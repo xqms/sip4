@@ -1,0 +1,17 @@
+Index: sip-4.12/configure.py
+===================================================================
+--- sip-4.12.orig/configure.py	2011-01-06 12:06:05.357805001 +0100
++++ sip-4.12/configure.py	2011-01-06 14:20:02.747805001 +0100
+@@ -219,9 +219,11 @@
+         ("siplib", "siplib.c"),
+         ("siplib", "siplib.sbf")
+     )
++    if not os.path.exists(patched[0][0]):
++        os.mkdir(patched[0][0])
+ 
+     for f in patched:
+-        dst_fn = os.path.join(*f)
++        dst_fn = os.path.join(src_dir, *f)
+         src_fn = os.path.join(src_dir, dst_fn + ".in")
+ 
+         siputils.inform("Creating %s..." % dst_fn)
