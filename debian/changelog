@@ -1,3 +1,19 @@
+sip4 (4.12.3-1) unstable; urgency=low
+
+  * Team upload
+
+  [ Scott Kitterman ]
+  * New upstream release (No API version change)
+    - Refresh and adapt patches
+  * Switch to dh_python2
+    - Update debian/rules
+    - Drop python-support build-depends
+  * Bump standards version to 3.9.2 without further change
+  * Remove Bernd Zeimetz from Uploaders at his request
+    - Thanks to bzed for all his work on the pacakge
+
+ -- Scott Kitterman <scott@kitterman.com>  Fri, 29 Jul 2011 19:24:24 -0400
+
 sip4 (4.12.1-1) unstable; urgency=low
 
   * Team upload.
