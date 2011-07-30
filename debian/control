@@ -1,0 +1,117 @@
+Source: sip4
+Section: devel
+Priority: optional
+Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Uploaders: Torsten Marek <shlomme@debian.org>, Michael Casadevall <mcasadevall@debian.org>
+Build-Depends: debhelper (>= 7), python-all-dev (>=  2.6.6-3~), python-all-dbg, python3-all-dev, python3-all-dbg
+Standards-Version: 3.9.2
+Homepage: http://www.riverbankcomputing.co.uk/software/sip/
+Vcs-Svn: svn://svn.debian.org/python-modules/packages/sip4/trunk
+Vcs-Browser: http://svn.debian.org/viewsvn/python-modules/packages/sip4/trunk/
+X-Python-Version: >= 2.4
+X-Python3-Version: >= 3.0
+
+Package: python-sip
+Architecture: any
+Section: python
+Provides: ${python:Provides}
+Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
+Breaks: python-qscintilla (<< 2.4.3-3~),
+        python-qwt5-qt4 (<< 5.2.1~cvs20091107+dfsg-6~),
+        python-qwt3d-qt4 (<< 0.1.7~cvs20090625-7~),
+        python-qt4 (<<4.8.3-3~)
+Description: Python/C++ bindings generator runtime library
+ SIP is a tool for generating bindings for C++ classes with some ideas
+ borrowed from SWIG, but capable of tighter bindings because of its
+ specificity towards C++ and Python.
+
+Package: python-sip-dbg
+Priority: extra
+Architecture: any
+Section: debug
+Provides: ${python:Provides}
+Depends: python-sip (= ${binary:Version}), python-dbg, ${shlibs:Depends}, ${misc:Depends}
+Description: Python/C++ bindings generator runtime library (debug extension)
+ SIP is a tool for generating bindings for C++ classes with some ideas
+ borrowed from SWIG, but capable of tighter bindings because of its
+ specificity towards C++ and Python.
+ .
+ This package contains the extension built for the Python debug interpreter.
+
+Package: python-sip-dev
+Architecture: any
+Section: python
+Depends: ${python:Depends}, python-sip (= ${binary:Version}), python-dev, ${shlibs:Depends}, libjs-jquery, ${misc:Depends}
+Recommends: python-sip (>= ${source:Version})
+Description: Python/C++ bindings generator development files
+ SIP is a tool for generating bindings for C++ classes with some ideas
+ borrowed from SWIG, but capable of tighter bindings because of its
+ specificity towards C++ and Python.
+ .
+ SIP was originally designed to generate Python bindings for KDE and so
+ has explicit support for the signal slot mechanism used by the Qt/KDE
+ class libraries.
+ .
+ Features:
+     - connecting Qt signals to Python functions and class methods
+     - connecting Python signals to Qt slots
+     - overloading virtual member functions with Python class methods
+     - protected member functions
+     - abstract classes
+     - enumerated types
+     - global class instances
+     - static member functions.
+ .
+ This package contains the code generator tool and the development headers
+ needed to develop Python bindings with sip.
+
+Package: python3-sip
+Architecture: any
+Section: python
+Provides: ${python3:Provides}
+Depends: ${python3:Depends}, ${shlibs:Depends}, ${misc:Depends}
+Description: Python 3/C++ bindings generator runtime library
+ SIP is a tool for generating bindings for C++ classes with some ideas
+ borrowed from SWIG, but capable of tighter bindings because of its
+ specificity towards C++ and Python.
+ .
+ This package provides SIP with support for Python 3
+
+Package: python3-sip-dev
+Architecture: any
+Section: python
+Depends: ${python:Depends}, python3-sip (= ${binary:Version}), python-dev, ${shlibs:Depends}, libjs-jquery, ${misc:Depends}
+Recommends: python3-sip (>= ${source:Version})
+Description: Python/C++ bindings generator development files
+ SIP is a tool for generating bindings for C++ classes with some ideas
+ borrowed from SWIG, but capable of tighter bindings because of its
+ specificity towards C++ and Python.
+ .
+ SIP was originally designed to generate Python bindings for KDE and so
+ has explicit support for the signal slot mechanism used by the Qt/KDE
+ class libraries.
+ .
+ Features:
+     - connecting Qt signals to Python functions and class methods
+     - connecting Python signals to Qt slots
+     - overloading virtual member functions with Python class methods
+     - protected member functions
+     - abstract classes
+     - enumerated types
+     - global class instances
+     - static member functions.
+ .
+ This package contains the code generator tool and the development headers
+ needed to develop Python 3 bindings with sip.
+
+Package: python3-sip-dbg
+Architecture: any
+Section: debug
+Priority: extra
+Depends: python3-sip (= ${binary:Version}), python3-dbg, ${shlibs:Depends}, ${misc:Depends}
+Description: Python 3/C++ bindings generator runtime library
+ SIP is a tool for generating bindings for C++ classes with some ideas
+ borrowed from SWIG, but capable of tighter bindings because of its
+ specificity towards C++ and Python.
+ .
+ This package contains debugging symbols for python3-sip
