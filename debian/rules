@@ -151,7 +151,16 @@ ifneq (,$(findstring -a, $(DH_OPTIONS)))
 endif
 	dh_compress -X.inv
 	dh_fixperms
-	dh_pysupport
+	# Gross hack, please avert eyes - Waiting for --no-dbg-cleaning option
+	mv debian/python-sip-dbg/usr/lib/python2.6/dist-packages/sipconfig_d.py \
+	  debian/python-sip/usr/lib/python2.6/dist-packages
+	mv debian/python-sip-dbg/usr/lib/python2.7/dist-packages/sipconfig_d.py \
+	  debian/python-sip/usr/lib/python2.7/dist-packages
+	dh_python2
+	mv debian/python-sip/usr/lib/python2.6/dist-packages/sipconfig_d.py \
+	  debian/python-sip-dbg/usr/lib/python2.6/dist-packages
+	mv debian/python-sip/usr/lib/python2.7/dist-packages/sipconfig_d.py \
+	  debian/python-sip-dbg/usr/lib/python2.7/dist-packages
 	dh_python3
 	dh_installdeb
 	dh_shlibdeps
