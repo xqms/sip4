@@ -6,6 +6,8 @@ sip4 (4.12.4-1) unstable; urgency=low
   * Fix typo in last changelog entry
   * Replace hack in debian/rules with --no-dbg-cleaning and bump minimun
     python version to 2.6.7-3~
+  * Add hack in debian/rules back for dh_python3 and wait for it to grow
+    --no-dbg-cleaning
   * Stop doing things in binary-indep since we no longer build any arch all
     packages
 

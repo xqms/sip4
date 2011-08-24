@@ -152,7 +152,12 @@ endif
 	dh_compress -X.inv
 	dh_fixperms
 	dh_python2 --no-dbg-cleaning
+	# Gross hack, please avert eyes - Waiting for --no-dbg-cleaning option
+	mv debian/python3-sip-dbg/usr/lib/python3.2/dist-packages/sipconfig_d.py \
+	  debian/python3-sip/usr/lib/python3.2/dist-packages
 	dh_python3
+	mv debian/python3-sip/usr/lib/python3/dist-packages/sipconfig_d.py \
+	  debian/python3-sip-dbg/usr/lib/python3/dist-packages
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
