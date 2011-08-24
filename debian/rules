@@ -151,17 +151,13 @@ ifneq (,$(findstring -a, $(DH_OPTIONS)))
 endif
 	dh_compress -X.inv
 	dh_fixperms
+	dh_python2 --no-dbg-cleaning
 	# Gross hack, please avert eyes - Waiting for --no-dbg-cleaning option
-	mv debian/python-sip-dbg/usr/lib/python2.6/dist-packages/sipconfig_d.py \
-	  debian/python-sip/usr/lib/python2.6/dist-packages
-	mv debian/python-sip-dbg/usr/lib/python2.7/dist-packages/sipconfig_d.py \
-	  debian/python-sip/usr/lib/python2.7/dist-packages
-	dh_python2
-	mv debian/python-sip/usr/lib/python2.6/dist-packages/sipconfig_d.py \
-	  debian/python-sip-dbg/usr/lib/python2.6/dist-packages
-	mv debian/python-sip/usr/lib/python2.7/dist-packages/sipconfig_d.py \
-	  debian/python-sip-dbg/usr/lib/python2.7/dist-packages
+	mv debian/python3-sip-dbg/usr/lib/python3.2/dist-packages/sipconfig_d.py \
+	  debian/python3-sip/usr/lib/python3.2/dist-packages
 	dh_python3
+	mv debian/python3-sip/usr/lib/python3/dist-packages/sipconfig_d.py \
+	  debian/python3-sip-dbg/usr/lib/python3/dist-packages
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
@@ -170,7 +166,6 @@ endif
 
 # Build architecture independant packages using the common target.
 binary-indep: 
-	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
 
 # Build architecture dependant packages using the common target.
 binary-arch: install-arch

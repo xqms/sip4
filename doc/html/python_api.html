@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,22 +7,23 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Python API for Applications &mdash; SIP 4.12.3 Reference Guide</title>
+    <title>Python API for Applications &mdash; SIP 4.12.4 Reference Guide</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.12.3',
-        COLLAPSE_MODINDEX: false,
+        VERSION:     '4.12.4',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.12.3 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.12.4 Reference Guide" href="index.html" />
     <link rel="next" title="The Build System" href="build_system.html" />
     <link rel="prev" title="Using the C API when Embedding" href="embedding.html" /> 
   </head>
@@ -32,15 +35,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="build_system.html" title="The Build System"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="embedding.html" title="Using the C API when Embedding"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -50,8 +53,8 @@
           <div class="body">
             
   <div class="section" id="module-sip">
-<span id="ref-python-api"></span><h1>Python API for Applications<a class="headerlink" href="#module-sip" title="Permalink to this headline">¶</a></h1>
-<p>The main purpose of the <tt class="xref docutils literal"><span class="pre">sip</span></tt> module is to provide functionality common to
+<span id="python-api-for-applications"></span><span id="ref-python-api"></span><h1>Python API for Applications<a class="headerlink" href="#module-sip" title="Permalink to this headline">¶</a></h1>
+<p>The main purpose of the <a class="reference internal" href="#module-sip"><tt class="xref py py-mod docutils literal"><span class="pre">sip</span></tt></a> module is to provide functionality common to
 all SIP generated bindings.  It is loaded automatically and most of the time
 you will completely ignore it.  However, it does expose some functionality that
 can be used by applications.</p>
@@ -65,8 +68,8 @@ sub or super-class types.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><em>obj</em> &#8211; the Python object.</li>
-<li><em>type</em> &#8211; the type.</li>
+<li><strong>obj</strong> &#8211; the Python object.</li>
+<li><strong>type</strong> &#8211; the type.</li>
 </ul>
 </td>
 </tr>
@@ -87,7 +90,10 @@ returns the structure&#8217;s memory to the heap.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>obj</em> &#8211; the Python object.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> &#8211; the Python object.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -102,7 +108,10 @@ of the Python object that wraps a C++ instance or C structure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>obj</em> &#8211; the Python object.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> &#8211; the Python object.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -111,19 +120,23 @@ of the Python object that wraps a C++ instance or C structure.</p>
 <dl class="function">
 <dt id="sip.getapi">
 <tt class="descclassname">sip.</tt><tt class="descname">getapi</tt><big>(</big><em>name</em><big>)</big> &rarr; version<a class="headerlink" href="#sip.getapi" title="Permalink to this definition">¶</a></dt>
-<dd><p>
+<dd><p class="versionadded">
 <span class="versionmodified">New in version 4.9.</span></p>
 <p>This returns the version number that has been set for an API.  The version
-number is either set explicitly by a call to <a title="sip.setapi" class="reference internal" href="#sip.setapi"><tt class="xref docutils literal"><span class="pre">sip.setapi()</span></tt></a> or
+number is either set explicitly by a call to <a class="reference internal" href="#sip.setapi" title="sip.setapi"><tt class="xref py py-func docutils literal"><span class="pre">sip.setapi()</span></tt></a> or
 implicitly by importing the module that defines it.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>name</em> &#8211; the name of the API.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; the name of the API.</li>
+</ul>
+</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">The version number that has been set for the API.  An exception will
-be raised if the API is unknown.</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The version number that has been set for the API.  An exception will
+be raised if the API is unknown.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -138,9 +151,13 @@ returned to the heap.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>obj</em> &#8211; the Python object.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> &#8211; the Python object.</li>
+</ul>
+</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref docutils literal"><span class="pre">True</span></tt> if the C/C++ instance has been deleted.</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref docutils literal"><span class="pre">True</span></tt> if the C/C++ instance has been deleted.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -149,7 +166,7 @@ returned to the heap.</p>
 <dl class="function">
 <dt id="sip.ispycreated">
 <tt class="descclassname">sip.</tt><tt class="descname">ispycreated</tt><big>(</big><em>obj</em><big>)</big> &rarr; bool<a class="headerlink" href="#sip.ispycreated" title="Permalink to this definition">¶</a></dt>
-<dd><p>
+<dd><p class="versionadded">
 <span class="versionmodified">New in version 4.12.1.</span></p>
 <p>This checks if the C++ instance or C structure was created by Python.  If
 it was then it is possible to call a C++ instance&#8217;s protected methods.</p>
@@ -157,9 +174,13 @@ it was then it is possible to call a C++ instance&#8217;s protected methods.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>obj</em> &#8211; the Python object.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> &#8211; the Python object.</li>
+</ul>
+</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref docutils literal"><span class="pre">True</span></tt> if the C/C++ instance was created by Python.</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref docutils literal"><span class="pre">True</span></tt> if the C/C++ instance was created by Python.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -173,9 +194,13 @@ it was then it is possible to call a C++ instance&#8217;s protected methods.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>obj</em> &#8211; the Python object.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> &#8211; the Python object.</li>
+</ul>
+</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref docutils literal"><span class="pre">True</span></tt> if the C/C++ instance is owned by Python.</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref docutils literal"><span class="pre">True</span></tt> if the C/C++ instance is owned by Python.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -184,7 +209,7 @@ it was then it is possible to call a C++ instance&#8217;s protected methods.</p>
 <dl class="function">
 <dt id="sip.setapi">
 <tt class="descclassname">sip.</tt><tt class="descname">setapi</tt><big>(</big><em>name</em>, <em>version</em><big>)</big><a class="headerlink" href="#sip.setapi" title="Permalink to this definition">¶</a></dt>
-<dd><p>
+<dd><p class="versionadded">
 <span class="versionmodified">New in version 4.9.</span></p>
 <p>This sets the version number of an API.  An exception is raised if a
 different version number has already been set, either explicitly by a
@@ -194,8 +219,8 @@ previous call, or implicitly by importing the module that defines it.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>name</em> &#8211; the name of the API.</li>
-<li><em>version</em> &#8211; The version number to set for the API.  Version numbers must be
+<li><strong>name</strong> &#8211; the name of the API.</li>
+<li><strong>version</strong> &#8211; The version number to set for the API.  Version numbers must be
 greater than or equal to 1.</li>
 </ul>
 </td>
@@ -215,7 +240,10 @@ automatically, but there may be circumstances where this isn&#8217;t possible.</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>obj</em> &#8211; the Python object.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> &#8211; the Python object.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -224,7 +252,7 @@ automatically, but there may be circumstances where this isn&#8217;t possible.</
 <dl class="function">
 <dt id="sip.settracemask">
 <tt class="descclassname">sip.</tt><tt class="descname">settracemask</tt><big>(</big><em>mask</em><big>)</big><a class="headerlink" href="#sip.settracemask" title="Permalink to this definition">¶</a></dt>
-<dd><p>If the bindings have been created with SIP&#8217;s <a class="reference external" href="command_line.html#cmdoption-sip-r"><em class="xref">-r</em></a> command
+<dd><p>If the bindings have been created with SIP&#8217;s <a class="reference internal" href="command_line.html#cmdoption-sip-r"><em class="xref std std-option">-r</em></a> command
 line option then the generated code will include debugging statements that
 trace the execution of the code.  (It is particularly useful when trying to
 understand the operation of a C++ library&#8217;s virtual function calls.)</p>
@@ -232,7 +260,10 @@ understand the operation of a C++ library&#8217;s virtual function calls.)</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>mask</em> &#8211; the mask that determines which debugging statements are enabled.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mask</strong> &#8211; the mask that determines which debugging statements are enabled.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -252,34 +283,39 @@ disabled.</p>
 <dl class="class">
 <dt id="sip.simplewrapper">
 <em class="property">class </em><tt class="descclassname">sip.</tt><tt class="descname">simplewrapper</tt><a class="headerlink" href="#sip.simplewrapper" title="Permalink to this definition">¶</a></dt>
-<dd>This is an alternative type object than can be used as the base type of an
+<dd><p>This is an alternative type object than can be used as the base type of an
 instance wrapped by SIP.  Objects using this are smaller than those that
-use the default <a title="sip.wrapper" class="reference internal" href="#sip.wrapper"><tt class="xref docutils literal"><span class="pre">sip.wrapper</span></tt></a> type but do not support the concept of
-object ownership.</dd></dl>
+use the default <a class="reference internal" href="#sip.wrapper" title="sip.wrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.wrapper</span></tt></a> type but do not support the concept of
+object ownership.</p>
+</dd></dl>
 
 <dl class="data">
 <dt id="sip.SIP_VERSION">
 <tt class="descclassname">sip.</tt><tt class="descname">SIP_VERSION</tt><a class="headerlink" href="#sip.SIP_VERSION" title="Permalink to this definition">¶</a></dt>
-<dd>This is a Python integer object that represents the SIP version number as
+<dd><p>This is a Python integer object that represents the SIP version number as
 a 3 part hexadecimal number (e.g. v4.0.0 is represented as <tt class="docutils literal"><span class="pre">0x040000</span></tt>).
-It was first implemented in SIP v4.2.</dd></dl>
+It was first implemented in SIP v4.2.</p>
+</dd></dl>
 
 <dl class="data">
 <dt id="sip.SIP_VERSION_STR">
 <tt class="descclassname">sip.</tt><tt class="descname">SIP_VERSION_STR</tt><a class="headerlink" href="#sip.SIP_VERSION_STR" title="Permalink to this definition">¶</a></dt>
-<dd>This is a Python string object that defines the SIP version number as
+<dd><p>This is a Python string object that defines the SIP version number as
 represented as a string.  For development snapshots it will start with
-<tt class="docutils literal"><span class="pre">snapshot-</span></tt>.  It was first implemented in SIP v4.3.</dd></dl>
+<tt class="docutils literal"><span class="pre">snapshot-</span></tt>.  It was first implemented in SIP v4.3.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="sip.transferback">
 <tt class="descclassname">sip.</tt><tt class="descname">transferback</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#sip.transferback" title="Permalink to this definition">¶</a></dt>
-<dd>This function is a wrapper around <a title="sipTransferBack" class="reference external" href="c_api.html#sipTransferBack"><tt class="xref docutils literal"><span class="pre">sipTransferBack()</span></tt></a>.</dd></dl>
+<dd><p>This function is a wrapper around <a class="reference internal" href="c_api.html#sipTransferBack" title="sipTransferBack"><tt class="xref c c-func docutils literal"><span class="pre">sipTransferBack()</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="sip.transferto">
 <tt class="descclassname">sip.</tt><tt class="descname">transferto</tt><big>(</big><em>obj</em>, <em>owner</em><big>)</big><a class="headerlink" href="#sip.transferto" title="Permalink to this definition">¶</a></dt>
-<dd>This function is a wrapper around <a title="sipTransferTo" class="reference external" href="c_api.html#sipTransferTo"><tt class="xref docutils literal"><span class="pre">sipTransferTo()</span></tt></a>.</dd></dl>
+<dd><p>This function is a wrapper around <a class="reference internal" href="c_api.html#sipTransferTo" title="sipTransferTo"><tt class="xref c c-func docutils literal"><span class="pre">sipTransferTo()</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="sip.unwrapinstance">
@@ -290,9 +326,13 @@ class instance.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>obj</em> &#8211; the Python object.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> &#8211; the Python object.</li>
+</ul>
+</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">an integer that is the address of the C/C++ instance.</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an integer that is the address of the C/C++ instance.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -313,12 +353,12 @@ methods.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>address</em> &#8211; the address, either another <a title="sip.voidptr" class="reference internal" href="#sip.voidptr"><tt class="xref docutils literal"><span class="pre">sip.voidptr</span></tt></a>, <tt class="xref docutils literal"><span class="pre">None</span></tt>, a
+<li><strong>address</strong> &#8211; the address, either another <a class="reference internal" href="#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a>, <tt class="xref docutils literal"><span class="pre">None</span></tt>, a
 Python Capsule, a Python CObject, or an integer.</li>
-<li><em>size</em> &#8211; the optional associated size of the block of memory and is negative
+<li><strong>size</strong> &#8211; the optional associated size of the block of memory and is negative
 if the size is not known.</li>
-<li><em>writeable</em> &#8211; set if the memory is writeable.  If it is not specified, and
-<em>address</em> is a <a title="sip.voidptr" class="reference internal" href="#sip.voidptr"><tt class="xref docutils literal"><span class="pre">sip.voidptr</span></tt></a> instance then its value will be
+<li><strong>writeable</strong> &#8211; set if the memory is writeable.  If it is not specified, and
+<em>address</em> is a <a class="reference internal" href="#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> instance then its value will be
 used.</li>
 </ul>
 </td>
@@ -344,7 +384,7 @@ used.</li>
 <dl class="method">
 <dt id="sip.voidptr.__getitem__">
 <tt class="descname">__getitem__</tt><big>(</big><em>idx</em><big>)</big> &rarr; item<a class="headerlink" href="#sip.voidptr.__getitem__" title="Permalink to this definition">¶</a></dt>
-<dd><p>
+<dd><p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
 <p>This returns the item at a given index.  An exception will be raised if
 the address does not have an associated size.  It behaves like a Python
@@ -353,14 +393,18 @@ the address does not have an associated size.  It behaves like a Python
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>idx</em> &#8211; is the index which may either be an integer, an object that
-implements <tt class="docutils literal"><span class="pre">__index__()</span></tt> or a slice object.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>idx</strong> &#8211; is the index which may either be an integer, an object that
+implements <tt class="docutils literal"><span class="pre">__index__()</span></tt> or a slice object.</li>
+</ul>
+</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">the item.  If the index is an integer then the item will be a
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the item.  If the index is an integer then the item will be a
 Python v2 string object or a Python v3 bytes object containing the
 single byte at that index.  If the index is a slice object then the
-item will be a new <a title="sip.voidptr" class="reference internal" href="#sip.voidptr"><tt class="xref docutils literal"><span class="pre">voidptr</span></tt></a> object defining the subset of
-the memory corresponding to the slice.</td>
+item will be a new <a class="reference internal" href="#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">voidptr</span></tt></a> object defining the subset of
+the memory corresponding to the slice.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -383,7 +427,7 @@ the memory corresponding to the slice.</td>
 <dl class="method">
 <dt id="sip.voidptr.__len__">
 <tt class="descname">__len__</tt><big>(</big><big>)</big> &rarr; integer<a class="headerlink" href="#sip.voidptr.__len__" title="Permalink to this definition">¶</a></dt>
-<dd><p>
+<dd><p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
 <p>This returns the size associated with the address.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -399,7 +443,7 @@ the memory corresponding to the slice.</td>
 <dl class="method">
 <dt id="sip.voidptr.__setitem__">
 <tt class="descname">__setitem__</tt><big>(</big><em>idx</em>, <em>item</em><big>)</big><a class="headerlink" href="#sip.voidptr.__setitem__" title="Permalink to this definition">¶</a></dt>
-<dd><p>
+<dd><p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
 <p>This updates the memory at a given index.  An exception will be raised
 if the address does not have an associated size or is not writable.  It
@@ -409,9 +453,9 @@ behaves like a Python <tt class="docutils literal"><span class="pre">memoryview<
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>idx</em> &#8211; is the index which may either be an integer, an object that
+<li><strong>idx</strong> &#8211; is the index which may either be an integer, an object that
 implements <tt class="docutils literal"><span class="pre">__index__()</span></tt> or a slice object.</li>
-<li><em>item</em> &#8211; is the data that will update the memory defined by the index.  It
+<li><strong>item</strong> &#8211; is the data that will update the memory defined by the index.  It
 must implement the buffer interface and be the same size as the
 data that is being updated.</li>
 </ul>
@@ -424,7 +468,7 @@ data that is being updated.</li>
 <dl class="method">
 <dt id="sip.voidptr.ascapsule">
 <tt class="descname">ascapsule</tt><big>(</big><big>)</big> &rarr; capsule<a class="headerlink" href="#sip.voidptr.ascapsule" title="Permalink to this definition">¶</a></dt>
-<dd><p>
+<dd><p class="versionadded">
 <span class="versionmodified">New in version 4.10.</span></p>
 <p>This returns the address as an unnamed Python Capsule.  This requires
 Python v3.1 or later or Python v2.7 or later.</p>
@@ -462,11 +506,15 @@ or a Python v3 bytes object.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>size</em> &#8211; the number of bytes to copy.  If it is negative then the size
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>size</strong> &#8211; the number of bytes to copy.  If it is negative then the size
 associated with the address is used.  If there is no associated
-size then an exception is raised.</td>
+size then an exception is raised.</li>
+</ul>
+</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">the string or bytes object.</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the string or bytes object.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -494,8 +542,11 @@ size then an exception is raised.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>size</em> &#8211; the size to associate.  If it is negative then no size is
-associated.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>size</strong> &#8211; the size to associate.  If it is negative then no size is
+associated.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -523,7 +574,10 @@ associated.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>writeable</em> &#8211; the writeable state to set.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>writeable</strong> &#8211; the writeable state to set.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -542,8 +596,8 @@ object is returned.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><em>addr</em> &#8211; the address of the instance as a number.</li>
-<li><em>type</em> &#8211; the Python type of the instance.</li>
+<li><strong>addr</strong> &#8211; the address of the instance as a number.</li>
+<li><strong>type</strong> &#8211; the Python type of the instance.</li>
 </ul>
 </td>
 </tr>
@@ -557,14 +611,16 @@ object is returned.</p>
 <dl class="class">
 <dt id="sip.wrapper">
 <em class="property">class </em><tt class="descclassname">sip.</tt><tt class="descname">wrapper</tt><a class="headerlink" href="#sip.wrapper" title="Permalink to this definition">¶</a></dt>
-<dd>This is the type object of the default base type of all instances wrapped
-by SIP.  The <a class="reference external" href="annotations.html#canno-Supertype"><tt class="xref docutils literal"><span class="pre">Supertype</span></tt></a> class annotation can be used to specify a
-different base type for a class.</dd></dl>
+<dd><p>This is the type object of the default base type of all instances wrapped
+by SIP.  The <tt class="xref std std-canno docutils literal"><span class="pre">Supertype</span></tt> class annotation can be used to specify a
+different base type for a class.</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="sip.wrappertype">
 <em class="property">class </em><tt class="descclassname">sip.</tt><tt class="descname">wrappertype</tt><a class="headerlink" href="#sip.wrappertype" title="Permalink to this definition">¶</a></dt>
-<dd>This is the type object of the metatype of the <a title="sip.wrapper" class="reference internal" href="#sip.wrapper"><tt class="xref docutils literal"><span class="pre">sip.wrapper</span></tt></a> type.</dd></dl>
+<dd><p>This is the type object of the metatype of the <a class="reference internal" href="#sip.wrapper" title="sip.wrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.wrapper</span></tt></a> type.</p>
+</dd></dl>
 
 </div>
 
@@ -577,25 +633,25 @@ different base type for a class.</dd></dl>
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
             </a></p>
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="embedding.html"
-                                  title="previous chapter">Using the C API when Embedding</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="build_system.html"
-                                  title="next chapter">The Build System</a></p>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="embedding.html"
+                        title="previous chapter">Using the C API when Embedding</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="build_system.html"
+                        title="next chapter">The Build System</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -607,7 +663,7 @@ different base type for a class.</dd></dl>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="build_system.html" title="The Build System"
@@ -615,12 +671,12 @@ different base type for a class.</dd></dl>
         <li class="right" >
           <a href="embedding.html" title="Using the C API when Embedding"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
+        &copy; Copyright 2011 Riverbank Computing Limited.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
     </div>
   </body>
 </html>

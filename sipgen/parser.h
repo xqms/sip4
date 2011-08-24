@@ -313,7 +313,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 170 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 170 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
 
     char            qchar;
     char            *text;
@@ -354,7 +354,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 358 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.h"
+#line 358 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

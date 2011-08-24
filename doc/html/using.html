@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,22 +7,23 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Using SIP &mdash; SIP 4.12.3 Reference Guide</title>
+    <title>Using SIP &mdash; SIP 4.12.4 Reference Guide</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.12.3',
-        COLLAPSE_MODINDEX: false,
+        VERSION:     '4.12.4',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.12.3 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.12.4 Reference Guide" href="index.html" />
     <link rel="next" title="The SIP Command Line" href="command_line.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
   </head>
@@ -32,15 +35,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="command_line.html" title="The SIP Command Line"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="installation.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -97,13 +100,13 @@ file, but SIP does not include a full C++ parser.  Let&#8217;s look at the
 differences between the two files.</p>
 <blockquote>
 <ul class="simple">
-<li>The <a class="reference external" href="directives.html#directive-%Module"><tt class="xref docutils literal"><span class="pre">%Module</span></tt></a> directive has been added <a class="footnote-reference" href="#id4" id="id1">[1]</a>.  This is used to
+<li>The <a class="reference internal" href="directives.html#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive has been added <a class="footnote-reference" href="#id4" id="id1">[1]</a>.  This is used to
 name the Python module that is being created and to give it a
 <em>generation</em> number.  In this example these are <tt class="docutils literal"><span class="pre">word</span></tt> and <tt class="docutils literal"><span class="pre">0</span></tt>
 respectively.  The generation number is effectively the version number of
 the module.</li>
-<li>The <a class="reference external" href="directives.html#directive-%TypeHeaderCode"><tt class="xref docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a> directive has been added.  The text
-between this and the following <a class="reference external" href="directives.html#directive-%End"><tt class="xref docutils literal"><span class="pre">%End</span></tt></a> directive is included
+<li>The <a class="reference internal" href="directives.html#directive-%TypeHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a> directive has been added.  The text
+between this and the following <a class="reference internal" href="directives.html#directive-%End"><tt class="xref std std-directive docutils literal"><span class="pre">%End</span></tt></a> directive is included
 literally in the code that SIP generates.  Normally it is used, as in
 this case, to <tt class="docutils literal"><span class="pre">#include</span></tt> the corresponding C++ (or C) header file <a class="footnote-reference" href="#id5" id="id2">[2]</a>.</li>
 <li>The declaration of the private variable <tt class="docutils literal"><span class="pre">this_word</span></tt> has been removed.
@@ -118,7 +121,7 @@ running the following command:</p>
 </div>
 <p>However, that still leaves us with the task of compiling the generated code and
 linking it against all the necessary libraries.  It&#8217;s much easier to use the
-<a class="reference external" href="build_system.html#ref-build-system"><em>SIP build system</em></a> to do the whole thing.</p>
+<a class="reference internal" href="build_system.html#ref-build-system"><em>SIP build system</em></a> to do the whole thing.</p>
 <p>Using the SIP build system is simply a matter of writing a small Python script.
 In this simple example we will assume that the <tt class="docutils literal"><span class="pre">word</span></tt> library we are wrapping
 and it&#8217;s header file are installed in standard system locations and will be
@@ -165,7 +168,7 @@ commands <a class="footnote-reference" href="#id6" id="id3">[3]</a>:</p>
 make install</pre>
 </div>
 <p>That&#8217;s all there is to it.</p>
-<p>See <a class="reference external" href="distutils.html#ref-distutils"><em>Building Your Extension with distutils</em></a> for an example of how to build this example using
+<p>See <a class="reference internal" href="distutils.html#ref-distutils"><em>Building Your Extension with distutils</em></a> for an example of how to build this example using
 distutils.</p>
 <table class="docutils footnote" frame="void" id="id4" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
@@ -220,12 +223,12 @@ char *reverse(struct Word *word);</pre>
 <p>Again, let&#8217;s look at the differences between the two files.</p>
 <blockquote>
 <ul class="simple">
-<li>The <a class="reference external" href="directives.html#directive-%CModule"><tt class="xref docutils literal"><span class="pre">%CModule</span></tt></a> directive has been added.  This has the same
-syntax as the <a class="reference external" href="directives.html#directive-%Module"><tt class="xref docutils literal"><span class="pre">%Module</span></tt></a> directive used in the previous example
+<li>The <a class="reference internal" href="directives.html#directive-%CModule"><tt class="xref std std-directive docutils literal"><span class="pre">%CModule</span></tt></a> directive has been added.  This has the same
+syntax as the <a class="reference internal" href="directives.html#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive used in the previous example
 but tells SIP that the library being wrapped is implemented in C rather
 than C++.</li>
-<li>The <a class="reference external" href="directives.html#directive-%TypeHeaderCode"><tt class="xref docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a> directive has been added.</li>
-<li>The <a class="reference external" href="annotations.html#fanno-Factory"><tt class="xref docutils literal"><span class="pre">Factory</span></tt></a> annotation has been added to the <tt class="docutils literal"><span class="pre">create_word()</span></tt>
+<li>The <a class="reference internal" href="directives.html#directive-%TypeHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a> directive has been added.</li>
+<li>The <tt class="xref std std-fanno docutils literal"><span class="pre">Factory</span></tt> annotation has been added to the <tt class="docutils literal"><span class="pre">create_word()</span></tt>
 function.  This tells SIP that a newly created structure is being
 returned and it is owned by Python.</li>
 </ul>
@@ -301,14 +304,14 @@ void setDefault(const QString &amp;def);
 previous examples.</p>
 <blockquote>
 <ul class="simple">
-<li>The <a class="reference external" href="directives.html#directive-%Import"><tt class="xref docutils literal"><span class="pre">%Import</span></tt></a> directive has been added to specify that we are
+<li>The <a class="reference internal" href="directives.html#directive-%Import"><tt class="xref std std-directive docutils literal"><span class="pre">%Import</span></tt></a> directive has been added to specify that we are
 extending the class hierarchy defined in the file <tt class="docutils literal"><span class="pre">QtGui/QtGuimod.sip</span></tt>.
 This file is part of PyQt.  The build system will take care of finding
 the file&#8217;s exact location.</li>
-<li>The <a class="reference external" href="directives.html#directive-%If"><tt class="xref docutils literal"><span class="pre">%If</span></tt></a> directive has been added to specify that everything
-<a class="footnote-reference" href="#id11" id="id8">[4]</a> up to the matching <a class="reference external" href="directives.html#directive-%End"><tt class="xref docutils literal"><span class="pre">%End</span></tt></a> directive only applies to Qt
+<li>The <a class="reference internal" href="directives.html#directive-%If"><tt class="xref std std-directive docutils literal"><span class="pre">%If</span></tt></a> directive has been added to specify that everything
+<a class="footnote-reference" href="#id11" id="id8">[4]</a> up to the matching <a class="reference internal" href="directives.html#directive-%End"><tt class="xref std std-directive docutils literal"><span class="pre">%End</span></tt></a> directive only applies to Qt
 v4.2 and later.  <tt class="docutils literal"><span class="pre">Qt_4_2_0</span></tt> is a <em>tag</em> defined in <tt class="docutils literal"><span class="pre">QtCoremod.sip</span></tt>
-<a class="footnote-reference" href="#id12" id="id9">[5]</a> using the <a class="reference external" href="directives.html#directive-%Timeline"><tt class="xref docutils literal"><span class="pre">%Timeline</span></tt></a> directive.  <a class="reference external" href="directives.html#directive-%Timeline"><tt class="xref docutils literal"><span class="pre">%Timeline</span></tt></a>
+<a class="footnote-reference" href="#id12" id="id9">[5]</a> using the <a class="reference internal" href="directives.html#directive-%Timeline"><tt class="xref std std-directive docutils literal"><span class="pre">%Timeline</span></tt></a> directive.  <a class="reference internal" href="directives.html#directive-%Timeline"><tt class="xref std std-directive docutils literal"><span class="pre">%Timeline</span></tt></a>
 is used to define a tag for each version of a library&#8217;s API you are
 wrapping allowing you to maintain all the different versions in a single
 SIP specification.  The build system provides support to <tt class="docutils literal"><span class="pre">configure.py</span></tt>
@@ -316,7 +319,7 @@ scripts for working out the correct tags to use according to which
 version of the library is actually installed.</li>
 <li>The <tt class="docutils literal"><span class="pre">public</span></tt> keyword used in defining the super-classes has been
 removed.  This is not supported by SIP.</li>
-<li>The <a class="reference external" href="annotations.html#aanno-TransferThis"><tt class="xref docutils literal"><span class="pre">TransferThis</span></tt></a> annotation has been added to the constructor&#8217;s
+<li>The <tt class="xref std std-aanno docutils literal"><span class="pre">TransferThis</span></tt> annotation has been added to the constructor&#8217;s
 argument.  It specifies that if the argument is not 0 (i.e. the <tt class="docutils literal"><span class="pre">Hello</span></tt>
 instance being constructed has a parent) then ownership of the instance
 is transferred from Python to C++.  It is needed because Qt maintains
@@ -330,11 +333,11 @@ Multiple annotations are separated by commas.  Annotations may have
 values.</li>
 <li>The <tt class="docutils literal"><span class="pre">=</span></tt> operator has been removed.  This operator is not supported by
 SIP.</li>
-<li>The <a class="reference external" href="directives.html#directive-%If"><tt class="xref docutils literal"><span class="pre">%If</span></tt></a> directive has been added to specify that everything
-up to the matching <a class="reference external" href="directives.html#directive-%End"><tt class="xref docutils literal"><span class="pre">%End</span></tt></a> directive does not apply to Windows.
+<li>The <a class="reference internal" href="directives.html#directive-%If"><tt class="xref std std-directive docutils literal"><span class="pre">%If</span></tt></a> directive has been added to specify that everything
+up to the matching <a class="reference internal" href="directives.html#directive-%End"><tt class="xref std std-directive docutils literal"><span class="pre">%End</span></tt></a> directive does not apply to Windows.
 <tt class="docutils literal"><span class="pre">WS_WIN</span></tt> is another tag defined by PyQt, this time using the
-<a class="reference external" href="directives.html#directive-%Platforms"><tt class="xref docutils literal"><span class="pre">%Platforms</span></tt></a> directive.  Tags defined by the
-<a class="reference external" href="directives.html#directive-%Platforms"><tt class="xref docutils literal"><span class="pre">%Platforms</span></tt></a> directive are mutually exclusive, i.e. only one
+<a class="reference internal" href="directives.html#directive-%Platforms"><tt class="xref std std-directive docutils literal"><span class="pre">%Platforms</span></tt></a> directive.  Tags defined by the
+<a class="reference internal" href="directives.html#directive-%Platforms"><tt class="xref std std-directive docutils literal"><span class="pre">%Platforms</span></tt></a> directive are mutually exclusive, i.e. only one
 may be valid at a time <a class="footnote-reference" href="#id13" id="id10">[6]</a>.</li>
 </ul>
 </blockquote>
@@ -469,7 +472,7 @@ life easier for them.</p>
 <table class="docutils footnote" frame="void" id="id12" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id9">[5]</a></td><td>Actually in <tt class="docutils literal"><span class="pre">versions.sip</span></tt>.  PyQt uses the <a class="reference external" href="directives.html#directive-%Include"><tt class="xref docutils literal"><span class="pre">%Include</span></tt></a>
+<tr><td class="label"><a class="fn-backref" href="#id9">[5]</a></td><td>Actually in <tt class="docutils literal"><span class="pre">versions.sip</span></tt>.  PyQt uses the <a class="reference internal" href="directives.html#directive-%Include"><tt class="xref std std-directive docutils literal"><span class="pre">%Include</span></tt></a>
 directive to split the SIP specification for Qt across a large number of
 separate <tt class="docutils literal"><span class="pre">.sip</span></tt> files.</td></tr>
 </tbody>
@@ -477,7 +480,7 @@ separate <tt class="docutils literal"><span class="pre">.sip</span></tt> files.<
 <table class="docutils footnote" frame="void" id="id13" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id10">[6]</a></td><td>Tags can also be defined by the <a class="reference external" href="directives.html#directive-%Feature"><tt class="xref docutils literal"><span class="pre">%Feature</span></tt></a> directive.  These
+<tr><td class="label"><a class="fn-backref" href="#id10">[6]</a></td><td>Tags can also be defined by the <a class="reference internal" href="directives.html#directive-%Feature"><tt class="xref std std-directive docutils literal"><span class="pre">%Feature</span></tt></a> directive.  These
 tags are not mutually exclusive, i.e. any number may be valid at a time.</td></tr>
 </tbody>
 </table>
@@ -505,43 +508,43 @@ Python and C++ call the destructor) and memory leaks (where neither Python and
 C++ call the destructor).</p>
 <p>This applies equally to C structures where the structure is returned to the
 heap using the <tt class="docutils literal"><span class="pre">free()</span></tt> function.</p>
-<p>See also <a title="sipTransferTo" class="reference external" href="c_api.html#sipTransferTo"><tt class="xref docutils literal"><span class="pre">sipTransferTo()</span></tt></a>, <a title="sipTransferBack" class="reference external" href="c_api.html#sipTransferBack"><tt class="xref docutils literal"><span class="pre">sipTransferBack()</span></tt></a> and
-<a title="sipTransferBreak" class="reference external" href="c_api.html#sipTransferBreak"><tt class="xref docutils literal"><span class="pre">sipTransferBreak()</span></tt></a>.</p>
+<p>See also <a class="reference internal" href="c_api.html#sipTransferTo" title="sipTransferTo"><tt class="xref c c-func docutils literal"><span class="pre">sipTransferTo()</span></tt></a>, <a class="reference internal" href="c_api.html#sipTransferBack" title="sipTransferBack"><tt class="xref c c-func docutils literal"><span class="pre">sipTransferBack()</span></tt></a> and
+<a class="reference internal" href="c_api.html#sipTransferBreak" title="sipTransferBreak"><tt class="xref c c-func docutils literal"><span class="pre">sipTransferBreak()</span></tt></a>.</p>
 </div>
 <div class="section" id="types-and-meta-types">
 <span id="ref-types-metatypes"></span><h2>Types and Meta-types<a class="headerlink" href="#types-and-meta-types" title="Permalink to this headline">¶</a></h2>
-<p>Every Python object (with the exception of the <tt class="xref docutils literal"><span class="pre">object</span></tt> object itself)
+<p>Every Python object (with the exception of the <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt> object itself)
 has a meta-type and at least one super-type.  By default an object&#8217;s meta-type
 is the meta-type of its first super-type.</p>
-<p>SIP implements two super-types, <a title="sip.simplewrapper" class="reference external" href="python_api.html#sip.simplewrapper"><tt class="xref docutils literal"><span class="pre">sip.simplewrapper</span></tt></a> and
-<a title="sip.wrapper" class="reference external" href="python_api.html#sip.wrapper"><tt class="xref docutils literal"><span class="pre">sip.wrapper</span></tt></a>, and a meta-type, <a title="sip.wrappertype" class="reference external" href="python_api.html#sip.wrappertype"><tt class="xref docutils literal"><span class="pre">sip.wrappertype</span></tt></a>.</p>
-<p><a title="sip.simplewrapper" class="reference external" href="python_api.html#sip.simplewrapper"><tt class="xref docutils literal"><span class="pre">sip.simplewrapper</span></tt></a> is the super-type of <a title="sip.wrapper" class="reference external" href="python_api.html#sip.wrapper"><tt class="xref docutils literal"><span class="pre">sip.wrapper</span></tt></a>.  The
-super-type of <a title="sip.simplewrapper" class="reference external" href="python_api.html#sip.simplewrapper"><tt class="xref docutils literal"><span class="pre">sip.simplewrapper</span></tt></a> is <tt class="xref docutils literal"><span class="pre">object</span></tt>.</p>
-<p><a title="sip.wrappertype" class="reference external" href="python_api.html#sip.wrappertype"><tt class="xref docutils literal"><span class="pre">sip.wrappertype</span></tt></a> is the meta-type of both <a title="sip.simplewrapper" class="reference external" href="python_api.html#sip.simplewrapper"><tt class="xref docutils literal"><span class="pre">sip.simplewrapper</span></tt></a>
-and <a title="sip.wrapper" class="reference external" href="python_api.html#sip.wrapper"><tt class="xref docutils literal"><span class="pre">sip.wrapper</span></tt></a>.  The super-type of <a title="sip.wrappertype" class="reference external" href="python_api.html#sip.wrappertype"><tt class="xref docutils literal"><span class="pre">sip.wrappertype</span></tt></a> is
-<tt class="xref docutils literal"><span class="pre">type</span></tt>.</p>
-<p><a title="sip.wrapper" class="reference external" href="python_api.html#sip.wrapper"><tt class="xref docutils literal"><span class="pre">sip.wrapper</span></tt></a> supports the concept of object ownership described in
+<p>SIP implements two super-types, <a class="reference internal" href="python_api.html#sip.simplewrapper" title="sip.simplewrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.simplewrapper</span></tt></a> and
+<a class="reference internal" href="python_api.html#sip.wrapper" title="sip.wrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.wrapper</span></tt></a>, and a meta-type, <a class="reference internal" href="python_api.html#sip.wrappertype" title="sip.wrappertype"><tt class="xref py py-class docutils literal"><span class="pre">sip.wrappertype</span></tt></a>.</p>
+<p><a class="reference internal" href="python_api.html#sip.simplewrapper" title="sip.simplewrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.simplewrapper</span></tt></a> is the super-type of <a class="reference internal" href="python_api.html#sip.wrapper" title="sip.wrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.wrapper</span></tt></a>.  The
+super-type of <a class="reference internal" href="python_api.html#sip.simplewrapper" title="sip.simplewrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.simplewrapper</span></tt></a> is <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt>.</p>
+<p><a class="reference internal" href="python_api.html#sip.wrappertype" title="sip.wrappertype"><tt class="xref py py-class docutils literal"><span class="pre">sip.wrappertype</span></tt></a> is the meta-type of both <a class="reference internal" href="python_api.html#sip.simplewrapper" title="sip.simplewrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.simplewrapper</span></tt></a>
+and <a class="reference internal" href="python_api.html#sip.wrapper" title="sip.wrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.wrapper</span></tt></a>.  The super-type of <a class="reference internal" href="python_api.html#sip.wrappertype" title="sip.wrappertype"><tt class="xref py py-class docutils literal"><span class="pre">sip.wrappertype</span></tt></a> is
+<tt class="xref py py-class docutils literal"><span class="pre">type</span></tt>.</p>
+<p><a class="reference internal" href="python_api.html#sip.wrapper" title="sip.wrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.wrapper</span></tt></a> supports the concept of object ownership described in
 <a class="reference internal" href="#ref-object-ownership"><em>Ownership of Objects</em></a> and, by default, is the super-type of all the types
 that SIP generates.</p>
-<p><a title="sip.simplewrapper" class="reference external" href="python_api.html#sip.simplewrapper"><tt class="xref docutils literal"><span class="pre">sip.simplewrapper</span></tt></a> does not support the concept of object ownership but
+<p><a class="reference internal" href="python_api.html#sip.simplewrapper" title="sip.simplewrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.simplewrapper</span></tt></a> does not support the concept of object ownership but
 SIP generated types that are sub-classed from it have Python objects that take
 less memory.</p>
 <p>SIP allows a class&#8217;s meta-type and super-type to be explicitly specified using
-the <a class="reference external" href="annotations.html#canno-Metatype"><tt class="xref docutils literal"><span class="pre">Metatype</span></tt></a> and <a class="reference external" href="annotations.html#canno-Supertype"><tt class="xref docutils literal"><span class="pre">Supertype</span></tt></a> class annotations.</p>
+the <tt class="xref std std-canno docutils literal"><span class="pre">Metatype</span></tt> and <tt class="xref std std-canno docutils literal"><span class="pre">Supertype</span></tt> class annotations.</p>
 <p>SIP also allows the default meta-type and super-type to be changed for a module
-using the <a class="reference external" href="directives.html#directive-%DefaultMetatype"><tt class="xref docutils literal"><span class="pre">%DefaultMetatype</span></tt></a> and <a class="reference external" href="directives.html#directive-%DefaultSupertype"><tt class="xref docutils literal"><span class="pre">%DefaultSupertype</span></tt></a>
+using the <a class="reference internal" href="directives.html#directive-%DefaultMetatype"><tt class="xref std std-directive docutils literal"><span class="pre">%DefaultMetatype</span></tt></a> and <a class="reference internal" href="directives.html#directive-%DefaultSupertype"><tt class="xref std std-directive docutils literal"><span class="pre">%DefaultSupertype</span></tt></a>
 directives.  Unlike the default super-type, the default meta-type is inherited
 by importing modules.</p>
 <p>If you want to use your own meta-type or super-type then they must be
 sub-classed from one of the SIP provided types.  Your types must be registered
-using <a title="sipRegisterPyType" class="reference external" href="c_api.html#sipRegisterPyType"><tt class="xref docutils literal"><span class="pre">sipRegisterPyType()</span></tt></a>.  This is normally done in code specified
-using the <a class="reference external" href="directives.html#directive-%InitialisationCode"><tt class="xref docutils literal"><span class="pre">%InitialisationCode</span></tt></a> directive.</p>
-<p>As an example, PyQt4 uses <a class="reference external" href="directives.html#directive-%DefaultMetatype"><tt class="xref docutils literal"><span class="pre">%DefaultMetatype</span></tt></a> to specify a new
+using <a class="reference internal" href="c_api.html#sipRegisterPyType" title="sipRegisterPyType"><tt class="xref c c-func docutils literal"><span class="pre">sipRegisterPyType()</span></tt></a>.  This is normally done in code specified
+using the <a class="reference internal" href="directives.html#directive-%InitialisationCode"><tt class="xref std std-directive docutils literal"><span class="pre">%InitialisationCode</span></tt></a> directive.</p>
+<p>As an example, PyQt4 uses <a class="reference internal" href="directives.html#directive-%DefaultMetatype"><tt class="xref std std-directive docutils literal"><span class="pre">%DefaultMetatype</span></tt></a> to specify a new
 meta-type that handles the interaction with Qt&#8217;s own meta-type system.  It also
-uses <a class="reference external" href="directives.html#directive-%DefaultSupertype"><tt class="xref docutils literal"><span class="pre">%DefaultSupertype</span></tt></a> to specify that the smaller
-<a title="sip.simplewrapper" class="reference external" href="python_api.html#sip.simplewrapper"><tt class="xref docutils literal"><span class="pre">sip.simplewrapper</span></tt></a> super-type is normally used.  Finally it uses
-<a class="reference external" href="annotations.html#canno-Supertype"><tt class="xref docutils literal"><span class="pre">Supertype</span></tt></a> as an annotation of the <tt class="docutils literal"><span class="pre">QObject</span></tt> class to override the
-default and use <a title="sip.wrapper" class="reference external" href="python_api.html#sip.wrapper"><tt class="xref docutils literal"><span class="pre">sip.wrapper</span></tt></a> as the super-type so that the parent/child
+uses <a class="reference internal" href="directives.html#directive-%DefaultSupertype"><tt class="xref std std-directive docutils literal"><span class="pre">%DefaultSupertype</span></tt></a> to specify that the smaller
+<a class="reference internal" href="python_api.html#sip.simplewrapper" title="sip.simplewrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.simplewrapper</span></tt></a> super-type is normally used.  Finally it uses
+<tt class="xref std std-canno docutils literal"><span class="pre">Supertype</span></tt> as an annotation of the <tt class="docutils literal"><span class="pre">QObject</span></tt> class to override the
+default and use <a class="reference internal" href="python_api.html#sip.wrapper" title="sip.wrapper"><tt class="xref py py-class docutils literal"><span class="pre">sip.wrapper</span></tt></a> as the super-type so that the parent/child
 relationships of <tt class="docutils literal"><span class="pre">QObject</span></tt> instances are properly maintained.</p>
 </div>
 <div class="section" id="lazy-type-attributes">
@@ -553,7 +556,7 @@ start up time when used to wrap large libraries with hundreds of classes and
 tens of thousands of attributes.</p>
 <p>SIP allows you to extend the handling of lazy attributes to your own attribute
 types by allowing you to register an attribute getter handler (using
-<a title="sipRegisterAttributeGetter" class="reference external" href="c_api.html#sipRegisterAttributeGetter"><tt class="xref docutils literal"><span class="pre">sipRegisterAttributeGetter()</span></tt></a>).  This will be called just before a
+<a class="reference internal" href="c_api.html#sipRegisterAttributeGetter" title="sipRegisterAttributeGetter"><tt class="xref c c-func docutils literal"><span class="pre">sipRegisterAttributeGetter()</span></tt></a>).  This will be called just before a
 type&#8217;s dictionary is accessed for the first time.</p>
 </div>
 <div class="section" id="support-for-python-s-buffer-interface">
@@ -570,14 +573,14 @@ ignored.</p>
 Python&#8217;s C API includes support for converting between unicode objects and wide
 character strings and arrays.  When converting from a unicode object to wide
 characters SIP creates the string or array on the heap (using memory allocated
-using <a title="sipMalloc" class="reference external" href="c_api.html#sipMalloc"><tt class="xref docutils literal"><span class="pre">sipMalloc()</span></tt></a>).  This then raises the problem of how this memory
+using <a class="reference internal" href="c_api.html#sipMalloc" title="sipMalloc"><tt class="xref c c-func docutils literal"><span class="pre">sipMalloc()</span></tt></a>).  This then raises the problem of how this memory
 is subsequently freed.</p>
 <p>The following describes how SIP handles this memory in the different situations
 where this is an issue.</p>
 <blockquote>
 <ul class="simple">
 <li>When a wide string or array is passed to a function or method then the
-memory is freed (using <a title="sipFree" class="reference external" href="c_api.html#sipFree"><tt class="xref docutils literal"><span class="pre">sipFree()</span></tt></a>) after than function or method
+memory is freed (using <a class="reference internal" href="c_api.html#sipFree" title="sipFree"><tt class="xref c c-func docutils literal"><span class="pre">sipFree()</span></tt></a>) after than function or method
 returns.</li>
 <li>When a wide string or array is returned from a virtual method then SIP
 does not free the memory until the next time the method is called.</li>
@@ -597,22 +600,22 @@ SIP provides ways of specifying when the GIL is released and acquired to
 ensure that locking problems can be avoided.</p>
 <p>SIP always ensures that the GIL is acquired before making calls to the Python
 API.  By default SIP does not release the GIL when making calls to the C/C++
-library being wrapped.  The <a class="reference external" href="annotations.html#fanno-ReleaseGIL"><tt class="xref docutils literal"><span class="pre">ReleaseGIL</span></tt></a> annotation can be used to
+library being wrapped.  The <tt class="xref std std-fanno docutils literal"><span class="pre">ReleaseGIL</span></tt> annotation can be used to
 override this behaviour when required.</p>
-<p>If SIP is given the <a class="reference external" href="command_line.html#cmdoption-sip-g"><em class="xref">-g</em></a> command line option then the default
+<p>If SIP is given the <a class="reference internal" href="command_line.html#cmdoption-sip-g"><em class="xref std std-option">-g</em></a> command line option then the default
 behaviour is changed and SIP releases the GIL every time is makes calls to the
-C/C++ library being wrapped.  The <a class="reference external" href="annotations.html#fanno-HoldGIL"><tt class="xref docutils literal"><span class="pre">HoldGIL</span></tt></a> annotation can be used to
+C/C++ library being wrapped.  The <tt class="xref std std-fanno docutils literal"><span class="pre">HoldGIL</span></tt> annotation can be used to
 override this behaviour when required.</p>
 </div>
 <div class="section" id="managing-incompatible-apis">
 <span id="ref-incompat-apis"></span><h2>Managing Incompatible APIs<a class="headerlink" href="#managing-incompatible-apis" title="Permalink to this headline">¶</a></h2>
-<p>
+<p class="versionadded">
 <span class="versionmodified">New in version 4.9.</span></p>
 <p>Sometimes it is necessary to change the way something is wrapped in a way that
 introduces an incompatibility.  For example a new feature of Python may
 suggest that something may be wrapped in a different way to exploit that
 feature.</p>
-<p>SIP&#8217;s <a class="reference external" href="directives.html#directive-%Feature"><tt class="xref docutils literal"><span class="pre">%Feature</span></tt></a> directive could be used to provide two different
+<p>SIP&#8217;s <a class="reference internal" href="directives.html#directive-%Feature"><tt class="xref std std-directive docutils literal"><span class="pre">%Feature</span></tt></a> directive could be used to provide two different
 implementations.  However this would mean that the choice between the two
 implementations would have to be made when building the generated module
 potentially causing all sorts of deployment problems.  It may also require
@@ -623,14 +626,14 @@ their behaviour accordingly.</p>
 application at run-time.  It is then up to the application developer how they
 want to manage the migration from the old API to the new, incompatible API.</p>
 <p>This support is implemented in three parts.</p>
-<p>Firstly the <a class="reference external" href="directives.html#directive-%API"><tt class="xref docutils literal"><span class="pre">%API</span></tt></a> directive is used to define the name of an API
+<p>Firstly the <a class="reference internal" href="directives.html#directive-%API"><tt class="xref std std-directive docutils literal"><span class="pre">%API</span></tt></a> directive is used to define the name of an API
 and its default version number.  The default version number is the one used if
 an application doesn&#8217;t explicitly set the version number to use.</p>
-<p>Secondly the <a class="reference external" href="annotations.html#canno-API"><tt class="xref docutils literal"><span class="pre">API</span> <span class="pre">class</span></tt></a>, <a class="reference external" href="annotations.html#manno-API"><tt class="xref docutils literal"><span class="pre">mapped</span> <span class="pre">type</span></tt></a> or
-<a class="reference external" href="annotations.html#fanno-API"><tt class="xref docutils literal"><span class="pre">function</span></tt></a> annotation is applied accordingly to specify the API
+<p>Secondly the <tt class="xref std std-canno docutils literal"><span class="pre">API</span> <span class="pre">class</span></tt>, <tt class="xref std std-manno docutils literal"><span class="pre">mapped</span> <span class="pre">type</span></tt> or
+<tt class="xref std std-fanno docutils literal"><span class="pre">function</span></tt> annotation is applied accordingly to specify the API
 and range of version numbers that a particular class, mapped type or function
 implementation should be enabled for.</p>
-<p>Finally the application calls <a title="sip.setapi" class="reference external" href="python_api.html#sip.setapi"><tt class="xref docutils literal"><span class="pre">sip.setapi()</span></tt></a> to specify the version number
+<p>Finally the application calls <a class="reference internal" href="python_api.html#sip.setapi" title="sip.setapi"><tt class="xref py py-func docutils literal"><span class="pre">sip.setapi()</span></tt></a> to specify the version number
 of the API that should be enabled.  This call must be made before any module
 that has multiple implementations is imported for the first time.</p>
 <p>Note this mechanism is not intended as a way or providing equally valid
@@ -660,7 +663,7 @@ instead as might be expected.</p>
 </div>
 <div class="section" id="building-a-private-copy-of-the-sip-module">
 <span id="ref-private-sip"></span><h2>Building a Private Copy of the <tt class="docutils literal"><span class="pre">sip</span></tt> Module<a class="headerlink" href="#building-a-private-copy-of-the-sip-module" title="Permalink to this headline">¶</a></h2>
-<p>
+<p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
 <p>The <tt class="docutils literal"><span class="pre">sip</span></tt> module is intended to be be used by all the SIP generated modules
 of a particular Python installation.  For example PyQt3 and PyQt4 are
@@ -670,11 +673,11 @@ compatible version of SIP.  If you do not have complete control over the
 Python installation then this may be difficult or even impossible to achieve.</p>
 <p>To get around this problem you can build a private copy of the <tt class="docutils literal"><span class="pre">sip</span></tt> module
 that has a different name and/or is placed in a different Python package.  To
-do this you use the <a class="reference external" href="installation.html#cmdoption-configure.py--sip-module"><em class="xref">--sip-module</em></a> option
+do this you use the <a class="reference internal" href="installation.html#cmdoption-configure.py--sip-module"><em class="xref std std-option">--sip-module</em></a> option
 to specify the name (optionally including a package name) of your private copy.</p>
 <p>As well as building the private copy of the module, the version of the
 <tt class="docutils literal"><span class="pre">sip.h</span></tt> header file will also be specific to the private copy.  You will
-probably also want to use the <a class="reference external" href="installation.html#cmdoption-configure.py-e"><em class="xref">--incdir</em></a> option to
+probably also want to use the <a class="reference internal" href="installation.html#cmdoption-configure.py-e"><em class="xref std std-option">--incdir</em></a> option to
 specify the directory where the header file will be installed to avoid
 overwriting a copy of the default version that might already be installed.</p>
 <p>When building your generated modules you must ensure that they <tt class="docutils literal"><span class="pre">#include</span></tt> the
@@ -691,43 +694,43 @@ private copy of <tt class="docutils literal"><span class="pre">sip.h</span></tt>
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
             </a></p>
-            <h3><a href="index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">Using SIP</a><ul>
-<li><a class="reference external" href="#a-simple-c-example">A Simple C++ Example</a></li>
-<li><a class="reference external" href="#id7">A Simple C Example</a></li>
-<li><a class="reference external" href="#a-more-complex-c-example">A More Complex C++ Example</a></li>
-<li><a class="reference external" href="#ownership-of-objects">Ownership of Objects</a></li>
-<li><a class="reference external" href="#types-and-meta-types">Types and Meta-types</a></li>
-<li><a class="reference external" href="#lazy-type-attributes">Lazy Type Attributes</a></li>
-<li><a class="reference external" href="#support-for-python-s-buffer-interface">Support for Python&#8217;s Buffer Interface</a></li>
-<li><a class="reference external" href="#support-for-wide-characters">Support for Wide Characters</a></li>
-<li><a class="reference external" href="#the-python-global-interpreter-lock">The Python Global Interpreter Lock</a></li>
-<li><a class="reference external" href="#managing-incompatible-apis">Managing Incompatible APIs</a></li>
-<li><a class="reference external" href="#building-a-private-copy-of-the-sip-module">Building a Private Copy of the <tt class="docutils literal"><span class="pre">sip</span></tt> Module</a></li>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using SIP</a><ul>
+<li><a class="reference internal" href="#a-simple-c-example">A Simple C++ Example</a></li>
+<li><a class="reference internal" href="#id7">A Simple C Example</a></li>
+<li><a class="reference internal" href="#a-more-complex-c-example">A More Complex C++ Example</a></li>
+<li><a class="reference internal" href="#ownership-of-objects">Ownership of Objects</a></li>
+<li><a class="reference internal" href="#types-and-meta-types">Types and Meta-types</a></li>
+<li><a class="reference internal" href="#lazy-type-attributes">Lazy Type Attributes</a></li>
+<li><a class="reference internal" href="#support-for-python-s-buffer-interface">Support for Python&#8217;s Buffer Interface</a></li>
+<li><a class="reference internal" href="#support-for-wide-characters">Support for Wide Characters</a></li>
+<li><a class="reference internal" href="#the-python-global-interpreter-lock">The Python Global Interpreter Lock</a></li>
+<li><a class="reference internal" href="#managing-incompatible-apis">Managing Incompatible APIs</a></li>
+<li><a class="reference internal" href="#building-a-private-copy-of-the-sip-module">Building a Private Copy of the <tt class="docutils literal"><span class="pre">sip</span></tt> Module</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="installation.html"
-                                  title="previous chapter">Installation</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="command_line.html"
-                                  title="next chapter">The SIP Command Line</a></p>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="command_line.html"
+                        title="next chapter">The SIP Command Line</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -739,7 +742,7 @@ private copy of <tt class="docutils literal"><span class="pre">sip.h</span></tt>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="command_line.html" title="The SIP Command Line"
@@ -747,12 +750,12 @@ private copy of <tt class="docutils literal"><span class="pre">sip.h</span></tt>
         <li class="right" >
           <a href="installation.html" title="Installation"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
+        &copy; Copyright 2011 Riverbank Computing Limited.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
     </div>
   </body>
 </html>

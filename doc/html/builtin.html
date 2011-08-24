@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,22 +7,23 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Builtin Modules and Custom Interpreters &mdash; SIP 4.12.3 Reference Guide</title>
+    <title>Builtin Modules and Custom Interpreters &mdash; SIP 4.12.4 Reference Guide</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.12.3',
-        COLLAPSE_MODINDEX: false,
+        VERSION:     '4.12.4',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.12.3 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.12.4 Reference Guide" href="index.html" />
     <link rel="prev" title="Building Your Extension with distutils" href="distutils.html" /> 
   </head>
   <body>
@@ -31,12 +34,12 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="distutils.html" title="Building Your Extension with distutils"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -57,7 +60,7 @@ normal.  (Note that, because the module is now a static library, you will not
 be able to import it.)</p>
 <p>To build a module you have created for your own library you must modify your
 own configuration script to pass a non-zero value as the <tt class="docutils literal"><span class="pre">static</span></tt> argument
-of the <tt class="docutils literal"><span class="pre">__init__()</span></tt> method of the <a title="sipconfig.ModuleMakefile" class="reference external" href="build_system.html#sipconfig.ModuleMakefile"><tt class="xref docutils literal"><span class="pre">sipconfig.ModuleMakefile</span></tt></a> class (or
+of the <tt class="docutils literal"><span class="pre">__init__()</span></tt> method of the <a class="reference internal" href="build_system.html#sipconfig.ModuleMakefile" title="sipconfig.ModuleMakefile"><tt class="xref py py-class docutils literal"><span class="pre">sipconfig.ModuleMakefile</span></tt></a> class (or
 any derived class you have created).  Normally you would make this configurable
 using a command line option in the same way that SIP&#8217;s <tt class="docutils literal"><span class="pre">configure.py</span></tt> handles
 it.</p>
@@ -99,22 +102,22 @@ perhaps to protect a proprietary API, then take a look at the
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
             </a></p>
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="distutils.html"
-                                  title="previous chapter">Building Your Extension with distutils</a></p>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="distutils.html"
+                        title="previous chapter">Building Your Extension with distutils</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -126,17 +129,17 @@ perhaps to protect a proprietary API, then take a look at the
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="distutils.html" title="Building Your Extension with distutils"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
+        &copy; Copyright 2011 Riverbank Computing Limited.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
     </div>
   </body>
 </html>
