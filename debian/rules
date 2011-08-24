@@ -161,7 +161,6 @@ endif
 
 # Build architecture independant packages using the common target.
 binary-indep: 
-	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
 
 # Build architecture dependant packages using the common target.
 binary-arch: install-arch
