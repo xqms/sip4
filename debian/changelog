@@ -1,3 +1,14 @@
+sip4 (4.12.4-1) unstable; urgency=low
+
+  * Team upload
+  * New upstream release
+  * Remove obsolete debian/source/lintian-overrides
+  * Fix typo in last changelog entry
+  * Replace hack in debian/rules with --no-dbg-cleaning and bump minimun
+    python version to 2.6.7-3~
+
+ -- Scott Kitterman <scott@kitterman.com>  Wed, 24 Aug 2011 10:22:09 -0400
+
 sip4 (4.12.3-1) unstable; urgency=low
 
   * Team upload
@@ -10,7 +21,7 @@ sip4 (4.12.3-1) unstable; urgency=low
     - Drop python-support build-depends
   * Bump standards version to 3.9.2 without further change
   * Remove Bernd Zeimetz from Uploaders at his request
-    - Thanks to bzed for all his work on the pacakge
+    - Thanks to bzed for all his work on the package
 
  -- Scott Kitterman <scott@kitterman.com>  Fri, 29 Jul 2011 19:24:24 -0400
 
