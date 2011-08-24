@@ -1,3 +1,0 @@
-# overriden since this is a transition package, and the depend pulls in the new
-# package instead of the old one
-sip4-qt3 source: dbg-package-missing-depends python-sip4-dbg
