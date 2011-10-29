@@ -1,3 +1,12 @@
+sip4 (4.13-1) unstable; urgency=low
+
+  * Team upload
+  * New upstream release
+  * Use --no-dbg-cleaning for python3 too
+  * Add build-arch: build and build-indep: build to debian/rules
+
+ -- Scott Kitterman <scott@kitterman.com>  Sat, 29 Oct 2011 11:50:01 -0400
+
 sip4 (4.12.4-1) unstable; urgency=low
 
   * Team upload
