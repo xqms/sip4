@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Annotations &mdash; SIP 4.12.4 Reference Guide</title>
+    <title>Annotations &mdash; SIP 4.13 Reference Guide</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.12.4',
+        VERSION:     '4.13',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.12.4 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.13 Reference Guide" href="index.html" />
     <link rel="next" title="C API for Handwritten Code" href="c_api.html" />
     <link rel="prev" title="Directives" href="directives.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="directives.html" title="Directives"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -109,9 +109,9 @@ annotations, or annotations used out of their correct context.</p>
 <dt id="argument-annotation-AllowNone">
 <tt class="descname">AllowNone</tt><a class="headerlink" href="#argument-annotation-AllowNone" title="Permalink to this definition">¶</a></dt>
 <dd><p>This boolean annotation specifies that the value of the corresponding
-argument (which should be either <tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYCALLABLE</span></tt>,
-<tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYDICT</span></tt>, <tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYLIST</span></tt>, <tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYSLICE</span></tt>,
-<tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTUPLE</span></tt> or <tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTYPE</span></tt>) may be <tt class="xref docutils literal"><span class="pre">None</span></tt>.</p>
+argument (which should be either <a class="reference internal" href="specification_files.html#sip-type-SIP_PYCALLABLE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYCALLABLE</span></tt></a>,
+<a class="reference internal" href="specification_files.html#sip-type-SIP_PYDICT"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYDICT</span></tt></a>, <a class="reference internal" href="specification_files.html#sip-type-SIP_PYLIST"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYLIST</span></tt></a>, <a class="reference internal" href="specification_files.html#sip-type-SIP_PYSLICE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYSLICE</span></tt></a>,
+<a class="reference internal" href="specification_files.html#sip-type-SIP_PYTUPLE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTUPLE</span></tt></a> or <a class="reference internal" href="specification_files.html#sip-type-SIP_PYTYPE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTYPE</span></tt></a>) may be <tt class="xref docutils literal"><span class="pre">None</span></tt>.</p>
 </dd></dl>
 
 <dl class="argument-annotation">
@@ -121,9 +121,9 @@ argument (which should be either <tt class="xref std std-stype docutils literal"
 to an array.</p>
 <p>The argument should be either a pointer to a wrapped type, a <tt class="docutils literal"><span class="pre">char</span> <span class="pre">*</span></tt> or
 a <tt class="docutils literal"><span class="pre">unsigned</span> <span class="pre">char</span> <span class="pre">*</span></tt>.  If the argument is a character array then the
-annotation also implies the <tt class="xref std std-aanno docutils literal"><span class="pre">Encoding</span></tt> annotation with an encoding
+annotation also implies the <a class="reference internal" href="#argument-annotation-Encoding"><tt class="xref std std-aanno docutils literal"><span class="pre">Encoding</span></tt></a> annotation with an encoding
 of <tt class="docutils literal"><span class="pre">&quot;None&quot;</span></tt>.</p>
-<p>There must be a corresponding argument with the <tt class="xref std std-aanno docutils literal"><span class="pre">ArraySize</span></tt>
+<p>There must be a corresponding argument with the <a class="reference internal" href="#argument-annotation-ArraySize"><tt class="xref std std-aanno docutils literal"><span class="pre">ArraySize</span></tt></a>
 annotation specified.  The annotation may only be specified once in a list
 of arguments.</p>
 </dd></dl>
@@ -134,7 +134,7 @@ of arguments.</p>
 <dd><p>This boolean annotation specifies that the corresponding argument (which
 should be either <tt class="docutils literal"><span class="pre">short</span></tt>, <tt class="docutils literal"><span class="pre">unsigned</span> <span class="pre">short</span></tt>, <tt class="docutils literal"><span class="pre">int</span></tt>, <tt class="docutils literal"><span class="pre">unsigned</span></tt>,
 <tt class="docutils literal"><span class="pre">long</span></tt> or <tt class="docutils literal"><span class="pre">unsigned</span> <span class="pre">long</span></tt>) refers to the size of an array.  There must
-be a corresponding argument with the <tt class="xref std std-aanno docutils literal"><span class="pre">Array</span></tt> annotation specified.
+be a corresponding argument with the <a class="reference internal" href="#argument-annotation-Array"><tt class="xref std std-aanno docutils literal"><span class="pre">Array</span></tt></a> annotation specified.
 The annotation may only be specified once in a list of arguments.</p>
 </dd></dl>
 
@@ -175,7 +175,7 @@ void foo(int);</pre>
 <span class="versionmodified">New in version 4.10.</span></p>
 <p>This string annotation specifies the type of the argument as it will appear
 in any generated docstrings.  It is usually used with arguments of type
-<tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYOBJECT</span></tt> to provide a more specific type.</p>
+<a class="reference internal" href="specification_files.html#sip-type-SIP_PYOBJECT"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYOBJECT</span></tt></a> to provide a more specific type.</p>
 </dd></dl>
 
 <dl class="argument-annotation">
@@ -220,12 +220,12 @@ pointer to the Python object that wraps the argument.</p>
 <dd><p>This boolean annotation is used to specify that the corresponding argument
 (which should be a pointer type) is used to pass a value to the function.</p>
 <p>For pointers to wrapped C structures or C++ class instances, <tt class="docutils literal"><span class="pre">char</span> <span class="pre">*</span></tt> and
-<tt class="docutils literal"><span class="pre">unsigned</span> <span class="pre">char</span> <span class="pre">*</span></tt> then this annotation is assumed unless the <tt class="xref std std-aanno docutils literal"><span class="pre">Out</span></tt>
+<tt class="docutils literal"><span class="pre">unsigned</span> <span class="pre">char</span> <span class="pre">*</span></tt> then this annotation is assumed unless the <a class="reference internal" href="#argument-annotation-Out"><tt class="xref std std-aanno docutils literal"><span class="pre">Out</span></tt></a>
 annotation is specified.</p>
 <p>For pointers to other types then this annotation must be explicitly
 specified if required.  The argument will be dereferenced to obtain the
 actual value.</p>
-<p>Both <tt class="xref std std-aanno docutils literal"><span class="pre">In</span></tt> and <tt class="xref std std-aanno docutils literal"><span class="pre">Out</span></tt> may be specified for the same argument.</p>
+<p>Both <a class="reference internal" href="#argument-annotation-In"><tt class="xref std std-aanno docutils literal"><span class="pre">In</span></tt></a> and <a class="reference internal" href="#argument-annotation-Out"><tt class="xref std std-aanno docutils literal"><span class="pre">Out</span></tt></a> may be specified for the same argument.</p>
 </dd></dl>
 
 <dl class="argument-annotation">
@@ -266,8 +266,8 @@ as an element of a tuple.</p>
 <tt class="docutils literal"><span class="pre">unsigned</span> <span class="pre">char</span> <span class="pre">*</span></tt> then this annotation must be explicitly specified if
 required.</p>
 <p>For pointers to other types then this annotation is assumed unless the
-<tt class="xref std std-aanno docutils literal"><span class="pre">In</span></tt> annotation is specified.</p>
-<p>Both <tt class="xref std std-aanno docutils literal"><span class="pre">In</span></tt> and <tt class="xref std std-aanno docutils literal"><span class="pre">Out</span></tt> may be specified for the same argument.</p>
+<a class="reference internal" href="#argument-annotation-In"><tt class="xref std std-aanno docutils literal"><span class="pre">In</span></tt></a> annotation is specified.</p>
+<p>Both <a class="reference internal" href="#argument-annotation-In"><tt class="xref std std-aanno docutils literal"><span class="pre">In</span></tt></a> and <a class="reference internal" href="#argument-annotation-Out"><tt class="xref std std-aanno docutils literal"><span class="pre">Out</span></tt></a> may be specified for the same argument.</p>
 </dd></dl>
 
 <dl class="argument-annotation">
@@ -294,7 +294,7 @@ buffer protocol.</p>
 <dt id="argument-annotation-SingleShot">
 <tt class="descname">SingleShot</tt><a class="headerlink" href="#argument-annotation-SingleShot" title="Permalink to this definition">¶</a></dt>
 <dd><p>This boolean annotation is used only with arguments of type
-<tt class="xref std std-stype docutils literal"><span class="pre">SIP_RXOBJ_CON</span></tt> to specify that the signal connected to the slot
+<a class="reference internal" href="specification_files.html#sip-type-SIP_RXOBJ_CON"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_RXOBJ_CON</span></tt></a> to specify that the signal connected to the slot
 will only ever be emitted once.  This prevents a certain class of memory
 leaks.</p>
 </dd></dl>
@@ -307,6 +307,9 @@ corresponding argument (which should be a wrapped C structure or C++ class
 instance) is transferred from Python to C++.  In addition, if the argument
 is of a class method, then it is associated with the class instance with
 regard to the cyclic garbage collector.</p>
+<p>If the annotation is used with the <a class="reference internal" href="#argument-annotation-Array"><tt class="xref std std-aanno docutils literal"><span class="pre">Array</span></tt></a> annotation then the
+array of pointers to the sequence of C structures or C++ class instances
+that is created on the heap is not automatically freed.</p>
 <p>See <a class="reference internal" href="using.html#ref-object-ownership"><em>Ownership of Objects</em></a> for more detail.</p>
 </dd></dl>
 
@@ -395,7 +398,7 @@ destructors in any desired order.</p>
 
 <dl class="function">
 <dt id="sipDelayedDtors">
-void <tt class="descname">sipDelayedDtors</tt><big>(</big>const <a class="reference internal" href="#sipDelayedDtor" title="sipDelayedDtor">sipDelayedDtor</a><em> *dd_list</em><big>)</big><a class="headerlink" href="#sipDelayedDtors" title="Permalink to this definition">¶</a></dt>
+void <tt class="descname">sipDelayedDtors</tt><big>(</big>const <a class="reference internal" href="#sipDelayedDtor" title="sipDelayedDtor">sipDelayedDtor</a><em>&nbsp;*dd_list</em><big>)</big><a class="headerlink" href="#sipDelayedDtors" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -414,29 +417,29 @@ void <tt class="descname">sipDelayedDtors</tt><big>(</big>const <a class="refere
 <tt class="descname">sipDelayedDtor</tt><a class="headerlink" href="#sipDelayedDtor" title="Permalink to this definition">¶</a></dt>
 <dd><p>This structure describes a particular delayed destructor.</p>
 <dl class="member">
-<dt id="dd_name">
-const char *<tt class="descname">dd_name</tt><a class="headerlink" href="#dd_name" title="Permalink to this definition">¶</a></dt>
+<dt id="sipDelayedDtor.dd_name">
+const char *<tt class="descname">dd_name</tt><a class="headerlink" href="#sipDelayedDtor.dd_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the name of the class excluding any package or module name.</p>
 </dd></dl>
 
 <dl class="member">
-<dt id="dd_ptr">
-void *<tt class="descname">dd_ptr</tt><a class="headerlink" href="#dd_ptr" title="Permalink to this definition">¶</a></dt>
+<dt id="sipDelayedDtor.dd_ptr">
+void *<tt class="descname">dd_ptr</tt><a class="headerlink" href="#sipDelayedDtor.dd_ptr" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the address of the C or C++ instance to be destroyed.  It&#8217;s
-exact type depends on the value of <a class="reference internal" href="#dd_isderived" title="dd_isderived"><tt class="xref c c-member docutils literal"><span class="pre">dd_isderived</span></tt></a>.</p>
+exact type depends on the value of <tt class="xref c c-member docutils literal"><span class="pre">dd_isderived</span></tt>.</p>
 </dd></dl>
 
 <dl class="member">
-<dt id="dd_isderived">
-int <tt class="descname">dd_isderived</tt><a class="headerlink" href="#dd_isderived" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is non-zero if the type of <a class="reference internal" href="#dd_ptr" title="dd_ptr"><tt class="xref c c-member docutils literal"><span class="pre">dd_ptr</span></tt></a> is actually the
+<dt id="sipDelayedDtor.dd_isderived">
+int <tt class="descname">dd_isderived</tt><a class="headerlink" href="#sipDelayedDtor.dd_isderived" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is non-zero if the type of <tt class="xref c c-member docutils literal"><span class="pre">dd_ptr</span></tt> is actually the
 generated derived class.  This allows the correct destructor to be
 called.  See <a class="reference internal" href="c_api.html#ref-derived-classes"><em>Generated Derived Classes</em></a>.</p>
 </dd></dl>
 
 <dl class="member">
-<dt id="dd_next">
-<a class="reference internal" href="#sipDelayedDtor" title="sipDelayedDtor">sipDelayedDtor</a> *<tt class="descname">dd_next</tt><a class="headerlink" href="#dd_next" title="Permalink to this definition">¶</a></dt>
+<dt id="sipDelayedDtor.dd_next">
+<a class="reference internal" href="#sipDelayedDtor" title="sipDelayedDtor">sipDelayedDtor</a> *<tt class="descname">dd_next</tt><a class="headerlink" href="#sipDelayedDtor.dd_next" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the address of the next entry in the list or zero if this is
 the last one.</p>
 </dd></dl>
@@ -530,7 +533,7 @@ different ranges of version numbers then those ranges must not overlap.</p>
 <tt class="descname">DocType</tt><a class="headerlink" href="#mapped-type-annotation-DocType" title="Permalink to this definition">¶</a></dt>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.10.</span></p>
-<p>This string annotation serves the same purpose as the <tt class="xref std std-aanno docutils literal"><span class="pre">DocType</span></tt>
+<p>This string annotation serves the same purpose as the <a class="reference internal" href="#argument-annotation-DocType"><tt class="xref std std-aanno docutils literal"><span class="pre">DocType</span></tt></a>
 argument annotation when applied to the mapped type being defined.</p>
 </dd></dl>
 
@@ -632,7 +635,7 @@ function is called.</p>
 <tt class="descname">DocType</tt><a class="headerlink" href="#function-annotation-DocType" title="Permalink to this definition">¶</a></dt>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.10.</span></p>
-<p>This string annotation serves the same purpose as the <tt class="xref std std-aanno docutils literal"><span class="pre">DocType</span></tt>
+<p>This string annotation serves the same purpose as the <a class="reference internal" href="#argument-annotation-DocType"><tt class="xref std std-aanno docutils literal"><span class="pre">DocType</span></tt></a>
 argument annotation when applied to the type of the value returned by the
 function.</p>
 </dd></dl>
@@ -640,7 +643,7 @@ function.</p>
 <dl class="function-annotation">
 <dt id="function-annotation-Encoding">
 <tt class="descname">Encoding</tt><a class="headerlink" href="#function-annotation-Encoding" title="Permalink to this definition">¶</a></dt>
-<dd><p>This string annotation serves the same purpose as the <tt class="xref std std-aanno docutils literal"><span class="pre">Encoding</span></tt>
+<dd><p>This string annotation serves the same purpose as the <a class="reference internal" href="#argument-annotation-Encoding"><tt class="xref std std-aanno docutils literal"><span class="pre">Encoding</span></tt></a>
 argument annotation when applied to the type of the value returned by the
 function.</p>
 </dd></dl>
@@ -659,7 +662,7 @@ created instance and is owned by Python.</p>
 <tt class="descname">HoldGIL</tt><a class="headerlink" href="#function-annotation-HoldGIL" title="Permalink to this definition">¶</a></dt>
 <dd><p>This boolean annotation specifies that the Python Global Interpreter Lock
 (GIL) is not released before the call to the underlying C or C++ function.
-See <a class="reference internal" href="using.html#ref-gil"><em>The Python Global Interpreter Lock</em></a> and the <tt class="xref std std-fanno docutils literal"><span class="pre">ReleaseGIL</span></tt> annotation.</p>
+See <a class="reference internal" href="using.html#ref-gil"><em>The Python Global Interpreter Lock</em></a> and the <a class="reference internal" href="#function-annotation-ReleaseGIL"><tt class="xref std std-fanno docutils literal"><span class="pre">ReleaseGIL</span></tt></a> annotation.</p>
 </dd></dl>
 
 <dl class="function-annotation">
@@ -668,7 +671,7 @@ See <a class="reference internal" href="using.html#ref-gil"><em>The Python Globa
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.12.2.</span></p>
 <p>This optional integer annotation serves the same purpose as the
-<tt class="xref std std-aanno docutils literal"><span class="pre">KeepReference</span></tt> argument annotation when applied to the type of the
+<a class="reference internal" href="#argument-annotation-KeepReference"><tt class="xref std std-aanno docutils literal"><span class="pre">KeepReference</span></tt></a> argument annotation when applied to the type of the
 value returned by the function.</p>
 </dd></dl>
 
@@ -750,7 +753,7 @@ the derived class.</p>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.10.</span></p>
 <p class="deprecated">
-<span class="versionmodified">Deprecated since version 4.12: </span>Use the <tt class="xref std std-fanno docutils literal"><span class="pre">KeywordArgs</span></tt> annotation with a value of <tt class="docutils literal"><span class="pre">&quot;None&quot;</span></tt>.</p>
+<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#function-annotation-KeywordArgs"><tt class="xref std std-fanno docutils literal"><span class="pre">KeywordArgs</span></tt></a> annotation with a value of <tt class="docutils literal"><span class="pre">&quot;None&quot;</span></tt>.</p>
 <p>This boolean annotation specifies that the argument parser generated for
 this function will not support passing the parameters using Python&#8217;s
 keyword argument syntax.  In other words, the argument parser will only
@@ -813,7 +816,7 @@ exceptions) that have the same name in the same C++ scope.</p>
 <tt class="descname">PyInt</tt><a class="headerlink" href="#function-annotation-PyInt" title="Permalink to this definition">¶</a></dt>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
-<p>This boolean annotation serves the same purpose as the <tt class="xref std std-aanno docutils literal"><span class="pre">PyInt</span></tt>
+<p>This boolean annotation serves the same purpose as the <a class="reference internal" href="#argument-annotation-PyInt"><tt class="xref std std-aanno docutils literal"><span class="pre">PyInt</span></tt></a>
 argument annotation when applied to the type of the value returned by the
 function.</p>
 </dd></dl>
@@ -836,7 +839,7 @@ cleared before the function is called.  It is ignored if the
 (GIL) is released before the call to the underlying C or C++ function and
 reacquired afterwards.  It should be used for functions that might block or
 take a significant amount of time to execute.  See <a class="reference internal" href="using.html#ref-gil"><em>The Python Global Interpreter Lock</em></a> and the
-<tt class="xref std std-fanno docutils literal"><span class="pre">HoldGIL</span></tt> annotation.</p>
+<a class="reference internal" href="#function-annotation-HoldGIL"><tt class="xref std std-fanno docutils literal"><span class="pre">HoldGIL</span></tt></a> annotation.</p>
 </dd></dl>
 
 <dl class="function-annotation">
@@ -882,14 +885,14 @@ from Python to C++.</p>
 <tt class="descname">DocType</tt><a class="headerlink" href="#typedef-annotation-DocType" title="Permalink to this definition">¶</a></dt>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.10.</span></p>
-<p>This string annotation serves the same purpose as the <tt class="xref std std-aanno docutils literal"><span class="pre">DocType</span></tt>
+<p>This string annotation serves the same purpose as the <a class="reference internal" href="#argument-annotation-DocType"><tt class="xref std std-aanno docutils literal"><span class="pre">DocType</span></tt></a>
 argument annotation when applied to the mapped type being defined.</p>
 </dd></dl>
 
 <dl class="typedef-annotation">
 <dt id="typedef-annotation-Encoding">
 <tt class="descname">Encoding</tt><a class="headerlink" href="#typedef-annotation-Encoding" title="Permalink to this definition">¶</a></dt>
-<dd><p>This string annotation serves the same purpose as the <tt class="xref std std-aanno docutils literal"><span class="pre">Encoding</span></tt>
+<dd><p>This string annotation serves the same purpose as the <a class="reference internal" href="#argument-annotation-Encoding"><tt class="xref std std-aanno docutils literal"><span class="pre">Encoding</span></tt></a>
 argument annotation when applied to the mapped type being defined.</p>
 </dd></dl>
 
@@ -912,7 +915,7 @@ code instead.</p>
 <tt class="descname">PyInt</tt><a class="headerlink" href="#typedef-annotation-PyInt" title="Permalink to this definition">¶</a></dt>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
-<p>This boolean annotation serves the same purpose as the <tt class="xref std std-aanno docutils literal"><span class="pre">PyInt</span></tt>
+<p>This boolean annotation serves the same purpose as the <a class="reference internal" href="#argument-annotation-PyInt"><tt class="xref std std-aanno docutils literal"><span class="pre">PyInt</span></tt></a>
 argument annotation when applied to the type being defined.</p>
 </dd></dl>
 
@@ -924,14 +927,14 @@ argument annotation when applied to the type being defined.</p>
 <tt class="descname">DocType</tt><a class="headerlink" href="#variable-annotation-DocType" title="Permalink to this definition">¶</a></dt>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.10.</span></p>
-<p>This string annotation serves the same purpose as the <tt class="xref std std-aanno docutils literal"><span class="pre">DocType</span></tt>
+<p>This string annotation serves the same purpose as the <a class="reference internal" href="#argument-annotation-DocType"><tt class="xref std std-aanno docutils literal"><span class="pre">DocType</span></tt></a>
 argument annotation when applied to the type of the variable being defined.</p>
 </dd></dl>
 
 <dl class="variable-annotation">
 <dt id="variable-annotation-Encoding">
 <tt class="descname">Encoding</tt><a class="headerlink" href="#variable-annotation-Encoding" title="Permalink to this definition">¶</a></dt>
-<dd><p>This string annotation serves the same purpose as the <tt class="xref std std-aanno docutils literal"><span class="pre">Encoding</span></tt>
+<dd><p>This string annotation serves the same purpose as the <a class="reference internal" href="#argument-annotation-Encoding"><tt class="xref std std-aanno docutils literal"><span class="pre">Encoding</span></tt></a>
 argument annotation when applied to the type of the variable being defined.</p>
 </dd></dl>
 
@@ -940,7 +943,7 @@ argument annotation when applied to the type of the variable being defined.</p>
 <tt class="descname">PyInt</tt><a class="headerlink" href="#variable-annotation-PyInt" title="Permalink to this definition">¶</a></dt>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
-<p>This boolean annotation serves the same purpose as the <tt class="xref std std-aanno docutils literal"><span class="pre">PyInt</span></tt>
+<p>This boolean annotation serves the same purpose as the <a class="reference internal" href="#argument-annotation-PyInt"><tt class="xref std std-aanno docutils literal"><span class="pre">PyInt</span></tt></a>
 argument annotation when applied to the type of the variable being defined.</p>
 </dd></dl>
 
@@ -1023,12 +1026,12 @@ have the same name in the same C++ scope.</p>
         <li class="right" >
           <a href="directives.html" title="Directives"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

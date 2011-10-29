@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Directives &mdash; SIP 4.12.4 Reference Guide</title>
+    <title>Directives &mdash; SIP 4.13 Reference Guide</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.12.4',
+        VERSION:     '4.13',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.12.4 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.13 Reference Guide" href="index.html" />
     <link rel="next" title="Annotations" href="annotations.html" />
     <link rel="prev" title="SIP Specification Files" href="specification_files.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -542,12 +542,19 @@ different to that of the super-class.  If so, then this must be set to the
 C++ address of the instance when cast (usually using <tt class="docutils literal"><span class="pre">static_cast</span></tt>)
 from the super-class to the sub-class.</dd>
 <dt>const sipTypeDef *sipType</dt>
-<dd>The handwritten code must set this to the SIP generated type structure
+<dd><p class="first">The handwritten code must set this to the SIP generated type structure
 that corresponds to the class instance.  (The type structure for class
 <tt class="docutils literal"><span class="pre">Klass</span></tt> is <tt class="docutils literal"><span class="pre">sipType_Klass</span></tt>.)  If the RTTI of the class instance isn&#8217;t
 recognised then <tt class="docutils literal"><span class="pre">sipType</span></tt> must be set to <tt class="docutils literal"><span class="pre">NULL</span></tt>.  The code doesn&#8217;t
 have to recognise the exact class, only the most specific sub-class that
-it can.</dd>
+it can.</p>
+<p class="last">The code may also set the value to a type that is apparently unrelated to
+the requested type.  If this happens then the whole conversion process is
+started again using the new type as the requested type.  This is typically
+used to deal with classes that have more than one super-class that are
+subject to this conversion process.  It allows the code for one super-class
+to switch to the code for another (more appropriate) super-class.</p>
+</dd>
 <dt>sipWrapperType *sipClass</dt>
 <dd><p class="first deprecated">
 <span class="versionmodified">Deprecated since version 4.8: </span>Use <tt class="docutils literal"><span class="pre">sipType</span></tt> instead.</p>
@@ -637,14 +644,14 @@ returned.</p>
 <p>If <tt class="docutils literal"><span class="pre">sipIsErr</span></tt> is not <tt class="docutils literal"><span class="pre">NULL</span></tt> then a combination of the following flags is
 returned.</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><tt class="xref c c-macro docutils literal"><span class="pre">SIP_TEMPORARY</span></tt> is set to indicate that the returned instance
 is a temporary and should be released to avoid a memory leak.</li>
 <li><tt class="xref c c-macro docutils literal"><span class="pre">SIP_DERIVED_CLASS</span></tt> is set to indicate that the type of the
 returned instance is a derived class.  See
 <a class="reference internal" href="c_api.html#ref-derived-classes"><em>Generated Derived Classes</em></a>.</li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>The following example converts a Python list of <tt class="docutils literal"><span class="pre">QPoint</span></tt> instances to a
 <tt class="docutils literal"><span class="pre">QList&lt;QPoint&gt;</span></tt> instance:</p>
 <div class="highlight-python"><pre>%ConvertToTypeCode
@@ -744,6 +751,23 @@ Copyright (c) 2011 Riverbank Computing Limited
 %End</pre>
 </div>
 <dl class="directive">
+<dt id="directive-%DefaultDocstringFormat">
+<tt class="descname">%DefaultDocstringFormat</tt><a class="headerlink" href="#directive-%DefaultDocstringFormat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="versionadded">
+<span class="versionmodified">New in version 4.13.</span></p>
+<div class="highlight-python"><pre>%DefaultDocstringFormat(name = ["raw" | "deindented"])</pre>
+</div>
+<p>This directive is used to specify the default formatting of docstrings, i.e.
+when the <a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a> directive does not specify an explicit format.</p>
+<p>See the <a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a> directive for an explanation of the different
+formats.  If the directive is not specified then the default format used is
+<tt class="docutils literal"><span class="pre">&quot;raw&quot;</span></tt>.</p>
+<p>For example:</p>
+<div class="highlight-python"><pre>%DefaultDocstringFormat "deindented"</pre>
+</div>
+<dl class="directive">
 <dt id="directive-%DefaultEncoding">
 <tt class="descname">%DefaultEncoding</tt><a class="headerlink" href="#directive-%DefaultEncoding" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -753,7 +777,7 @@ Copyright (c) 2011 Riverbank Computing Limited
 <p>This directive is used to specify the default encoding used for <tt class="docutils literal"><span class="pre">char</span></tt>,
 <tt class="docutils literal"><span class="pre">const</span> <span class="pre">char</span></tt>, <tt class="docutils literal"><span class="pre">char</span> <span class="pre">*</span></tt> or <tt class="docutils literal"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></tt> values.  An encoding of
 <tt class="docutils literal"><span class="pre">&quot;None&quot;</span></tt> means that the value is unencoded.  The default can be overridden
-for a particular value using the <tt class="xref std std-aanno docutils literal"><span class="pre">Encoding</span></tt> annotation.</p>
+for a particular value using the <a class="reference internal" href="annotations.html#argument-annotation-Encoding"><tt class="xref std std-aanno docutils literal"><span class="pre">Encoding</span></tt></a> annotation.</p>
 <p>If the directive is not specified then the default encoding of the last
 imported module is used, if any.</p>
 <p>For example:</p>
@@ -771,7 +795,7 @@ imported module is used, if any.</p>
 meta-type for any C/C++ data type defined in the same module, and by importing
 modules, that doesn&#8217;t have an explicit meta-type.</p>
 <p>If this is not specified then <tt class="docutils literal"><span class="pre">sip.wrappertype</span></tt> is used.</p>
-<p>You can also use the <tt class="xref std std-canno docutils literal"><span class="pre">Metatype</span></tt> class annotation to specify the
+<p>You can also use the <a class="reference internal" href="annotations.html#class-annotation-Metatype"><tt class="xref std std-canno docutils literal"><span class="pre">Metatype</span></tt></a> class annotation to specify the
 meta-type used by a particular C/C++ type.</p>
 <p>See the section <a class="reference internal" href="using.html#ref-types-metatypes"><em>Types and Meta-types</em></a> for more details.</p>
 <p>For example:</p>
@@ -789,7 +813,7 @@ meta-type used by a particular C/C++ type.</p>
 super-type for any C/C++ data type defined in the same module that doesn&#8217;t have
 an explicit super-type.</p>
 <p>If this is not specified then <tt class="docutils literal"><span class="pre">sip.wrapper</span></tt> is used.</p>
-<p>You can also use the <tt class="xref std std-canno docutils literal"><span class="pre">Supertype</span></tt> class annotation to specify the
+<p>You can also use the <a class="reference internal" href="annotations.html#class-annotation-Supertype"><tt class="xref std std-canno docutils literal"><span class="pre">Supertype</span></tt></a> class annotation to specify the
 super-type used by a particular C/C++ type.</p>
 <p>See the section <a class="reference internal" href="using.html#ref-types-metatypes"><em>Types and Meta-types</em></a> for more details.</p>
 <p>For example:</p>
@@ -832,7 +856,7 @@ which it is defined.
 <p class="versionadded">
 <span class="versionmodified">New in version 4.10.</span></p>
 <pre class="literal-block">
-%Docstring
+%Docstring(format = [&#8220;raw&#8221; | &#8220;deindented&#8221;])
     <em>text</em>
 %End
 </pre>
@@ -847,6 +871,15 @@ docstring that describes the Python signature of a function or method overload.
 This means that SIP will generate less informative exceptions (i.e. without a
 full signature) when it fails to match a set of arguments to any function or
 method overload.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 4.13.</span></p>
+<p>The format may either be <tt class="docutils literal"><span class="pre">&quot;raw&quot;</span></tt> or <tt class="docutils literal"><span class="pre">&quot;deindented&quot;</span></tt>.  If it is not specified
+then the value specified by any <a class="reference internal" href="#directive-%DefaultDocstringFormat"><tt class="xref std std-directive docutils literal"><span class="pre">%DefaultDocstringFormat</span></tt></a> directive
+is used.</p>
+<p>If the format is <tt class="docutils literal"><span class="pre">&quot;raw&quot;</span></tt> then the docstring is used as it appears in the
+specification file.</p>
+<p>If the format is <tt class="docutils literal"><span class="pre">&quot;deindented&quot;</span></tt> then any leading spaces common to all
+non-blank lines of the docstring are removed.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>class Klass
 {
@@ -856,8 +889,10 @@ This will be at the start of the class's docstring.
 
 public:
     Klass();
-%Docstring
-This will be appended to the class's docstring.
+%Docstring deindented
+    This will be appended to the class's docstring and will not be indented.
+
+        This will be indented by four spaces.
 %End
 };</pre>
 </div>
@@ -911,7 +946,7 @@ code that converts a reference to the C++ exception to the Python exception.</p>
 <p>In this example we map the standard C++ exception to a new Python exception.
 The new exception is called <tt class="docutils literal"><span class="pre">StdException</span></tt> and is derived from the standard
 Python exception <tt class="docutils literal"><span class="pre">Exception</span></tt>.</p>
-<p>An exception may be annotated with <tt class="xref std std-xanno docutils literal"><span class="pre">Default</span></tt> to specify that it should
+<p>An exception may be annotated with <a class="reference internal" href="annotations.html#exception-annotation-Default"><tt class="xref std std-xanno docutils literal"><span class="pre">Default</span></tt></a> to specify that it should
 be caught by default if there is no <tt class="docutils literal"><span class="pre">throw</span></tt> clause.</p>
 <dl class="directive">
 <dt id="directive-%ExportedDoc">
@@ -1486,7 +1521,7 @@ automatically.</p>
 have been successfully converted from Python objects to their C or C++
 equivalents.  In this case the specified code must not include any <tt class="docutils literal"><span class="pre">return</span></tt>
 statements.</p>
-<p>However if the <tt class="xref std std-fanno docutils literal"><span class="pre">NoArgParser</span></tt> annotation has been used then the specified
+<p>However if the <a class="reference internal" href="annotations.html#function-annotation-NoArgParser"><tt class="xref std std-fanno docutils literal"><span class="pre">NoArgParser</span></tt></a> annotation has been used then the specified
 code is also responsible for parsing the arguments.  No other code is generated
 by SIP and the specified code must include a <tt class="docutils literal"><span class="pre">return</span></tt> statement.</p>
 <p>In the context of a destructor the specified code is embedded in-line in the
@@ -1505,8 +1540,8 @@ Py_END_ALLOW_THREADS</pre>
 <p>If compatibility with SIP v3.x is not required then this is optional but
 should be done if the C++ function might block the current thread or take a
 significant amount of time to execute.  (See <a class="reference internal" href="using.html#ref-gil"><em>The Python Global Interpreter Lock</em></a> and the
-<tt class="xref std std-fanno docutils literal"><span class="pre">ReleaseGIL</span></tt> and <tt class="xref std std-fanno docutils literal"><span class="pre">HoldGIL</span></tt> annotations.)</p>
-<p>If the <tt class="xref std std-fanno docutils literal"><span class="pre">NoArgParser</span></tt> annotation has not been used then the following
+<a class="reference internal" href="annotations.html#function-annotation-ReleaseGIL"><tt class="xref std std-fanno docutils literal"><span class="pre">ReleaseGIL</span></tt></a> and <a class="reference internal" href="annotations.html#function-annotation-HoldGIL"><tt class="xref std std-fanno docutils literal"><span class="pre">HoldGIL</span></tt></a> annotations.)</p>
+<p>If the <a class="reference internal" href="annotations.html#function-annotation-NoArgParser"><tt class="xref std std-fanno docutils literal"><span class="pre">NoArgParser</span></tt></a> annotation has not been used then the following
 variables are made available to the handwritten code:</p>
 <dl class="docutils">
 <dt><em>type</em> a0</dt>
@@ -1518,7 +1553,7 @@ is the same as the type defined in the specification with the following
 exceptions:</p>
 <ul class="simple">
 <li>if the argument is only used to return a value (e.g. it is an <tt class="docutils literal"><span class="pre">int</span> <span class="pre">*</span></tt>
-without an <tt class="xref std std-aanno docutils literal"><span class="pre">In</span></tt> annotation) then the type has one less level of
+without an <a class="reference internal" href="annotations.html#argument-annotation-In"><tt class="xref std std-aanno docutils literal"><span class="pre">In</span></tt></a> annotation) then the type has one less level of
 indirection (e.g. it will be an <tt class="docutils literal"><span class="pre">int</span></tt>)</li>
 <li>if the argument is a structure or class (or a reference or a pointer to a
 structure or class) then <em>type</em> will always be a pointer to the structure
@@ -1527,7 +1562,7 @@ or class.</li>
 <p class="last">Note that handwritten code for destructors never has any arguments.</p>
 </dd>
 <dt>PyObject *a0Wrapper</dt>
-<dd><p class="first">This variable is made available only if the <tt class="xref std std-aanno docutils literal"><span class="pre">GetWrapper</span></tt> annotation
+<dd><p class="first">This variable is made available only if the <a class="reference internal" href="annotations.html#argument-annotation-GetWrapper"><tt class="xref std std-aanno docutils literal"><span class="pre">GetWrapper</span></tt></a> annotation
 is specified for the corresponding argument.  The variable is a pointer to
 the Python object that wraps the argument.</p>
 <p class="last">If <tt class="docutils literal"><span class="pre">use_argument_names</span></tt> has been set in the <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a>
@@ -1596,7 +1631,7 @@ rather than being bound to the method.  In other words, the call was:</p>
 </div>
 </dd>
 </dl>
-<p>If the <tt class="xref std std-fanno docutils literal"><span class="pre">NoArgParser</span></tt> annotation has been used then only the following
+<p>If the <a class="reference internal" href="annotations.html#function-annotation-NoArgParser"><tt class="xref std std-fanno docutils literal"><span class="pre">NoArgParser</span></tt></a> annotation has been used then only the following
 variables are made available to the handwritten code:</p>
 <dl class="docutils">
 <dt>PyObject *sipArgs</dt>
@@ -1679,7 +1714,7 @@ Python.</td></tr>
 attributes.  <tt class="docutils literal"><span class="pre">name</span></tt> may contain periods to specify that the module is part of
 a Python package.</p>
 <p><tt class="docutils literal"><span class="pre">keyword_arguments</span></tt> specifies the default level of support for Python keyword
-arguments.  See the <tt class="xref std std-fanno docutils literal"><span class="pre">KeywordArgs</span></tt> annotation for an explaination of the
+arguments.  See the <a class="reference internal" href="annotations.html#function-annotation-KeywordArgs"><tt class="xref std std-fanno docutils literal"><span class="pre">KeywordArgs</span></tt></a> annotation for an explaination of the
 possible values and their effect.  If it is not specified then the value
 implied by the (deprecated) <a class="reference internal" href="command_line.html#cmdoption-sip-k"><em class="xref std std-option">-k</em></a> command line option is used.</p>
 <p><tt class="docutils literal"><span class="pre">language</span></tt> specifies the implementation language of the library being
@@ -1690,7 +1725,7 @@ the function or method are based on the number of the argument, i.e. the first
 argument is named <tt class="docutils literal"><span class="pre">a0</span></tt>, the second <tt class="docutils literal"><span class="pre">a1</span></tt> and so on.  <tt class="docutils literal"><span class="pre">use_argument_names</span></tt>
 is set to specify that the real name of the argument, if any, should be used
 instead.  It also affects the name of the variable created when the
-<tt class="xref std std-aanno docutils literal"><span class="pre">GetWrapper</span></tt> argument annotation is used.</p>
+<a class="reference internal" href="annotations.html#argument-annotation-GetWrapper"><tt class="xref std std-aanno docutils literal"><span class="pre">GetWrapper</span></tt></a> argument annotation is used.</p>
 <p><tt class="docutils literal"><span class="pre">version</span></tt> is an optional version number that is useful if you (or others)
 might create other modules that build on this module, i.e. if another module
 might <a class="reference internal" href="#directive-%Import"><tt class="xref std std-directive docutils literal"><span class="pre">%Import</span></tt></a> this module.  Under the covers, a module exports an
@@ -2278,12 +2313,12 @@ public:
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

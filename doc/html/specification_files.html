@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>SIP Specification Files &mdash; SIP 4.12.4 Reference Guide</title>
+    <title>SIP Specification Files &mdash; SIP 4.13 Reference Guide</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.12.4',
+        VERSION:     '4.13',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.12.4 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.13 Reference Guide" href="index.html" />
     <link rel="next" title="Directives" href="directives.html" />
     <link rel="prev" title="The SIP Command Line" href="command_line.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="command_line.html" title="The SIP Command Line"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -312,15 +312,15 @@ file.</p>
 
 <em>argument</em> ::= [
         <em>type</em> [<em>name</em>] [<em>argument-annotations</em>] [<em>default-value</em>] |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_ANYSLOT</span></tt> [<em>default-value</em>] |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_QOBJECT</span></tt> |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_RXOBJ_CON</span></tt> |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_RXOBJ_DIS</span></tt> |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_SIGNAL</span></tt> [<em>default-value</em>] |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_SLOT</span></tt> [<em>default-value</em>] |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_SLOT_CON</span></tt> |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_SLOT_DIS</span></tt> |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_SSIZE_T</span></tt>]
+        <a class="reference internal" href="#sip-type-SIP_ANYSLOT"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_ANYSLOT</span></tt></a> [<em>default-value</em>] |
+        <a class="reference internal" href="#sip-type-SIP_QOBJECT"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_QOBJECT</span></tt></a> |
+        <a class="reference internal" href="#sip-type-SIP_RXOBJ_CON"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_RXOBJ_CON</span></tt></a> |
+        <a class="reference internal" href="#sip-type-SIP_RXOBJ_DIS"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_RXOBJ_DIS</span></tt></a> |
+        <a class="reference internal" href="#sip-type-SIP_SIGNAL"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_SIGNAL</span></tt></a> [<em>default-value</em>] |
+        <a class="reference internal" href="#sip-type-SIP_SLOT"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_SLOT</span></tt></a> [<em>default-value</em>] |
+        <a class="reference internal" href="#sip-type-SIP_SLOT_CON"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_SLOT_CON</span></tt></a> |
+        <a class="reference internal" href="#sip-type-SIP_SLOT_DIS"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_SLOT_DIS</span></tt></a> |
+        <a class="reference internal" href="#sip-type-SIP_SSIZE_T"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a>]
 
 <em>default-value</em> ::= <strong>=</strong> <em>expression</em>
 
@@ -352,7 +352,7 @@ file.</p>
 
 <em>character-value</em> ::= <strong>&#8216;</strong> <em>character</em> <strong>&#8216;</strong>
 
-<em>unary-operator</em> ::= [<strong>!</strong> | <strong>~</strong> | <strong>-</strong> | <strong>+</strong>]
+<em>unary-operator</em> ::= [<strong>!</strong> | <strong>~</strong> | <strong>-</strong> | <strong>+</strong> | <strong>*</strong> | <strong>&amp;</strong>]
 
 <em>binary-operator</em> ::= [<strong>-</strong> | <strong>+</strong> | <strong>*</strong> | <strong>/</strong> | <strong>&amp;</strong> | <strong>|</strong>]
 
@@ -382,13 +382,13 @@ file.</p>
         <strong>bool</strong> |
         <strong>void</strong> |
         <strong>PyObject</strong> |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYCALLABLE</span></tt> |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYDICT</span></tt> |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYLIST</span></tt> |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYOBJECT</span></tt> |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYSLICE</span></tt> |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTUPLE</span></tt> |
-        <tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTYPE</span></tt>]
+        <a class="reference internal" href="#sip-type-SIP_PYCALLABLE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYCALLABLE</span></tt></a> |
+        <a class="reference internal" href="#sip-type-SIP_PYDICT"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYDICT</span></tt></a> |
+        <a class="reference internal" href="#sip-type-SIP_PYLIST"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYLIST</span></tt></a> |
+        <a class="reference internal" href="#sip-type-SIP_PYOBJECT"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYOBJECT</span></tt></a> |
+        <a class="reference internal" href="#sip-type-SIP_PYSLICE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYSLICE</span></tt></a> |
+        <a class="reference internal" href="#sip-type-SIP_PYTUPLE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTUPLE</span></tt></a> |
+        <a class="reference internal" href="#sip-type-SIP_PYTYPE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTYPE</span></tt></a>]
 
 <em>scoped-name</em> ::= <em>name</em> [<strong>::</strong> <em>scoped-name</em>]
 
@@ -401,7 +401,7 @@ file.</p>
 <p>Here is a short list of differences between C++ and the subset supported by
 SIP that might trip you up.</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li>SIP does not support the use of <tt class="docutils literal"><span class="pre">[]</span></tt> in types.  Use pointers instead.</li>
 <li>A global <tt class="docutils literal"><span class="pre">operator</span></tt> can only be defined if its first argument is a
 class or a named enum that has been wrapped in the same module.</li>
@@ -409,7 +409,7 @@ class or a named enum that has been wrapped in the same module.</li>
 <li>A class&#8217;s list of super-classes doesn&#8217;t not include any access specifier
 (e.g. <tt class="docutils literal"><span class="pre">public</span></tt>).</li>
 </ul>
-</blockquote>
+</div></blockquote>
 </div>
 <div class="section" id="variable-numbers-of-arguments">
 <h2>Variable Numbers of Arguments<a class="headerlink" href="#variable-numbers-of-arguments" title="Permalink to this headline">¶</a></h2>
@@ -678,12 +678,12 @@ is at the end of the file.</p>
         <li class="right" >
           <a href="command_line.html" title="The SIP Command Line"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>
