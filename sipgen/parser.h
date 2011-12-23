@@ -171,7 +171,8 @@
      TK_TIMESTAMP = 387,
      TK_TYPE = 388,
      TK_USEARGNAMES = 389,
-     TK_VERSION = 390
+     TK_ALLRAISEPYEXC = 390,
+     TK_VERSION = 391
    };
 #endif
 /* Tokens.  */
@@ -307,14 +308,15 @@
 #define TK_TIMESTAMP 387
 #define TK_TYPE 388
 #define TK_USEARGNAMES 389
-#define TK_VERSION 390
+#define TK_ALLRAISEPYEXC 390
+#define TK_VERSION 391
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 171 "/Users/phil/hg/sip/sip-4.13/sipgen/parser.y"
+#line 174 "/Users/phil/hg/sip/sip-4.13.1/sipgen/parser.y"
 {
     char            qchar;
     char            *text;
@@ -353,9 +355,10 @@ typedef union YYSTYPE
     pluginCfg       plugin;
     propertyCfg     property;
     variableCfg     variable;
+    int             token;
 }
 /* Line 1529 of yacc.c.  */
-#line 359 "/Users/phil/hg/sip/sip-4.13/sipgen/parser.h"
+#line 362 "/Users/phil/hg/sip/sip-4.13.1/sipgen/parser.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

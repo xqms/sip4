@@ -6628,6 +6628,7 @@ static void generateVirtualCatcher(moduleDef *mod, classDef *cd, int virtNr,
 "\n"
             );
 
+        /* Generate a default result in case no API is enabled. */
         if (isAbstract(od))
             generateVirtHandlerErrorReturn(res, "    ", fp);
         else
@@ -6794,10 +6795,9 @@ static void generateUnambiguousClass(classDef *cd,classDef *scope,FILE *fp)
                 mroDef *guardc;
 
                 /*
-                 * Backtrack to find the class that directly
-                 * sub-classes the duplicated one.  This will
-                 * be the one that disambiguates the duplicated
-                 * one.
+                 * Backtrack to find the class that directly sub-classes the
+                 * duplicated one.  This will be the one that disambiguates the
+                 * duplicated one.
                  */
                 guardc = mro;
 
@@ -9906,7 +9906,7 @@ static void generateSignalTableEntry(sipSpec *pt, classDef *cd, overDef *sig,
             prcode(fp,",");
 
         /* Do some normalisation so that Qt doesn't have to. */
-        if (isConstArg(&arg))
+        if (isConstArg(&arg) && isReference(&arg))
         {
             resetIsConstArg(&arg);
             resetIsReference(&arg);
@@ -10865,10 +10865,14 @@ static void generateFunction(sipSpec *pt, memberDef *md, overDef *overs,
                  *   the explicitly scoped version.
                  *
                  * - If the call was bound then we only call the unscoped
-                 *   version in case there is a C++ reimplementation that
-                 *   Python knows nothing about.  Otherwise, if the call was
-                 *   invoked by super() within a Python reimplementation then
-                 *   the Python reimplementation would be called recursively.
+                 *   version in case there is a C++ sub-class reimplementation
+                 *   that Python knows nothing about.  Otherwise, if the call
+                 *   was invoked by super() within a Python reimplementation
+                 *   then the Python reimplementation would be called
+                 *   recursively.
+                 *
+                 * Note that we would like to rename 'sipSelfWasArg' to
+                 * 'sipExplicitScope' but it is part of the public API.
                  */
                 prcode(fp,
 "    bool sipSelfWasArg = (!sipSelf || sipIsDerived((sipSimpleWrapper *)sipSelf));\n"
@@ -12403,14 +12407,16 @@ static int generateArgParser(moduleDef *mod, signatureDef *sd,
 
     if (handle_self)
     {
+        const char *const_str = (isConst(od) ? "const " : "");
+
         if (isProtected(od) && hasShadow(c_scope))
             prcode(fp,
-"        sip%C *sipCpp;\n"
-                , classFQCName(c_scope));
+"        %ssip%C *sipCpp;\n"
+                , const_str, classFQCName(c_scope));
         else
             prcode(fp,
-"        %U *sipCpp;\n"
-                , c_scope);
+"        %s%U *sipCpp;\n"
+                , const_str, c_scope);
 
         prcode(fp,
 "\n"

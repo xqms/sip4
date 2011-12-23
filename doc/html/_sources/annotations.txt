@@ -61,9 +61,6 @@ The following example shows argument and function annotations::
 
     void exec(QWidget * /Transfer/) /ReleaseGIL, PyName=call_exec/;
 
-Note that the current version of SIP does not complain about unknown
-annotations, or annotations used out of their correct context.
-
 
 .. _ref-arg-annos:
 
@@ -697,6 +694,16 @@ Function Annotations
     like certain functions to only support positional arguments.
 
 
+.. function-annotation:: NoRaisesPyException
+
+    .. versionadded:: 4.13.1
+
+    This boolean annotation specifies that the function does not raise a Python
+    exception to indicate that an error occurred.
+
+    .. seealso:: :fanno:`RaisesPyException`
+
+
 .. function-annotation:: Numeric
 
     This boolean annotation specifies that the operator should be interpreted
@@ -756,6 +763,8 @@ Function Annotations
     exception to indicate that an error occurred.  Any current exception is
     cleared before the function is called.  It is ignored if the
     :directive:`%MethodCode` directive is used.
+
+    .. seealso:: :fanno:`NoRaisesPyException`
 
 
 .. function-annotation:: ReleaseGIL
@@ -844,6 +853,20 @@ Typedef Annotations
 
     This boolean annotation serves the same purpose as the :aanno:`PyInt`
     argument annotation when applied to the type being defined.
+
+
+.. typedef-annotation:: PyName
+
+    .. versionadded:: 4.13.1
+
+    This name annotation only applies when the typedef is being used to create
+    the wrapping for a class defined using a template and specifies an
+    alternative name for the class when it is referred to from Python.  It is
+    required when a class name is the same as a Python keyword.  It may also
+    be used to avoid name clashes with other objects (e.g. enums, exceptions,
+    functions) that have the same name in the same C++ scope.
+
+    .. seealso:: :directive:`%AutoPyName`
 
 
 .. _ref-variable-annos:
