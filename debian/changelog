@@ -1,3 +1,14 @@
+sip4 (4.13.1-1) unstable; urgency=low
+
+  * Team upload
+  * New upstream release
+  * Change python3-sip-dev to depend on python3-dev instead of python-dev
+  * Update python3-sip-dev short description to refer to python3
+  * Update python3-sip-dbg short description so it is different than
+    python3-sip
+
+ -- Scott Kitterman <scott@kitterman.com>  Fri, 23 Dec 2011 08:52:28 -0500
+
 sip4 (4.13-1) unstable; urgency=low
 
   * Team upload

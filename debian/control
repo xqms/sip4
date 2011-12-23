@@ -80,9 +80,9 @@ Description: Python 3/C++ bindings generator runtime library
 Package: python3-sip-dev
 Architecture: any
 Section: python
-Depends: ${python:Depends}, python3-sip (= ${binary:Version}), python-dev, ${shlibs:Depends}, libjs-jquery, ${misc:Depends}
+Depends: ${python:Depends}, python3-sip (= ${binary:Version}), python3-dev, ${shlibs:Depends}, libjs-jquery, ${misc:Depends}
 Recommends: python3-sip (>= ${source:Version})
-Description: Python/C++ bindings generator development files
+Description: Python 3/C++ bindings generator development files
  SIP is a tool for generating bindings for C++ classes with some ideas
  borrowed from SWIG, but capable of tighter bindings because of its
  specificity towards C++ and Python.
@@ -109,7 +109,7 @@ Architecture: any
 Section: debug
 Priority: extra
 Depends: python3-sip (= ${binary:Version}), python3-dbg, ${shlibs:Depends}, ${misc:Depends}
-Description: Python 3/C++ bindings generator runtime library
+Description: Python 3/C++ bindings generator runtime library (debug extension)
  SIP is a tool for generating bindings for C++ classes with some ideas
  borrowed from SWIG, but capable of tighter bindings because of its
  specificity towards C++ and Python.
