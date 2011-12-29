@@ -1,3 +1,10 @@
+sip4 (4.13.1-2) unstable; urgency=low
+
+  * Team upload
+  * Bump Breaks version for to python-qt4 << 4.9~ (Closes: #653293)
+
+ -- Scott Kitterman <scott@kitterman.com>  Wed, 28 Dec 2011 20:08:42 -0500
+
 sip4 (4.13.1-1) unstable; urgency=low
 
   * Team upload
