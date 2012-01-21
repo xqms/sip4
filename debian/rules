@@ -4,7 +4,7 @@
 
 PY2_PROVIDES=sip-api-8.0, sip-api-8.1
 PY3_PROVIDES=sip-py3api-8.0, sip-py3api-8.1
-# `dh_python3 --depends sip` should generate dependency on newest API only
+# `dh_python3 --depends sip3` should generate dependency on newest API only
 PYDIST=sip $(shell python -c "a=[i.strip() for i in '$(PY3_PROVIDES)'.split(',')]; print sorted(a, reverse=True)[0]")
 
 INSTDIR=$(CURDIR)/debian
@@ -70,6 +70,7 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -rf *-stamp siputils.pyc __pycache__ $(PYTHONS:%=build-%) $(PYTHONS:%=dbg-build-%)
+	rm -rf $(CURDIR)/siplib/sip.h $(CURDIR)/siplib/siplib.c $(CURDIR)/siplib/siplib.sbf
 	dh_clean debian/python3-sip.pydist
 
 install-arch: build
