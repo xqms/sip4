@@ -1,3 +1,17 @@
+sip4 (4.13.2-1) unstable; urgency=low
+
+  * New upstream release
+    - Refreshed patches
+  * Split out documentation into a separate package, python-sip-doc since it
+    is used for both the python and python3 versions of sip4
+    - Add python-sip-doc.docs/links
+    - Adjust other docs/links files
+    - python-sip-dev and python3-sip-dev Suggest python-sip-doc
+    - Adjust debian/rules to build arch all packages
+  * Install NEWS as changelog
+
+ -- Scott Kitterman <scott@kitterman.com>  Sat, 11 Feb 2012 12:47:35 -0500
+
 sip4 (4.13.1-3) unstable; urgency=low
 
   * Add myself to uploaders

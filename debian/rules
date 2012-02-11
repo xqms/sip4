@@ -138,7 +138,7 @@ binary-common:
 	dh_testdir
 	dh_testroot
 	dh_installman
-	dh_installchangelogs
+	dh_installchangelogs NEWS
 	dh_installdocs -A
 	dh_installexamples
 	dh_link
@@ -164,6 +164,7 @@ endif
 
 # Build architecture independant packages using the common target.
 binary-indep: 
+	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
 
 # Build architecture dependant packages using the common target.
 binary-arch: install-arch
