@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040d01
-#define SIP_VERSION_STR     "4.13.1"
+#define SIP_VERSION         0x040d02
+#define SIP_VERSION_STR     "4.13.2"
 
 
 #ifdef TRUE

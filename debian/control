@@ -42,8 +42,9 @@ Package: python-sip-dev
 Architecture: any
 Section: python
 Depends: ${python:Depends}, python-sip (= ${binary:Version}), python-dev,
- ${shlibs:Depends}, libjs-jquery, libjs-underscore, ${misc:Depends}
+ ${shlibs:Depends}, ${misc:Depends}
 Recommends: python-sip (>= ${source:Version})
+Suggests: python-sip-doc
 Description: Python/C++ bindings generator development files
  SIP is a tool for generating bindings for C++ classes with some ideas
  borrowed from SWIG, but capable of tighter bindings because of its
@@ -66,6 +67,31 @@ Description: Python/C++ bindings generator development files
  This package contains the code generator tool and the development headers
  needed to develop Python bindings with sip.
 
+Package: python-sip-doc
+Architecture: all
+Section: doc
+Depends: libjs-jquery, libjs-underscore, ${misc:Depends}
+Description: Python/C++ bindings generator documentation
+ SIP is a tool for generating bindings for C++ classes with some ideas
+ borrowed from SWIG, but capable of tighter bindings because of its
+ specificity towards C++ and Python.
+ .
+ SIP was originally designed to generate Python bindings for KDE and so
+ has explicit support for the signal slot mechanism used by the Qt/KDE
+ class libraries.
+ .
+ Features:
+     - connecting Qt signals to Python functions and class methods
+     - connecting Python signals to Qt slots
+     - overloading virtual member functions with Python class methods
+     - protected member functions
+     - abstract classes
+     - enumerated types
+     - global class instances
+     - static member functions.
+ .
+ This package contains the html documentation.
+
 Package: python3-sip
 Architecture: any
 Section: python
@@ -83,6 +109,7 @@ Architecture: any
 Section: python
 Depends: ${python:Depends}, python3-sip (= ${binary:Version}), python3-dev, ${shlibs:Depends}, libjs-jquery, ${misc:Depends}
 Recommends: python3-sip (>= ${source:Version})
+Suggests: python-sip-doc
 Description: Python 3/C++ bindings generator development files
  SIP is a tool for generating bindings for C++ classes with some ideas
  borrowed from SWIG, but capable of tighter bindings because of its
