@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040d02
-#define SIP_VERSION_STR     "4.13.2"
+#define SIP_VERSION         0x040d03
+#define SIP_VERSION_STR     "4.13.3"
 
 
 #ifdef TRUE
@@ -189,6 +189,7 @@
 #define CTOR_HOLD_GIL       0x00000800  /* The ctor holds the GIL. */
 #define CTOR_XFERRED        0x00001000  /* Ownership is transferred. */
 #define CTOR_IS_DEPRECATED  0x00002000  /* The ctor is deprecated. */
+#define CTOR_RAISES_PY_EXC  0x00004000  /* It raises a Python exception. */
 
 #define isPublicCtor(c)     ((c)->ctorflags & SECT_IS_PUBLIC)
 #define setIsPublicCtor(c)  ((c)->ctorflags |= SECT_IS_PUBLIC)
@@ -208,6 +209,8 @@
 #define setIsResultTransferredCtor(c)   ((c)->ctorflags |= CTOR_XFERRED)
 #define isDeprecatedCtor(c) ((c)->ctorflags & CTOR_IS_DEPRECATED)
 #define setIsDeprecatedCtor(c)  ((c)->ctorflags |= CTOR_IS_DEPRECATED)
+#define raisesPyExceptionCtor(c)    ((c)->ctorflags & CTOR_RAISES_PY_EXC)
+#define setRaisesPyExceptionCtor(c) ((c)->ctorflags |= CTOR_RAISES_PY_EXC)
 
 
 /* Handle member flags. */
@@ -624,6 +627,13 @@ typedef enum {
 } ifaceFileType;
 
 
+/* A location in a .sip source file. */
+typedef struct {
+    int linenr;                         /* The line number. */
+    const char *name;                   /* The filename. */
+} sourceLocation;
+
+
 /* A software license. */
 
 typedef struct {
@@ -951,6 +961,7 @@ typedef struct _propertyDef {
 /* An overloaded member function definition. */
 
 typedef struct _overDef {
+    sourceLocation sloc;                /* The source location. */
     char *cppname;                      /* The C++ name. */
     int overflags;                      /* The overload flags. */
     KwArgs kwargs;                      /* The keyword argument support. */
@@ -1209,6 +1220,7 @@ void warning(Warning w, const char *fmt, ...);
 void deprecated(const char *msg);
 void fatal(char *,...);
 void fatalScopedName(scopedNameDef *);
+void getSourceLocation(sourceLocation *slp);
 int setInputFile(FILE *open_fp, parserContext *pc, int optional);
 void resetLexerState();
 void *sipMalloc(size_t n);

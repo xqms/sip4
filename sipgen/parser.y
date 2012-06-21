@@ -396,6 +396,7 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
 %type <text>            optfilename
 %type <text>            optname
 %type <text>            dottedname
+%type <text>            name_or_string
 %type <optflags>        optflags
 %type <optflags>        flaglist
 %type <flag>            flag
@@ -743,7 +744,7 @@ api_arg_list:   api_arg
         }
     ;
 
-api_arg:    TK_NAME '=' TK_NAME_VALUE {
+api_arg:    TK_NAME '=' name_or_string {
             $$.token = TK_NAME;
 
             $$.name = $3;
@@ -1196,7 +1197,7 @@ feature_arg_list:   feature_arg
         }
     ;
 
-feature_arg:    TK_NAME '=' TK_NAME_VALUE {
+feature_arg:    TK_NAME '=' name_or_string {
             $$.token = TK_NAME;
 
             $$.name = $3;
@@ -2271,7 +2272,6 @@ codelines:  TK_CODELINE
             append(&$$->frag, $2->frag);
 
             free($2->frag);
-            free((char *)$2->filename);
             free($2);
         }
     ;
@@ -2991,7 +2991,7 @@ property_arg:   TK_GET '=' TK_NAME_VALUE {
             $$.name = NULL;
             $$.set = NULL;
         }
-    |   TK_NAME '=' TK_NAME_VALUE {
+    |   TK_NAME '=' name_or_string {
             $$.token = TK_NAME;
 
             $$.get = NULL;
@@ -3045,6 +3045,10 @@ property_body_directive:    ifstart {
                 $$.docstring = NULL;
             }
         }
+    ;
+
+name_or_string: TK_NAME_VALUE
+    |   TK_STRING_VALUE
     ;
 
 optslot:    {
@@ -3133,8 +3137,10 @@ simplector: TK_NAME_VALUE '(' arglist ')' optexceptions optflags optctorsig ';' 
                     "HoldGIL",
                     "KeywordArgs",
                     "NoDerived",
+                    "NoRaisesPyException",
                     "PostHook",
                     "PreHook",
+                    "RaisesPyException",
                     "ReleaseGIL",
                     "Transfer",
                     NULL
@@ -4325,6 +4331,8 @@ static moduleDef *allocModule()
     newmod->encoding = no_type;
     newmod->qobjclass = -1;
     newmod->nrvirthandlers = -1;
+
+    /* -1 is reserved for variable getters. */
     newmod->next_key = -2;
 
     /*
@@ -6447,6 +6455,12 @@ static void newCtor(moduleDef *mod, char *name, int sectFlags,
     if (!isPrivateCtor(ct))
         ct->kwargs = keywordArgs(mod, optflgs, &ct->pysig, FALSE);
 
+    if (methodcode == NULL && getOptFlag(optflgs, "NoRaisesPyException", bool_flag) == NULL)
+    {
+        if (allRaisePyException(mod) || getOptFlag(optflgs, "RaisesPyException", bool_flag) != NULL)
+            setRaisesPyExceptionCtor(ct);
+    }
+
     if (getOptFlag(optflgs, "NoDerived", bool_flag) != NULL)
     {
         if (cppsig != NULL)
@@ -6590,6 +6604,8 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
     /* Create a new overload definition. */
 
     od = sipMalloc(sizeof (overDef));
+
+    getSourceLocation(&od->sloc);
 
     /* Set the overload flags. */
 

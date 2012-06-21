@@ -1,3 +1,14 @@
+sip4 (4.13.3-1) unstable; urgency=low
+
+  * New upstream release
+    - Refresh patches
+    - Update debian/copyright
+  * Bump standards-version to 3.9.3 without futher change
+  * Correct link targets in python-sip-doc.links to point at the current
+    -doc package and not the old -dev package location
+
+ -- Scott Kitterman <scott@kitterman.com>  Thu, 21 Jun 2012 14:59:40 -0400
+
 sip4 (4.13.2-1) unstable; urgency=low
 
   * New upstream release
