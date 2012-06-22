@@ -10,10 +10,16 @@ PYDIST=sip $(shell python -c "a=[i.strip() for i in '$(PY3_PROVIDES)'.split(',')
 INSTDIR=$(CURDIR)/debian
 
 CFLAGS=
+CPPFLAGS=
+CXXFLAGS=
+LDFLAGS=
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 	CFLAGS += -O0 -g
 else
-	CFLAGS += -O2 -g
+	CFLAGS += $(shell dpkg-buildflags --get CFLAGS)
+	CPPFLAGS += $(shell dpkg-buildflags --get CPPFLAGS)
+	CXXFLAGS += $(shell dpkg-buildflags --get CXXFLAGS)
+	LDFLAGS += $(shell dpkg-buildflags --get LDFLAGS)
 endif
 
 PYTHONS	:= $(shell pyversions -vr) $(shell py3versions -vd)
@@ -37,7 +43,9 @@ build-%/configure-stamp:
 	cd build-$* \
 		&& python$* ../configure.py \
 			-d /usr/lib/python$*/$(call py_sitename,$*) \
-			-u STRIP="" CFLAGS="${CFLAGS}" CFLAGS_RELEASE="" CXXFLAGS="${CFLAGS}" CXXFLAGS_RELEASE=""
+			-u STRIP="" CFLAGS="${CFLAGS} ${CPPFLAGS}" CFLAGS_RELEASE="" \
+			CXXFLAGS="${CXXFLAGS} ${CPPFLAGS}" CXXFLAGS_RELEASE="" \
+			LFLAGS="${LDFLAGS}" LFLAGS_RELEASE=""
 	touch $@
 
 dbg-build-%/configure-stamp:
@@ -47,7 +55,9 @@ dbg-build-%/configure-stamp:
 		&& python$*-dbg ../configure.py \
 			-d /usr/lib/python$*/$(call py_sitename,$*) \
 			-e /usr/include/python$*_d \
-			-u CFLAGS="-O0 -g" CFLAGS_RELEASE="" CXXFLAGS="-O0 -g" CXXFLAGS_RELEASE="" STRIP=""
+			-u CFLAGS="${CFLAGS} ${CPPFLAGS}" CFLAGS_RELEASE="" \
+			CXXFLAGS="${CXXFLAGS} ${CPPFLAGS}" CXXFLAGS_RELEASE="" \
+                        LFLAGS="${LDFLAGS}" LFLAGS_RELEASE="" STRIP="" 
 	touch $@
 
 
@@ -107,11 +117,11 @@ install-arch-3.%:
 	install -m 644 -o root -g root debian/sipconfig_py3.py debian/python3-sip/usr/lib/python3.$*/dist-packages/sipconfig.py
 	install -m 644 -o root -g root build-3.$*/sipconfig.py debian/python3-sip/usr/lib/python3.$*/dist-packages/sipconfig_nd.py
 	install -m 644 -o root -g root dbg-build-3.$*/sipconfig.py debian/python3-sip-dbg/usr/lib/python3.$*/dist-packages/sipconfig_d.py
-	mkdir -p debian/python3-sip-dev/usr/include/python3.$*
-	install -m 644 -o root -g root siplib/sip.h debian/python3-sip-dev/usr/include/python3.$*/
-	mkdir -p debian/python3-sip-dev/usr/include/python3.$*_d
-	ln -s ../python3.$*/sip.h \
-	    debian/python3-sip-dev/usr/include/python3.$*_d/sip.h
+	mkdir -p debian/python3-sip-dev/usr/include/python3.$*mu
+	install -m 644 -o root -g root siplib/sip.h debian/python3-sip-dev/usr/include/python3.$*mu/
+	mkdir -p debian/python3-sip-dev/usr/include/python3.$*dmu
+	ln -s ../python3.$*mu/sip.h \
+	    debian/python3-sip-dev/usr/include/python3.$*dmu/sip.h
 	mkdir -p debian/python3-sip-dev/usr/lib/python3.$*/dist-packages
 	install -m 644 -o root -g root sipdistutils.py debian/python3-sip-dev/usr/lib/python3.$*/dist-packages
 
