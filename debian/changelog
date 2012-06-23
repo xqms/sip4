@@ -1,3 +1,14 @@
+sip4 (4.13.3-2) unstable; urgency=low
+
+  * Install sip.h for python3-sip-dev in the correct directories
+  * Add support for dpkg-buildflags in debian/rules
+    - Build dbg packages -02 instead of -00 as a consequence
+    - Add build-depends on dpkg-dev (>= 1.16.1~)
+  * Add missing build-depends on flex
+  * Drop unneeded depends on libjs-jquery for python3-sip-dev
+
+ -- Scott Kitterman <scott@kitterman.com>  Fri, 22 Jun 2012 11:54:27 -0400
+
 sip4 (4.13.3-1) unstable; urgency=low
 
   * New upstream release
