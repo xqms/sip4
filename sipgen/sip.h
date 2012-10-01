@@ -1,7 +1,7 @@
 /*
  * The main header file for SIP.
  *
- * Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040d03
-#define SIP_VERSION_STR     "4.13.3"
+#define SIP_VERSION         0x040e00
+#define SIP_VERSION_STR     "4.14"
 
 
 #ifdef TRUE
@@ -283,6 +283,7 @@
 #define OVER_REALLY_PROT    0x02000000  /* It really is protected. */
 #define OVER_IS_DELATTR     0x04000000  /* It is __delattr__. */
 #define OVER_RAISES_PY_EXC  0x08000000  /* It raises a Python exception. */
+#define OVER_NO_ERROR_HANDLER   0x10000000  /* It doesn't use a virtual error handler. */
 
 #define isPublic(o)         ((o)->overflags & SECT_IS_PUBLIC)
 #define setIsPublic(o)      ((o)->overflags |= SECT_IS_PUBLIC)
@@ -339,6 +340,8 @@
 #define setIsDelattr(o)     ((o)->overflags |= OVER_IS_DELATTR)
 #define raisesPyException(o)    ((o)->overflags & OVER_RAISES_PY_EXC)
 #define setRaisesPyException(o) ((o)->overflags |= OVER_RAISES_PY_EXC)
+#define noErrorHandler(o)   ((o)->overflags & OVER_NO_ERROR_HANDLER)
+#define setNoErrorHandler(o)    ((o)->overflags |= OVER_NO_ERROR_HANDLER)
 
 
 /* Handle variable flags. */
@@ -765,7 +768,6 @@ typedef struct _argList {
 
 
 /* A function call. */
-
 typedef struct _fcallDef {
     argDef type;                        /* The type. */
     int nrArgs;                         /* The number of arguments. */
@@ -781,6 +783,16 @@ typedef struct _apiVersionRangeDef {
     int index;                          /* The range index. */
     struct _apiVersionRangeDef *next;   /* The next in the list. */
 } apiVersionRangeDef;
+
+
+/* A virtual error handler. */
+typedef struct _virtErrorHandler {
+    const char *name;                   /* The name of the handler. */
+    codeBlockList *code;                /* The handler code. */
+    struct _moduleDef *mod;             /* The defining module. */
+    int index;                          /* The index within the module. */
+    struct _virtErrorHandler *next;     /* The next in the list. */
+} virtErrorHandler;
 
 
 /* A module definition. */
@@ -809,6 +821,7 @@ typedef struct _moduleDef {
     codeBlockList *unitcode;            /* Compilation unit code. */
     codeBlockList *unitpostinccode;     /* Compilation unit post-include code. */
     codeBlockList *docstring;           /* The docstring. */
+    const char *virt_error_handler;     /* The virtual error handler. */
     int parts;                          /* The number of parts generated. */
     const char *file;                   /* The filename. */
     qualDef *qualifiers;                /* The list of qualifiers. */
@@ -818,6 +831,7 @@ typedef struct _moduleDef {
     int nrexceptions;                   /* The nr. of exceptions. */
     int nrtypedefs;                     /* The nr. of typedefs. */
     int nrvirthandlers;                 /* The nr. of virtual handlers. */
+    int nrvirterrorhandlers;            /* The nr. of virtual error handlers. */
     int next_key;                       /* The next key to allocate. */
     struct _virtHandlerDef *virthandlers;   /* The virtual handlers. */
     licenseDef *license;                /* The software license. */
@@ -874,6 +888,7 @@ typedef struct _mappedTypeDef {
     ifaceFileDef *iff;                  /* The interface file. */
     struct _memberDef *members;         /* The static member functions. */
     struct _overDef *overs;             /* The static overloads. */
+    codeBlockList *instancecode;        /* Create instance code. */
     codeBlockList *typecode;            /* Type code. */
     codeBlockList *convfromcode;        /* Convert from C++ code. */
     codeBlockList *convtocode;          /* Convert to C++ code. */
@@ -974,6 +989,7 @@ typedef struct _overDef {
     virtHandlerDef *virthandler;        /* The virtual handler. */
     char *prehook;                      /* The pre-hook name. */
     char *posthook;                     /* The post-hook name. */
+    const char *virt_error_handler;     /* The virtual error handler. */
     struct _overDef *next;              /* Next in the list. */
 } overDef;
 
@@ -1102,6 +1118,7 @@ typedef struct _classDef {
     codeBlockList *convtosubcode;       /* Convert to sub C++ code. */
     struct _classDef *subbase;          /* Sub-class base class. */
     codeBlockList *docstring;           /* Class and ctor docstrings. */
+    codeBlockList *instancecode;        /* Create instance code. */
     codeBlockList *convtocode;          /* Convert to C++ code. */
     codeBlockList *travcode;            /* Traverse code. */
     codeBlockList *clearcode;           /* Clear code. */
@@ -1113,6 +1130,7 @@ typedef struct _classDef {
     codeBlockList *charbufcode;         /* Character buffer code (Python v2). */
     codeBlockList *picklecode;          /* Pickle code. */
     propertyDef *properties;            /* The properties. */
+    const char *virt_error_handler;     /* The virtual error handler. */
     struct _classDef *next;             /* Next in the list. */
 } classDef;
 
@@ -1176,6 +1194,7 @@ typedef struct {
     enumDef *enums;                     /* List of enums. */
     varDef *vars;                       /* List of variables. */
     typedefDef *typedefs;               /* List of typedefs. */
+    virtErrorHandler *errorhandlers;    /* The list of virtual error handlers. */
     codeBlockList *exphdrcode;          /* Exported header code. */
     codeBlockList *docs;                /* Documentation. */
     int sigslots;                       /* Set if signals or slots are used. */
@@ -1207,10 +1226,11 @@ extern stringList *includeDirList;      /* The include directory list for SIP fi
 
 
 void parse(sipSpec *, FILE *, char *, stringList *, stringList *, KwArgs, int);
-void parserEOF(char *,parserContext *);
+void parserEOF(const char *,parserContext *);
 void transform(sipSpec *);
 void generateCode(sipSpec *, char *, char *, char *, const char *, int, int,
-        int, int, stringList *, const char *, int, int);
+        int, int, stringList *needed_qualifiers, stringList *, const char *,
+        int, int);
 void generateExtracts(sipSpec *pt, const stringList *extracts);
 void addExtractPart(sipSpec *pt, const char *id, int order, codeBlock *part);
 void generateAPI(sipSpec *pt, moduleDef *mod, const char *apiFile);
@@ -1229,6 +1249,7 @@ char *sipStrdup(const char *);
 char *concat(const char *, ...);
 void append(char **, const char *);
 void addToUsedList(ifaceFileList **, ifaceFileDef *);
+int selectedQualifier(stringList *needed_qualifiers, qualDef *qd);
 int excludedFeature(stringList *,qualDef *);
 int sameSignature(signatureDef *,signatureDef *,int);
 int sameTemplateSignature(signatureDef *tmpl_sd, signatureDef *args_sd,
@@ -1254,6 +1275,7 @@ int isSSizeReturnSlot(memberDef *md);
 int isLongReturnSlot(memberDef *md);
 int isVoidReturnSlot(memberDef *md);
 int isNumberSlot(memberDef *md);
+int isInplaceNumberSlot(memberDef *md);
 int isRichCompareSlot(memberDef *md);
 mappedTypeDef *allocMappedType(sipSpec *pt, argDef *type);
 void appendString(stringList **headp, const char *s);
@@ -1406,7 +1428,7 @@ typedef struct _licenseCfg {
     const char *timestamp;
 } licenseCfg;
 
-/* %Module */
+/* %Module and its sub-directives. */
 typedef struct _moduleCfg {
     int token;
     int c_module;
@@ -1414,6 +1436,7 @@ typedef struct _moduleCfg {
     const char *name;
     int use_arg_names;
     int all_raise_py_exc;
+    const char *def_error_handler;
     int version;
     codeBlock *docstring;
 } moduleCfg;
@@ -1440,5 +1463,11 @@ typedef struct _variableCfg {
     codeBlock *get_code;
     codeBlock *set_code;
 } variableCfg;
+
+/* %VirtualErrorHandler */
+typedef struct _vehCfg {
+    int token;
+    const char *name;
+} vehCfg;
 
 #endif

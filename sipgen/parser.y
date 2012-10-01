@@ -63,7 +63,8 @@ static classDef *findClass(sipSpec *pt, ifaceFileType iftype,
         apiVersionRangeDef *api_range, scopedNameDef *fqname);
 static classDef *findClassWithInterface(sipSpec *pt, ifaceFileDef *iff);
 static classDef *newClass(sipSpec *pt, ifaceFileType iftype,
-        apiVersionRangeDef *api_range, scopedNameDef *snd);
+        apiVersionRangeDef *api_range, scopedNameDef *snd,
+        const char *virt_error_handler);
 static void finishClass(sipSpec *, moduleDef *, classDef *, optFlags *);
 static exceptionDef *findException(sipSpec *pt, scopedNameDef *fqname, int new);
 static mappedTypeDef *newMappedType(sipSpec *,argDef *, optFlags *);
@@ -106,7 +107,6 @@ static qualDef *allocQualifier(moduleDef *, int, int, const char *, qualType);
 static void newImport(const char *filename);
 static int timePeriod(const char *lname, const char *uname);
 static int platOrFeature(char *,int);
-static int isNeeded(qualDef *);
 static int notSkipping(void);
 static void getHooks(optFlags *,char **,char **);
 static int getTransfer(optFlags *optflgs);
@@ -114,6 +114,7 @@ static int getReleaseGIL(optFlags *optflgs);
 static int getHoldGIL(optFlags *optflgs);
 static int getDeprecated(optFlags *optflgs);
 static int getAllowNone(optFlags *optflgs);
+static const char *getVirtErrorHandler(optFlags *optflgs);
 static const char *getDocType(optFlags *optflgs);
 static const char *getDocValue(optFlags *optflgs);
 static void templateSignature(signatureDef *sd, int result, classTmplDef *tcd, templateDef *td, classDef *ncd);
@@ -162,13 +163,14 @@ static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
 static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
         const char *filename, const char *name, int version, int c_module,
         KwArgs kwargs, int use_arg_names, int all_raise_py_exc,
-        codeBlock *docstring);
+        const char *def_error_handler, codeBlock *docstring);
 static void addAutoPyName(moduleDef *mod, const char *remove_leading);
 static KwArgs convertKwArgs(const char *kwargs);
 static void checkAnnos(optFlags *annos, const char *valid[]);
 static void checkNoAnnos(optFlags *annos, const char *msg);
 static void appendCodeBlock(codeBlockList **headp, codeBlock *cb);
 static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
+static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs);
 %}
 
 %union {
@@ -209,6 +211,7 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
     pluginCfg       plugin;
     propertyCfg     property;
     variableCfg     variable;
+    vehCfg          veh;
     int             token;
 }
 
@@ -217,6 +220,7 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
 %token          TK_DEFDOCSTRING
 %token          TK_DEFENCODING
 %token          TK_PLUGIN
+%token          TK_VIRTERRORHANDLER
 %token          TK_DOCSTRING
 %token          TK_DOC
 %token          TK_EXPORTEDDOC
@@ -252,6 +256,7 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
 %token          TK_CHARBUFFERCODE
 %token          TK_PICKLECODE
 %token          TK_METHODCODE
+%token          TK_INSTANCECODE
 %token          TK_FROMTYPE
 %token          TK_TOTYPE
 %token          TK_TOSUBCLASS
@@ -323,6 +328,7 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
 %token          TK_QOBJECT
 %token          TK_EXCEPTION
 %token          TK_RAISECODE
+%token          TK_VIRTERRORCODE
 %token          TK_EXPLICIT
 %token          TK_TEMPLATE
 %token          TK_ELLIPSIS
@@ -346,6 +352,7 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
 %token          TK_TYPE
 %token          TK_USEARGNAMES
 %token          TK_ALLRAISEPYEXC
+%token          TK_DEFERRORHANDLER
 %token          TK_VERSION
 
 %type <memArg>          argvalue
@@ -389,6 +396,7 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
 %type <codeb>           codelines
 %type <codeb>           virtualcatchercode
 %type <codeb>           methodcode
+%type <codeb>           instancecode
 %type <codeb>           raisecode
 %type <codeb>           docstring
 %type <codeb>           optdocstring
@@ -502,6 +510,10 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
 %type <variable>        variable_body_directives
 %type <variable>        variable_body_directive
 
+%type <veh>             veh_args
+%type <veh>             veh_arg_list
+%type <veh>             veh_arg
+
 %%
 
 specification:  statement
@@ -559,6 +571,7 @@ modstatement:   module
     |   makefile
     |   mappedtype
     |   mappedtypetmpl
+    |   virterrorhandler
     |   nsstatement
     ;
 
@@ -687,6 +700,63 @@ plugin_arg_list:    plugin_arg
     ;
 
 plugin_arg: TK_NAME '=' TK_NAME_VALUE {
+            $$.token = TK_NAME;
+
+            $$.name = $3;
+        }
+    ;
+
+virterrorhandler:   TK_VIRTERRORHANDLER veh_args codeblock {
+            if ($2.name == NULL)
+                yyerror("%VirtualErrorHandler must have a 'name' argument");
+
+            if (notSkipping())
+            {
+                virtErrorHandler *veh, **tailp;
+
+                /* Check there isn't already a handler with the same name. */
+                for (tailp = &currentSpec->errorhandlers; (veh = *tailp) != NULL; tailp = &veh->next)
+                    if (strcmp(veh->name, $2.name) == 0)
+                        break;
+
+                if (veh != NULL)
+                    yyerror("A virtual error handler with that name has already been defined");
+
+                veh = sipMalloc(sizeof (virtErrorHandler));
+
+                veh->name = $2.name;
+                appendCodeBlock(&veh->code, $3);
+                veh->mod = currentModule;
+                veh->index = currentModule->nrvirterrorhandlers++;
+                veh->next = NULL;
+
+                *tailp = veh;
+            }
+        }
+    ;
+
+veh_args:    TK_NAME_VALUE {
+            resetLexerState();
+
+            $$.name = $1;
+        }
+    |   '(' veh_arg_list ')' {
+            $$ = $2;
+        }
+    ;
+
+veh_arg_list:    veh_arg
+    |   veh_arg_list ',' veh_arg {
+            $$ = $1;
+
+            switch ($3.token)
+            {
+            case TK_NAME: $$.name = $3.name; break;
+            }
+        }
+    ;
+
+veh_arg: TK_NAME '=' TK_NAME_VALUE {
             $$.token = TK_NAME;
 
             $$.name = $3;
@@ -967,7 +1037,9 @@ mappedtypetmpl: template TK_MAPPEDTYPE basetype optflags {
             if (notSkipping())
             {
                 static const char *annos[] = {
+                    "AllowNone",
                     "DocType",
+                    "NoRelease",
                     NULL
                 };
 
@@ -1007,7 +1079,7 @@ mappedtypetmpl: template TK_MAPPEDTYPE basetype optflags {
 
                 mtt->sig = $1;
                 mtt->mt = allocMappedType(currentSpec, &$3);
-                mtt->mt->doctype = getDocType(&$4);
+                mappedTypeAnnos(mtt->mt, &$4);
                 mtt->next = currentSpec->mappedtypetemplates;
 
                 currentSpec->mappedtypetemplates = mtt;
@@ -1068,6 +1140,15 @@ mtline: ifstart
                 appendCodeBlock(&currentMappedType->convtocode, $2);
             }
         }
+    |   instancecode {
+            if (notSkipping())
+            {
+                if (currentMappedType->instancecode != NULL)
+                    yyerror("%MappedType has more than one %InstanceCode directive");
+
+                appendCodeBlock(&currentMappedType->instancecode, $1);
+            }
+        }
     |   enum
     |   mtfunction
     ;
@@ -1101,7 +1182,7 @@ namespace:  TK_NAMESPACE TK_NAME_VALUE {
                     scope = NULL;
 
                 ns = newClass(currentSpec, namespace_iface, NULL,
-                        text2scopedName(scope, $2));
+                        text2scopedName(scope, $2), NULL);
 
                 pushScope(ns);
 
@@ -1151,7 +1232,7 @@ platforms:  TK_PLATFORMS {
                 nrneeded = 0;
 
                 for (qd = currentModule->qualifiers; qd != NULL; qd = qd->next)
-                    if (qd->qtype == platform_qualifier && isNeeded(qd))
+                    if (qd->qtype == platform_qualifier && selectedQualifier(neededQualifiers, qd))
                         ++nrneeded;
 
                 if (nrneeded > 1)
@@ -1219,7 +1300,7 @@ timeline:   TK_TIMELINE {
                 nrneeded = 0;
 
                 for (qd = currentModule->qualifiers; qd != NULL; qd = qd->next)
-                    if (qd->qtype == time_qualifier && isNeeded(qd))
+                    if (qd->qtype == time_qualifier && selectedQualifier(neededQualifiers, qd))
                         ++nrneeded;
 
                 if (nrneeded > 1)
@@ -1641,7 +1722,8 @@ module: TK_MODULE module_args module_body {
                 currentModule = configureModule(currentSpec, currentModule,
                         currentContext.filename, $2.name, $2.version,
                         $2.c_module, $2.kwargs, $2.use_arg_names,
-                        $2.all_raise_py_exc, $3.docstring);
+                        $2.all_raise_py_exc, $2.def_error_handler,
+                        $3.docstring);
         }
     |   TK_CMODULE dottedname optnumber {
             deprecated("%CModule is deprecated, use %Module and the 'language' argument instead");
@@ -1649,7 +1731,7 @@ module: TK_MODULE module_args module_body {
             if (notSkipping())
                 currentModule = configureModule(currentSpec, currentModule,
                         currentContext.filename, $2, $3, TRUE, defaultKwArgs,
-                        FALSE, FALSE, NULL);
+                        FALSE, FALSE, NULL, NULL);
         }
     ;
 
@@ -1664,6 +1746,7 @@ module_args:    dottedname optnumber {
             $$.name = $1;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = FALSE;
+            $$.def_error_handler = NULL;
             $$.version = $2;
         }
     |   '(' module_arg_list ')' {
@@ -1682,6 +1765,7 @@ module_arg_list:    module_arg
             case TK_NAME: $$.name = $3.name; break;
             case TK_USEARGNAMES: $$.use_arg_names = $3.use_arg_names; break;
             case TK_ALLRAISEPYEXC: $$.all_raise_py_exc = $3.all_raise_py_exc; break;
+            case TK_DEFERRORHANDLER: $$.def_error_handler = $3.def_error_handler; break;
             case TK_VERSION: $$.version = $3.version; break;
             }
         }
@@ -1695,6 +1779,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = NULL;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = FALSE;
+            $$.def_error_handler = NULL;
             $$.version = -1;
         }
     |   TK_LANGUAGE '=' TK_STRING_VALUE {
@@ -1711,6 +1796,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = NULL;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = FALSE;
+            $$.def_error_handler = NULL;
             $$.version = -1;
         }
     |   TK_NAME '=' dottedname {
@@ -1721,6 +1807,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = $3;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = FALSE;
+            $$.def_error_handler = NULL;
             $$.version = -1;
         }
     |   TK_USEARGNAMES '=' bool_value {
@@ -1731,6 +1818,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = NULL;
             $$.use_arg_names = $3;
             $$.all_raise_py_exc = FALSE;
+            $$.def_error_handler = NULL;
             $$.version = -1;
         }
     |   TK_ALLRAISEPYEXC '=' bool_value {
@@ -1741,6 +1829,18 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = NULL;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = $3;
+            $$.def_error_handler = NULL;
+            $$.version = -1;
+        }
+    |   TK_DEFERRORHANDLER '=' TK_NAME_VALUE {
+            $$.token = TK_DEFERRORHANDLER;
+
+            $$.c_module = FALSE;
+            $$.kwargs = defaultKwArgs;
+            $$.name = NULL;
+            $$.use_arg_names = FALSE;
+            $$.all_raise_py_exc = FALSE;
+            $$.def_error_handler = $3;
             $$.version = -1;
         }
     |   TK_VERSION '=' TK_NUMBER_VALUE {
@@ -1754,6 +1854,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = NULL;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = FALSE;
+            $$.def_error_handler = NULL;
             $$.version = $3;
         }
     ;
@@ -1995,6 +2096,11 @@ segcountcode:   TK_SEGCOUNTCODE codeblock {
     ;
 
 charbufcode:    TK_CHARBUFFERCODE codeblock {
+            $$ = $2;
+        }
+    ;
+
+instancecode:   TK_INSTANCECODE codeblock {
             $$ = $2;
         }
     ;
@@ -2621,6 +2727,7 @@ struct:     TK_STRUCT scopedname {
                     "PyQt4Flags",
                     "PyQt4NoQMetaObject",
                     "Supertype",
+                    "VirtualErrorHandler",
                     NULL
                 };
 
@@ -2691,6 +2798,7 @@ class:  TK_CLASS scopedname {
                     "PyQt4Flags",
                     "PyQt4NoQMetaObject",
                     "Supertype",
+                    "VirtualErrorHandler",
                     NULL
                 };
 
@@ -2885,6 +2993,17 @@ classline:  ifstart
                     yyerror("%BIGetCharBufferCode already given for class");
 
                 appendCodeBlock(&scope->charbufcode, $1);
+            }
+        }
+    |   instancecode {
+            if (notSkipping())
+            {
+                classDef *scope = currentScope();
+
+                if (scope->instancecode != NULL)
+                    yyerror("%InstanceCode already given for class");
+
+                appendCodeBlock(&scope->instancecode, $1);
             }
         }
     |   picklecode {
@@ -3884,8 +4003,6 @@ argtype:    cpptype optname optflags {
                 NULL
             };
 
-            optFlag *of;
-
             checkAnnos(&$3, annos);
 
             $$ = $1;
@@ -4189,23 +4306,8 @@ void parse(sipSpec *spec, FILE *fp, char *filename, stringList *tsl,
 
     /* Initialise the spec. */
  
-    spec->modules = NULL;
-    spec->namecache = NULL;
-    spec->ifacefiles = NULL;
-    spec->classes = NULL;
-    spec->classtemplates = NULL;
-    spec->exceptions = NULL;
-    spec->mappedtypes = NULL;
-    spec->mappedtypetemplates = NULL;
-    spec->enums = NULL;
-    spec->vars = NULL;
-    spec->typedefs = NULL;
-    spec->exphdrcode = NULL;
-    spec->docs = NULL;
-    spec->sigslots = FALSE;
+    memset(spec, 0, sizeof (sipSpec));
     spec->genc = -1;
-    spec->plugins = NULL;
-    spec->extracts = NULL;
 
     currentSpec = spec;
     neededQualifiers = tsl;
@@ -4263,7 +4365,7 @@ void parse(sipSpec *spec, FILE *fp, char *filename, stringList *tsl,
 /*
  * Tell the parser that a complete file has now been read.
  */
-void parserEOF(char *name, parserContext *pc)
+void parserEOF(const char *name, parserContext *pc)
 {
     previousFile = sipStrdup(name);
     currentContext = *pc;
@@ -4573,11 +4675,11 @@ static exceptionDef *findException(sipSpec *pt, scopedNameDef *fqname, int new)
             return xd;
 
     /*
-     * If it is an exception interface file then we have never seen this
-     * name before.  We require that exceptions are defined before being
-     * used, but don't make the same requirement of classes (for reasons of
-     * backwards compatibility).  Therefore the name must be reinterpreted
-     * as a (as yet undefined) class.
+     * If it is an exception interface file then we have never seen this name
+     * before.  We require that exceptions are defined before being used, but
+     * don't make the same requirement of classes (for reasons of backwards
+     * compatibility).  Therefore the name must be reinterpreted as a (as yet
+     * undefined) class.
      */
     if (new)
     {
@@ -4620,7 +4722,8 @@ static exceptionDef *findException(sipSpec *pt, scopedNameDef *fqname, int new)
  * Find an undefined (or create a new) class definition in a parse tree.
  */
 static classDef *newClass(sipSpec *pt, ifaceFileType iftype,
-        apiVersionRangeDef *api_range, scopedNameDef *fqname)
+        apiVersionRangeDef *api_range, scopedNameDef *fqname,
+        const char *virt_error_handler)
 {
     int flags;
     classDef *cd, *scope;
@@ -4666,6 +4769,7 @@ static classDef *newClass(sipSpec *pt, ifaceFileType iftype,
     cd->classflags |= flags;
     cd->ecd = scope;
     cd->iff->module = currentModule;
+    cd->virt_error_handler = virt_error_handler;
 
     if (currentIsTemplate)
         setIsTemplateClass(cd);
@@ -4994,13 +5098,7 @@ static mappedTypeDef *newMappedType(sipSpec *pt, argDef *ad, optFlags *of)
     if (cname != NULL)
         mtd->pyname = cacheName(pt, getPythonName(currentModule, of, cname));
 
-    if (getOptFlag(of, "NoRelease", bool_flag) != NULL)
-        setNoRelease(mtd);
-
-    if (getAllowNone(of))
-        setHandlesNone(mtd);
-
-    mtd->doctype = getDocType(of);
+    mappedTypeAnnos(mtd, of);
 
     mtd->iff = iff;
     mtd->next = pt->mappedtypes;
@@ -5592,6 +5690,7 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
     cd->writebufcode = templateCode(pt, used, cd->writebufcode, type_names, type_values);
     cd->segcountcode = templateCode(pt, used, cd->segcountcode, type_names, type_values);
     cd->charbufcode = templateCode(pt, used, cd->charbufcode, type_names, type_values);
+    cd->instancecode = templateCode(pt, used, cd->instancecode, type_names, type_values);
     cd->picklecode = templateCode(pt, used, cd->picklecode, type_names, type_values);
     cd->next = pt->classes;
 
@@ -6513,6 +6612,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         "NoArgParser",
         "NoCopy",
         "NoRaisesPyException",
+        "NoVirtualErrorHandler",
         "Numeric",
         "PostHook",
         "PreHook",
@@ -6520,14 +6620,15 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         "PyName",
         "RaisesPyException",
         "ReleaseGIL",
+        "VirtualErrorHandler",
         "Transfer",
         "TransferBack",
         "TransferThis",
         NULL
     };
 
-    const char *pyname;
-    int factory, xferback, no_arg_parser;
+    const char *pyname, *virt_error_handler;
+    int factory, xferback, no_arg_parser, no_virt_error_handler;
     overDef *od, **odp, **headp;
     optFlag *of;
     virtHandlerDef *vhd;
@@ -6688,6 +6789,9 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
             setIsAutoGen(od);
     }
 
+    virt_error_handler = getVirtErrorHandler(optflgs);
+    no_virt_error_handler = (getOptFlag(optflgs, "NoVirtualErrorHandler", bool_flag) != NULL);
+
     if (isvirt)
     {
         if (isSignal(od) && pluginPyQt3(pt))
@@ -6707,6 +6811,18 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         if (factory || xferback)
             setIsTransferVH(vhd);
 
+        if (no_virt_error_handler)
+        {
+            if (virt_error_handler != NULL)
+                yyerror("/VirtualErrorHandler/ and /NoVirtualErrorHandler/ provided");
+
+            setNoErrorHandler(od);
+        }
+        else
+        {
+            od->virt_error_handler = virt_error_handler;
+        }
+
         /*
          * Only add it to the module's virtual handlers if we are not in a
          * class template.
@@ -6723,6 +6839,12 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
     {
         if (vcode != NULL)
             yyerror("%VirtualCatcherCode provided for non-virtual function");
+
+        if (virt_error_handler != NULL)
+            yyerror("/VirtualErrorHandler/ provided for non-virtual function");
+
+        if (no_virt_error_handler)
+            yyerror("/NoVirtualErrorHandler/ provided for non-virtual function");
 
         vhd = NULL;
     }
@@ -7682,7 +7804,7 @@ static int timePeriod(const char *lname, const char *uname)
          * This is within the required range so if it is also needed then the
          * expression is true.
          */
-        if (isNeeded(qd))
+        if (selectedQualifier(neededQualifiers, qd))
         {
             this = TRUE;
             break;
@@ -7713,7 +7835,7 @@ static int platOrFeature(char *name,int optnot)
         if (!excludedFeature(excludedQualifiers,qd))
             this = TRUE;
     }
-    else if (isNeeded(qd))
+    else if (selectedQualifier(neededQualifiers, qd))
         this = TRUE;
 
     if (optnot)
@@ -7743,11 +7865,11 @@ int excludedFeature(stringList *xsl,qualDef *qd)
 /*
  * Return TRUE if the given qualifier is needed.
  */
-static int isNeeded(qualDef *qd)
+int selectedQualifier(stringList *needed_qualifiers, qualDef *qd)
 {
     stringList *sl;
 
-    for (sl = neededQualifiers; sl != NULL; sl = sl -> next)
+    for (sl = needed_qualifiers; sl != NULL; sl = sl -> next)
         if (strcmp(qd -> name,sl -> s) == 0)
             return TRUE;
 
@@ -7906,6 +8028,20 @@ static int getAllowNone(optFlags *optflgs)
 
 
 /*
+ * Get the /VirtualErrorHandler/ option flag.
+ */
+static const char *getVirtErrorHandler(optFlags *optflgs)
+{
+    optFlag *of = getOptFlag(optflgs, "VirtualErrorHandler", name_flag);
+
+    if (of == NULL)
+        return NULL;
+
+    return of->fvalue.sval;
+}
+
+
+/*
  * Get the /DocType/ option flag.
  */
 static const char *getDocType(optFlags *optflgs)
@@ -7993,7 +8129,8 @@ static void defineClass(scopedNameDef *snd, classList *supers, optFlags *of)
     classDef *cd, *c_scope = currentScope();
 
     cd = newClass(currentSpec, class_iface, getAPIRange(of),
-            scopeScopedName((c_scope != NULL ? c_scope->iff : NULL), snd));
+            scopeScopedName((c_scope != NULL ? c_scope->iff : NULL), snd),
+            getVirtErrorHandler(of));
     cd->supers = supers;
 
     pushScope(cd);
@@ -8371,7 +8508,7 @@ static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
 static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
         const char *filename, const char *name, int version, int c_module,
         KwArgs kwargs, int use_arg_names, int all_raise_py_exc,
-        codeBlock *docstring)
+        const char *def_error_handler, codeBlock *docstring)
 {
     moduleDef *mod;
 
@@ -8396,6 +8533,7 @@ static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
 
     setModuleName(pt, module, name);
     module->kwargs = kwargs;
+    module->virt_error_handler = def_error_handler;
     module->version = version;
     appendCodeBlock(&module->docstring, docstring);
 
@@ -8488,4 +8626,20 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod)
         if (ad->key == -1)
             ad->key = mod->next_key--;
     }
+}
+
+
+/*
+ * Configure the mapped type annotations that are also valid with mapped type
+ * templates.
+ */
+static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs)
+{
+    if (getOptFlag(optflgs, "NoRelease", bool_flag) != NULL)
+        setNoRelease(mtd);
+
+    if (getAllowNone(optflgs))
+        setHandlesNone(mtd);
+
+    mtd->doctype = getDocType(optflgs);
 }
