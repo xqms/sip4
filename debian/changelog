@@ -1,3 +1,11 @@
+sip4 (4.14-1) experimental; urgency=low
+
+  * New upstream release
+    - Update sip-api and sip-py3api for New Sip API version
+  * Fix debian/watch to work with the current download location
+
+ -- Scott Kitterman <scott@kitterman.com>  Mon, 01 Oct 2012 01:57:53 -0400
+
 sip4 (4.13.3-2) unstable; urgency=low
 
   * Install sip.h for python3-sip-dev in the correct directories
