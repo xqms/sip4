@@ -1,3 +1,15 @@
+sip4 (4.14-2) experimental; urgency=low
+
+  * Enable building for multiple supported python3 versions
+    - Support python3.3 and later file locations
+    - Generate sipconfig_py3.py during configure to account for different
+      sipconfig contents for python3.2/3.3
+  * Update debian/rules to properly install sipconfig data for python3-sip-dbg
+  * Use/usr/share/doc symlinks for python-sip-dev, python3-sip-dbg, and
+    python3-sip-dev
+
+ -- Scott Kitterman <scott@kitterman.com>  Mon, 22 Oct 2012 19:40:12 -0400
+
 sip4 (4.14-1) experimental; urgency=low
 
   * New upstream release
