@@ -22,7 +22,8 @@ else
 	LDFLAGS += $(shell dpkg-buildflags --get LDFLAGS)
 endif
 
-PYTHONS	:= $(shell pyversions -vr) $(shell py3versions -vd)
+PYTHONS	:= $(shell pyversions -vr) $(shell py3versions -vr)
+PYTHON3S := $(shell py3versions -vr)
 
 -include /usr/share/python/python.mk
 ifeq (,$(py_sitename))
@@ -32,12 +33,11 @@ py_sitename_sh = $(py_sitename)
 py_libdir_sh = $(py_libdir)
 endif
 
-
 .PRECIOUS: build-%/configure-stamp dbg-build-%/configure-stamp
 
 configure: $(PYTHONS:%=build-%/configure-stamp) $(PYTHONS:%=dbg-build-%/configure-stamp)
 
-build-%/configure-stamp:
+build-%/configure-stamp: $(PYTHON3S:%=sipconfig-%)
 	dh_testdir
 	mkdir -p build-$*
 	cd build-$* \
@@ -60,8 +60,14 @@ dbg-build-%/configure-stamp:
                         LFLAGS="${LDFLAGS}" LFLAGS_RELEASE="" STRIP="" 
 	touch $@
 
+sipconfig-3.%:
+	cat $(CURDIR)/debian/sipconfig_py3.py $(CURDIR)/debian/sipconfig_py3.snippet \
+		> $(CURDIR)/debian/sipconfig_py3.py.tmp
+	sed -e "s/@MINORVERS@/$*/g" <$(CURDIR)/debian/sipconfig_py3.py.tmp \
+		> $(CURDIR)/debian/sipconfig_py3.py
+	touch $@
 
-build: $(PYTHONS:%=build-%/build-stamp) $(PYTHONS:%=dbg-build-%/build-stamp)
+build: $(PYTHON3S:%=sipconfig-%) $(PYTHONS:%=build-%/build-stamp) $(PYTHONS:%=dbg-build-%/build-stamp)
 
 build-%/build-stamp: build-%/configure-stamp
 	dh_testdir
@@ -81,6 +87,9 @@ clean:
 	dh_testroot
 	rm -rf *-stamp siputils.pyc __pycache__ $(PYTHONS:%=build-%) $(PYTHONS:%=dbg-build-%)
 	rm -rf $(CURDIR)/siplib/sip.h $(CURDIR)/siplib/siplib.c $(CURDIR)/siplib/siplib.sbf
+	cp $(CURDIR)/debian/sipconfig_py3.header $(CURDIR)/debian/sipconfig_py3.py
+	rm -rf $(CURDIR)/debian/sipconfig_py3.py.tmp
+	rm -rf $(CURDIR)/sipconfig-3.*
 	dh_clean debian/python3-sip.pydist
 
 install-arch: build
@@ -104,41 +113,60 @@ install-arch: build
 		b=$$(basename $$i .so); \
 		mv $$i $$(dirname $$i)/$${b}_d.so; \
 	done
-	find debian/python*-sip-dbg ! -type d ! -name '*_d.*' | xargs rm -f
+	find debian/python*-sip-dbg ! -type d ! -name '*_d.*' ! -name *sipconfig_d* | xargs rm -f
 	find debian/python*-sip-dbg -depth -empty -exec rmdir {} \;
 
 	dh_install -a --sourcedir=$(CURDIR)/debian/tmp
 	install -m 755 -o root -g root debian/dh_sip debian/python-sip-dev/usr/bin
 
+install-arch-3.2:
+	$(MAKE) -C build-3.2 install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C dbg-build-3.2 install DESTDIR=$(CURDIR)/debian/python3-sip-dbg
+	mkdir -p debian/python3-sip/usr/lib/python3.2/dist-packages/
+	mkdir -p debian/python3-sip-dbg/usr/lib/python3/dist-packages/
+	mkdir -p debian/python3-sip-dbg/usr/lib/python3.2/dist-packages/
+	install -m 644 -o root -g root debian/sipconfig_py3.py debian/python3-sip/usr/lib/python3.2/dist-packages/sipconfig.py
+	install -m 644 -o root -g root build-3.2/sipconfig.py debian/python3-sip/usr/lib/python3.2/dist-packages/sipconfig_nd2.py
+	mv debian/python3-sip-dbg/usr/lib/python3.2/dist-packages/sipconfig.py debian/python3-sip-dbg/usr/lib/python3/dist-packages/sipconfig_d2.py
+	mkdir -p debian/python3-sip-dev/usr/include/python3.2mu
+	install -m 644 -o root -g root siplib/sip.h debian/python3-sip-dev/usr/include/python3.2mu/
+	mkdir -p debian/python3-sip-dev/usr/include/python3.2dmu
+	ln -s ../python3.2mu/sip.h \
+	    debian/python3-sip-dev/usr/include/python3.2dmu/sip.h
+	mkdir -p debian/python3-sip-dev/usr/lib/python3.2/dist-packages
+	install -m 644 -o root -g root sipdistutils.py debian/python3-sip-dev/usr/lib/python3.2/dist-packages
+
 install-arch-3.%:
 	$(MAKE) -C build-3.$* install DESTDIR=$(CURDIR)/debian/tmp
 	$(MAKE) -C dbg-build-3.$* install DESTDIR=$(CURDIR)/debian/python3-sip-dbg
 	mkdir -p debian/python3-sip/usr/lib/python3.$*/dist-packages/
+	mkdir -p debian/python3-sip-dbg/usr/lib/python3/dist-packages/
+	mkdir -p debian/python3-sip-dbg/usr/lib/python3.$*/dist-packages/
 	install -m 644 -o root -g root debian/sipconfig_py3.py debian/python3-sip/usr/lib/python3.$*/dist-packages/sipconfig.py
-	install -m 644 -o root -g root build-3.$*/sipconfig.py debian/python3-sip/usr/lib/python3.$*/dist-packages/sipconfig_nd.py
-	install -m 644 -o root -g root dbg-build-3.$*/sipconfig.py debian/python3-sip-dbg/usr/lib/python3.$*/dist-packages/sipconfig_d.py
-	mkdir -p debian/python3-sip-dev/usr/include/python3.$*mu
-	install -m 644 -o root -g root siplib/sip.h debian/python3-sip-dev/usr/include/python3.$*mu/
-	mkdir -p debian/python3-sip-dev/usr/include/python3.$*dmu
-	ln -s ../python3.$*mu/sip.h \
-	    debian/python3-sip-dev/usr/include/python3.$*dmu/sip.h
+	install -m 644 -o root -g root build-3.$*/sipconfig.py debian/python3-sip/usr/lib/python3.$*/dist-packages/sipconfig_nd$*.py
+	mv debian/python3-sip-dbg/usr/lib/python3.$*/dist-packages/sipconfig.py debian/python3-sip-dbg/usr/lib/python3/dist-packages/sipconfig_d$*.py
+	mkdir -p debian/python3-sip-dev/usr/include/python3.$*m
+	install -m 644 -o root -g root siplib/sip.h debian/python3-sip-dev/usr/include/python3.$*m/
+	mkdir -p debian/python3-sip-dev/usr/include/python3.$*dm
+	ln -s ../python3.$*m/sip.h \
+	    debian/python3-sip-dev/usr/include/python3.$*dm/sip.h
 	mkdir -p debian/python3-sip-dev/usr/lib/python3.$*/dist-packages
 	install -m 644 -o root -g root sipdistutils.py debian/python3-sip-dev/usr/lib/python3.$*/dist-packages
 
-install-arch-%:
-	$(MAKE) -C build-$* install DESTDIR=$(CURDIR)/debian/tmp
-	$(MAKE) -C dbg-build-$* install DESTDIR=$(CURDIR)/debian/python-sip-dbg
-	mkdir -p debian/python-sip/usr/lib/python$*/$(call py_sitename,$*)/
-	install -m 644 -o root -g root debian/sipconfig.py debian/python-sip/usr/lib/python$*/$(call py_sitename,$*)/
-	install -m 644 -o root -g root build-$*/sipconfig.py debian/python-sip/usr/lib/python$*/$(call py_sitename,$*)/sipconfig_nd.py
-	install -m 644 -o root -g root dbg-build-$*/sipconfig.py debian/python-sip-dbg/usr/lib/python$*/$(call py_sitename,$*)/sipconfig_d.py
-	mkdir -p debian/python-sip-dev/usr/include/python$*
-	install -m 644 -o root -g root siplib/sip.h debian/python-sip-dev/usr/include/python$*/
-	mkdir -p debian/python-sip-dev/usr/include/python$*_d
-	ln -s ../python$*/sip.h \
-	    debian/python-sip-dev/usr/include/python$*_d/sip.h
-	mkdir -p debian/python-sip-dev/usr/lib/python$*/$(call py_sitename,$*)
-	install -m 644 -o root -g root sipdistutils.py debian/python-sip-dev/usr/lib/python$*/$(call py_sitename,$*)
+install-arch-2%:
+	$(MAKE) -C build-2$* install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) -C dbg-build-2$* install DESTDIR=$(CURDIR)/debian/python-sip-dbg
+	mkdir -p debian/python-sip/usr/lib/python2$*/$(call py_sitename,2$*)/
+	install -m 644 -o root -g root debian/sipconfig.py debian/python-sip/usr/lib/python2$*/$(call py_sitename,2$*)/
+	install -m 644 -o root -g root build-2$*/sipconfig.py debian/python-sip/usr/lib/python2$*/$(call py_sitename,2$*)/sipconfig_nd.py
+	install -m 644 -o root -g root dbg-build-2$*/sipconfig.py debian/python-sip-dbg/usr/lib/python2$*/$(call py_sitename,2$*)/sipconfig_d.py
+	mkdir -p debian/python-sip-dev/usr/include/python2$*
+	install -m 644 -o root -g root siplib/sip.h debian/python-sip-dev/usr/include/python2$*/
+	mkdir -p debian/python-sip-dev/usr/include/python2$*_d
+	ln -s ../python2$*/sip.h \
+	    debian/python-sip-dev/usr/include/python2$*_d/sip.h
+	mkdir -p debian/python-sip-dev/usr/lib/python2$*/$(call py_sitename,2$*)
+	install -m 644 -o root -g root sipdistutils.py debian/python-sip-dev/usr/lib/python2$*/$(call py_sitename,2$*)
 
 
 # Must not depend on anything. This is to be called by
@@ -161,6 +189,15 @@ ifneq (,$(findstring -a, $(DH_OPTIONS)))
 	rm -rf debian/python-sip-dbg/usr/share/doc/python-sip-dbg
 	mkdir -p debian/python-sip-dbg/usr/share/doc
 	ln -s python-sip debian/python-sip-dbg/usr/share/doc/python-sip-dbg
+	rm -rf debian/python-sip-dev/usr/share/doc/python-sip-dev
+	mkdir -p debian/python-sip-dev/usr/share/doc
+	ln -s python-sip debian/python-sip-dev/usr/share/doc/python-sip-dev
+	rm -rf debian/python3-sip-dbg/usr/share/doc/python3-sip-dbg
+	mkdir -p debian/python3-sip-dbg/usr/share/doc
+	ln -s python3-sip debian/python3-sip-dbg/usr/share/doc/python3-sip-dbg
+	rm -rf debian/python3-sip-dev/usr/share/doc/python3-sip-dev
+	mkdir -p debian/python3-sip-dev/usr/share/doc
+	ln -s python3-sip debian/python3-sip-dev/usr/share/doc/python3-sip-dev
 endif
 	dh_compress -X.inv
 	dh_fixperms
