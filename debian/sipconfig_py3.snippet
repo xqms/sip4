@@ -1,5 +1,5 @@
 if sys.version_info[1] == @MINORVERS@:
-    if getattr(sys, "pydebug", False):
+    if 'd' in sys.abiflags:
         try:
             from sipconfig_d@MINORVERS@ import *
             from sipconfig_d@MINORVERS@ import _pkg_config, _default_macros

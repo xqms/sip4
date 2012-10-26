@@ -1,3 +1,14 @@
+sip4 (4.14-3) experimental; urgency=low
+
+  * Fix debian/sipconfig_py3.snippet to use sys.abiflags to detect if the
+    debug build is running instead of the non-existent (in python3)
+    sys.pydebug
+  * Add *.preinst to python-sip-dbg, python-sip-dev, python3-sip-dbg, and
+    python3-sip-dev to remove any potential doc directories that are now
+    symlinks (Closes: #691442)
+
+ -- Scott Kitterman <scott@kitterman.com>  Fri, 26 Oct 2012 00:03:20 -0400
+
 sip4 (4.14-2) experimental; urgency=low
 
   * Enable building for multiple supported python3 versions
