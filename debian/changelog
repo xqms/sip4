@@ -1,3 +1,10 @@
+sip4 (4.14-4) experimental; urgency=low
+
+  * Give up on doc directory symlinks as not worth the trouble
+    (Closes: #691442)
+
+ -- Scott Kitterman <scott@kitterman.com>  Mon, 05 Nov 2012 20:58:12 -0500
+
 sip4 (4.14-3) experimental; urgency=low
 
   * Fix debian/sipconfig_py3.snippet to use sys.abiflags to detect if the

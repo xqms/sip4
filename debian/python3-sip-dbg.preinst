@@ -4,7 +4,7 @@ set -e
 # Replace documentation directory with symlink
 docdir="/usr/share/doc/python3-sip-dbg"
 if [ -d $docdir ] && [ ! -L $docdir ]; then
-    if rmdir $docdir 2>/dev/null; then
+    if rm -rf $docdir 2>/dev/null; then
         ln -sf python3-sip $docdir
     fi
 fi

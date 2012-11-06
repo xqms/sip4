@@ -4,8 +4,8 @@ set -e
 # Replace documentation directory with symlink
 docdir="/usr/share/doc/python-sip-dev"
 if [ -d $docdir ] && [ ! -L $docdir ]; then
-    if rmdir $docdir 2>/dev/null; then
-        ln -sf python-sip $docdir
+    if rm -rf $docdir 2>/dev/null; then
+        echo "Removing $docdir for conversion to symlink."
     fi
 fi
 
