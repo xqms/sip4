@@ -1,3 +1,9 @@
+sip4 (4.14-5) experimental; urgency=low
+
+  * Remove *.preinst scripts as they are no longer needed.
+
+ -- Scott Kitterman <scott@kitterman.com>  Mon, 05 Nov 2012 23:05:18 -0500
+
 sip4 (4.14-4) experimental; urgency=low
 
   * Give up on doc directory symlinks as not worth the trouble
