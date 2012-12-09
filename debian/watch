@@ -1,2 +1,3 @@
 version=3
-http://sf.net/pyqt/sip-(.*).tar.gz debian uupdate
+http://www.riverbankcomputing.co.uk/software/sip/download .*/sip-(\d+(?:\.\d+)*)\.(?:tgz|tbz2|tar\.(?:gz|bz2|xz))
+# Bart Martens <bartm@debian.org>  Fri, 23 Nov 2012 09:31:45 +0000

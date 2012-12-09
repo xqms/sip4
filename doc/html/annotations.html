@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Annotations &mdash; SIP 4.14 Reference Guide</title>
+    <title>Annotations &mdash; SIP 4.14.2 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.14',
+        VERSION:     '4.14.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.14 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.14.2 Reference Guide" href="index.html" />
     <link rel="next" title="C API for Handwritten Code" href="c_api.html" />
     <link rel="prev" title="Directives" href="directives.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="directives.html" title="Directives"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.14 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.2 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -110,9 +110,10 @@ void hex() /PyName=hex_, API=PyQt4:2-/</pre>
 <dt id="argument-annotation-AllowNone">
 <tt class="descname">AllowNone</tt><a class="headerlink" href="#argument-annotation-AllowNone" title="Permalink to this definition">¶</a></dt>
 <dd><p>This boolean annotation specifies that the value of the corresponding
-argument (which should be either <a class="reference internal" href="specification_files.html#sip-type-SIP_PYCALLABLE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYCALLABLE</span></tt></a>,
-<a class="reference internal" href="specification_files.html#sip-type-SIP_PYDICT"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYDICT</span></tt></a>, <a class="reference internal" href="specification_files.html#sip-type-SIP_PYLIST"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYLIST</span></tt></a>, <a class="reference internal" href="specification_files.html#sip-type-SIP_PYSLICE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYSLICE</span></tt></a>,
-<a class="reference internal" href="specification_files.html#sip-type-SIP_PYTUPLE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTUPLE</span></tt></a> or <a class="reference internal" href="specification_files.html#sip-type-SIP_PYTYPE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTYPE</span></tt></a>) may be <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+argument (which should be either <a class="reference internal" href="specification_files.html#sip-type-SIP_PYBUFFER"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYBUFFER</span></tt></a>,
+<a class="reference internal" href="specification_files.html#sip-type-SIP_PYCALLABLE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYCALLABLE</span></tt></a>, <a class="reference internal" href="specification_files.html#sip-type-SIP_PYDICT"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYDICT</span></tt></a>, <a class="reference internal" href="specification_files.html#sip-type-SIP_PYLIST"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYLIST</span></tt></a>,
+<a class="reference internal" href="specification_files.html#sip-type-SIP_PYSLICE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYSLICE</span></tt></a>, <a class="reference internal" href="specification_files.html#sip-type-SIP_PYTUPLE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTUPLE</span></tt></a> or <a class="reference internal" href="specification_files.html#sip-type-SIP_PYTYPE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTYPE</span></tt></a>) may be
+<tt class="docutils literal"><span class="pre">None</span></tt>.</p>
 </dd></dl>
 
 <dl class="argument-annotation">
@@ -287,8 +288,8 @@ integers rather than strings of one character.</p>
 <dd><p>This boolean annotation is used with functions or methods that return a
 <tt class="docutils literal"><span class="pre">void</span> <span class="pre">*</span></tt> or <tt class="docutils literal"><span class="pre">const</span> <span class="pre">void</span> <span class="pre">*</span></tt>.  It identifies an argument that defines the
 size of the block of memory whose address is being returned.  This allows
-the <tt class="docutils literal"><span class="pre">sip.voidptr</span></tt> object that wraps the address to support the Python
-buffer protocol.</p>
+the <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> object that wraps the address to support the
+Python buffer protocol.</p>
 </dd></dl>
 
 <dl class="argument-annotation">
@@ -966,6 +967,19 @@ If not specified then the handler specified by the class&#8217;s
 <div class="section" id="typedef-annotations">
 <span id="ref-typedef-annos"></span><h2>Typedef Annotations<a class="headerlink" href="#typedef-annotations" title="Permalink to this headline">¶</a></h2>
 <dl class="typedef-annotation">
+<dt id="typedef-annotation-Capsule">
+<tt class="descname">Capsule</tt><a class="headerlink" href="#typedef-annotation-Capsule" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.14.1.</span></p>
+<p>This boolean annotation may only be used when the base type is <tt class="docutils literal"><span class="pre">void</span> <span class="pre">*</span></tt>
+and specifies that a Python capsule object is used to wrap the value rather
+than a <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a>.  The advantage of using a capsule is that name
+based type checking is performed using the name of the type being defined.</p>
+<p>For versions of Python that do not support capules <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> is
+used instead and name based type checking is not performed.</p>
+</dd></dl>
+
+<dl class="typedef-annotation">
 <dt id="typedef-annotation-DocType">
 <tt class="descname">DocType</tt><a class="headerlink" href="#typedef-annotation-DocType" title="Permalink to this definition">¶</a></dt>
 <dd><p class="versionadded">
@@ -1128,7 +1142,7 @@ have the same name in the same C++ scope.</p>
         <li class="right" >
           <a href="directives.html" title="Directives"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.14 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.2 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

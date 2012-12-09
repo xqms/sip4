@@ -1,3 +1,20 @@
+v4.14.2 8th December 2012
+  - Added sip.setdestroyonexit().
+  - sip.voidptr() will now accept any object that implements the buffer
+    protocol.
+  - Bug fixes.
+
+v4.14.1 27th October 2012
+  - SIP_PYBUFFER can now be used to define objects that implement the Python
+    buffer protocol.
+  - Added /Capsule/ typedef annotation.
+  - Added the 'z' format character to sipBuildResult().
+  - Added the 'z', '!' and '$' format characters to sipParseResult().
+  - The C prototype foo(void) is now accepted.
+  - sipdistutils.py will now include swig_opts if no sip_opts have been
+    defined.
+  - Bug fixes.
+
 v4.14 29th September 2012
   - The internal API version is increased to 9.0 requiring the regeneration of
     all modules.

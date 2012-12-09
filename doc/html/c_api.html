@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>C API for Handwritten Code &mdash; SIP 4.14 Reference Guide</title>
+    <title>C API for Handwritten Code &mdash; SIP 4.14.2 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.14',
+        VERSION:     '4.14.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.14 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.14.2 Reference Guide" href="index.html" />
     <link rel="next" title="Using the C API when Embedding" href="embedding.html" />
     <link rel="prev" title="Annotations" href="annotations.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.14 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.2 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -381,7 +381,12 @@ count is unaffected, i.e. a reference is taken.</dd>
 <dd>The result is value passed without any conversions.  The reference
 count is incremented.</dd>
 <dt><tt class="docutils literal"><span class="pre">V</span></tt> (sip.voidptr) [void *]</dt>
-<dd>Convert a C/C++ <tt class="docutils literal"><span class="pre">void</span> <span class="pre">*</span></tt> Python <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> object.</dd>
+<dd>Convert a C/C++ <tt class="docutils literal"><span class="pre">void</span> <span class="pre">*</span></tt> to a Python <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> object.</dd>
+<dt><tt class="docutils literal"><span class="pre">z</span></tt> (object) [const char *, void *]</dt>
+<dd><p class="first versionadded">
+<span class="versionmodified">New in version 4.14.1.</span></p>
+<p class="last">Convert a C/C++ <tt class="docutils literal"><span class="pre">void</span> <span class="pre">*</span></tt> to a Python named capsule object.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1639,10 +1644,29 @@ an argument.</dd>
 <dd>A Python object is checked to see if it is a certain type and then
 returned without any conversions.  The reference count is incremented.
 The Python object may not be <tt class="docutils literal"><span class="pre">Py_None</span></tt>.</dd>
-<dt><tt class="docutils literal"><span class="pre">V</span></tt> (<a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a>) [void *]</dt>
+<dt><tt class="docutils literal"><span class="pre">V</span></tt> (<a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a>) [void **]</dt>
 <dd>Convert a Python <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> object to a C/C++ <tt class="docutils literal"><span class="pre">void</span> <span class="pre">*</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">z</span></tt> (object) [const char *, void **]</dt>
+<dd><p class="first versionadded">
+<span class="versionmodified">New in version 4.14.1.</span></p>
+<p class="last">Convert a Python named capsule object to a C/C++ <tt class="docutils literal"><span class="pre">void</span> <span class="pre">*</span></tt>.</p>
+</dd>
 <dt><tt class="docutils literal"><span class="pre">Z</span></tt> (object) []</dt>
 <dd>Check that a Python object is <tt class="docutils literal"><span class="pre">Py_None</span></tt>.  No value is returned.</dd>
+<dt><tt class="docutils literal"><span class="pre">!</span></tt> (object) [PyObject **]</dt>
+<dd><p class="first versionadded">
+<span class="versionmodified">New in version 4.14.1.</span></p>
+<p class="last">A Python object is checked to see if it implements the buffer protocol
+and then returned without any conversions.  The reference count is
+incremented.  The Python object may not be <tt class="docutils literal"><span class="pre">Py_None</span></tt>.</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">$</span></tt> (object) [PyObject **]</dt>
+<dd><p class="first versionadded">
+<span class="versionmodified">New in version 4.14.1.</span></p>
+<p class="last">A Python object is checked to see if it implements the buffer protocol
+and then returned without any conversions.  The reference count is
+incremented.  The Python object may be <tt class="docutils literal"><span class="pre">Py_None</span></tt>.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -2287,7 +2311,7 @@ object for enum <tt class="docutils literal"><span class="pre">Except</span></tt
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.14 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.2 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

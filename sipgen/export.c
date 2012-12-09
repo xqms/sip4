@@ -940,6 +940,10 @@ static const char *pyType(sipSpec *pt, argDef *ad, int sec, classDef **scope)
 
     switch (ad->atype)
     {
+    case capsule_type:
+        type_name = scopedNameTail(ad->u.cap);
+        break;
+
     case struct_type:
     case void_type:
         type_name = "sip.voidptr";
@@ -1041,6 +1045,10 @@ static const char *pyType(sipSpec *pt, argDef *ad, int sec, classDef **scope)
         type_name = "type";
         break;
 
+    case pybuffer_type:
+        type_name = "buffer";
+        break;
+
     case ellipsis_type:
         type_name = "...";
         break;
@@ -1082,7 +1090,15 @@ int prPythonSignature(sipSpec *pt, FILE *fp, signatureDef *sd, int sec,
 {
     int need_sec = FALSE, need_comma = FALSE, is_res, nr_out, a;
 
-    fprintf(fp, "%c", (is_signal ? '[' : '('));
+    if (is_signal)
+    {
+        if (sd->nrArgs != 0)
+            fprintf(fp, "[");
+    }
+    else
+    {
+        fprintf(fp, "(");
+    }
 
     nr_out = 0;
 
@@ -1103,7 +1119,16 @@ int prPythonSignature(sipSpec *pt, FILE *fp, signatureDef *sd, int sec,
             need_sec = TRUE;
     }
 
-    fprintf(fp, "%c", (is_signal ? ']' : ')'));
+    if (is_signal)
+    {
+        if (sd->nrArgs != 0)
+            fprintf(fp, "]");
+    }
+    else
+    {
+        fprintf(fp, ")");
+    }
+
 
     is_res = !((sd->result.atype == void_type && sd->result.nrderefs == 0) ||
             (sd->result.doctype != NULL && sd->result.doctype[0] == '\0'));
