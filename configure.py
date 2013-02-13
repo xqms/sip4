@@ -1,6 +1,6 @@
 # This script handles the SIP configuration and generates the Makefiles.
 #
-# Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
+# Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
 #
 # This file is part of SIP.
 #
@@ -25,8 +25,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x040e02
-sip_version_str = "4.14.2"
+sip_version = 0x040e03
+sip_version_str = "4.14.3"
 py_version = sys.hexversion >> 8
 plat_py_site_dir = None
 plat_py_inc_dir = None

@@ -1,7 +1,7 @@
 /*
  * The main header file for SIP.
  *
- * Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040e02
-#define SIP_VERSION_STR     "4.14.2"
+#define SIP_VERSION         0x040e03
+#define SIP_VERSION_STR     "4.14.3"
 
 
 #ifdef TRUE

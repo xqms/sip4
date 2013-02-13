@@ -2,8 +2,8 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-PY2_PROVIDES=sip-api-9.0
-PY3_PROVIDES=sip-py3api-9.0
+PY2_PROVIDES=sip-api-9.0, sip-api-9.1
+PY3_PROVIDES=sip-py3api-9.0, sip-py3api-9.1
 # `dh_python3 --depends sip3` should generate dependency on newest API only
 PYDIST=sip $(shell python -c "a=[i.strip() for i in '$(PY3_PROVIDES)'.split(',')]; print sorted(a, reverse=True)[0]")
 
