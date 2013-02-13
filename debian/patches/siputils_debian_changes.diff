@@ -1,10 +1,10 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 02_siputils.dpatch by Torsten Marek <shlomme@debian.org>
-Index: sip4-4.14.2/siputils.py
+Index: sip4-4.14.3/siputils.py
 ===================================================================
---- sip4-4.14.2.orig/siputils.py	2012-12-07 13:09:49.000000000 -0500
-+++ sip4-4.14.2/siputils.py	2012-12-09 14:04:18.141756553 -0500
-@@ -779,7 +779,8 @@
+--- sip4-4.14.3.orig/siputils.py	2013-01-11 12:09:13.000000000 -0500
++++ sip4-4.14.3/siputils.py	2013-02-13 00:46:54.345833434 -0500
+@@ -784,7 +784,8 @@
  
          libs.extend(self.optional_list("LIBS_WINDOWS"))
  
@@ -14,7 +14,7 @@ Index: sip4-4.14.2/siputils.py
  
          # Save the transformed values.
          self.CFLAGS.set(cflags)
-@@ -916,6 +917,15 @@
+@@ -926,6 +927,15 @@
          clib is the library name in cannonical form.
          framework is set of the library is implemented as a MacOS framework.
          """
