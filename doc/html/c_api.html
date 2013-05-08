@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>C API for Handwritten Code &mdash; SIP 4.14.3 Reference Guide</title>
+    <title>C API for Handwritten Code &mdash; SIP 4.14.6 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.14.3',
+        VERSION:     '4.14.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.14.3 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.14.6 Reference Guide" href="index.html" />
     <link rel="next" title="Using the C API when Embedding" href="embedding.html" />
     <link rel="prev" title="Annotations" href="annotations.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.6 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -108,6 +108,29 @@ system to specify that the generated code is being compiled with
 <tt class="docutils literal"><span class="pre">protected</span></tt> redefined as <tt class="docutils literal"><span class="pre">public</span></tt>.  This allows handwritten code to
 determine if the generated helper functions for accessing protected C++
 functions are available (see <a class="reference internal" href="directives.html#directive-%MethodCode"><tt class="xref std std-directive docutils literal"><span class="pre">%MethodCode</span></tt></a>).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SIP_RELEASE_GIL">
+<tt class="descname">SIP_RELEASE_GIL</tt><big>(</big>sip_gilstate_t<em>&nbsp;sipGILState</em><big>)</big><a class="headerlink" href="#SIP_RELEASE_GIL" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.14.4.</span></p>
+<p>This is called from the handwritten code specified with the
+<tt class="xref std std-directive docutils literal"><span class="pre">VirtualErrorHandler</span></tt> in order to release the Python Global
+Interpreter Lock (GIL) prior to changing the execution path (e.g. by
+throwing a C++ exception).  It should not be called under any other
+circumstances.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sipGILState</strong> &#8211; an opaque value provided to the handwritten code by SIP.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="macro">
@@ -2311,7 +2334,7 @@ object for enum <tt class="docutils literal"><span class="pre">Except</span></tt
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.6 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

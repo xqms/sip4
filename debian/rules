@@ -2,8 +2,8 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-PY2_PROVIDES=sip-api-9.0, sip-api-9.1
-PY3_PROVIDES=sip-py3api-9.0, sip-py3api-9.1
+PY2_PROVIDES=sip-api-9.0, sip-api-9.1, sip-api-9.2
+PY3_PROVIDES=sip-py3api-9.0, sip-py3api-9.1, sip-py3api-9.2
 # `dh_python3 --depends sip3` should generate dependency on newest API only
 PYDIST=sip $(shell python -c "a=[i.strip() for i in '$(PY3_PROVIDES)'.split(',')]; print sorted(a, reverse=True)[0]")
 
@@ -96,8 +96,8 @@ install-arch: build
 	dh_testdir
 	dh_testroot	
 	dh_prep -a
-	echo "python:Provides=$(PY2_PROVIDES)" >> debian/python-sip.substvars
-	echo "python3:Provides=$(PY3_PROVIDES)" >> debian/python3-sip.substvars
+	echo "sip:Provides=$(PY2_PROVIDES)" >> debian/python-sip.substvars
+	echo "sip3:Provides=$(PY3_PROVIDES)" >> debian/python3-sip.substvars
 	echo "$(PYDIST)" > debian/python3-sip.pydist
 	dh_installdirs -a
 	# This is needed to enforce that the install-arch-% rules are

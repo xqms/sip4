@@ -1,3 +1,15 @@
+v4.14.6 21st April 2013
+  - Bug fixes.
+
+v4.14.5 26th March 2013
+  - Bug fixes (specifically for QGIS).
+
+v4.14.4 1st March 2013
+  - The handwritten code provided to the %VirtualErrorHandler directive is now
+    called with the GIL held and from the thread that raised the error.  This
+    is, potentially, an incompatible change.
+  - Bug fixes.
+
 v4.14.3 28th January 2013
   - The /KeepReference/ argument annotation, when applied to factories, will
     now keep the reference with the object created by the factory.

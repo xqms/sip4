@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Potential Incompatibilities with Earlier Versions &mdash; SIP 4.14.3 Reference Guide</title>
+    <title>Potential Incompatibilities with Earlier Versions &mdash; SIP 4.14.6 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.14.3',
+        VERSION:     '4.14.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.14.3 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.14.6 Reference Guide" href="index.html" />
     <link rel="next" title="Installation" href="installation.html" />
     <link rel="prev" title="Introduction" href="introduction.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="introduction.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.6 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -59,6 +59,17 @@
 <h1>Potential Incompatibilities with Earlier Versions<a class="headerlink" href="#potential-incompatibilities-with-earlier-versions" title="Permalink to this headline">¶</a></h1>
 <p>This section describes incompatibilities introduced by particular versions of
 SIP.  Normally these are the removal of previously deprecated features.</p>
+<div class="section" id="sip-v4-14-4">
+<h2>SIP v4.14.4<a class="headerlink" href="#sip-v4-14-4" title="Permalink to this headline">¶</a></h2>
+<p>Prior to this version, the handwritten code defined by the
+<a class="reference internal" href="directives.html#directive-%VirtualErrorHandler"><tt class="xref std std-directive docutils literal"><span class="pre">%VirtualErrorHandler</span></tt></a> directive was called without the Python
+Global Interpreter Lock (GIL) being held and from an arbitrary thread.</p>
+<p>Starting with this version the code is called with the GIL being held and from
+the thread that raised the error.  In addition the code is provided a value
+called <tt class="docutils literal"><span class="pre">sipGILState</span></tt> that may be passed to <a class="reference internal" href="c_api.html#SIP_RELEASE_GIL" title="SIP_RELEASE_GIL"><tt class="xref c c-func docutils literal"><span class="pre">SIP_RELEASE_GIL()</span></tt></a> in order
+to release the GIL.  This must be done if the code changes the execution path
+(e.g. by throwing a C++ exception).</p>
+</div>
 <div class="section" id="sip-v4-12-3">
 <h2>SIP v4.12.3<a class="headerlink" href="#sip-v4-12-3" title="Permalink to this headline">¶</a></h2>
 <p>Prior to this version, when SIP searches a class hierachy to see if there is a
@@ -236,6 +247,7 @@ still supported).</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Potential Incompatibilities with Earlier Versions</a><ul>
+<li><a class="reference internal" href="#sip-v4-14-4">SIP v4.14.4</a></li>
 <li><a class="reference internal" href="#sip-v4-12-3">SIP v4.12.3</a></li>
 <li><a class="reference internal" href="#sip-v4-12">SIP v4.12</a></li>
 <li><a class="reference internal" href="#sip-v4-10-1">SIP v4.10.1</a><ul>
@@ -306,7 +318,7 @@ still supported).</p>
         <li class="right" >
           <a href="introduction.html" title="Introduction"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.6 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

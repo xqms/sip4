@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Directives &mdash; SIP 4.14.3 Reference Guide</title>
+    <title>Directives &mdash; SIP 4.14.6 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.14.3',
+        VERSION:     '4.14.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.14.3 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.14.6 Reference Guide" href="index.html" />
     <link rel="next" title="Annotations" href="annotations.html" />
     <link rel="prev" title="SIP Specification Files" href="specification_files.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.6 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -2321,22 +2321,34 @@ public:
 that is called when a Python re-implementation of a virtual C++ function raises
 a Python exception.  If a virtual C++ function does not have a handler the
 <tt class="docutils literal"><span class="pre">PyErr_Print()</span></tt> function is called.</p>
-<p>The handler is called after all tidying up has been completed and with the
-Python Global Interpreter Lock (GIL) released.  Therefore the handler may
-change the execution path by, for example, throwing a C++ exception.</p>
-<p>The following variable is made available to the handwritten code:</p>
+<p>The handler is called after all tidying up has been completed, with the Python
+Global Interpreter Lock (GIL) held and from the thread that raised the
+exception.  If the handler wants to change the execution path by, for example,
+throwing a C++ exception, it must first release the GIL by calling
+<a class="reference internal" href="c_api.html#SIP_RELEASE_GIL" title="SIP_RELEASE_GIL"><tt class="xref c c-func docutils literal"><span class="pre">SIP_RELEASE_GIL()</span></tt></a>.  It must not call <a class="reference internal" href="c_api.html#SIP_RELEASE_GIL" title="SIP_RELEASE_GIL"><tt class="xref c c-func docutils literal"><span class="pre">SIP_RELEASE_GIL()</span></tt></a> if the
+execution path is not changed.</p>
+<p>The following variables are made available to the handwritten code:</p>
 <dl class="docutils">
 <dt>sipSimpleWrapper *sipPySelf</dt>
 <dd>This is the class instance containing the Python reimplementation.</dd>
+<dt>sip_gilstate_t sipGILState</dt>
+<dd>This is an opaque value that must be passed to <a class="reference internal" href="c_api.html#SIP_RELEASE_GIL" title="SIP_RELEASE_GIL"><tt class="xref c c-func docutils literal"><span class="pre">SIP_RELEASE_GIL()</span></tt></a> in
+order to release the GIL prior to changing the execution path.</dd>
 </dl>
 <p>For example:</p>
 <div class="highlight-python"><pre>%VirtualErrorHandler my_handler
-    throw my_exception(sipPySelf);
+    PyObject *exception, *value, *traceback;
+
+    PyErr_Fetch(&amp;exception, &amp;value, &amp;traceback);
+
+    SIP_RELEASE_GIL(sipGILState);
+
+    throw my_exception(sipPySelf, exception, value, traceback);
 %End</pre>
 </div>
 <div class="admonition-see-also admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="annotations.html#function-annotation-NoVirtualErrorHandler"><tt class="xref std std-fanno docutils literal"><span class="pre">NoVirtualErrorHandler</span></tt></a>, <tt class="xref std std-fanno docutils literal"><span class="pre">VirtualErrorHandler`</span></tt>, <a class="reference internal" href="annotations.html#class-annotation-VirtualErrorHandler"><tt class="xref std std-canno docutils literal"><span class="pre">VirtualErrorHandler</span></tt></a></p>
+<p class="last"><a class="reference internal" href="annotations.html#function-annotation-NoVirtualErrorHandler"><tt class="xref std std-fanno docutils literal"><span class="pre">NoVirtualErrorHandler</span></tt></a>, <a class="reference internal" href="annotations.html#function-annotation-VirtualErrorHandler"><tt class="xref std std-fanno docutils literal"><span class="pre">VirtualErrorHandler</span></tt></a>, <a class="reference internal" href="annotations.html#class-annotation-VirtualErrorHandler"><tt class="xref std std-canno docutils literal"><span class="pre">VirtualErrorHandler</span></tt></a></p>
 </div>
 </div>
 </div>
@@ -2397,7 +2409,7 @@ change the execution path by, for example, throwing a C++ exception.</p>
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.6 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
