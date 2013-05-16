@@ -1,8 +1,18 @@
-sip4 (4.14.3-2) UNRELEASED; urgency=low
+sip4 (4.14.6-1) unstable; urgency=low
 
+  * Upload to unstable
+
+  [ Jakub Wilk ]
   * Use canonical URIs for Vcs-* fields.
 
- -- Jakub Wilk <jwilk@debian.org>  Sun, 05 May 2013 16:03:59 +0200
+  [ Scott Kitterman ]
+  * New upstream release
+    - Refreshed patches
+    - Update sip{3}-api provides for new minor SIP API version
+    - Update Breaks for new transition
+  * Drop unused python/python3:Provides
+
+ -- Scott Kitterman <scott@kitterman.com>  Tue, 07 May 2013 22:48:39 -0400
 
 sip4 (4.14.3-1) experimental; urgency=low
 
