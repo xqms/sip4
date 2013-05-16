@@ -1,3 +1,12 @@
+sip4 (4.14.6-2) UNRELEASED; urgency=low
+
+  * Fixes for some lintian4python errors:
+    - Make python3-sip-dev depend on ${python3:Depends}, not ${python:Depends}.
+    - Bump build-dependency on python-all-dev to (>= 2.7.2-5~), to ensure
+      that dh_python2 supports --no-dbg-cleaning option.
+
+ -- Dmitry Shachnev <mitya57@gmail.com>  Thu, 16 May 2013 20:47:20 +0400
+
 sip4 (4.14.6-1) unstable; urgency=low
 
   * Upload to unstable
