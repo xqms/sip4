@@ -833,6 +833,28 @@ specification files.
         the memory address.
 
 
+.. c:function:: int sipEnableAutoconversion(const sipTypeDef *td, int enable)
+
+    .. versionadded:: 4.14.7
+
+    Instances of some classes may be automatically converted to other Python
+    objects even though the class has been wrapped.  This allows that behaviour
+    to be suppressed so that an instances of the wrapped class is returned
+    instead.
+
+    :param td:
+        the type's :ref:`generated type structure <ref-type-structures>`.  This
+        must refer to a class.
+    :param enable:
+        is non-zero if auto-conversion should be enabled for the type.  This is
+        the default behaviour.
+    :return:
+        ``1`` or ``0`` depending on whether or not auto-conversion was
+        previously enabled for the type.  This allows the previous state to be
+        restored later on.  ``-1`` is returned, and a Python exception raised,
+        if there was an error.
+
+
 .. c:function:: int sipExportSymbol(const char *name, void *sym)
 
     Python does not allow extension modules to directly access symbols in
@@ -1467,6 +1489,22 @@ specification files.
         the name of the typedef.
     :return:
         the value of the typedef or ``NULL`` if there was no such typedef.
+
+
+.. c:function:: void sipSetDestroyOnExit(int destroy)
+
+    .. versionadded:: 4.14.7
+
+    When the Python interpreter exits it garbage collects those objects that it
+    can.  This means that any corresponding C++ instances and C structures
+    owned by Python are destroyed.  Unfortunately this happens in an
+    unpredictable order and so can cause memory faults within the wrapped
+    library.  Calling this function with a value of zero disables the automatic
+    destruction of C++ instances and C structures.
+
+    :param destroy:
+        non-zero if all C++ instances and C structures owned by Python should
+        be destroyed when the interpreter exits.  This is the default.
 
 
 .. c:type:: sipSimpleWrapper

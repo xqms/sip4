@@ -1,3 +1,17 @@
+sip4 (4.14.7-1) unstable; urgency=low
+
+  [ Dmitry Shachnev ]
+  * Fixes for some lintian4python errors:
+    - Make python3-sip-dev depend on ${python3:Depends}, not ${python:Depends}.
+    - Bump build-dependency on python-all-dev to (>= 2.7.2-5~), to ensure
+      that dh_python2 supports --no-dbg-cleaning option.
+
+  [ Scott Kitterman ]
+  * New upstream release
+  * Added doc-base registration, debian/python-sip-doc.doc-base
+
+ -- Scott Kitterman <scott@kitterman.com>  Mon, 17 Jun 2013 20:39:47 -0400
+
 sip4 (4.14.6-1) unstable; urgency=low
 
   * Upload to unstable

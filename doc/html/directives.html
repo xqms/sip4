@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Directives &mdash; SIP 4.14.6 Reference Guide</title>
+    <title>Directives &mdash; SIP 4.14.7 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.14.6',
+        VERSION:     '4.14.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.14.6 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.14.7 Reference Guide" href="index.html" />
     <link rel="next" title="Annotations" href="annotations.html" />
     <link rel="prev" title="SIP Specification Files" href="specification_files.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.6 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.7 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -452,15 +452,21 @@ specify the name of the consolidated module.</p>
     <em>code</em>
 %End
 </pre>
-<p>This directive is used as part of the <a class="reference internal" href="#directive-%MappedType"><tt class="xref std std-directive docutils literal"><span class="pre">%MappedType</span></tt></a> directive to
-specify the handwritten code that converts an instance of a mapped type to a
-Python object.</p>
+<p>This directive is used as part of the <a class="reference internal" href="#directive-%MappedType"><tt class="xref std std-directive docutils literal"><span class="pre">%MappedType</span></tt></a> directive (when
+it is required) or of a class specification (when it is optional) to specify
+the handwritten code that converts an instance of a C/C++ type to a Python
+object.</p>
+<p>If used as part of a class specification then instances of the class will be
+automatically converted to the Python object, even though the class itself has
+been wrapped.  This behaviour can be changed on a temporary basis from an
+application by calling the <a class="reference internal" href="python_api.html#sip.enableautoconversion" title="sip.enableautoconversion"><tt class="xref py py-func docutils literal"><span class="pre">sip.enableautoconversion()</span></tt></a> function, or from
+handwritten code by calling the <a class="reference internal" href="c_api.html#sipEnableAutoconversion" title="sipEnableAutoconversion"><tt class="xref c c-func docutils literal"><span class="pre">sipEnableAutoconversion()</span></tt></a> function.</p>
 <p>The following variables are made available to the handwritten code:</p>
 <dl class="docutils">
 <dt><em>type</em> *sipCpp</dt>
-<dd>This is a pointer to the instance of the mapped type to be converted.  It
-will never be zero as the conversion from zero to <tt class="docutils literal"><span class="pre">Py_None</span></tt> is handled
-before the handwritten code is called.</dd>
+<dd>This is a pointer to the C/C++ instance to be converted.  It will never be
+zero as the conversion from zero to <tt class="docutils literal"><span class="pre">Py_None</span></tt> is handled before the
+handwritten code is called.</dd>
 <dt>PyObject *sipTransferObj</dt>
 <dd>This specifies any desired ownership changes to the returned object.  If it
 is <tt class="docutils literal"><span class="pre">NULL</span></tt> then the ownership should be left unchanged.  If it is
@@ -1073,8 +1079,7 @@ objects even when their reference counts are not zero.  If a wrapped C
 structure or C++ class keeps its own reference to a Python object then, if the
 garbage collector is to do its job, it needs to provide some handwritten code
 to traverse and potentially clear those embedded references.</p>
-<p>See the section <em>Supporting cyclic garbage collection</em> in <a class="reference external" href="http://www.python.org/dev/doc/devel/ext/">Embedding and
-Extending the Python Interpreter</a>
+<p>See the section <a class="reference external" href="http://docs.python.org/3/c-api/gcsupport.html">Supporting Cyclic Garbage Collection</a> in the Python documentation
 for the details.</p>
 <p>This directive is used to specify the code that clears any embedded references.
 (See <a class="reference internal" href="#directive-%GCTraverseCode"><tt class="xref std std-directive docutils literal"><span class="pre">%GCTraverseCode</span></tt></a> for specifying the code that traverses any
@@ -2409,7 +2414,7 @@ order to release the GIL prior to changing the execution path.</dd>
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.6 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.7 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Annotations &mdash; SIP 4.14.6 Reference Guide</title>
+    <title>Annotations &mdash; SIP 4.14.7 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.14.6',
+        VERSION:     '4.14.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.14.6 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.14.7 Reference Guide" href="index.html" />
     <link rel="next" title="C API for Handwritten Code" href="c_api.html" />
     <link rel="prev" title="Directives" href="directives.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="directives.html" title="Directives"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.6 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.7 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -844,16 +844,16 @@ directive is ignored.</p>
 <dt id="function-annotation-Numeric">
 <tt class="descname">Numeric</tt><a class="headerlink" href="#function-annotation-Numeric" title="Permalink to this definition">¶</a></dt>
 <dd><p>This boolean annotation specifies that the operator should be interpreted
-as a numeric operator rather than a sequence operator.  Python uses the
-<tt class="docutils literal"><span class="pre">+</span></tt> operator for adding numbers and concatanating sequences, and the
-<tt class="docutils literal"><span class="pre">*</span></tt> operator for multiplying numbers and repeating sequences.  SIP tries
-to work out which is meant by looking at other operators that have been
-defined for the type.  If it finds either <tt class="docutils literal"><span class="pre">-</span></tt>, <tt class="docutils literal"><span class="pre">-=</span></tt>, <tt class="docutils literal"><span class="pre">/</span></tt>, <tt class="docutils literal"><span class="pre">/=</span></tt>,
-<tt class="docutils literal"><span class="pre">%</span></tt> or <tt class="docutils literal"><span class="pre">%=</span></tt> defined then it assumes that <tt class="docutils literal"><span class="pre">+</span></tt>, <tt class="docutils literal"><span class="pre">+=</span></tt>, <tt class="docutils literal"><span class="pre">*</span></tt> and
-<tt class="docutils literal"><span class="pre">*=</span></tt> should be numeric operators.  Otherwise, if it finds either <tt class="docutils literal"><span class="pre">[]</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">__getitem__()</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">__setitem__()</span></tt> or <tt class="xref py py-meth docutils literal"><span class="pre">__delitem__()</span></tt> defined
-then it assumes that they should be sequence operators.  This annotation is
-used to force SIP to treat the operator as numeric.</p>
+as a numeric operator rather than a sequence operator.</p>
+<p>Python uses the <tt class="docutils literal"><span class="pre">+</span></tt> operator for adding numbers and concatanating
+sequences, and the <tt class="docutils literal"><span class="pre">*</span></tt> operator for multiplying numbers and repeating
+sequences.  Unless this or the <a class="reference internal" href="#function-annotation-Sequence"><tt class="xref std std-fanno docutils literal"><span class="pre">Sequence</span></tt></a> annotation is specified,
+SIP tries to work out which is meant by looking at other operators that
+have been defined for the type.  If it finds either <tt class="docutils literal"><span class="pre">-</span></tt>, <tt class="docutils literal"><span class="pre">-=</span></tt>, <tt class="docutils literal"><span class="pre">/</span></tt>,
+<tt class="docutils literal"><span class="pre">/=</span></tt>, <tt class="docutils literal"><span class="pre">%</span></tt> or <tt class="docutils literal"><span class="pre">%=</span></tt> defined then it assumes that <tt class="docutils literal"><span class="pre">+</span></tt>, <tt class="docutils literal"><span class="pre">+=</span></tt>, <tt class="docutils literal"><span class="pre">*</span></tt>
+and <tt class="docutils literal"><span class="pre">*=</span></tt> should be numeric operators.  Otherwise, if it finds either
+<tt class="docutils literal"><span class="pre">[]</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">__getitem__()</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">__setitem__()</span></tt> or <tt class="xref py py-meth docutils literal"><span class="pre">__delitem__()</span></tt>
+defined then it assumes that they should be sequence operators.</p>
 </dd></dl>
 
 <dl class="function-annotation">
@@ -921,6 +921,24 @@ the <a class="reference internal" href="directives.html#directive-%MethodCode"><
 reacquired afterwards.  It should be used for functions that might block or
 take a significant amount of time to execute.  See <a class="reference internal" href="using.html#ref-gil"><em>The Python Global Interpreter Lock</em></a> and the
 <a class="reference internal" href="#function-annotation-HoldGIL"><tt class="xref std std-fanno docutils literal"><span class="pre">HoldGIL</span></tt></a> annotation.</p>
+</dd></dl>
+
+<dl class="function-annotation">
+<dt id="function-annotation-Sequence">
+<tt class="descname">Sequence</tt><a class="headerlink" href="#function-annotation-Sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.14.7.</span></p>
+<p>This boolean annotation specifies that the operator should be interpreted
+as a sequence operator rather than a numeric operator.</p>
+<p>Python uses the <tt class="docutils literal"><span class="pre">+</span></tt> operator for adding numbers and concatanating
+sequences, and the <tt class="docutils literal"><span class="pre">*</span></tt> operator for multiplying numbers and repeating
+sequences.  Unless this or the <a class="reference internal" href="#function-annotation-Numeric"><tt class="xref std std-fanno docutils literal"><span class="pre">Numeric</span></tt></a> annotation is specified,
+SIP tries to work out which is meant by looking at other operators that
+have been defined for the type.  If it finds either <tt class="docutils literal"><span class="pre">-</span></tt>, <tt class="docutils literal"><span class="pre">-=</span></tt>, <tt class="docutils literal"><span class="pre">/</span></tt>,
+<tt class="docutils literal"><span class="pre">/=</span></tt>, <tt class="docutils literal"><span class="pre">%</span></tt> or <tt class="docutils literal"><span class="pre">%=</span></tt> defined then it assumes that <tt class="docutils literal"><span class="pre">+</span></tt>, <tt class="docutils literal"><span class="pre">+=</span></tt>, <tt class="docutils literal"><span class="pre">*</span></tt>
+and <tt class="docutils literal"><span class="pre">*=</span></tt> should be numeric operators.  Otherwise, if it finds either
+<tt class="docutils literal"><span class="pre">[]</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">__getitem__()</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">__setitem__()</span></tt> or <tt class="xref py py-meth docutils literal"><span class="pre">__delitem__()</span></tt>
+defined then it assumes that they should be sequence operators.</p>
 </dd></dl>
 
 <dl class="function-annotation">
@@ -1153,7 +1171,7 @@ have the same name in the same C++ scope.</p>
         <li class="right" >
           <a href="directives.html" title="Directives"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.6 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.7 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
