@@ -1,0 +1,10 @@
+Document: python-sip-doc
+Title: Sip4 Reference and API Documentation
+Author: Phil Thompson
+Abstract: Sip4 is a Python/C++ bindings generator
+ This documentation contains the html version of Sip4.
+Section: Programming/Python
+
+Format: HTML
+Index: /usr/share/doc/python-sip-doc/html/index.html
+Files: /usr/share/doc/python-sip-doc/html/*.html
