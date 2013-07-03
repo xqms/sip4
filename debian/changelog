@@ -1,3 +1,17 @@
+sip4 (4.14.7-3) UNRELEASED; urgency=low
+
+  * Split usr/bin/sip out of python-sip-dev to fix missing depends for
+    python3-sip-dev without requiring dragging in all of python-sip for
+    Python 3 projects
+    - Add sip-dev to debian/control with breaks/replaces on old python-sip-dev
+      versions
+    - Add sip-dev to depends for python-sip-dev and python3-sip-dev
+    - Update .install and .manpages files for package split
+  * Remove redundant Recommends on python-sip/python3-sip in the -dev
+    packages
+
+ -- Scott Kitterman <scott@kitterman.com>  Wed, 03 Jul 2013 17:33:19 -0400
+
 sip4 (4.14.7-2) unstable; urgency=low
 
   * Fix sip API bump missed in the last upload (Closes: #712669)
