@@ -186,6 +186,7 @@ ifneq (,$(findstring -a, $(DH_OPTIONS)))
 	DH_OPTIONS= dh_strip -ppython-sip -Npython-sip-dev --dbg-package=python-sip-dbg
 	DH_OPTIONS= dh_strip -ppython3-sip-dev
 	DH_OPTIONS= dh_strip -ppython3-sip -Npython3-sip-dev --dbg-package=python3-sip-dbg
+	DH_OPTIONS= dh_strip -psip-dev --dbg-package=sip-dbg
 endif
 	dh_compress -X.inv
 	dh_fixperms
