@@ -9,6 +9,11 @@ sip4 (4.14.7-3) UNRELEASED; urgency=low
     - Update .install and .manpages files for package split
   * Remove redundant Recommends on python-sip/python3-sip in the -dev
     packages
+  * Use build Sphinx based documenation from source and use dh_sphinxdoc to
+    generate dependencies for python-sip-doc
+    - Add sphinxdoc:Depends to python-sip-doc depends
+    - Add call to sphinx-build and dh_sphinxdoc in debian/rules
+    - Add python-sphinx to build-depends
 
  -- Scott Kitterman <scott@kitterman.com>  Wed, 03 Jul 2013 17:33:19 -0400
 

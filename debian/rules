@@ -198,7 +198,9 @@ endif
 	dh_builddeb
 
 # Build architecture independant packages using the common target.
-binary-indep: 
+binary-indep:
+	sphinx-build sphinx debian/python-sip-doc/usr/share/doc/python-sip-doc/html
+	dh_sphinxdoc -p python-sip-doc
 	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
 
 # Build architecture dependant packages using the common target.
