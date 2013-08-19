@@ -1,3 +1,20 @@
+sip4 (4.14.7-4) unstable; urgency=medium
+
+  * Urgency medium for RC bug fix affecting stable -> testing upgrades
+  * Clean up symlink versus directory for python/python3-sip-dbg
+    (Closes: #720156)
+    - Convert doc directories for -dbg packages to symlinks (as
+      python-sip-dbg has in wheezy)
+    - Add python/python3-sip-dbg.postinsts to straighten up existing dirs
+    - Convert sip-dbg doc dir to symlink to sip-dev
+  * Exclude sip-dev from dh_python3 processing to fix errors with dh_python3
+    processing inappropriate files
+  * Remove install-arch-3.2, now that python3.2 is no longer supported to
+    simplify debian/rules, bump minimum python3-all-dev version required to
+    3.3.2-5~
+
+ -- Scott Kitterman <scott@kitterman.com>  Mon, 19 Aug 2013 08:59:25 -0400
+
 sip4 (4.14.7-3) unstable; urgency=low
 
   * Split usr/bin/sip out of python-sip-dev to fix missing depends for
