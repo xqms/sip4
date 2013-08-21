@@ -419,6 +419,16 @@ Class Annotations
     and methods as being deprecated.
 
 
+.. class-annotation:: ExportDerived
+
+    .. versionadded:: 4.15
+
+    In many cases SIP generates a derived class for each class being wrapped
+    (see :ref:`ref-derived-classes`).  Normally this is used internally.  This
+    boolean annotation specifies that the declaration of the class is exported
+    and able to be used by handwritten code.
+
+
 .. class-annotation:: External
 
     This boolean annotation is used to specify that the class is defined in
@@ -433,6 +443,31 @@ Class Annotations
     creating the type object for this C structure or C++ type.
 
     See the section :ref:`ref-types-metatypes` for more details.
+
+
+.. class-annotation:: Mixin
+
+    .. versionadded:: 4.15
+
+    This boolean annotation specifies that the class can be used as a mixin
+    with other wrapped classes.
+    
+    Normally a Python application cannot define a new class that is derived
+    from more than one wrapped class.  In C++ this would create a new C++
+    class.  This cannot be done from Python.  At best a C++ instance of each of
+    the wrapped classes can be created and wrapped as separate Python objects.
+    However some C++ classes may function perfectly well with this restriction.
+    Such classes are often intended to be used as mixins.
+
+    If this annotation is specified then a separate instance of the class is
+    created.  The main instance automatically delegates to the instance of the
+    mixin when required.  A mixin class should have the following
+    characteristics:
+
+    - Any constructor arguments should be able to be specified using keyword
+      arguments.
+
+    - The class should not have any virtual methods.
 
 
 .. class-annotation:: NoDefaultCtors
@@ -537,6 +572,17 @@ Mapped Type Annotations
 Enum Annotations
 ----------------
 
+.. enum-annotation:: NoScope
+
+    .. versionadded:: 4.15
+
+    This boolean annotation specifies the that scope of an enum's members
+    should be omitted in the generated code.  Normally this would mean that the
+    generated code will not compile.  However it is useful when defining
+    pseudo-enums, for example, to wrap global values so that they are defined
+    (in Python) within the scope of a class.
+
+
 .. enum-annotation:: PyName
 
     This name annotation specifies an alternative name for the enum or enum
@@ -632,7 +678,7 @@ Function Annotations
 
     This boolean annotation specifies that the value returned by the function
     (which should be a wrapped C structure or C++ class instance) is a newly
-    created instance and is owned by C/C++.
+    created instance and is owned by Python.
 
     See :ref:`ref-object-ownership` for more detail.
 

@@ -581,6 +581,36 @@ specification files.
     :directive:`%ConvertToSubClassCode` code.
 
 
+.. c:function:: PyObject *sipConvertFromNewPyType(void *cpp, PyTypeObject *py_type, sipWrapper *owner, sipSimpleWrapper **selfp, const char *format, ...)
+
+    .. versionadded:: 4.15
+
+    This converts a new C structure or a C++ class instance to an instance of a
+    corresponding Python type (as opposed to the corresponding generated Python
+    type).  This is useful when the C/C++ library provides some sort of
+    mechanism whereby handwritten code has some control over the exact type of
+    structure or class being created.  Typically it would be used to create an
+    instance of the generated derived class which would then allow Python
+    re-implementations of C++ virtual methods to function properly.
+
+    :param cpp:
+        the C/C++ instance.
+    :param py_type:
+        the Python type object.  This is called to create the Python object and
+        is passed the arguments defined by the string of format characters.
+    :param owner:
+        is the optional owner of the Python object.
+    :param selfp:
+        is an optional pointer to the ``sipPySelf`` instance variable of the
+        C/C++ instance if that instance's type is a generated derived class.
+        Otherwise it should be ``NULL``.
+    :param format:
+        the string of format characters (see :c:func:`sipBuildResult()`).
+    :return:
+        the Python object.  If there was an error then ``NULL`` is returned and
+        a Python exception is raised.
+
+
 .. c:function:: PyObject *sipConvertFromNewType(void *cpp, const sipTypeDef *td, PyObject *transferObj)
 
     This converts a new C structure or a C++ class instance to an instance of
@@ -682,6 +712,35 @@ specification files.
         the size associated with the address.
     :return:
         the :class:`sip.voidptr` object.
+
+
+.. c:function:: PyObject *sipConvertToArray(void *cpp, const char *format, SIP_SSIZE_T len, int readonly)
+
+    .. versionadded:: 4.15
+
+    This converts a one dimensional array of fundamental types to a
+    :class:`sip.array` object.
+
+    An array is very like a Python :class:`memoryview` object.  The underlying
+    memory is not copied and may be modified in situ.  Arrays support the
+    buffer protocol and so can be passed to other modules, again without the
+    underlying memory being copied.
+
+    :class:`sip.array` objects are not supported by the :program:`sip` code
+    generator.  They can only be created by handwritten code.
+
+    :param cpp:
+        the address of the start of the C/C++ array.
+    :param format:
+        the format, as defined by the :mod:`struct` module, of an array
+        element.  At the moment only ``H`` (unsigned short) and ``I`` (unsigned
+        int) are supported.
+    :param len:
+        the number of elements in the array.
+    :param readonly:
+        is non-zero if the array is read-only.
+    :return:
+        the :class:`sip.array` object.
 
 
 .. c:function:: void *sipConvertToInstance(PyObject *obj, sipWrapperType *type, PyObject *transferObj, int flags, int *state, int *iserr)
@@ -818,6 +877,40 @@ specification files.
     isn't attempted in the first place.  (This allows several calls to be made
     that share the same error flag so that it only needs to be tested once
     rather than after each call.)
+
+
+.. c:function:: PyObject *sipConvertToTypedArray(void *cpp, const sipTypeDef *td, const char *format, size_t stride, SIP_SSIZE_T len, int readonly)
+
+    .. versionadded:: 4.15
+
+    This converts a one dimensional array of instances of a C structure, C++
+    class or mapped type to a :class:`sip.array` object.
+
+    An array is very like a Python :class:`memoryview` object but it's elements
+    correspond to C structures or C++ classes.  The underlying memory is not
+    copied and may be modified in situ.  Arrays support the buffer protocol and
+    so can be passed to other modules, again without the underlying memory
+    being copied.
+
+    :class:`sip.array` objects are not supported by the :program:`sip` code
+    generator.  They can only be created by handwritten code.
+
+    :param cpp:
+        the address of the start of the C/C++ array.
+    :param td:
+        an element's type's
+        :ref:`generated type structure <ref-type-structures>`.
+    :param format:
+        the format, as defined by the :mod:`struct` module, of an array
+        element.
+    :param stride:
+        the size of an array element, including any padding.
+    :param len:
+        the number of elements in the array.
+    :param readonly:
+        is non-zero if the array is read-only.
+    :return:
+        the :class:`sip.array` object.
 
 
 .. c:function:: void *sipConvertToVoidPtr(PyObject *obj)
@@ -984,6 +1077,22 @@ specification files.
         the Python object.
     :return:
         the address of the C/C++ instance
+
+
+.. c:function:: void *sipGetMixinAddress(sipSimpleWrapper *obj, const sipTypeDef *td)
+
+    .. versionadded:: 4.15
+
+    This returns the address of the C++ class instance that implements the
+    mixin of a wrapped Python object.
+
+    :param obj:
+        the Python object.
+    :param td:
+        the :ref:`generated type structure <ref-type-structures>` corresponding
+        to the C++ type of the mixin.
+    :return:
+        the address of the C++ instance
 
 
 .. c:function:: PyObject *sipGetPyObject(void *cppptr, const sipTypeDef *td)
@@ -1415,9 +1524,35 @@ specification files.
 
         *dict* is the dictionary to be populated.
 
-        0 if there was no error, otherwise -1 is returned.
+        0 is returned if there was no error, otherwise -1 is returned.
 
     See the section :ref:`ref-lazy-type-attributes` for more details.
+
+
+.. c:function:: int sipRegisterProxyResolver(const sipTypeDef *td, sipProxyResolverFunc resolver)
+
+    .. versionadded:: 4.15
+
+    This registers a resolver that will called just before SIP wraps a C/C++
+    pointer in a Python object.  The resolver may choose to replace the C/C++
+    pointer with the address of another object.  Typically this is used to
+    replace a proxy by the object that is being proxied for.
+
+    :param td:
+        the optional :ref:`generated type structure <ref-type-structures>` that
+        determines which type the resolver will be called for.
+    :param resolver:
+        the resolver function.
+    :return:
+        0 if there was no error, otherwise -1 is returned.
+
+    A resolver has the following signature.
+
+    void \*resolver(void \*proxy)
+
+        *proxy* is C/C++ pointer that is being wrapped.
+
+        The C/C++ pointer that will actually be wrapped is returned.
 
 
 .. c:function:: int sipRegisterPyType(PyTypeObject *type)

@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Directives &mdash; SIP 4.14.7 Reference Guide</title>
+    <title>Directives &mdash; SIP 4.15 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.14.7',
+        VERSION:     '4.15',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.14.7 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.15 Reference Guide" href="index.html" />
     <link rel="next" title="Annotations" href="annotations.html" />
     <link rel="prev" title="SIP Specification Files" href="specification_files.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.7 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -1065,6 +1065,47 @@ void foo();
 %End</pre>
 </div>
 <dl class="directive">
+<dt id="directive-%FinalisationCode">
+<tt class="descname">%FinalisationCode</tt><a class="headerlink" href="#directive-%FinalisationCode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="versionadded">
+<span class="versionmodified">New in version 4.15.</span></p>
+<pre class="literal-block">
+%FinalisationCode
+    <em>code</em>
+%End
+</pre>
+<p>This directive is used to specify handwritten code that is executed one the
+instance of a wrapped class has been created.  The handwritten code is passed a
+dictionary of any remaining keyword arguments.  It must explicitly return an
+integer result which should be <tt class="docutils literal"><span class="pre">0</span></tt> if there was no error.  If an error
+occurred then <tt class="docutils literal"><span class="pre">-1</span></tt> should be returned and a Python exception raised.</p>
+<p>The following variables are made available to the handwritten code:</p>
+<dl class="docutils">
+<dt>PyObject *sipSelf</dt>
+<dd>This is the Python object that wraps the structure or class instance, i.e.
+<tt class="docutils literal"><span class="pre">self</span></tt>.</dd>
+<dt><em>type</em> *sipCpp</dt>
+<dd>This is a pointer to the structure or class instance.  Its <em>type</em> is a
+pointer to the structure or class.</dd>
+<dt>PyObject *sipKwds</dt>
+<dd>This is an optional dictionary of unused keyword arguments.  It may be
+<tt class="docutils literal"><span class="pre">NULL</span></tt> or refer to an empty dictionary.  If the handwritten code handles
+any of the arguments then, if <tt class="docutils literal"><span class="pre">sipUnused</span></tt> is <tt class="docutils literal"><span class="pre">NULL</span></tt>, those arguments
+must be removed from the dictionary.  If <tt class="docutils literal"><span class="pre">sipUnused</span></tt> is not <tt class="docutils literal"><span class="pre">NULL</span></tt> then
+the <tt class="docutils literal"><span class="pre">sipKwds</span></tt> dictionary must not be updated.  Instead a new dictionary
+must be created that contains any remaining unused keyword arguments and
+the address of the new dictionary returned via <tt class="docutils literal"><span class="pre">sipUnused</span></tt>.  This rather
+complicated API ensures that new dictionaries are created only when
+necessary.</dd>
+<dt>PyObject **sipUnused</dt>
+<dd>This is an optional pointer to where the handwritten code should save the
+address of any new dictionary of unused keyword arguments that it creates.
+If it is <tt class="docutils literal"><span class="pre">NULL</span></tt> then the handwritten code is allowed to update the
+<tt class="docutils literal"><span class="pre">sipKwds</span></tt> dictionary.</dd>
+</dl>
+<dl class="directive">
 <dt id="directive-%GCClearCode">
 <tt class="descname">%GCClearCode</tt><a class="headerlink" href="#directive-%GCClearCode" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1737,6 +1778,7 @@ Python.</td></tr>
 <pre class="literal-block">
 %Module(name = <em>dotted-name</em>
         [, all_raise_py_exception = [True | False]]
+        [, call_super_init = [True | False]]
         [, default_VirtualErrorHandler = <em>name</em>]
         [, keyword_arguments = [&quot;None&quot; | &quot;All&quot; | &quot;Optional&quot;]]
         [, language = <em>string</em>]
@@ -1754,6 +1796,12 @@ a Python package.</p>
 methods defined in the module raise a Python exception to indicate that an
 error occurred.  It is the equivalent of using the <a class="reference internal" href="annotations.html#function-annotation-RaisesPyException"><tt class="xref std std-fanno docutils literal"><span class="pre">RaisesPyException</span></tt></a>
 function annotation on every constructor, function and method.</p>
+<p><tt class="docutils literal"><span class="pre">call_super_init</span></tt> specifies that the <tt class="docutils literal"><span class="pre">__init__()</span></tt> method of a wrapped class
+should automatically call it&#8217;s super-class&#8217;s <tt class="docutils literal"><span class="pre">__init__()</span></tt> method passing a
+dictionary of any unused keyword arguments.  In other words, wrapped classes
+support cooperative multi-inheritance.  This means that sub-classes, and any
+mixin classes, should always use call <tt class="docutils literal"><span class="pre">super().__init__()</span></tt> and not call any
+super-class&#8217;s <tt class="docutils literal"><span class="pre">__init__()</span></tt> method explicitly.</p>
 <p><tt class="docutils literal"><span class="pre">default_VirtualErrorHandler</span></tt> specifies the handler (defined by the
 <a class="reference internal" href="#directive-%VirtualErrorHandler"><tt class="xref std std-directive docutils literal"><span class="pre">%VirtualErrorHandler</span></tt></a> directive) that is called when a Python
 re-implementation of any virtual C++ function raises a Python exception.  If no
@@ -2414,7 +2462,7 @@ order to release the GIL prior to changing the execution path.</dd>
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.7 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

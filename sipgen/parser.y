@@ -162,8 +162,9 @@ static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
         codeBlock *docstring);
 static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
         const char *filename, const char *name, int version, int c_module,
-        KwArgs kwargs, int use_arg_names, int all_raise_py_exc,
-        const char *def_error_handler, codeBlock *docstring);
+        KwArgs kwargs, int use_arg_names, int call_super_init,
+        int all_raise_py_exc, const char *def_error_handler,
+        codeBlock *docstring);
 static void addAutoPyName(moduleDef *mod, const char *remove_leading);
 static KwArgs convertKwArgs(const char *kwargs);
 static void checkAnnos(optFlags *annos, const char *valid[]);
@@ -171,6 +172,8 @@ static void checkNoAnnos(optFlags *annos, const char *msg);
 static void appendCodeBlock(codeBlockList **headp, codeBlock *cb);
 static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
 static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs);
+static void add_new_deref(argDef *new, argDef *orig, int isconst);
+static void add_derefs(argDef *dst, argDef *src);
 %}
 
 %union {
@@ -232,6 +235,7 @@ static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs);
 %token          TK_PREINITCODE
 %token          TK_INITCODE
 %token          TK_POSTINITCODE
+%token          TK_FINALCODE
 %token          TK_UNITCODE
 %token          TK_UNITPOSTINCLUDECODE
 %token          TK_MODCODE
@@ -353,6 +357,7 @@ static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs);
 %token          TK_TYPE
 %token          TK_USEARGNAMES
 %token          TK_ALLRAISEPYEXC
+%token          TK_CALLSUPERINIT
 %token          TK_DEFERRORHANDLER
 %token          TK_VERSION
 
@@ -360,6 +365,7 @@ static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs);
 %type <memArg>          argtype
 %type <memArg>          cpptype
 %type <memArg>          basetype
+%type <memArg>          deref
 %type <signature>       template
 %type <signature>       arglist
 %type <signature>       rawarglist
@@ -373,7 +379,6 @@ static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs);
 %type <number>          optconst
 %type <number>          optvirtual
 %type <number>          optabstract
-%type <number>          deref
 %type <number>          optnumber
 %type <value>           simplevalue
 %type <valp>            value
@@ -392,6 +397,7 @@ static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs);
 %type <codeb>           segcountcode
 %type <codeb>           charbufcode
 %type <codeb>           picklecode
+%type <codeb>           finalcode
 %type <codeb>           typecode
 %type <codeb>           codeblock
 %type <codeb>           codelines
@@ -414,6 +420,7 @@ static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs);
 %type <qchar>           binop
 %type <scpvalp>         scopepart
 %type <scpvalp>         scopedname
+%type <scpvalp>         optcast
 %type <fcall>           exprlist
 %type <boolean>         qualifiers
 %type <boolean>         oredqualifiers
@@ -1723,8 +1730,8 @@ module: TK_MODULE module_args module_body {
                 currentModule = configureModule(currentSpec, currentModule,
                         currentContext.filename, $2.name, $2.version,
                         $2.c_module, $2.kwargs, $2.use_arg_names,
-                        $2.all_raise_py_exc, $2.def_error_handler,
-                        $3.docstring);
+                        $2.call_super_init, $2.all_raise_py_exc,
+                        $2.def_error_handler, $3.docstring);
         }
     |   TK_CMODULE dottedname optnumber {
             deprecated("%CModule is deprecated, use %Module and the 'language' argument instead");
@@ -1732,7 +1739,7 @@ module: TK_MODULE module_args module_body {
             if (notSkipping())
                 currentModule = configureModule(currentSpec, currentModule,
                         currentContext.filename, $2, $3, TRUE, defaultKwArgs,
-                        FALSE, FALSE, NULL, NULL);
+                        FALSE, -1, FALSE, NULL, NULL);
         }
     ;
 
@@ -1745,6 +1752,7 @@ module_args:    dottedname {resetLexerState();} optnumber {
             $$.name = $1;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = FALSE;
+            $$.call_super_init = -1;
             $$.def_error_handler = NULL;
             $$.version = $3;
         }
@@ -1764,6 +1772,7 @@ module_arg_list:    module_arg
             case TK_NAME: $$.name = $3.name; break;
             case TK_USEARGNAMES: $$.use_arg_names = $3.use_arg_names; break;
             case TK_ALLRAISEPYEXC: $$.all_raise_py_exc = $3.all_raise_py_exc; break;
+            case TK_CALLSUPERINIT: $$.call_super_init = $3.call_super_init; break;
             case TK_DEFERRORHANDLER: $$.def_error_handler = $3.def_error_handler; break;
             case TK_VERSION: $$.version = $3.version; break;
             }
@@ -1778,6 +1787,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = NULL;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = FALSE;
+            $$.call_super_init = -1;
             $$.def_error_handler = NULL;
             $$.version = -1;
         }
@@ -1795,6 +1805,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = NULL;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = FALSE;
+            $$.call_super_init = -1;
             $$.def_error_handler = NULL;
             $$.version = -1;
         }
@@ -1806,6 +1817,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = $3;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = FALSE;
+            $$.call_super_init = -1;
             $$.def_error_handler = NULL;
             $$.version = -1;
         }
@@ -1817,6 +1829,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = NULL;
             $$.use_arg_names = $3;
             $$.all_raise_py_exc = FALSE;
+            $$.call_super_init = -1;
             $$.def_error_handler = NULL;
             $$.version = -1;
         }
@@ -1828,6 +1841,19 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = NULL;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = $3;
+            $$.call_super_init = -1;
+            $$.def_error_handler = NULL;
+            $$.version = -1;
+        }
+    |   TK_CALLSUPERINIT '=' bool_value {
+            $$.token = TK_CALLSUPERINIT;
+
+            $$.c_module = FALSE;
+            $$.kwargs = defaultKwArgs;
+            $$.name = NULL;
+            $$.use_arg_names = FALSE;
+            $$.all_raise_py_exc = FALSE;
+            $$.call_super_init = $3;
             $$.def_error_handler = NULL;
             $$.version = -1;
         }
@@ -1839,6 +1865,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = NULL;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = FALSE;
+            $$.call_super_init = -1;
             $$.def_error_handler = $3;
             $$.version = -1;
         }
@@ -1853,6 +1880,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.name = NULL;
             $$.use_arg_names = FALSE;
             $$.all_raise_py_exc = FALSE;
+            $$.call_super_init = -1;
             $$.def_error_handler = NULL;
             $$.version = $3;
         }
@@ -2105,6 +2133,11 @@ instancecode:   TK_INSTANCECODE codeblock {
     ;
 
 picklecode: TK_PICKLECODE codeblock {
+            $$ = $2;
+        }
+    ;
+
+finalcode:  TK_FINALCODE codeblock {
             $$ = $2;
         }
     ;
@@ -2385,6 +2418,7 @@ enum:       TK_ENUM optname optflags {
             if (notSkipping())
             {
                 const char *annos[] = {
+                    "NoScope",
                     "PyName",
                     NULL
                 };
@@ -2540,17 +2574,26 @@ optunop:    {
         }
     ;
 
-value:      optunop simplevalue {
-            if ($1 != '\0' && $2.vtype == string_value)
+value:      optcast optunop simplevalue {
+            if ($2 != '\0' && $3.vtype == string_value)
                 yyerror("Invalid unary operator for string");
  
             /* Convert the value to a simple expression on the heap. */
             $$ = sipMalloc(sizeof (valueDef));
  
-            *$$ = $2;
-            $$->vunop = $1;
+            *$$ = $3;
+            $$->vunop = $2;
             $$->vbinop = '\0';
+            $$->cast = $1;
             $$->next = NULL;
+        }
+    ;
+
+optcast:    {
+            $$ = NULL;
+        }
+    |       '(' scopedname ')' {
+            $$ = $2;
         }
     ;
 
@@ -2641,7 +2684,7 @@ exprlist:   {
             /* Check there is room. */
 
             if ($1.nrArgs == MAX_NR_ARGS)
-                yyerror("Too many arguments to function call");
+                yyerror("Internal error - increase the value of MAX_NR_ARGS");
 
             $$ = $1;
 
@@ -2669,7 +2712,7 @@ typedef:    TK_TYPEDEF cpptype TK_NAME_VALUE optflags ';' {
                 newTypedef(currentSpec, currentModule, $3, &$2, &$4);
             }
         }
-    |   TK_TYPEDEF cpptype '(' deref TK_NAME_VALUE ')' '(' cpptypelist ')' optflags ';' {
+    |   TK_TYPEDEF cpptype '(' '*' TK_NAME_VALUE ')' '(' cpptypelist ')' optflags ';' {
             if (notSkipping())
             {
                 const char *annos[] = {
@@ -2697,7 +2740,7 @@ typedef:    TK_TYPEDEF cpptype TK_NAME_VALUE optflags ';' {
 
                 /* Create the full type. */
                 ftype.atype = function_type;
-                ftype.nrderefs = $4;
+                ftype.nrderefs = 1;
                 ftype.u.sa = sig;
 
                 newTypedef(currentSpec, currentModule, $5, &ftype, &$10);
@@ -2720,12 +2763,15 @@ struct:     TK_STRUCT scopedname {
                     "API",
                     "DelayDtor",
                     "Deprecated",
+                    "ExportDerived",
                     "External",
                     "Metatype",
+                    "Mixin",
                     "NoDefaultCtors",
                     "PyName",
                     "PyQt4Flags",
                     "PyQt4NoQMetaObject",
+                    "PyQtInterface",
                     "Supertype",
                     "VirtualErrorHandler",
                     NULL
@@ -2791,12 +2837,15 @@ class:  TK_CLASS scopedname {
                     "API",
                     "DelayDtor",
                     "Deprecated",
+                    "ExportDerived",
                     "External",
                     "Metatype",
+                    "Mixin",
                     "NoDefaultCtors",
                     "PyName",
                     "PyQt4Flags",
                     "PyQt4NoQMetaObject",
+                    "PyQtInterface",
                     "Supertype",
                     "VirtualErrorHandler",
                     NULL
@@ -3020,6 +3069,17 @@ classline:  ifstart
                     yyerror("%PickleCode already given for class");
 
                 appendCodeBlock(&scope->picklecode, $1);
+            }
+        }
+    |   finalcode {
+            if (notSkipping())
+            {
+                classDef *scope = currentScope();
+
+                if (scope->finalcode != NULL)
+                    yyerror("%FinalisationCode already given for class");
+
+                appendCodeBlock(&scope->finalcode, $1);
             }
         }
     |   ctor
@@ -3979,17 +4039,31 @@ variable_body_directive:    ifstart {
     ;
 
 cpptype:    TK_CONST basetype deref optref {
+            int i;
+
             $$ = $2;
-            $$.nrderefs += $3;
+            add_derefs(&$$, &$3);
             $$.argflags |= ARG_IS_CONST | $4;
+
+            /*
+             * Treat a prefix const as postfix but check if there isn't already
+             * a postfix const.
+             */
+            if ($3.nrderefs > 0)
+            {
+                if ($$.derefs[0])
+                    yyerror("'const' specified as prefix and postfix");
+
+                $$.derefs[0] = TRUE;
+            }
         }
     |   basetype deref optref {
             $$ = $1;
-            $$.nrderefs += $2;
+            add_derefs(&$$, &$2);
             $$.argflags |= $3;
 
             /* PyObject * is a synonym for SIP_PYOBJECT. */
-            if ($1.atype == defined_type && strcmp($1.u.snd->name, "PyObject") == 0 && $1.u.snd->next == NULL && $2 == 1 && $3 == 0)
+            if ($1.atype == defined_type && strcmp($1.u.snd->name, "PyObject") == 0 && $1.u.snd->next == NULL && $2.nrderefs == 1 && $3 == 0)
             {
                 $$.atype = pyobject_type;
                 $$.nrderefs = 0;
@@ -4088,7 +4162,7 @@ argtype:    cpptype optname optflags {
         }
     ;
 
-optref:     {
+optref: {
             $$ = 0;
         }
     |   '&' {
@@ -4099,11 +4173,14 @@ optref:     {
         }
     ;
 
-deref:      {
-            $$ = 0;
+deref:  {
+            $$.nrderefs = 0;
+        }
+    |   deref TK_CONST '*' {
+            add_new_deref(&$$, &$1, TRUE);
         }
     |   deref '*' {
-            $$ = $1 + 1;
+            add_new_deref(&$$, &$1, FALSE);
         }
     ;
 
@@ -4843,11 +4920,20 @@ static void finishClass(sipSpec *pt, moduleDef *mod, classDef *cd,
     if ((flg = getOptFlag(of, "Supertype", dotted_name_flag)) != NULL)
         cd->supertype = cacheName(pt, flg->fvalue.sval);
 
+    if (getOptFlag(of, "ExportDerived", bool_flag) != NULL)
+        setExportDerived(cd);
+
+    if (getOptFlag(of, "Mixin", bool_flag) != NULL)
+        setMixin(cd);
+
     if ((flg = getOptFlag(of, "PyQt4Flags", integer_flag)) != NULL)
         cd->pyqt4_flags = flg->fvalue.ival;
 
     if (getOptFlag(of, "PyQt4NoQMetaObject", bool_flag) != NULL)
         setPyQt4NoQMetaObject(cd);
+
+    if ((flg = getOptFlag(of, "PyQtInterface", string_flag)) != NULL)
+        cd->pyqt_interface = flg->fvalue.sval;
 
     if (isOpaque(cd))
     {
@@ -5256,6 +5342,9 @@ static enumDef *newEnum(sipSpec *pt, moduleDef *mod, mappedTypeDef *mt_scope,
     ed->next = pt -> enums;
 
     pt->enums = ed;
+
+    if (getOptFlag(of, "NoScope", bool_flag) != NULL)
+        setIsNoScope(ed);
 
     return ed;
 }
@@ -5719,6 +5808,7 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
     cd->charbufcode = templateCode(pt, used, cd->charbufcode, type_names, type_values);
     cd->instancecode = templateCode(pt, used, cd->instancecode, type_names, type_values);
     cd->picklecode = templateCode(pt, used, cd->picklecode, type_names, type_values);
+    cd->finalcode = templateCode(pt, used, cd->finalcode, type_names, type_values);
     cd->next = pt->classes;
 
     pt->classes = cd;
@@ -7571,8 +7661,17 @@ static void handleEOM()
 
     from = currentContext.prevmod;
 
-    if (from != NULL && from->encoding == no_type)
-        from->encoding = currentModule->encoding;
+    if (from != NULL)
+    {
+        if (from->encoding == no_type)
+            from->encoding = currentModule->encoding;
+
+        if (isCallSuperInitUndefined(from))
+            if (isCallSuperInitYes(currentModule))
+                setCallSuperInitYes(from);
+            else
+                setCallSuperInitNo(from);
+    }
 
     /* The previous module is now current. */
     currentModule = from;
@@ -8159,6 +8258,15 @@ int pluginPyQt4(sipSpec *pt)
 
 
 /*
+ * Return TRUE if the PyQt5 plugin was specified.
+ */
+int pluginPyQt5(sipSpec *pt)
+{
+    return stringFind(pt->plugins, "PyQt5");
+}
+
+
+/*
  * Return TRUE if a list of strings contains a given entry.
  */
 static int stringFind(stringList *sl, const char *s)
@@ -8578,8 +8686,9 @@ static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
  */
 static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
         const char *filename, const char *name, int version, int c_module,
-        KwArgs kwargs, int use_arg_names, int all_raise_py_exc,
-        const char *def_error_handler, codeBlock *docstring)
+        KwArgs kwargs, int use_arg_names, int call_super_init,
+        int all_raise_py_exc, const char *def_error_handler,
+        codeBlock *docstring)
 {
     moduleDef *mod;
 
@@ -8613,6 +8722,11 @@ static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
 
     if (use_arg_names)
         setUseArgNames(module);
+
+    if (call_super_init == 0)
+        setCallSuperInitNo(module);
+    else if (call_super_init > 0)
+        setCallSuperInitYes(module);
 
     if (pt->genc < 0)
         pt->genc = c_module;
@@ -8713,4 +8827,34 @@ static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs)
         setHandlesNone(mtd);
 
     mtd->doctype = getDocType(optflgs);
+}
+
+
+/*
+ * Initialise an argument with the derefences of another, plus a new one.
+ */
+static void add_new_deref(argDef *new, argDef *orig, int isconst)
+{
+    if ((new->nrderefs = orig->nrderefs + 1) >= MAX_NR_DEREFS)
+        yyerror("Internal error - increase the value of MAX_NR_DEREFS");
+
+    memcpy(&new->derefs[0], &orig->derefs[0], sizeof (new->derefs));
+    new->derefs[orig->nrderefs] = isconst;
+}
+
+
+/*
+ * Add the dereferences from one type to another.
+ */
+static void add_derefs(argDef *dst, argDef *src)
+{
+    int i;
+
+    for (i = 0; i < src->nrderefs; ++i)
+    {
+        if (dst->nrderefs >= MAX_NR_DEREFS - 1)
+            fatal("Internal error - increase the value of MAX_NR_DEREFS\n");
+
+        dst->derefs[dst->nrderefs++] = src->derefs[i];
+    }
 }
