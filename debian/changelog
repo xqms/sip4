@@ -1,3 +1,10 @@
+sip4 (4.15-1) experimental; urgency=low
+
+  * New upstream feature release
+    - Add 10.1 to sip-api and sip-py3api
+
+ -- Scott Kitterman <scott@kitterman.com>  Wed, 21 Aug 2013 17:19:27 -0400
+
 sip4 (4.14.7-4) unstable; urgency=medium
 
   * Urgency medium for RC bug fix affecting stable -> testing upgrades
