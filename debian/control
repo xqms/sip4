@@ -126,7 +126,7 @@ Description: Debug symbols for Python/C++ bindings generator application
 Package: python-sip-doc
 Architecture: all
 Section: doc
-Depends: libjs-jquery, libjs-underscore, ${sphinxdoc:Depends}, ${misc:Depends}
+Depends: ${sphinxdoc:Depends}, ${misc:Depends}
 Description: Python/C++ bindings generator documentation
  SIP is a tool for generating bindings for C++ classes with some ideas
  borrowed from SWIG, but capable of tighter bindings because of its

@@ -1,3 +1,13 @@
+sip4 (4.15-2) UNRELEASED; urgency=low
+
+  * Call dh_sphinxdoc after dh_installdocs, to fix build failure with
+    new debhelper versions.
+  * Remove wrong debian/python-sip-doc.docs, we install docs manually.
+  * Don't hardcode depends on libjs-jquery and libjs-underscore,
+    ${sphinxdoc:Depends} takes care of that.
+
+ -- Dmitry Shachnev <mitya57@gmail.com>  Tue, 27 Aug 2013 20:19:39 +0400
+
 sip4 (4.15-1) experimental; urgency=low
 
   * New upstream feature release
