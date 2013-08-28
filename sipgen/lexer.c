@@ -1,6 +1,6 @@
-#line 2 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.c"
+#line 2 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.c"
 
-#line 4 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.c"
+#line 4 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -1440,7 +1440,7 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 1 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 /*
  * The SIP lexer.
  *
@@ -1458,7 +1458,7 @@ char *yytext;
  * SIP is supplied WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#line 20 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 20 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1498,7 +1498,7 @@ static void fatallex(char *);
 
 
 
-#line 1502 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.c"
+#line 1502 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.c"
 
 #define INITIAL 0
 #define code 1
@@ -1697,10 +1697,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 64 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 64 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 
 
-#line 1704 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.c"
+#line 1704 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.c"
 
 	if ( !(yy_init) )
 		{
@@ -1786,507 +1786,507 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 66 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 66 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_API;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 67 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 67 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_AUTOPYNAME;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 68 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 68 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_CMODULE;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 69 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 69 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_COMPOMODULE;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 70 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 70 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_CONSMODULE;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 71 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 71 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_DEFDOCSTRING;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 72 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 72 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_DEFENCODING;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 73 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 73 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_DEFMETATYPE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 74 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 74 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_DEFSUPERTYPE;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 75 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 75 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_END;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 76 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 76 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN INITIAL; return TK_END;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 77 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 77 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_EXCEPTION;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 78 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 78 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_FEATURE;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 79 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 79 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_IF;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 80 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 80 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_IMPORT;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 81 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 81 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_INCLUDE;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 82 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 82 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_LICENSE;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 83 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 83 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_MAPPEDTYPE;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 84 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 84 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_MODULE;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 85 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 85 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_OPTINCLUDE;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 86 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 86 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_PLATFORMS;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 87 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 87 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_PLUGIN;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 88 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 88 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {BEGIN directive_start; return TK_PROPERTY;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 89 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 89 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_TIMELINE;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 91 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 91 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_CLASS;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 92 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 92 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_STRUCT;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 93 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 93 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_PUBLIC;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 94 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 94 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_PROTECTED;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 95 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 95 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_PRIVATE;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 96 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 96 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIGNALS;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 97 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 97 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIGNALS;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 98 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 98 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIGNAL_METHOD;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 99 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 99 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SLOTS;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 100 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 100 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SLOTS;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 101 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 101 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SLOT_METHOD;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 102 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 102 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_CHAR;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 103 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 103 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_WCHAR_T;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 104 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 104 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_BOOL;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 105 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 105 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SHORT;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 106 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 106 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_INT;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 107 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 107 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_LONG;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 108 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 108 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_FLOAT;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 109 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 109 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_DOUBLE;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 110 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 110 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_VOID;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 111 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 111 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_VIRTUAL;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 112 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 112 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_ENUM;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 113 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 113 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIGNED;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 114 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 114 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_UNSIGNED;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 115 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 115 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_CONST;}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 116 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 116 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_STATIC;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 117 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 117 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_TRUE_VALUE;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 118 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 118 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_FALSE_VALUE;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 119 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 119 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_NULL_VALUE;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 120 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 120 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_TYPEDEF;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 121 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 121 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_NAMESPACE;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 122 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 122 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_OPERATOR;}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 123 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 123 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_THROW;}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 124 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 124 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_EXPLICIT;}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 125 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 125 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_TEMPLATE;}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 126 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 126 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SCOPE;}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 127 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 127 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_LOGICAL_OR;}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 128 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 128 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_PYOBJECT;}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 129 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 129 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_PYTUPLE;}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 130 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 130 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_PYLIST;}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 131 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 131 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_PYDICT;}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 132 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 132 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_PYCALLABLE;}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 133 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 133 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_PYSLICE;}
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 134 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 134 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_PYTYPE;}
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 135 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 135 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_PYBUFFER;}
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 136 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 136 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIPSIGNAL;}
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 137 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 137 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIPSLOT;}
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 138 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 138 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIPANYSLOT;}
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 139 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 139 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIPRXCON;}
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 140 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 140 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIPRXDIS;}
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 141 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 141 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIPSLOTCON;}
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 142 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 142 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIPSLOTDIS;}
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 143 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 143 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIPSSIZET;}
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 144 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 144 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_QOBJECT;}
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 145 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 145 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_ELLIPSIS;}
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 147 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 147 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_FORMAT;}
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 148 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 148 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_GET;}
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 149 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 149 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_ID;}
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 150 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 150 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_KWARGS;}
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 151 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 151 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_LANGUAGE;}
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 152 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 152 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_LICENSEE;}
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 153 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 153 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_NAME;}
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 154 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 154 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_OPTIONAL;}
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 155 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 155 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_ORDER;}
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 156 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 156 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_REMOVELEADING;}
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 157 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 157 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SET;}
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 158 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 158 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_SIGNATURE;}
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 159 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 159 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_TIMESTAMP;}
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 160 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 160 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_TYPE;}
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 161 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 161 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_USEARGNAMES;}
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 162 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 162 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_ALLRAISEPYEXC;}
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 163 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 163 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_CALLSUPERINIT;}
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 164 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 164 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_DEFERRORHANDLER;}
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 165 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 165 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_VERSION;}
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 167 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 167 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_TRUE_VALUE;}
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 168 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 168 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {return TK_FALSE_VALUE;}
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 171 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 171 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* Ignore whitespace. */
     ;
@@ -2294,7 +2294,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 176 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 176 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /*
      * Maintain the parenthesis depth so that we don't enter the 'code' state
@@ -2309,7 +2309,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 188 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 188 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* Maintain the parenthesis depth. */
     --parenDepth;
@@ -2322,7 +2322,7 @@ YY_RULE_SETUP
 case 104:
 /* rule 104 can match eol */
 YY_RULE_SETUP
-#line 197 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 197 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* Maintain the line number. */
     ++inputFileStack[currentFile].sloc.linenr;
@@ -2335,7 +2335,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 207 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 207 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* Ignore C++ style comments. */
     ;
@@ -2343,7 +2343,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 213 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 213 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* A signed decimal number. */
     yylval.number = strtol(yytext,NULL,0);
@@ -2352,7 +2352,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 220 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 220 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* A floating point number. */
     yylval.real = strtod(yytext,NULL);
@@ -2361,7 +2361,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 227 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 227 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* An unsigned hexadecimal number. */
     yylval.number = strtol(yytext,NULL,16);
@@ -2370,7 +2370,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 234 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 234 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* An identifier name. */
     yylval.text = sipStrdup(yytext);
@@ -2379,7 +2379,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 241 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 241 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* A relative pathname. */
     yylval.text = sipStrdup(yytext);
@@ -2389,7 +2389,7 @@ YY_RULE_SETUP
 case 111:
 /* rule 111 can match eol */
 YY_RULE_SETUP
-#line 248 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 248 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* A double-quoted string. */
     char *dp, *sp;
@@ -2417,7 +2417,7 @@ YY_RULE_SETUP
 case 112:
 /* rule 112 can match eol */
 YY_RULE_SETUP
-#line 273 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 273 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* A single-quoted character. */
     if (strlen(yytext) != 3)
@@ -2430,7 +2430,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 284 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 284 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* Ignore C-style comments. */
     yy_push_state(ccomment);
@@ -2439,28 +2439,28 @@ YY_RULE_SETUP
 case 114:
 /* rule 114 can match eol */
 YY_RULE_SETUP
-#line 288 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 288 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     ++inputFileStack[currentFile].sloc.linenr;
 }
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 291 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 291 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     yy_pop_state();
 }
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 294 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 294 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     ;
 }
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 299 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 299 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The software license. */
     codeIdx = 0;
@@ -2469,7 +2469,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 305 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 305 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a from-type code block. */
     codeIdx = 0;
@@ -2478,7 +2478,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
-#line 311 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 311 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a to-type code block. */
     codeIdx = 0;
@@ -2487,7 +2487,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 120:
 YY_RULE_SETUP
-#line 317 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 317 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a to-sub-class code block. */
     codeIdx = 0;
@@ -2496,7 +2496,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 121:
 YY_RULE_SETUP
-#line 323 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 323 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of an exported header code block. */
     codeIdx = 0;
@@ -2505,7 +2505,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
-#line 329 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 329 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of part of an extract. */
     codeIdx = 0;
@@ -2517,7 +2517,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
-#line 338 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 338 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a module header code block. */
     codeIdx = 0;
@@ -2526,7 +2526,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 124:
 YY_RULE_SETUP
-#line 344 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 344 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a type header code block. */
     codeIdx = 0;
@@ -2535,7 +2535,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
-#line 350 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 350 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a pre-initialisation code block. */
     codeIdx = 0;
@@ -2544,7 +2544,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 126:
 YY_RULE_SETUP
-#line 356 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 356 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of an initialisation code block. */
     codeIdx = 0;
@@ -2553,7 +2553,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
-#line 362 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 362 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a post-initialisation code block. */
     codeIdx = 0;
@@ -2562,7 +2562,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
-#line 368 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 368 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a class finalisation code block. */
     codeIdx = 0;
@@ -2571,7 +2571,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
-#line 374 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 374 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a unit code block. */
     codeIdx = 0;
@@ -2580,7 +2580,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
-#line 380 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 380 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a unit post-include code block. */
     codeIdx = 0;
@@ -2589,7 +2589,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 131:
 YY_RULE_SETUP
-#line 386 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 386 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a module code block. */
     codeIdx = 0;
@@ -2598,7 +2598,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 132:
 YY_RULE_SETUP
-#line 392 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 392 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a type code block. */
     codeIdx = 0;
@@ -2607,7 +2607,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 133:
 YY_RULE_SETUP
-#line 398 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 398 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a C++ method code block. */
     codeIdx = 0;
@@ -2616,7 +2616,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 134:
 YY_RULE_SETUP
-#line 404 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 404 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a C++ virtual code block. */
     codeIdx = 0;
@@ -2625,7 +2625,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 135:
 YY_RULE_SETUP
-#line 410 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 410 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a traverse code block. */
     codeIdx = 0;
@@ -2634,7 +2634,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 136:
 YY_RULE_SETUP
-#line 416 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 416 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a clear code block. */
     codeIdx = 0;
@@ -2643,7 +2643,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
-#line 422 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 422 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a get buffer code block. */
     codeIdx = 0;
@@ -2652,7 +2652,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 138:
 YY_RULE_SETUP
-#line 428 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 428 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a release buffer code block. */
     codeIdx = 0;
@@ -2661,7 +2661,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 139:
 YY_RULE_SETUP
-#line 434 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 434 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a read buffer code block. */
     codeIdx = 0;
@@ -2670,7 +2670,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 140:
 YY_RULE_SETUP
-#line 440 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 440 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a write buffer code block. */
     codeIdx = 0;
@@ -2679,7 +2679,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 141:
 YY_RULE_SETUP
-#line 446 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 446 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a segment count code block. */
     codeIdx = 0;
@@ -2688,7 +2688,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 142:
 YY_RULE_SETUP
-#line 452 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 452 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a char buffer code block. */
     codeIdx = 0;
@@ -2697,7 +2697,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 143:
 YY_RULE_SETUP
-#line 458 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 458 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a create instance code block. */
     codeIdx = 0;
@@ -2706,7 +2706,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 144:
 YY_RULE_SETUP
-#line 464 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 464 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a pickle code block. */
     codeIdx = 0;
@@ -2715,7 +2715,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 145:
 YY_RULE_SETUP
-#line 470 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 470 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a pre-Python code block. */
     deprecated("%PrePythonCode is deprecated");
@@ -2726,7 +2726,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 146:
 YY_RULE_SETUP
-#line 478 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 478 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a raise Python exception code block. */
     codeIdx = 0;
@@ -2735,7 +2735,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 147:
 YY_RULE_SETUP
-#line 484 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 484 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a docstring block. */
     codeIdx = 0;
@@ -2744,7 +2744,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 148:
 YY_RULE_SETUP
-#line 490 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 490 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a documentation block. */
     deprecated("%Doc is deprecated, use %Extract instead");
@@ -2755,7 +2755,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 149:
 YY_RULE_SETUP
-#line 498 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 498 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of an exported documentation block. */
     deprecated("%ExportedDoc is deprecated, use %Extract instead");
@@ -2766,7 +2766,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 150:
 YY_RULE_SETUP
-#line 506 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 506 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a Makefile code block. */
     deprecated("%Makefile is deprecated");
@@ -2777,7 +2777,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 151:
 YY_RULE_SETUP
-#line 514 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 514 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of an access code block. */
     codeIdx = 0;
@@ -2786,7 +2786,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 152:
 YY_RULE_SETUP
-#line 520 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 520 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a get code block. */
     codeIdx = 0;
@@ -2795,7 +2795,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 153:
 YY_RULE_SETUP
-#line 526 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 526 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of a set code block. */
     codeIdx = 0;
@@ -2804,7 +2804,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 154:
 YY_RULE_SETUP
-#line 532 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 532 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The start of part of a virtual error handler. */
     codeIdx = 0;
@@ -2816,7 +2816,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 155:
 YY_RULE_SETUP
-#line 541 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 541 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The end of a code block. */
     BEGIN INITIAL;
@@ -2827,7 +2827,7 @@ YY_RULE_SETUP
 case 156:
 /* rule 156 can match eol */
 YY_RULE_SETUP
-#line 548 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 548 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The end of a code line . */
     struct inputFile *ifp;
@@ -2849,7 +2849,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 157:
 YY_RULE_SETUP
-#line 567 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 567 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* The contents of a code line. */
     if (codeIdx == MAX_CODE_LINE_LENGTH)
@@ -2860,7 +2860,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 158:
 YY_RULE_SETUP
-#line 575 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 575 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 {
     /* Anything else is returned as is. */
     return yytext[0];
@@ -2868,10 +2868,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 159:
 YY_RULE_SETUP
-#line 580 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 580 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 ECHO;
 	YY_BREAK
-#line 2875 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.c"
+#line 2875 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(code):
 case YY_STATE_EOF(ccomment):
@@ -3920,7 +3920,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 580 "/Users/phil/hg/sip/sip-4.15/sipgen/lexer.l"
+#line 580 "/Users/phil/hg/sip/sip-4.15.1/sipgen/lexer.l"
 
 
 
