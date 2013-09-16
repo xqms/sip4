@@ -29,6 +29,14 @@ specification files.
     :c:macro:`SIP_UNBLOCK_THREADS` at the same lexical scope.
 
 
+.. c:macro:: SIP_OWNS_MEMORY
+
+    .. versionadded:: 4.15.2
+
+    This is a flag used by various array constructors that species that the
+    array owns the memory that holds the array's contents.
+
+
 .. c:macro:: SIP_NO_CONVERTORS
 
     This is a flag used by various type convertors that suppresses the use of a
@@ -50,6 +58,14 @@ specification files.
     ``protected`` redefined as ``public``.  This allows handwritten code to
     determine if the generated helper functions for accessing protected C++
     functions are available (see :directive:`%MethodCode`).
+
+
+.. c:macro:: SIP_READ_ONLY
+
+    .. versionadded:: 4.15.2
+
+    This is a flag used by various array constructors that species that the
+    array is read-only.
 
 
 .. c:function:: SIP_RELEASE_GIL(sip_gilstate_t sipGILState)
@@ -714,7 +730,7 @@ specification files.
         the :class:`sip.voidptr` object.
 
 
-.. c:function:: PyObject *sipConvertToArray(void *cpp, const char *format, SIP_SSIZE_T len, int readonly)
+.. c:function:: PyObject *sipConvertToArray(void *data, const char *format, SIP_SSIZE_T len, int flags)
 
     .. versionadded:: 4.15
 
@@ -729,16 +745,20 @@ specification files.
     :class:`sip.array` objects are not supported by the :program:`sip` code
     generator.  They can only be created by handwritten code.
 
-    :param cpp:
+    :param data:
         the address of the start of the C/C++ array.
     :param format:
         the format, as defined by the :mod:`struct` module, of an array
-        element.  At the moment only ``H`` (unsigned short) and ``I`` (unsigned
-        int) are supported.
+        element.  At the moment only ``b`` (char), ``B`` (unsigned char),
+        ``h`` (short), ``H`` (unsigned short), ``i`` (int),
+        ``I`` (unsigned int), ``f`` (float) and ``d`` (double) are supported.
     :param len:
         the number of elements in the array.
     :param readonly:
         is non-zero if the array is read-only.
+    :param flags:
+        any combination of the :c:macro:`SIP_READ_ONLY` and
+        :c:macro:`SIP_OWNS_MEMORY` flags.
     :return:
         the :class:`sip.array` object.
 
@@ -879,7 +899,7 @@ specification files.
     rather than after each call.)
 
 
-.. c:function:: PyObject *sipConvertToTypedArray(void *cpp, const sipTypeDef *td, const char *format, size_t stride, SIP_SSIZE_T len, int readonly)
+.. c:function:: PyObject *sipConvertToTypedArray(void *data, const sipTypeDef *td, const char *format, size_t stride, SIP_SSIZE_T len, int flags)
 
     .. versionadded:: 4.15
 
@@ -895,7 +915,7 @@ specification files.
     :class:`sip.array` objects are not supported by the :program:`sip` code
     generator.  They can only be created by handwritten code.
 
-    :param cpp:
+    :param data:
         the address of the start of the C/C++ array.
     :param td:
         an element's type's
@@ -907,8 +927,8 @@ specification files.
         the size of an array element, including any padding.
     :param len:
         the number of elements in the array.
-    :param readonly:
-        is non-zero if the array is read-only.
+    :param flags:
+        the optional :c:macro:`SIP_READ_ONLY` flag.
     :return:
         the :class:`sip.array` object.
 
