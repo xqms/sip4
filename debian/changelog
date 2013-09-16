@@ -3,7 +3,7 @@ sip4 (4.15.2-1) experimental; urgency=low
   * New upstream release
     - Contains the sip4 part of the fix for recent pykde4 breakage
   * Temporarily hard code python3 Depends in python3-sip-dev to work around
-    breakage in python3-sip-dev (See #723070)
+    breakage in dh-python (See #723070)
 
  -- Scott Kitterman <scott@kitterman.com>  Mon, 16 Sep 2013 00:45:10 -0400
 
