@@ -1,4 +1,4 @@
-sip4 (4.15.4-1) UNRELEASED; urgency=low
+sip4 (4.15.4-1) unstable; urgency=low
 
   * New upstream bugfix release.
   * Adjust python-qwt5-qt4 and python-qwt3d-qt4 breaks, only the newly
