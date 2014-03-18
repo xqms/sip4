@@ -2,8 +2,8 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-PY2_PROVIDES=sip-api-10.0, sip-api-10.1
-PY3_PROVIDES=sip-py3api-10.0, sip-py3api-10.1
+PY2_PROVIDES=sip-api-11.0
+PY3_PROVIDES=sip-py3api-11.0
 # `dh_python3 --depends sip3` should generate dependency on newest API only
 PYDIST=sip $(shell python -c "a=[i.strip() for i in '$(PY3_PROVIDES)'.split(',')]; print sorted(a, reverse=True)[0]")
 
@@ -25,14 +25,6 @@ endif
 PYTHONS	:= $(shell pyversions -vr) $(shell py3versions -vr)
 PYTHON3S := $(shell py3versions -vr)
 
--include /usr/share/python/python.mk
-ifeq (,$(py_sitename))
-py_sitename = site-packages
-py_libdir = /usr/lib/python$(subst python,,$(1))/site-packages
-py_sitename_sh = $(py_sitename)
-py_libdir_sh = $(py_libdir)
-endif
-
 .PRECIOUS: build-%/configure-stamp dbg-build-%/configure-stamp
 
 configure: $(PYTHONS:%=build-%/configure-stamp) $(PYTHONS:%=dbg-build-%/configure-stamp)
@@ -42,7 +34,7 @@ build-%/configure-stamp: $(PYTHON3S:%=sipconfig-%)
 	mkdir -p build-$*
 	cd build-$* \
 		&& python$* ../configure.py \
-			-d /usr/lib/python$*/$(call py_sitename,$*) \
+			-d /usr/lib/python$*/dist-packages \
 			-u STRIP="" CFLAGS="${CFLAGS} ${CPPFLAGS}" CFLAGS_RELEASE="" \
 			CXXFLAGS="${CXXFLAGS} ${CPPFLAGS}" CXXFLAGS_RELEASE="" \
 			LFLAGS="${LDFLAGS}" LFLAGS_RELEASE=""
@@ -53,7 +45,7 @@ dbg-build-%/configure-stamp:
 	mkdir -p dbg-build-$*
 	cd dbg-build-$* \
 		&& python$*-dbg ../configure.py \
-			-d /usr/lib/python$*/$(call py_sitename,$*) \
+			-d /usr/lib/python$*/dist-packages \
 			-e /usr/include/python$*_d \
 			-u CFLAGS="${CFLAGS} ${CPPFLAGS}" CFLAGS_RELEASE="" \
 			CXXFLAGS="${CXXFLAGS} ${CPPFLAGS}" CXXFLAGS_RELEASE="" \
@@ -139,17 +131,17 @@ install-arch-3.%:
 install-arch-2%:
 	$(MAKE) -C build-2$* install DESTDIR=$(CURDIR)/debian/tmp
 	$(MAKE) -C dbg-build-2$* install DESTDIR=$(CURDIR)/debian/python-sip-dbg
-	mkdir -p debian/python-sip/usr/lib/python2$*/$(call py_sitename,2$*)/
-	install -m 644 -o root -g root debian/sipconfig.py debian/python-sip/usr/lib/python2$*/$(call py_sitename,2$*)/
-	install -m 644 -o root -g root build-2$*/sipconfig.py debian/python-sip/usr/lib/python2$*/$(call py_sitename,2$*)/sipconfig_nd.py
-	install -m 644 -o root -g root dbg-build-2$*/sipconfig.py debian/python-sip-dbg/usr/lib/python2$*/$(call py_sitename,2$*)/sipconfig_d.py
+	mkdir -p debian/python-sip/usr/lib/python2$*/dist-packages/
+	install -m 644 -o root -g root debian/sipconfig.py debian/python-sip/usr/lib/python2$*/dist-packages/
+	install -m 644 -o root -g root build-2$*/sipconfig.py debian/python-sip/usr/lib/python2$*/dist-packages/sipconfig_nd.py
+	install -m 644 -o root -g root dbg-build-2$*/sipconfig.py debian/python-sip-dbg/usr/lib/python2$*/dist-packages/sipconfig_d.py
 	mkdir -p debian/python-sip-dev/usr/include/python2$*
 	install -m 644 -o root -g root siplib/sip.h debian/python-sip-dev/usr/include/python2$*/
 	mkdir -p debian/python-sip-dev/usr/include/python2$*_d
 	ln -s ../python2$*/sip.h \
 	    debian/python-sip-dev/usr/include/python2$*_d/sip.h
-	mkdir -p debian/python-sip-dev/usr/lib/python2$*/$(call py_sitename,2$*)
-	install -m 644 -o root -g root sipdistutils.py debian/python-sip-dev/usr/lib/python2$*/$(call py_sitename,2$*)
+	mkdir -p debian/python-sip-dev/usr/lib/python2$*/dist-packages
+	install -m 644 -o root -g root sipdistutils.py debian/python-sip-dev/usr/lib/python2$*/dist-packages
 
 
 # Must not depend on anything. This is to be called by

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Directives &mdash; SIP 4.15.4 Reference Guide</title>
+    <title>Directives &mdash; SIP 4.15.5 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '4.15.4',
+        URL_ROOT:    './',
+        VERSION:     '4.15.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.15.4 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.15.5 Reference Guide" href="index.html" />
     <link rel="next" title="Annotations" href="annotations.html" />
     <link rel="prev" title="SIP Specification Files" href="specification_files.html" /> 
   </head>
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.15.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15.5 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -67,8 +65,9 @@ are enclosed in [<em>brackets</em>].</p>
 not define names that start with the prefix <tt class="docutils literal"><span class="pre">sip</span></tt>.</p>
 <div class="section" id="revised-directive-syntax">
 <h2>Revised Directive Syntax<a class="headerlink" href="#revised-directive-syntax" title="Permalink to this headline">¶</a></h2>
-<p class="versionadded">
-<span class="versionmodified">New in version 4.12.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.12.</span></p>
+</div>
 <p>The directive syntax used in older versions has some problems:</p>
 <ul class="simple">
 <li>it is inconsistent in places</li>
@@ -79,11 +78,12 @@ not define names that start with the prefix <tt class="docutils literal"><span c
 and deprecates the old syntax.  Support for the old syntax will be removed in
 SIP v5.</p>
 <p>The revised syntax is:</p>
-<div class="highlight-python"><pre>%Directive(arg = value, ...)
+<div class="highlight-python"><div class="highlight"><pre>%Directive(arg = value, ...)
 {
     %Sub-directive
     ...
-};</pre>
+};
+</pre></div>
 </div>
 <p>A directive may have a number of arguments enclosed in parentheses followed by
 a number of sub-directives enclosed in braces.  Individual arguments and
@@ -123,13 +123,13 @@ required.</p>
 or structure, or a pointer to such an instance.  You use it to provide
 handwritten code that overrides the default behaviour.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>class Klass;
+<div class="highlight-python"><div class="highlight"><pre>class Klass;
 
 Klass *klassInstance
 {
     %AccessCode
         // In this contrived example the C++ library we are wrapping
-        // defines klassInstance as Klass ** (which SIP doesn't support) so
+        // defines klassInstance as Klass ** (which SIP doesn&#39;t support) so
         // we explicitly dereference it.
         if (klassInstance &amp;&amp; *klassInstance)
             return *klassInstance;
@@ -137,9 +137,10 @@ Klass *klassInstance
         // This will get converted to None.
         return 0;
     %End
-};</pre>
+};
+</pre></div>
 </div>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="#directive-%GetCode"><tt class="xref std std-directive docutils literal"><span class="pre">%GetCode</span></tt></a>, <a class="reference internal" href="#directive-%SetCode"><tt class="xref std std-directive docutils literal"><span class="pre">%SetCode</span></tt></a></p>
 </div>
@@ -148,8 +149,9 @@ Klass *klassInstance
 <tt class="descname">%API</tt><a class="headerlink" href="#directive-%API" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="versionadded">
-<span class="versionmodified">New in version 4.9.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.9.</span></p>
+</div>
 <pre class="literal-block">
 %API(name = <em>name</em>, version = <em>integer</em>)
 </pre>
@@ -157,15 +159,17 @@ Klass *klassInstance
 version number must be greater than or equal to 1.</p>
 <p>See <a class="reference internal" href="using.html#ref-incompat-apis"><em>Managing Incompatible APIs</em></a> for more detail.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%API(name=PyQt4, version=1)</pre>
+<div class="highlight-python"><div class="highlight"><pre>%API(name=PyQt4, version=1)
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%AutoPyName">
 <tt class="descname">%AutoPyName</tt><a class="headerlink" href="#directive-%AutoPyName" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="versionadded">
-<span class="versionmodified">New in version 4.12.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.12.</span></p>
+</div>
 <pre class="literal-block">
 %AutoPyName(remove_leading = <em>string</em>)
 </pre>
@@ -177,10 +181,11 @@ an item has been given an explicit Python name.</p>
 <p><tt class="docutils literal"><span class="pre">remove_leading</span></tt> is a string that will be removed from the beginning of any
 C++ or C name.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%Module PyQt4.QtCore
+<div class="highlight-python"><div class="highlight"><pre>%Module PyQt4.QtCore
 {
-    %AutoPyName(remove_leading="Q")
-}</pre>
+    %AutoPyName(remove_leading=&quot;Q&quot;)
+}
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%BIGetBufferCode">
@@ -234,10 +239,10 @@ v3 is being used then this is ignored.</p>
 pointer to the structure or class.</dd>
 <dt>void **sipPtrPtr</dt>
 <dd>This is the pointer used to return the address of the character buffer.</dd>
-<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
+<dt><a class="reference internal" href="c_api.html#c.SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
 <dd>The handwritten code should set this to the length of the character buffer
 or -1 if there was an error.</dd>
-<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipSegment</dt>
+<dt><a class="reference internal" href="c_api.html#c.SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipSegment</dt>
 <dd>This is the number of the segment of the character buffer.</dd>
 <dt>PyObject *sipSelf</dt>
 <dd>This is the Python object that wraps the structure or class instance, i.e.
@@ -264,10 +269,10 @@ Python v3 is being used then this is ignored.</p>
 pointer to the structure or class.</dd>
 <dt>void **sipPtrPtr</dt>
 <dd>This is the pointer used to return the address of the read buffer.</dd>
-<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
+<dt><a class="reference internal" href="c_api.html#c.SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
 <dd>The handwritten code should set this to the length of the read buffer or
 -1 if there was an error.</dd>
-<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipSegment</dt>
+<dt><a class="reference internal" href="c_api.html#c.SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipSegment</dt>
 <dd>This is the number of the segment of the read buffer.</dd>
 <dt>PyObject *sipSelf</dt>
 <dd>This is the Python object that wraps the structure or class instance, i.e.
@@ -292,10 +297,10 @@ Python v3 is being used then this is ignored.</p>
 <dt><em>type</em> *sipCpp</dt>
 <dd>This is a pointer to the structure or class instance.  Its <em>type</em> is a
 pointer to the structure or class.</dd>
-<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> *sipLenPtr</dt>
+<dt><a class="reference internal" href="c_api.html#c.SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> *sipLenPtr</dt>
 <dd>This is the pointer used to return the total length in bytes of all
 segments of the buffer.</dd>
-<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
+<dt><a class="reference internal" href="c_api.html#c.SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
 <dd>The handwritten code should set this to the number of segments that make
 up the buffer.</dd>
 <dt>PyObject *sipSelf</dt>
@@ -323,10 +328,10 @@ v3 is being used then this is ignored.</p>
 pointer to the structure or class.</dd>
 <dt>void **sipPtrPtr</dt>
 <dd>This is the pointer used to return the address of the write buffer.</dd>
-<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
+<dt><a class="reference internal" href="c_api.html#c.SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
 <dd>The handwritten code should set this to the length of the write buffer or
 -1 if there was an error.</dd>
-<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipSegment</dt>
+<dt><a class="reference internal" href="c_api.html#c.SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipSegment</dt>
 <dd>This is the number of the segment of the write buffer.</dd>
 <dt>PyObject *sipSelf</dt>
 <dd>This is the Python object that wraps the structure or class instance, i.e.
@@ -361,9 +366,10 @@ pointer to the structure or class.</dd>
 <tt class="descname">%CModule</tt><a class="headerlink" href="#directive-%CModule" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="deprecated">
-<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive with the <tt class="docutils literal"><span class="pre">language</span></tt> argument set
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive with the <tt class="docutils literal"><span class="pre">language</span></tt> argument set
 to <tt class="docutils literal"><span class="pre">&quot;C&quot;</span></tt> instead.</p>
+</div>
 <pre class="literal-block">
 %CModule <em>name</em> [<em>version</em>]
 </pre>
@@ -372,7 +378,8 @@ library and to define the name of the module and it&#8217;s optional version num
 <p>See the <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive for an explanation of the version
 number.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%CModule dbus 1</pre>
+<div class="highlight-python"><div class="highlight"><pre>%CModule dbus 1
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%CompositeModule">
@@ -401,9 +408,10 @@ component module.</p>
 <p>The optional <a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a> sub-directive is used to specify the
 module&#8217;s docstring.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%CompositeModule PyQt4.Qt
+<div class="highlight-python"><div class="highlight"><pre>%CompositeModule PyQt4.Qt
 %Include QtCore/QtCoremod.sip
-%Include QtGui/QtGuimod.sip</pre>
+%Include QtGui/QtGuimod.sip
+</pre></div>
 </div>
 <p>The main purpose of a composite module is as a programmer convenience as they
 don&#8217;t have to remember which individual module an object is defined in.</p>
@@ -426,9 +434,10 @@ component module.</p>
 <p>The optional <a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a> sub-directive is used to specify the
 module&#8217;s docstring.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%ConsolidatedModule PyQt4._qt
+<div class="highlight-python"><div class="highlight"><pre>%ConsolidatedModule PyQt4._qt
 %Include QtCore/QtCoremod.sip
-%Include QtGui/QtGuimod.sip</pre>
+%Include QtGui/QtGuimod.sip
+</pre></div>
 </div>
 <p>A consolidated module is not intended to be explicitly imported by an
 application.  Instead it is imported by its component modules when they
@@ -460,7 +469,7 @@ object.</p>
 automatically converted to the Python object, even though the class itself has
 been wrapped.  This behaviour can be changed on a temporary basis from an
 application by calling the <a class="reference internal" href="python_api.html#sip.enableautoconversion" title="sip.enableautoconversion"><tt class="xref py py-func docutils literal"><span class="pre">sip.enableautoconversion()</span></tt></a> function, or from
-handwritten code by calling the <a class="reference internal" href="c_api.html#sipEnableAutoconversion" title="sipEnableAutoconversion"><tt class="xref c c-func docutils literal"><span class="pre">sipEnableAutoconversion()</span></tt></a> function.</p>
+handwritten code by calling the <a class="reference internal" href="c_api.html#c.sipEnableAutoconversion" title="sipEnableAutoconversion"><tt class="xref c c-func docutils literal"><span class="pre">sipEnableAutoconversion()</span></tt></a> function.</p>
 <p>The following variables are made available to the handwritten code:</p>
 <dl class="docutils">
 <dt><em>type</em> *sipCpp</dt>
@@ -481,7 +490,7 @@ made to each element of the list.</dd>
 error then a Python exception must be raised and <tt class="docutils literal"><span class="pre">NULL</span></tt> returned.</p>
 <p>The following example converts a <tt class="docutils literal"><span class="pre">QList&lt;QWidget</span> <span class="pre">*&gt;</span></tt> instance to a Python
 list of <tt class="docutils literal"><span class="pre">QWidget</span></tt> instances:</p>
-<div class="highlight-python"><pre>%ConvertFromTypeCode
+<div class="highlight-python"><div class="highlight"><pre>%ConvertFromTypeCode
     PyObject *l;
 
     // Create the Python list of the correct length.
@@ -510,7 +519,8 @@ list of <tt class="docutils literal"><span class="pre">QWidget</span></tt> insta
 
     // Return the Python list.
     return l;
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%ConvertToSubClassCode">
@@ -565,8 +575,9 @@ subject to this conversion process.  It allows the code for one super-class
 to switch to the code for another (more appropriate) super-class.</p>
 </dd>
 <dt>sipWrapperType *sipClass</dt>
-<dd><p class="first deprecated">
-<span class="versionmodified">Deprecated since version 4.8: </span>Use <tt class="docutils literal"><span class="pre">sipType</span></tt> instead.</p>
+<dd><div class="first deprecated">
+<p><span class="versionmodified">Deprecated since version 4.8: </span>Use <tt class="docutils literal"><span class="pre">sipType</span></tt> instead.</p>
+</div>
 <p class="last">The handwritten code must set this to the SIP generated Python type object
 that corresponds to the class instance.  (The type object for class
 <tt class="docutils literal"><span class="pre">Klass</span></tt> is <tt class="docutils literal"><span class="pre">sipClass_Klass</span></tt>.)  If the RTTI of the class instance isn&#8217;t
@@ -578,7 +589,7 @@ it can.</p>
 <p>The handwritten code must not explicitly return.</p>
 <p>The following example shows the sub-class conversion code for <tt class="docutils literal"><span class="pre">QEvent</span></tt> based
 class hierarchy in PyQt:</p>
-<div class="highlight-python"><pre>class QEvent
+<div class="highlight-python"><div class="highlight"><pre>class QEvent
 {
 %ConvertToSubClassCode
     // QEvent sub-classes provide a unique type ID.
@@ -596,14 +607,15 @@ class hierarchy in PyQt:</p>
     // Skip the remaining event types to keep the example short.
 
     default:
-        // We don't recognise the type.
+        // We don&#39;t recognise the type.
         sipType = NULL;
     }
 %End
 
     // The rest of the class specification.
 
-};</pre>
+};
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%ConvertToTypeCode">
@@ -664,7 +676,7 @@ returned instance is a derived class.  See
 </div></blockquote>
 <p>The following example converts a Python list of <tt class="docutils literal"><span class="pre">QPoint</span></tt> instances to a
 <tt class="docutils literal"><span class="pre">QList&lt;QPoint&gt;</span></tt> instance:</p>
-<div class="highlight-python"><pre>%ConvertToTypeCode
+<div class="highlight-python"><div class="highlight"><pre>%ConvertToTypeCode
     // See if we are just being asked to check the type of the Python
     // object.
     if (!sipIsErr)
@@ -676,7 +688,7 @@ returned instance is a derived class.  See
 
         // Check the type of each element.  We specify SIP_NOT_NONE to
         // disallow None because it is a list of QPoint, not of a pointer
-        // to a QPoint, so None isn't appropriate.
+        // to a QPoint, so None isn&#39;t appropriate.
         for (int i = 0; i &lt; PyList_GET_SIZE(sipPy); ++i)
             if (!sipCanConvertToType(PyList_GET_ITEM(sipPy, i),
                                      sipType_QPoint, SIP_NOT_NONE))
@@ -694,8 +706,8 @@ returned instance is a derived class.  See
         QPoint *qp;
         int state;
 
-        // Get the address of the element's C++ instance.  Note that, in
-        // this case, we don't apply any ownership changes to the list
+        // Get the address of the element&#39;s C++ instance.  Note that, in
+        // this case, we don&#39;t apply any ownership changes to the list
         // elements, only to the list itself.
         qp = reinterpret_cast&lt;QPoint *&gt;(sipConvertToType(
                                                 PyList_GET_ITEM(sipPy, i),
@@ -732,15 +744,16 @@ returned instance is a derived class.  See
     // Python.  sipGetState() is a convenience function that implements
     // this common transfer behaviour.
     return sipGetState(sipTransferObj);
-%End</pre>
+%End
+</pre></div>
 </div>
 <p>When used in a class specification the handwritten code replaces the code that
 would normally be automatically generated.  This means that the handwritten
 code must also handle instances of the class itself and not just the additional
 types that are being supported.  This should be done by making calls to
-<a class="reference internal" href="c_api.html#sipCanConvertToType" title="sipCanConvertToType"><tt class="xref c c-func docutils literal"><span class="pre">sipCanConvertToType()</span></tt></a> to check the object type and
-<a class="reference internal" href="c_api.html#sipConvertToType" title="sipConvertToType"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertToType()</span></tt></a> to convert the object.  The
-<a class="reference internal" href="c_api.html#SIP_NO_CONVERTORS" title="SIP_NO_CONVERTORS"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_NO_CONVERTORS</span></tt></a> flag <em>must</em> be passed to both these functions to
+<a class="reference internal" href="c_api.html#c.sipCanConvertToType" title="sipCanConvertToType"><tt class="xref c c-func docutils literal"><span class="pre">sipCanConvertToType()</span></tt></a> to check the object type and
+<a class="reference internal" href="c_api.html#c.sipConvertToType" title="sipConvertToType"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertToType()</span></tt></a> to convert the object.  The
+<a class="reference internal" href="c_api.html#c.SIP_NO_CONVERTORS" title="SIP_NO_CONVERTORS"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_NO_CONVERTORS</span></tt></a> flag <em>must</em> be passed to both these functions to
 prevent recursive calls to the handwritten code.</p>
 <dl class="directive">
 <dt id="directive-%Copying">
@@ -756,18 +769,21 @@ prevent recursive calls to the handwritten code.</p>
 the start of all source files generated by SIP.  It is normally used to include
 copyright and licensing terms.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%Copying
+<div class="highlight-python"><div class="highlight"><pre>%Copying
 Copyright (c) 2014 Riverbank Computing Limited
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%DefaultDocstringFormat">
 <tt class="descname">%DefaultDocstringFormat</tt><a class="headerlink" href="#directive-%DefaultDocstringFormat" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="versionadded">
-<span class="versionmodified">New in version 4.13.</span></p>
-<div class="highlight-python"><pre>%DefaultDocstringFormat(name = ["raw" | "deindented"])</pre>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.13.</span></p>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>%DefaultDocstringFormat(name = [&quot;raw&quot; | &quot;deindented&quot;])
+</pre></div>
 </div>
 <p>This directive is used to specify the default formatting of docstrings, i.e.
 when the <a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a> directive does not specify an explicit format.</p>
@@ -775,14 +791,16 @@ when the <a class="reference internal" href="#directive-%Docstring"><tt class="x
 formats.  If the directive is not specified then the default format used is
 <tt class="docutils literal"><span class="pre">&quot;raw&quot;</span></tt>.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%DefaultDocstringFormat "deindented"</pre>
+<div class="highlight-python"><div class="highlight"><pre>%DefaultDocstringFormat &quot;deindented&quot;
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%DefaultEncoding">
 <tt class="descname">%DefaultEncoding</tt><a class="headerlink" href="#directive-%DefaultEncoding" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<div class="highlight-python"><pre>%DefaultEncoding(name = ["ASCII" | "Latin-1" | "UTF-8" | "None"])</pre>
+<div class="highlight-python"><div class="highlight"><pre>%DefaultEncoding(name = [&quot;ASCII&quot; | &quot;Latin-1&quot; | &quot;UTF-8&quot; | &quot;None&quot;])
+</pre></div>
 </div>
 <p>This directive is used to specify the default encoding used for <tt class="docutils literal"><span class="pre">char</span></tt>,
 <tt class="docutils literal"><span class="pre">const</span> <span class="pre">char</span></tt>, <tt class="docutils literal"><span class="pre">char</span> <span class="pre">*</span></tt> or <tt class="docutils literal"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></tt> values.  An encoding of
@@ -791,7 +809,8 @@ for a particular value using the <a class="reference internal" href="annotations
 <p>If the directive is not specified then the default encoding of the last
 imported module is used, if any.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%DefaultEncoding "Latin-1"</pre>
+<div class="highlight-python"><div class="highlight"><pre>%DefaultEncoding &quot;Latin-1&quot;
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%DefaultMetatype">
@@ -809,7 +828,8 @@ modules, that doesn&#8217;t have an explicit meta-type.</p>
 meta-type used by a particular C/C++ type.</p>
 <p>See the section <a class="reference internal" href="using.html#ref-types-metatypes"><em>Types and Meta-types</em></a> for more details.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%DefaultMetatype PyQt4.QtCore.pyqtWrapperType</pre>
+<div class="highlight-python"><div class="highlight"><pre>%DefaultMetatype PyQt4.QtCore.pyqtWrapperType
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%DefaultSupertype">
@@ -827,15 +847,17 @@ an explicit super-type.</p>
 super-type used by a particular C/C++ type.</p>
 <p>See the section <a class="reference internal" href="using.html#ref-types-metatypes"><em>Types and Meta-types</em></a> for more details.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%DefaultSupertype sip.simplewrapper</pre>
+<div class="highlight-python"><div class="highlight"><pre>%DefaultSupertype sip.simplewrapper
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%Doc">
 <tt class="descname">%Doc</tt><a class="headerlink" href="#directive-%Doc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="deprecated">
-<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Extract"><tt class="xref std std-directive docutils literal"><span class="pre">%Extract</span></tt></a> directive instead.</p>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Extract"><tt class="xref std std-directive docutils literal"><span class="pre">%Extract</span></tt></a> directive instead.</p>
+</div>
 <pre class="literal-block">
 %Doc
     <em>text</em>
@@ -850,21 +872,23 @@ which it appears.  It is ignored by modules that <a class="reference internal" h
 the <a class="reference internal" href="#directive-%ExportedDoc"><tt class="xref std std-directive docutils literal"><span class="pre">%ExportedDoc</span></tt></a> directive for documentation that should be
 included by all modules that <a class="reference internal" href="#directive-%Import"><tt class="xref std std-directive docutils literal"><span class="pre">%Import</span></tt></a> this one.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%Doc
+<div class="highlight-python"><div class="highlight"><pre>%Doc
 &lt;h1&gt;An Example&lt;/h1&gt;
 &lt;p&gt;
 This fragment of documentation is HTML and is local to the module in
 which it is defined.
 &lt;/p&gt;
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%Docstring">
 <tt class="descname">%Docstring</tt><a class="headerlink" href="#directive-%Docstring" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="versionadded">
-<span class="versionmodified">New in version 4.10.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.10.</span></p>
+</div>
 <pre class="literal-block">
 %Docstring(format = [&quot;raw&quot; | &quot;deindented&quot;])
     <em>text</em>
@@ -881,8 +905,9 @@ docstring that describes the Python signature of a function or method overload.
 This means that SIP will generate less informative exceptions (i.e. without a
 full signature) when it fails to match a set of arguments to any function or
 method overload.</p>
-<p class="versionadded">
-<span class="versionmodified">New in version 4.13.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.13.</span></p>
+</div>
 <p>The format may either be <tt class="docutils literal"><span class="pre">&quot;raw&quot;</span></tt> or <tt class="docutils literal"><span class="pre">&quot;deindented&quot;</span></tt>.  If it is not specified
 then the value specified by any <a class="reference internal" href="#directive-%DefaultDocstringFormat"><tt class="xref std std-directive docutils literal"><span class="pre">%DefaultDocstringFormat</span></tt></a> directive
 is used.</p>
@@ -891,20 +916,21 @@ specification file.</p>
 <p>If the format is <tt class="docutils literal"><span class="pre">&quot;deindented&quot;</span></tt> then any leading spaces common to all
 non-blank lines of the docstring are removed.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>class Klass
+<div class="highlight-python"><div class="highlight"><pre>class Klass
 {
 %Docstring
-This will be at the start of the class's docstring.
+This will be at the start of the class&#39;s docstring.
 %End
 
 public:
     Klass();
 %Docstring deindented
-    This will be appended to the class's docstring and will not be indented.
+    This will be appended to the class&#39;s docstring and will not be indented.
 
         This will be indented by four spaces.
 %End
-};</pre>
+};
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%End">
@@ -939,7 +965,7 @@ external interface to the exception being defined.</p>
 <p>The <a class="reference internal" href="#directive-%RaiseCode"><tt class="xref std std-directive docutils literal"><span class="pre">%RaiseCode</span></tt></a> sub-directive is used to specify the handwritten
 code that converts a reference to the C++ exception to the Python exception.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%Exception std::exception(SIP_Exception) /PyName=StdException/
+<div class="highlight-python"><div class="highlight"><pre>%Exception std::exception(SIP_Exception) /PyName=StdException/
 {
 %TypeHeaderCode
 #include &lt;exception&gt;
@@ -951,7 +977,8 @@ code that converts a reference to the C++ exception to the Python exception.</p>
     PyErr_SetString(sipException_std_exception, detail);
     SIP_UNBLOCK_THREADS
 %End
-};</pre>
+};
+</pre></div>
 </div>
 <p>In this example we map the standard C++ exception to a new Python exception.
 The new exception is called <tt class="docutils literal"><span class="pre">StdException</span></tt> and is derived from the standard
@@ -963,8 +990,9 @@ be caught by default if there is no <tt class="docutils literal"><span class="pr
 <tt class="descname">%ExportedDoc</tt><a class="headerlink" href="#directive-%ExportedDoc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="deprecated">
-<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Extract"><tt class="xref std std-directive docutils literal"><span class="pre">%Extract</span></tt></a> directive instead.</p>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Extract"><tt class="xref std std-directive docutils literal"><span class="pre">%Extract</span></tt></a> directive instead.</p>
+</div>
 <pre class="literal-block">
 %ExportedDoc
     <em>text</em>
@@ -977,14 +1005,15 @@ of text in the order that it sees them.</p>
 <p>Documentation that is specified using this directive will also be included by
 modules that <a class="reference internal" href="#directive-%Import"><tt class="xref std std-directive docutils literal"><span class="pre">%Import</span></tt></a> it.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%ExportedDoc
+<div class="highlight-python"><div class="highlight"><pre>%ExportedDoc
 ==========
 An Example
 ==========
 
 This fragment of documentation is reStructuredText and will appear in the
 module in which it is defined and all modules that %Import it.
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%ExportedHeaderCode">
@@ -1000,7 +1029,7 @@ module in which it is defined and all modules that %Import it.
 of types, that is placed in a header file that is included by all generated
 code for all modules.  It should not include function declarations because
 Python modules should not explicitly call functions in another Python module.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="#directive-%ModuleCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ModuleCode</span></tt></a>, <a class="reference internal" href="#directive-%ModuleHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ModuleHeaderCode</span></tt></a></p>
 </div>
@@ -1009,8 +1038,9 @@ Python modules should not explicitly call functions in another Python module.</p
 <tt class="descname">%Extract</tt><a class="headerlink" href="#directive-%Extract" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="versionadded">
-<span class="versionmodified">New in version 4.12.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.12.</span></p>
+</div>
 <pre class="literal-block">
 %Extract(id = <em>name</em> [, order = <em>integer</em>])
     <em>text</em>
@@ -1027,7 +1057,7 @@ extract.</p>
 <p>An extract is written to a file using the <a class="reference internal" href="command_line.html#cmdoption-sip-X"><em class="xref std std-option">-X</em></a> command line
 option.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%Extract example
+<div class="highlight-python"><div class="highlight"><pre>%Extract example
 This will be the last line because there is no explicit order.
 %End
 
@@ -1037,7 +1067,8 @@ This will be the second line.
 
 %Extract(id=example, order=10)
 This will be the first line.
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%Feature">
@@ -1058,19 +1089,21 @@ may be enabled or disable.  By default all features are enabled.  The
 preprocessor symbol for use by handwritten code.  The symbol is the name of
 the feature prefixed by <tt class="docutils literal"><span class="pre">SIP_FEATURE_</span></tt>.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%Feature FOO_SUPPORT
+<div class="highlight-python"><div class="highlight"><pre>%Feature FOO_SUPPORT
 
 %If (FOO_SUPPORT)
 void foo();
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%FinalisationCode">
 <tt class="descname">%FinalisationCode</tt><a class="headerlink" href="#directive-%FinalisationCode" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="versionadded">
-<span class="versionmodified">New in version 4.15.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.15.</span></p>
+</div>
 <pre class="literal-block">
 %FinalisationCode
     <em>code</em>
@@ -1136,7 +1169,7 @@ pointer to the structure or class.</dd>
 <p>The following simplified example is taken from PyQt.  The <tt class="docutils literal"><span class="pre">QCustomEvent</span></tt>
 class allows arbitary data to be attached to the event.  In PyQt this data is
 always a Python object and so should be handled by the garbage collector:</p>
-<div class="highlight-python"><pre>%GCClearCode
+<div class="highlight-python"><div class="highlight"><pre>%GCClearCode
     PyObject *obj;
 
     // Get the object.
@@ -1150,7 +1183,8 @@ always a Python object and so should be handled by the garbage collector:</p>
 
     // Report no error.
     sipRes = 0;
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%GCTraverseCode">
@@ -1179,7 +1213,7 @@ collector.</dd>
 <dd>The handwritten code should set this to the result to be returned.</dd>
 </dl>
 <p>The following simplified example is taken from PyQt&#8217;s <tt class="docutils literal"><span class="pre">QCustomEvent</span></tt> class:</p>
-<div class="highlight-python"><pre>%GCTraverseCode
+<div class="highlight-python"><div class="highlight"><pre>%GCTraverseCode
     PyObject *obj;
 
     // Get the object.
@@ -1190,7 +1224,8 @@ collector.</dd>
         sipRes = sipVisit(obj, sipArg);
     else
         sipRes = 0;
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%GetCode">
@@ -1222,7 +1257,7 @@ Python type object of the class from which the variable was referenced
 PyTypeObject * or a sipWrapperType *.</dd>
 </dl>
 <p>For example:</p>
-<div class="highlight-python"><pre>struct Entity
+<div class="highlight-python"><div class="highlight"><pre>struct Entity
 {
     /*
      * In this contrived example the C library we are wrapping actually
@@ -1246,12 +1281,12 @@ PyTypeObject * or a sipWrapperType *.</dd>
             else if (length != 100)
             {
                 /*
-                 * Raise an exception because the length isn't exactly
+                 * Raise an exception because the length isn&#39;t exactly
                  * right.
                  */
 
                 PyErr_SetString(PyExc_ValueError,
-                        "an Entity.buffer must be exactly 100 bytes");
+                        &quot;an Entity.buffer must be exactly 100 bytes&quot;);
                 sipErr = 1;
             }
             else
@@ -1260,9 +1295,10 @@ PyTypeObject * or a sipWrapperType *.</dd>
             }
         %End
     };
-}</pre>
+}
+</pre></div>
 </div>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="#directive-%AccessCode"><tt class="xref std std-directive docutils literal"><span class="pre">%AccessCode</span></tt></a>, <a class="reference internal" href="#directive-%SetCode"><tt class="xref std std-directive docutils literal"><span class="pre">%SetCode</span></tt></a></p>
 </div>
@@ -1295,7 +1331,7 @@ but excluding the upper bound.  If the lower bound is omitted then it is
 interpreted as being before the earliest version.  If the upper bound is
 omitted then it is interpreted as being after the latest version.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%Feature SUPPORT_FOO
+<div class="highlight-python"><div class="highlight"><pre>%Feature SUPPORT_FOO
 %Platforms {WIN32_PLATFORM POSIX_PLATFORM MACOS_PLATFORM}
 %Timeline {V1_0 V1_1 V2_0 V3_0}
 
@@ -1322,7 +1358,8 @@ omitted then it is interpreted as being after the latest version.</p>
 
 %If ( - )
     // Always process this.
-%End</pre>
+%End
+</pre></div>
 </div>
 <p>Also note that the only way to specify the logical and of qualifiers is to use
 nested <a class="reference internal" href="#directive-%If"><tt class="xref std std-directive docutils literal"><span class="pre">%If</span></tt></a> directives.</p>
@@ -1344,7 +1381,8 @@ SIP prepends <tt class="docutils literal"><span class="pre">name</span></tt> wit
 <a class="reference internal" href="command_line.html#cmdoption-sip-I"><em class="xref std std-option">-I</em></a> command line option.</p>
 <p>Directory separators must always be <tt class="docutils literal"><span class="pre">/</span></tt>.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%Import qt/qtmod.sip</pre>
+<div class="highlight-python"><div class="highlight"><pre>%Import qt/qtmod.sip
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%Include">
@@ -1364,7 +1402,8 @@ specification into manageable pieces.</p>
 could not be opened.</p>
 <p>Directory separators must always be <tt class="docutils literal"><span class="pre">/</span></tt>.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%Include qwidget.sip</pre>
+<div class="highlight-python"><div class="highlight"><pre>%Include qwidget.sip
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%InitialisationCode">
@@ -1379,21 +1418,23 @@ could not be opened.</p>
 <p>This directive is used to specify handwritten code that is embedded in-line
 in the generated module initialisation code after the SIP module has been
 imported but before the module itself has been initialised.</p>
-<p>It is typically used to call <a class="reference internal" href="c_api.html#sipRegisterPyType" title="sipRegisterPyType"><tt class="xref c c-func docutils literal"><span class="pre">sipRegisterPyType()</span></tt></a>.</p>
+<p>It is typically used to call <a class="reference internal" href="c_api.html#c.sipRegisterPyType" title="sipRegisterPyType"><tt class="xref c c-func docutils literal"><span class="pre">sipRegisterPyType()</span></tt></a>.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%InitialisationCode
+<div class="highlight-python"><div class="highlight"><pre>%InitialisationCode
     // The code will be executed when the module is first imported, after
     // the SIP module has been imported, but before other module-specific
     // initialisation has been completed.
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%InstanceCode">
 <tt class="descname">%InstanceCode</tt><a class="headerlink" href="#directive-%InstanceCode" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="versionadded">
-<span class="versionmodified">New in version 4.14.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.14.</span></p>
+</div>
 <pre class="literal-block">
 %InstanceCode
     <em>code</em>
@@ -1442,7 +1483,8 @@ placed on the value.</p>
 on a module.  It is simply a method for easily embedding licensing information
 in a module so that it is accessible to Python scripts.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%License "GPL"</pre>
+<div class="highlight-python"><div class="highlight"><pre>%License &quot;GPL&quot;
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%MappedType">
@@ -1485,7 +1527,7 @@ type.</p>
 the handwritten code that converts an instance of the mapped type to a Python
 object.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>template&lt;Type *&gt;
+<div class="highlight-python"><div class="highlight"><pre>template&lt;Type *&gt;
 %MappedType QList
 {
 %TypeHeaderCode
@@ -1503,7 +1545,7 @@ object.</p>
             return 0;
 
         // Now check each element of the list is of the type we expect.
-        // The template is for a pointer type so we don't disallow None.
+        // The template is for a pointer type so we don&#39;t disallow None.
         for (int i = 0; i &lt; PyList_GET_SIZE(sipPy); ++i)
             if (!sipCanConvertToType(PyList_GET_ITEM(sipPy, i),
                                      sipType_Type, 0))
@@ -1572,7 +1614,8 @@ object.</p>
     // Return the Python list.
     return l;
 %End
-};</pre>
+};
+</pre></div>
 </div>
 <p>Using this we can use, for example, <tt class="docutils literal"><span class="pre">QList&lt;QObject</span> <span class="pre">*&gt;</span></tt> throughout the
 module&#8217;s specification files (and in any module that imports this one).  The
@@ -1609,9 +1652,10 @@ called if ownership of the structure or class is with Python.</p>
 If compatibility with SIP v3.x is required then the GIL must be released
 immediately before the C++ call and reacquired immediately afterwards as shown
 in this example fragment:</p>
-<div class="highlight-python"><pre>Py_BEGIN_ALLOW_THREADS
+<div class="highlight-python"><div class="highlight"><pre>Py_BEGIN_ALLOW_THREADS
 sipCpp-&gt;foo();
-Py_END_ALLOW_THREADS</pre>
+Py_END_ALLOW_THREADS
+</pre></div>
 </div>
 <p>If compatibility with SIP v3.x is not required then this is optional but
 should be done if the C++ function might block the current thread or take a
@@ -1716,7 +1760,7 @@ variables are made available to the handwritten code:</p>
 <dd>This is the dictionary of keyword arguments.</dd>
 </dl>
 <p>The following is a complete example:</p>
-<div class="highlight-python"><pre>class Klass
+<div class="highlight-python"><div class="highlight"><pre>class Klass
 {
 public:
     virtual int foo(SIP_PYTUPLE);
@@ -1726,7 +1770,7 @@ public:
 
         int iarr[2];
 
-        if (PyArg_ParseTuple(a0, "ii", &amp;iarr[0], &amp;iarr[1]))
+        if (PyArg_ParseTuple(a0, &quot;ii&quot;, &amp;iarr[0], &amp;iarr[1]))
         {
             Py_BEGIN_ALLOW_THREADS
             sipRes = sipSelfWasArg ? sipCpp-&gt;Klass::foo(iarr)
@@ -1739,7 +1783,8 @@ public:
             sipIsErr = 1;
         }
 %End
-};</pre>
+};
+</pre></div>
 </div>
 <p>As the example is a virtual method <a class="footnote-reference" href="#id2" id="id1">[1]</a>, note the use of <tt class="docutils literal"><span class="pre">sipSelfWasArg</span></tt> to
 determine exactly which implementation of <tt class="docutils literal"><span class="pre">foo()</span></tt> to call.</p>
@@ -1747,20 +1792,22 @@ determine exactly which implementation of <tt class="docutils literal"><span cla
 helpers that provide access to method.  However, these are not available if
 the Python module is being built with <tt class="docutils literal"><span class="pre">protected</span></tt> redefined as <tt class="docutils literal"><span class="pre">public</span></tt>.</p>
 <p>The following pattern should be used to cover all possibilities:</p>
-<div class="highlight-python"><pre>#if defined(SIP_PROTECTED_IS_PUBLIC)
+<div class="highlight-python"><div class="highlight"><pre>#if defined(SIP_PROTECTED_IS_PUBLIC)
     sipRes = sipSelfWasArg ? sipCpp-&gt;Klass::foo(iarr)
                            : sipCpp-&gt;foo(iarr);
 #else
     sipRes = sipCpp-&gt;sipProtectVirt_foo(sipSelfWasArg, iarr);
-#endif</pre>
+#endif
+</pre></div>
 </div>
 <p>If a method is in the <tt class="docutils literal"><span class="pre">protected</span></tt> section of a C++ class but is not virtual
 then the pattern should instead be:</p>
-<div class="highlight-python"><pre>#if defined(SIP_PROTECTED_IS_PUBLIC)
+<div class="highlight-python"><div class="highlight"><pre>#if defined(SIP_PROTECTED_IS_PUBLIC)
     sipRes = sipCpp-&gt;foo(iarr);
 #else
     sipRes = sipCpp-&gt;sipProtect_foo(iarr);
-#endif</pre>
+#endif
+</pre></div>
 </div>
 <table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
@@ -1834,7 +1881,8 @@ for automatically providing Python names.</p>
 <p>The optional <a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a> sub-directive is used to specify the
 module&#8217;s docstring.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%Module(name=PyQt4.QtCore, version=5)</pre>
+<div class="highlight-python"><div class="highlight"><pre>%Module(name=PyQt4.QtCore, version=5)
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%ModuleCode">
@@ -1850,16 +1898,17 @@ module&#8217;s docstring.</p>
 implementations of utility functions, that can be called by other handwritten
 code in the module.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%ModuleCode
+<div class="highlight-python"><div class="highlight"><pre>%ModuleCode
 // Print an object on stderr for debugging purposes.
 void dump_object(PyObject *o)
 {
     PyObject_Print(o, stderr, 0);
-    fprintf(stderr, "\n");
+    fprintf(stderr, &quot;\n&quot;);
 }
-%End</pre>
+%End
+</pre></div>
 </div>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="#directive-%ExportedHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ExportedHeaderCode</span></tt></a>, <a class="reference internal" href="#directive-%ModuleHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ModuleHeaderCode</span></tt></a></p>
 </div>
@@ -1877,11 +1926,12 @@ void dump_object(PyObject *o)
 of utility functions, that is placed in a header file that is included by all
 generated code for the same module.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%ModuleHeaderCode
+<div class="highlight-python"><div class="highlight"><pre>%ModuleHeaderCode
 void dump_object(PyObject *o);
-%End</pre>
+%End
+</pre></div>
 </div>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="#directive-%ExportedHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ExportedHeaderCode</span></tt></a>, <a class="reference internal" href="#directive-%ModuleCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ModuleCode</span></tt></a></p>
 </div>
@@ -1893,13 +1943,15 @@ void dump_object(PyObject *o);
 <pre class="literal-block">
 %OptionalInclude <em>filename</em>
 </pre>
-<p class="deprecated">
-<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Include"><tt class="xref std std-directive docutils literal"><span class="pre">%Include</span></tt></a> directive with the <tt class="docutils literal"><span class="pre">optional</span></tt> argument set
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Include"><tt class="xref std std-directive docutils literal"><span class="pre">%Include</span></tt></a> directive with the <tt class="docutils literal"><span class="pre">optional</span></tt> argument set
 to <tt class="docutils literal"><span class="pre">True</span></tt> instead.</p>
+</div>
 <p>This directive is identical to the <a class="reference internal" href="#directive-%Include"><tt class="xref std std-directive docutils literal"><span class="pre">%Include</span></tt></a> directive except that
 SIP silently continues processing if <em>filename</em> could not be opened.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%OptionalInclude license.sip</pre>
+<div class="highlight-python"><div class="highlight"><pre>%OptionalInclude license.sip
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%PickleCode">
@@ -1925,7 +1977,7 @@ instance is unpickled.  If there is an error then the code must raise an
 exception and set this to <tt class="docutils literal"><span class="pre">NULL</span></tt>.</dd>
 </dl>
 <p>For example:</p>
-<div class="highlight-python"><pre>class Point
+<div class="highlight-python"><div class="highlight"><pre>class Point
 {
     Point(int x, y);
 
@@ -1933,9 +1985,10 @@ exception and set this to <tt class="docutils literal"><span class="pre">NULL</s
     int y() const;
 
 %PickleCode
-    sipRes = Py_BuildValue("ii", sipCpp-&gt;x(), sipCpp-&gt;y());
+    sipRes = Py_BuildValue(&quot;ii&quot;, sipCpp-&gt;x(), sipCpp-&gt;y());
 %End
-}</pre>
+}
+</pre></div>
 </div>
 <p>Note that SIP works around the Python limitation that prevents nested types
 being pickled.</p>
@@ -1956,13 +2009,14 @@ are processed or ignored.</p>
 <p>Platforms are mutually exclusive - only one platform can be enabled at a time.
 By default all platforms are disabled.  The SIP <a class="reference internal" href="command_line.html#cmdoption-sip-t"><em class="xref std std-option">-t</em></a> command
 line option is used to enable a platform.</p>
-<p class="versionadded">
-<span class="versionmodified">New in version 4.14.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.14.</span></p>
+</div>
 <p>If a platform is enabled then SIP will automatically generate a corresponding C
 preprocessor symbol for use by handwritten code.  The symbol is the name of
 the platform prefixed by <tt class="docutils literal"><span class="pre">SIP_PLATFORM_</span></tt>.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%Platforms {WIN32_PLATFORM POSIX_PLATFORM MACOS_PLATFORM}
+<div class="highlight-python"><div class="highlight"><pre>%Platforms {WIN32_PLATFORM POSIX_PLATFORM MACOS_PLATFORM}
 
 %If (WIN32_PLATFORM)
 void undocumented();
@@ -1970,7 +2024,8 @@ void undocumented();
 
 %If (POSIX_PLATFORM)
 void documented();
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%PostInitialisationCode">
@@ -1992,10 +2047,11 @@ at the very end of the generated module initialisation code.</p>
 <dd>This is the module&#8217;s dictionary object returned by <tt class="docutils literal"><span class="pre">Py_ModuleGetDict()</span></tt>.</dd>
 </dl>
 <p>For example:</p>
-<div class="highlight-python"><pre>%PostInitialisationCode
+<div class="highlight-python"><div class="highlight"><pre>%PostInitialisationCode
     // The code will be executed when the module is first imported and
     // after all other initialisation has been completed.
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%PreInitialisationCode">
@@ -2010,18 +2066,20 @@ at the very end of the generated module initialisation code.</p>
 <p>This directive is used to specify handwritten code that is embedded in-line
 at the very start of the generated module initialisation code.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%PreInitialisationCode
+<div class="highlight-python"><div class="highlight"><pre>%PreInitialisationCode
     // The code will be executed when the module is first imported and
     // before other initialisation has been completed.
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%Property">
 <tt class="descname">%Property</tt><a class="headerlink" href="#directive-%Property" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="versionadded">
-<span class="versionmodified">New in version 4.12.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.12.</span></p>
+</div>
 <pre class="literal-block">
 %Property(name = <em>name</em>, get = <em>name</em> [, set = <em>name</em>])
 {
@@ -2037,14 +2095,15 @@ method in the same class.</p>
 <p>The optional <a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a> sub-directive is used to specify the
 property&#8217;s docstring.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>class Klass
+<div class="highlight-python"><div class="highlight"><pre>class Klass
 {
 public:
     int get_count() const;
     void set_count();
 
     %Property(name=count, get=get_count, set=set_count)
-};</pre>
+};
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%RaiseCode">
@@ -2108,7 +2167,7 @@ Python type object of the class from which the variable was referenced
 (<em>not</em> the class in which it is defined).  It may be safely cast to a
 PyTypeObject * or a sipWrapperType *.</dd>
 </dl>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="#directive-%AccessCode"><tt class="xref std std-directive docutils literal"><span class="pre">%AccessCode</span></tt></a>, <a class="reference internal" href="#directive-%GetCode"><tt class="xref std std-directive docutils literal"><span class="pre">%GetCode</span></tt></a></p>
 </div>
@@ -2129,19 +2188,21 @@ By default all versions are disabled.  The SIP <a class="reference internal" hre
 line option is used to enable a version.</p>
 <p>The <a class="reference internal" href="#directive-%Timeline"><tt class="xref std std-directive docutils literal"><span class="pre">%Timeline</span></tt></a> directive can be used any number of times in a
 module to allow multiple libraries to be wrapped in the same module.</p>
-<p class="versionadded">
-<span class="versionmodified">New in version 4.12.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.12.</span></p>
+</div>
 <p>SIP automatically defines a timeline containing all versions of SIP since
 v4.12.  The name of the version is <tt class="docutils literal"><span class="pre">SIP_</span></tt> followed by the individual parts of
 the version number separated by an underscore.  SIP v4.12 is therefore
 <tt class="docutils literal"><span class="pre">SIP_4_12</span></tt> and SIP v4.13.2 is <tt class="docutils literal"><span class="pre">SIP_4_13_2</span></tt>.</p>
-<p class="versionadded">
-<span class="versionmodified">New in version 4.14.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.14.</span></p>
+</div>
 <p>If a particular version is enabled then SIP will automatically generate a
 corresponding C preprocessor symbol for use by handwritten code.  The symbol is
 the name of the version prefixed by <tt class="docutils literal"><span class="pre">SIP_TIMELINE_</span></tt>.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>%Timeline {V1_0 V1_1 V2_0 V3_0}
+<div class="highlight-python"><div class="highlight"><pre>%Timeline {V1_0 V1_1 V2_0 V3_0}
 
 %If (V1_0 - V2_0)
 void foo();
@@ -2153,7 +2214,8 @@ void foo(int = 0);
 
 %If (- SIP_4_13)
 void bar();
-%End</pre>
+%End
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%TypeCode">
@@ -2170,19 +2232,20 @@ class or a <a class="reference internal" href="#directive-%MappedType"><tt class
 typically the implementations of utility functions, that can be called by other
 handwritten code in the structure or class.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>class Klass
+<div class="highlight-python"><div class="highlight"><pre>class Klass
 {
 %TypeCode
 // Print an instance on stderr for debugging purposes.
 static void dump_klass(const Klass *k)
 {
-    fprintf(stderr,"Klass %s at %p\n", k-&gt;name(), k);
+    fprintf(stderr,&quot;Klass %s at %p\n&quot;, k-&gt;name(), k);
 }
 %End
 
     // The rest of the class specification.
 
-};</pre>
+};
+</pre></div>
 </div>
 <p>Because the scope of the code is normally within the generated file that
 implements the type, any utility functions would normally be declared
@@ -2204,7 +2267,7 @@ to a C or C++ type being wrapped, either a structure, a class, or a template.
 It is used within a class definition or a <a class="reference internal" href="#directive-%MappedType"><tt class="xref std std-directive docutils literal"><span class="pre">%MappedType</span></tt></a> directive.</p>
 <p>Normally <em>code</em> will be a pre-processor <tt class="docutils literal"><span class="pre">#include</span></tt> statement.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>// Wrap the Klass class.
+<div class="highlight-python"><div class="highlight"><pre>// Wrap the Klass class.
 class Klass
 {
 %TypeHeaderCode
@@ -2212,7 +2275,8 @@ class Klass
 %End
 
     // The rest of the class specification.
-};</pre>
+};
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%UnitCode">
@@ -2232,8 +2296,9 @@ typically used to <tt class="docutils literal"><span class="pre">#include</span>
 <tt class="descname">%UnitPostIncludeCode</tt><a class="headerlink" href="#directive-%UnitPostIncludeCode" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="versionadded">
-<span class="versionmodified">New in version 4.11.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.11.</span></p>
+</div>
 <pre class="literal-block">
 %UnitPostIncludeCode
     <em>code</em>
@@ -2288,7 +2353,7 @@ specification.</dd>
 where it is important to ensure that the corresponding Python object is not
 garbage collected too soon.  This only applies to output arguments that
 return <tt class="docutils literal"><span class="pre">'\0'</span></tt> terminated strings.  The variable would normally be passed
-to <a class="reference internal" href="c_api.html#sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a> using either the <tt class="docutils literal"><span class="pre">A</span></tt> or <tt class="docutils literal"><span class="pre">B</span></tt> format
+to <a class="reference internal" href="c_api.html#c.sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a> using either the <tt class="docutils literal"><span class="pre">A</span></tt> or <tt class="docutils literal"><span class="pre">B</span></tt> format
 characters.</p>
 <p class="last">If <tt class="docutils literal"><span class="pre">use_argument_names</span></tt> has been set in the <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a>
 directive then the name of the variable is the real name of the argument
@@ -2299,7 +2364,7 @@ with <tt class="docutils literal"><span class="pre">Key</span></tt> appended.</p
 appropriate Python exception, if an error is detected.</dd>
 <dt>PyObject *sipMethod</dt>
 <dd>This object is the Python reimplementation of the virtual C++ method.  It
-is normally passed to <a class="reference internal" href="c_api.html#sipCallMethod" title="sipCallMethod"><tt class="xref c c-func docutils literal"><span class="pre">sipCallMethod()</span></tt></a>.</dd>
+is normally passed to <a class="reference internal" href="c_api.html#c.sipCallMethod" title="sipCallMethod"><tt class="xref c c-func docutils literal"><span class="pre">sipCallMethod()</span></tt></a>.</dd>
 <dt><em>type</em> sipRes</dt>
 <dd>The handwritten code should set this to the result to be returned.  The
 <em>type</em> of the variable is the same as the type defined in the C++ signature
@@ -2308,17 +2373,17 @@ in the specification.</dd>
 <dd>This variable is only made available if the result has a type where it is
 important to ensure that the corresponding Python object is not garbage
 collected too soon.  This only applies to <tt class="docutils literal"><span class="pre">'\0'</span></tt> terminated strings.  The
-variable would normally be passed to <a class="reference internal" href="c_api.html#sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a> using
+variable would normally be passed to <a class="reference internal" href="c_api.html#c.sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a> using
 either the <tt class="docutils literal"><span class="pre">A</span></tt> or <tt class="docutils literal"><span class="pre">B</span></tt> format characters.</dd>
 <dt>sipSimpleWrapper *sipPySelf</dt>
 <dd>This variable is only made available if either the <tt class="docutils literal"><span class="pre">a0Key</span></tt> or
 <tt class="docutils literal"><span class="pre">sipResKey</span></tt> are made available.  It defines the context within which keys
 are unique.  The variable would normally be passed to
-<a class="reference internal" href="c_api.html#sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a> using the <tt class="docutils literal"><span class="pre">S</span></tt> format character.</dd>
+<a class="reference internal" href="c_api.html#c.sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a> using the <tt class="docutils literal"><span class="pre">S</span></tt> format character.</dd>
 </dl>
 <p>No variables are made available in the context of a destructor.</p>
 <p>For example:</p>
-<div class="highlight-python"><pre>class Klass
+<div class="highlight-python"><div class="highlight"><pre>class Klass
 {
 public:
     virtual int foo(SIP_PYTUPLE) [int (int *)];
@@ -2328,7 +2393,7 @@ public:
 
         int iarr[2];
 
-        if (PyArg_ParseTuple(a0, "ii", &amp;iarr[0], &amp;iarr[1]))
+        if (PyArg_ParseTuple(a0, &quot;ii&quot;, &amp;iarr[0], &amp;iarr[1]))
         {
             Py_BEGIN_ALLOW_THREADS
             sipRes = sipCpp-&gt;Klass::foo(iarr);
@@ -2346,25 +2411,27 @@ public:
 
         PyObject *result;
 
-        result = sipCallMethod(&amp;sipIsErr, sipMethod, "ii", a0[0], a0[1]);
+        result = sipCallMethod(&amp;sipIsErr, sipMethod, &quot;ii&quot;, a0[0], a0[1]);
 
         if (result != NULL)
         {
             // Convert the result to the C++ type.
-            sipParseResult(&amp;sipIsErr, sipMethod, result, "i", &amp;sipRes);
+            sipParseResult(&amp;sipIsErr, sipMethod, result, &quot;i&quot;, &amp;sipRes);
 
             Py_DECREF(result);
         }
 %End
-};</pre>
+};
+</pre></div>
 </div>
 <dl class="directive">
 <dt id="directive-%VirtualErrorHandler">
 <tt class="descname">%VirtualErrorHandler</tt><a class="headerlink" href="#directive-%VirtualErrorHandler" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p class="versionadded">
-<span class="versionmodified">New in version 4.14.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.14.</span></p>
+</div>
 <pre class="literal-block">
 %VirtualErrorHandler(name = <em>name</em>)
     <em>code</em>
@@ -2378,18 +2445,18 @@ a Python exception.  If a virtual C++ function does not have a handler the
 Global Interpreter Lock (GIL) held and from the thread that raised the
 exception.  If the handler wants to change the execution path by, for example,
 throwing a C++ exception, it must first release the GIL by calling
-<a class="reference internal" href="c_api.html#SIP_RELEASE_GIL" title="SIP_RELEASE_GIL"><tt class="xref c c-func docutils literal"><span class="pre">SIP_RELEASE_GIL()</span></tt></a>.  It must not call <a class="reference internal" href="c_api.html#SIP_RELEASE_GIL" title="SIP_RELEASE_GIL"><tt class="xref c c-func docutils literal"><span class="pre">SIP_RELEASE_GIL()</span></tt></a> if the
+<a class="reference internal" href="c_api.html#c.SIP_RELEASE_GIL" title="SIP_RELEASE_GIL"><tt class="xref c c-func docutils literal"><span class="pre">SIP_RELEASE_GIL()</span></tt></a>.  It must not call <a class="reference internal" href="c_api.html#c.SIP_RELEASE_GIL" title="SIP_RELEASE_GIL"><tt class="xref c c-func docutils literal"><span class="pre">SIP_RELEASE_GIL()</span></tt></a> if the
 execution path is not changed.</p>
 <p>The following variables are made available to the handwritten code:</p>
 <dl class="docutils">
 <dt>sipSimpleWrapper *sipPySelf</dt>
 <dd>This is the class instance containing the Python reimplementation.</dd>
 <dt>sip_gilstate_t sipGILState</dt>
-<dd>This is an opaque value that must be passed to <a class="reference internal" href="c_api.html#SIP_RELEASE_GIL" title="SIP_RELEASE_GIL"><tt class="xref c c-func docutils literal"><span class="pre">SIP_RELEASE_GIL()</span></tt></a> in
+<dd>This is an opaque value that must be passed to <a class="reference internal" href="c_api.html#c.SIP_RELEASE_GIL" title="SIP_RELEASE_GIL"><tt class="xref c c-func docutils literal"><span class="pre">SIP_RELEASE_GIL()</span></tt></a> in
 order to release the GIL prior to changing the execution path.</dd>
 </dl>
 <p>For example:</p>
-<div class="highlight-python"><pre>%VirtualErrorHandler my_handler
+<div class="highlight-python"><div class="highlight"><pre>%VirtualErrorHandler my_handler
     PyObject *exception, *value, *traceback;
 
     PyErr_Fetch(&amp;exception, &amp;value, &amp;traceback);
@@ -2397,9 +2464,10 @@ order to release the GIL prior to changing the execution path.</dd>
     SIP_RELEASE_GIL(sipGILState);
 
     throw my_exception(sipPySelf, exception, value, traceback);
-%End</pre>
+%End
+</pre></div>
 </div>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="annotations.html#function-annotation-NoVirtualErrorHandler"><tt class="xref std std-fanno docutils literal"><span class="pre">NoVirtualErrorHandler</span></tt></a>, <a class="reference internal" href="annotations.html#function-annotation-VirtualErrorHandler"><tt class="xref std std-fanno docutils literal"><span class="pre">VirtualErrorHandler</span></tt></a>, <a class="reference internal" href="annotations.html#class-annotation-VirtualErrorHandler"><tt class="xref std std-canno docutils literal"><span class="pre">VirtualErrorHandler</span></tt></a></p>
 </div>
@@ -2462,12 +2530,12 @@ order to release the GIL prior to changing the execution path.</dd>
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.15.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15.5 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2014 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

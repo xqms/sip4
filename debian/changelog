@@ -1,3 +1,11 @@
+sip4 (4.15.5-1) experimental; urgency=low
+
+  * New upstream release.
+  * Bump API version to 11.0.
+  * debian/rules: Drop Python 2.5 compatibility code.
+
+ -- Dmitry Shachnev <mitya57@gmail.com>  Tue, 18 Mar 2014 10:40:51 +0400
+
 sip4 (4.15.4-1) unstable; urgency=low
 
   * New upstream bugfix release.

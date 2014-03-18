@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>SIP Specification Files &mdash; SIP 4.15.4 Reference Guide</title>
+    <title>SIP Specification Files &mdash; SIP 4.15.5 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '4.15.4',
+        URL_ROOT:    './',
+        VERSION:     '4.15.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.15.4 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.15.5 Reference Guide" href="index.html" />
     <link rel="next" title="Directives" href="directives.html" />
     <link rel="prev" title="The SIP Command Line" href="command_line.html" /> 
   </head>
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="command_line.html" title="The SIP Command Line"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.15.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15.5 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -75,7 +73,7 @@ without SIP having to know the details itself.  However, there are a few cases
 where SIP generates a thin wrapper around a C++ method or constructor (see
 <a class="reference internal" href="c_api.html#ref-derived-classes"><em>Generated Derived Classes</em></a>) and needs to know the exact C++ signature.  To deal
 with these cases SIP allows two signatures to be specified.  For example:</p>
-<div class="highlight-python"><pre>class Klass
+<div class="highlight-python"><div class="highlight"><pre>class Klass
 {
 public:
     // The Python signature is a tuple, but the underlying C++ signature
@@ -84,7 +82,7 @@ public:
 %MethodCode
         int iarr[2];
 
-        if (PyArg_ParseTuple(a0, "ii", &amp;iarr[0], &amp;iarr[1]))
+        if (PyArg_ParseTuple(a0, &quot;ii&quot;, &amp;iarr[0], &amp;iarr[1]))
         {
             // Note that we use the SIP generated derived class
             // constructor.
@@ -93,7 +91,8 @@ public:
             Py_END_ALLOW_THREADS
         }
 %End
-};</pre>
+};
+</pre></div>
 </div>
 <div class="section" id="syntax-definition">
 <h2>Syntax Definition<a class="headerlink" href="#syntax-definition" title="Permalink to this headline">¶</a></h2>
@@ -536,10 +535,12 @@ that is the C++ signature of of the signal.</p>
 signal to a slot.  The signal is emitted when the keyboard accelerator is
 activated and it has a single integer argument that is the ID of the
 accelerator.  The C++ signature is:</p>
-<div class="highlight-python"><pre>bool connectItem(int id, const QObject *receiver, const char *member);</pre>
+<div class="highlight-python"><div class="highlight"><pre>bool connectItem(int id, const QObject *receiver, const char *member);
+</pre></div>
 </div>
 <p>The corresponding SIP specification is:</p>
-<div class="highlight-python"><pre>bool connectItem(int, SIP_RXOBJ_CON, SIP_SLOT_CON(int));</pre>
+<div class="highlight-python"><div class="highlight"><pre>bool connectItem(int, SIP_RXOBJ_CON, SIP_SLOT_CON(int));
+</pre></div>
 </div>
 <dl class="sip-type">
 <dt id="sip-type-SIP_SLOT_DIS">
@@ -580,22 +581,24 @@ namespace that is first defined in another module then the function is added to
 the namespace class in that other module.</p>
 <p>Say that we have a file <tt class="docutils literal"><span class="pre">a.sip</span></tt> that defines a module <tt class="docutils literal"><span class="pre">a_module</span></tt> as
 follows:</p>
-<div class="highlight-python"><pre>%Module a_module
+<div class="highlight-python"><div class="highlight"><pre>%Module a_module
 
 namespace N
 {
     void hello();
-};</pre>
+};
+</pre></div>
 </div>
 <p>We also have a file <tt class="docutils literal"><span class="pre">b.sip</span></tt> that defines a module <tt class="docutils literal"><span class="pre">b_module</span></tt> as follows:</p>
-<div class="highlight-python"><pre>%Module b_module
+<div class="highlight-python"><div class="highlight"><pre>%Module b_module
 
 %Import a.sip
 
 namespace N
 {
     void bye();
-};</pre>
+};
+</pre></div>
 </div>
 <p>When SIP parses <tt class="docutils literal"><span class="pre">b.sip</span></tt> it first sees the <tt class="docutils literal"><span class="pre">N</span></tt> namespace defined in module
 <tt class="docutils literal"><span class="pre">a_module</span></tt>.  Therefore it places the <tt class="docutils literal"><span class="pre">bye()</span></tt> function in the <tt class="docutils literal"><span class="pre">N</span></tt> Python
@@ -615,7 +618,7 @@ programmer who might expect to call the <tt class="docutils literal"><span class
 </div>
 <p>In order to achieve this behavior make sure that the <tt class="docutils literal"><span class="pre">N</span></tt> namespace is first
 defined in the <tt class="docutils literal"><span class="pre">b_module</span></tt>.  The following version of <tt class="docutils literal"><span class="pre">b.sip</span></tt> does this:</p>
-<div class="highlight-python"><pre>%Module b_module
+<div class="highlight-python"><div class="highlight"><pre>%Module b_module
 
 namespace N;
 
@@ -624,7 +627,8 @@ namespace N;
 namespace N
 {
     void bye();
-};</pre>
+};
+</pre></div>
 </div>
 <p>Alternatively you could just move the <a class="reference internal" href="directives.html#directive-%Import"><tt class="xref std std-directive docutils literal"><span class="pre">%Import</span></tt></a> directive so that it
 is at the end of the file.</p>
@@ -690,12 +694,12 @@ is at the end of the file.</p>
         <li class="right" >
           <a href="command_line.html" title="The SIP Command Line"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.15.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15.5 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2014 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

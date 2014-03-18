@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040f04
-#define SIP_VERSION_STR     "4.15.4"
+#define SIP_VERSION         0x040f05
+#define SIP_VERSION_STR     "4.15.5"
 
 
 #ifdef TRUE
@@ -159,8 +159,8 @@
 #define setIsHoldGILDtor(cd) ((cd)->classflags |= CLASS_DTOR_HOLD_GIL)
 #define assignmentHelper(cd) ((cd)->classflags & CLASS_ASSIGN_HELPER)
 #define setAssignmentHelper(cd) ((cd)->classflags |= CLASS_ASSIGN_HELPER)
-#define noPyQt4QMetaObject(cd)  ((cd)->classflags & CLASS_NO_QMETAOBJECT)
-#define setPyQt4NoQMetaObject(cd)   ((cd)->classflags |= CLASS_NO_QMETAOBJECT)
+#define noPyQtQMetaObject(cd)   ((cd)->classflags & CLASS_NO_QMETAOBJECT)
+#define setPyQtNoQMetaObject(cd)    ((cd)->classflags |= CLASS_NO_QMETAOBJECT)
 #define isTemplateClass(cd) ((cd)->classflags & CLASS_IS_TEMPLATE)
 #define setIsTemplateClass(cd)  ((cd)->classflags |= CLASS_IS_TEMPLATE)
 #define resetIsTemplateClass(cd)    ((cd)->classflags &= ~CLASS_IS_TEMPLATE)
@@ -499,7 +499,6 @@ typedef enum {
 /* Slot types. */
 typedef enum {
     str_slot,
-    unicode_slot,
     int_slot,
     long_slot,
     float_slot,
@@ -1004,6 +1003,7 @@ typedef struct _overDef {
     sourceLocation sloc;                /* The source location. */
     char *cppname;                      /* The C++ name. */
     int overflags;                      /* The overload flags. */
+    int pyqt_signal_hack;               /* The PyQt signal hack. */
     KwArgs kwargs;                      /* The keyword argument support. */
     struct _memberDef *common;          /* Common parts. */
     apiVersionRangeDef *api_range;      /* The optional API version range. */
@@ -1118,7 +1118,7 @@ typedef struct _mroDef {
 typedef struct _classDef {
     unsigned classflags;                /* The class flags. */
     unsigned classflags2;               /* The class flags, part 2. */
-    int pyqt4_flags;                    /* The PyQt4 specific flags. */
+    int pyqt_flags;                     /* The PyQt specific flags. */
     const char *pyqt_interface;         /* The Qt interface name. */
     nameDef *pyname;                    /* The Python name. */
     ifaceFileDef *iff;                  /* The interface file. */
