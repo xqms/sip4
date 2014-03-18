@@ -1,4 +1,4 @@
-sip4 (4.15.5-1) UNRELEASED; urgency=low
+sip4 (4.15.5-1) experimental; urgency=low
 
   * New upstream release.
   * Bump API version to 11.0.
