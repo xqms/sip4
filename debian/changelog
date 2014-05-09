@@ -1,3 +1,9 @@
+sip4 (4.15.5-2) unstable; urgency=medium
+
+  * Upload to unstable
+
+ -- Scott Kitterman <scott@kitterman.com>  Fri, 09 May 2014 07:48:12 -0400
+
 sip4 (4.15.5-1) experimental; urgency=low
 
   * New upstream release.
