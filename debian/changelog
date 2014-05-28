@@ -1,3 +1,10 @@
+sip4 (4.16-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+  * Bump API version to 11.1 (keep 11.0 in provided versions).
+
+ -- Dmitry Shachnev <mitya57@gmail.com>  Wed, 28 May 2014 16:14:08 +0400
+
 sip4 (4.15.5-2) unstable; urgency=medium
 
   * Upload to unstable
