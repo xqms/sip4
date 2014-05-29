@@ -1,10 +1,11 @@
-sip4 (4.16-1) UNRELEASED; urgency=medium
+sip4 (4.16+dfsg-1) UNRELEASED; urgency=medium
 
   * New upstream release.
   * Bump API version to 11.1 (keep 11.0 in provided versions).
   * Update debian/copyright to copyright-format 1.0.
   * Add Files-Excluded field to remove HTML documentation, which
     contains sourceless minified jquery.
+  * Simplify debian/watch, and mangle dfsg version.
 
  -- Dmitry Shachnev <mitya57@gmail.com>  Wed, 28 May 2014 16:14:08 +0400
 
