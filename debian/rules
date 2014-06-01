@@ -2,8 +2,8 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-PY2_PROVIDES=sip-api-11.0
-PY3_PROVIDES=sip-py3api-11.0
+PY2_PROVIDES=sip-api-11.0, sip-api-11.1
+PY3_PROVIDES=sip-py3api-11.0, sip-py3api-11.1
 # `dh_python3 --depends sip3` should generate dependency on newest API only
 PYDIST=sip $(shell python -c "a=[i.strip() for i in '$(PY3_PROVIDES)'.split(',')]; print sorted(a, reverse=True)[0]")
 
@@ -196,4 +196,8 @@ binary-arch: install-arch
 	$(MAKE) -f debian/rules DH_OPTIONS=-a binary-common
 
 binary: binary-arch binary-indep
-.PHONY: build clean binary-indep binary-arch binary configure
+
+get-orig-source:
+	uscan --verbose --download-current-version
+
+.PHONY: build binary-indep binary-arch binary clean configure get-orig-source

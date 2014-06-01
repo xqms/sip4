@@ -1,3 +1,18 @@
+v4.16 26th May 2014
+  - Added the /NoSetter/ variable annotation.
+  - Added the -B option to sip.
+  - Changed the handling of timelines (introducing a potential incompatibility)
+    so that later versions of wrapped libraries can be wrapped so long as they
+    are compatible with known versions.
+  - Added support for the 'no_receiver_check' argument to connect() in PyQt
+    v4.11.
+  - Added the --configuration option to configure.py.
+  - Added the --sysroot option to configure.py.
+  - Added the --target-py-version option to configure.py.
+  - Added the --no-tools option to configure.py.
+  - Added the --use-qmake option to configure.py.
+  - Bug fixes.
+
 v4.15.5 14th March 2014
   - The use_arch argument of sipconfig.create_wrapper() can now specify a space
     separated set of architectures.
