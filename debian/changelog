@@ -1,4 +1,4 @@
-sip4 (4.16+dfsg-1) UNRELEASED; urgency=medium
+sip4 (4.16+dfsg-1) unstable; urgency=medium
 
   * New upstream release.
   * Bump API version to 11.1 (keep 11.0 in provided versions).
@@ -8,7 +8,7 @@ sip4 (4.16+dfsg-1) UNRELEASED; urgency=medium
   * Simplify debian/watch, and mangle dfsg version.
   * Add get-orig-source target to debian/rules.
 
- -- Dmitry Shachnev <mitya57@gmail.com>  Wed, 28 May 2014 16:14:08 +0400
+ -- Dmitry Shachnev <mitya57@gmail.com>  Sun, 01 Jun 2014 12:38:17 +0400
 
 sip4 (4.15.5-2) unstable; urgency=medium
 
