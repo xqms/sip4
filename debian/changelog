@@ -1,3 +1,10 @@
+sip4 (4.16.1+dfsg-1) unstable; urgency=medium
+
+  * New upstream bugfix release.
+  * Update sip.1 man page, document new command-line flags.
+
+ -- Dmitry Shachnev <mitya57@gmail.com>  Mon, 09 Jun 2014 15:56:52 +0400
+
 sip4 (4.16+dfsg-1) unstable; urgency=medium
 
   * New upstream release.
