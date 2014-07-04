@@ -1,8 +1,8 @@
-Index: sip4-4.14/configure.py
+Index: sip4-4.16.2+dfsg/configure.py
 ===================================================================
---- sip4-4.14.orig/configure.py	2012-09-29 07:26:55.000000000 -0400
-+++ sip4-4.14/configure.py	2012-10-01 02:04:38.522747304 -0400
-@@ -224,6 +224,8 @@
+--- sip4-4.16.2+dfsg.orig/configure.py	2014-07-04 11:25:52.463702009 -0400
++++ sip4-4.16.2+dfsg/configure.py	2014-07-04 11:25:52.455702009 -0400
+@@ -231,6 +231,8 @@
          ("siplib", "siplib.c"),
          ("siplib", "siplib.sbf")
      )
@@ -11,7 +11,7 @@ Index: sip4-4.14/configure.py
  
      # The siplib directory may not exist if we are building away from the
      # source directory.
-@@ -233,7 +235,7 @@
+@@ -240,7 +242,7 @@
          pass
  
      for f in patched:
