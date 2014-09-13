@@ -1,3 +1,10 @@
+sip4 (4.16.3+dfsg-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update my e-mail address.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 13 Sep 2014 12:53:42 +0400
+
 sip4 (4.16.2+dfsg-1) unstable; urgency=medium
 
   * New upstream bugfix release

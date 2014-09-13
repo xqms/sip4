@@ -30,8 +30,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x041002
-sip_version_str = "4.16.2"
+sip_version = 0x041003
+sip_version_str = "4.16.3"
 py_version = sys.hexversion >> 8
 py_platform = sys.platform
 plat_py_site_dir = None
@@ -351,6 +351,10 @@ def create_makefiles(macros):
                 ("debug" if opts.debug else "release")))
 
         pro.write("\n")
+        pro.write("# Work around QTBUG-39300.\n")
+        pro.write("CONFIG -= android_install\n")
+
+        pro.write("\n")
         pro.write("target.path = %s\n" % os.path.dirname(cfg.sip_bin))
         pro.write("INSTALLS += target\n")
 
@@ -389,6 +393,10 @@ def create_makefiles(macros):
         pro.write("CONFIG += warn_on exceptions_off %s %s\n" % (
                 ("staticlib" if opts.static else "plugin"),
                 ("debug" if opts.debug else "release")))
+
+        pro.write("\n")
+        pro.write("# Work around QTBUG-39300.\n")
+        pro.write("CONFIG -= android_install\n")
 
         pro.write("\n")
         pro.write("INCLUDEPATH += %s\n" % cfg.py_inc_dir)
