@@ -2,6 +2,7 @@ sip4 (4.16.4+dfsg-1) UNRELEASED; urgency=medium
 
   * New upstream release.
   * Include full copy of SIP license in debian/copyright.
+  * Bump Standards-Version to 3.9.6, no changes needed.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Fri, 24 Oct 2014 10:07:59 +0400
 
