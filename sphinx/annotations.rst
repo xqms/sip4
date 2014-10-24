@@ -131,6 +131,15 @@ Argument Annotations
         void foo(int);
 
 
+.. argument-annotation:: DisallowNone
+
+    .. versionadded:: 4.16.4
+
+    This boolean annotation specifies that the value of the corresponding
+    argument (which should be a pointer to either a C++ class or a mapped type)
+    must not be ``None``.
+
+
 .. argument-annotation:: DocType
 
     .. versionadded:: 4.10
@@ -622,6 +631,26 @@ Exception Annotations
 Function Annotations
 --------------------
 
+.. function-annotation:: AbortOnException
+
+    .. versionadded:: 4.16.4
+
+    This boolean annotation specifies that when a Python re-implementation of a
+    virtual C++ function raises a Python exception then ``abort()`` is
+    called after the error handler returns.
+
+
+.. function-annotation:: AllowNone
+
+    .. versionadded:: 4.16.4
+
+    This boolean annotation is used to specify that the value returned by the
+    function (which should be either :stype:`SIP_PYBUFFER`,
+    :stype:`SIP_PYCALLABLE`, :stype:`SIP_PYDICT`, :stype:`SIP_PYLIST`,
+    :stype:`SIP_PYSLICE`, :stype:`SIP_PYTUPLE` or :stype:`SIP_PYTYPE`) may be
+    ``None``.
+
+
 .. function-annotation:: API
 
     .. versionadded:: 4.9
@@ -656,6 +685,15 @@ Function Annotations
     This boolean annotation is used to specify that the constructor or function
     is deprecated.  A deprecation warning is issued whenever the constructor or
     function is called.
+
+
+.. function-annotation:: DisallowNone
+
+    .. versionadded:: 4.16.4
+
+    This boolean annotation is used to specify that the value returned by the
+    function (which should be a pointer to either a C++ class or a mapped type)
+    must not be ``None``.
 
 
 .. function-annotation:: DocType

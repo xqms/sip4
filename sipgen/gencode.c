@@ -7864,7 +7864,7 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
 
     prcode(fp, ");\n"
 "\n"
-"    %ssipParseResultEx(sipGILState, sipErrorHandler, sipPySelf, sipMethod, sipResObj, \"", (res_isref ? "int sipRc = " : ""));
+"    %ssipParseResultEx(sipGILState, sipErrorHandler, sipPySelf, sipMethod, sipResObj, \"", ((res_isref || abortOnException(vhd)) ? "int sipRc = " : ""));
 
     /* Build the format string. */
     if (nrvals == 0)
@@ -7914,14 +7914,19 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
 
     if (res != NULL)
     {
-        if (res_isref)
+        if (res_isref || abortOnException(vhd))
         {
             prcode(fp,
 "\n"
 "    if (sipRc < 0)\n"
                 );
 
-            generateDefaultInstanceReturn(res, "    ", fp);
+            if (abortOnException(vhd))
+                prcode(fp,
+"        abort();\n"
+                    );
+            else
+                generateDefaultInstanceReturn(res, "    ", fp);
         }
 
         prcode(fp,
@@ -8019,9 +8024,12 @@ static const char *getParseResultFormat(argDef *ad, int res_isref, int xfervh)
                 if (!res_isref)
                     f |= 0x04;
             }
-            else if (ad->nrderefs == 1 && isOutArg(ad))
+            else if (ad->nrderefs == 1)
             {
-                f |= 0x04;
+                if (isOutArg(ad))
+                    f |= 0x04;
+                else if (isDisallowNone(ad))
+                    f |= 0x01;
             }
 
             if (xfervh)
@@ -8140,26 +8148,12 @@ static void generateTupleBuilder(moduleDef *mod, signatureDef *sd,FILE *fp)
         switch (ad->atype)
         {
         case ascii_string_type:
-            if (ad->nrderefs == 0 || (ad->nrderefs == 1 && isOutArg(ad)))
-                fmt = "aA";
-            else
-                fmt = "AA";
-
-            break;
-
         case latin1_string_type:
-            if (ad->nrderefs == 0 || (ad->nrderefs == 1 && isOutArg(ad)))
-                fmt = "aL";
-            else
-                fmt = "AL";
-
-            break;
-
         case utf8_string_type:
             if (ad->nrderefs == 0 || (ad->nrderefs == 1 && isOutArg(ad)))
-                fmt = "a8";
+                fmt = "a";
             else
-                fmt = "A8";
+                fmt = "A";
 
             break;
 
@@ -12138,13 +12132,9 @@ static const char *getBuildResultFormat(argDef *ad)
         return "b";
 
     case ascii_string_type:
-        return (ad->nrderefs > (isOutArg(ad) ? 1 : 0)) ? "AA" : "aA";
-
     case latin1_string_type:
-        return (ad->nrderefs > (isOutArg(ad) ? 1 : 0)) ? "AL" : "aL";
-
     case utf8_string_type:
-        return (ad->nrderefs > (isOutArg(ad) ? 1 : 0)) ? "A8" : "a8";
+        return (ad->nrderefs > (isOutArg(ad) ? 1 : 0)) ? "A" : "a";
 
     case sstring_type:
     case ustring_type:
@@ -13644,7 +13634,7 @@ static char *getSubFormatChar(char fc, argDef *ad)
 
     if (ad->atype == class_type || ad->atype == mapped_type)
     {
-        if (ad->nrderefs == 0)
+        if (ad->nrderefs == 0 || isDisallowNone(ad))
             flags |= 0x01;
 
         if (isThisTransferred(ad))

@@ -29,14 +29,6 @@ specification files.
     :c:macro:`SIP_UNBLOCK_THREADS` at the same lexical scope.
 
 
-.. c:macro:: SIP_OWNS_MEMORY
-
-    .. versionadded:: 4.15.2
-
-    This is a flag used by various array constructors that species that the
-    array owns the memory that holds the array's contents.
-
-
 .. c:macro:: SIP_NO_CONVERTORS
 
     This is a flag used by various type convertors that suppresses the use of a
@@ -47,6 +39,14 @@ specification files.
 
     This is a flag used by various type convertors that causes the conversion
     to fail if the Python object being converted is ``Py_None``.
+
+
+.. c:macro:: SIP_OWNS_MEMORY
+
+    .. versionadded:: 4.15.2
+
+    This is a flag used by various array constructors that species that the
+    array owns the memory that holds the array's contents.
 
 
 .. c:macro:: SIP_PROTECTED_IS_PUBLIC
@@ -1481,7 +1481,7 @@ specification files.
 
         Convert a Python long to a C/C++ ``unsigned char``.
 
-    ``N`` (object) [PyTypeObject \*, :PyObject \*\*]
+    ``N`` (object) [PyTypeObject \*, PyObject \*\*]
         A Python object is checked to see if it is a certain type and then
         returned without any conversions.  The reference count is incremented.
         The Python object may be ``Py_None``.
