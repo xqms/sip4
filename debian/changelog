@@ -3,6 +3,7 @@ sip4 (4.16.5+dfsg-1) UNRELEASED; urgency=medium
   * New upstream release.
   * Refresh patches.
   * Drop configure.py.patch, no longer needed.
+  * Update clean and install targets in debian/rules for new version.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Wed, 24 Dec 2014 21:40:44 +0300
 
