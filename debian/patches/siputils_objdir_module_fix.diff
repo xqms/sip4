@@ -1,11 +1,7 @@
 --- a/siputils.py
 +++ b/siputils.py
-@@ -1689,9 +1689,12 @@
-         mfile.write("\n$(OFILES): $(HFILES)\n")
- 
-         for mf in self._build["moc_headers"].split():
--            root, discard = os.path.splitext(mf)
-+            root, _ = os.path.splitext(mf)
+@@ -1692,6 +1692,9 @@
+             root, discard = os.path.splitext(mf)
              cpp = "moc_" + root + ".cpp"
  
 +            if self._src_dir != self.dir:
