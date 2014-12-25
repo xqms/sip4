@@ -123,8 +123,8 @@ specification files.
 .. c:macro:: SIP_VERSION_STR
 
     This is a C preprocessor symbol that defines the SIP version number
-    represented as a string.  For development snapshots it will start with
-    ``snapshot-``.
+    represented as a string.  For development snapshots it will contain either
+    ``-snapshot-`` or ``-preview-``.
 
 
 .. c:function:: sipErrorState sipBadCallableArg(int arg_nr, PyObject *arg)
@@ -752,7 +752,8 @@ specification files.
     underlying memory being copied.
 
     :class:`sip.array` objects are not supported by the :program:`sip` code
-    generator.  They can only be created by handwritten code.
+    generator.  They can only be created by handwritten code or by
+    :func:`sip.voidptr.asarray`.
 
     :param data:
         the address of the start of the C/C++ array.

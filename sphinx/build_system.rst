@@ -5,6 +5,11 @@ The Build System
 
 .. module:: sipconfig
 
+.. note::
+
+    This should not be used for new projects as it will not be supported by SIP
+    v5.
+
 The purpose of the build system is to make it easy for you to write
 configuration scripts in Python for your own bindings.  The build system takes
 care of the details of particular combinations of platform and compiler.  It
@@ -367,6 +372,10 @@ of the work of creating these additional configuration modules.
         A list of additional libraries passed to the linker.  The names of the
         libraries must be in platform neutral form (i.e. without any platform
         specific prefixes, version numbers or extensions).
+
+    .. attribute:: extra_source_dirs
+
+        A list of additional source directories passed to ``make``.
 
     .. attribute:: generator
 

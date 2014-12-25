@@ -1,3 +1,13 @@
+sip4 (4.16.5+dfsg-1) experimental; urgency=medium
+
+  * New upstream release.
+  * Refresh and simplify patches.
+  * Drop configure.py.patch, no longer needed.
+  * Update clean and install targets in debian/rules for new version.
+  * Build-depend on dh-python explicitly.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Thu, 25 Dec 2014 14:59:14 +0300
+
 sip4 (4.16.4+dfsg-1) unstable; urgency=medium
 
   * New upstream release.

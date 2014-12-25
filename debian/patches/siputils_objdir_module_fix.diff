@@ -1,18 +1,12 @@
-Index: sip4-4.16.2+dfsg/siputils.py
-===================================================================
---- sip4-4.16.2+dfsg.orig/siputils.py	2014-07-04 11:25:16.519703071 -0400
-+++ sip4-4.16.2+dfsg/siputils.py	2014-07-04 11:25:16.515703071 -0400
-@@ -1683,9 +1683,12 @@
-         mfile.write("\n$(OFILES): $(HFILES)\n")
- 
-         for mf in self._build["moc_headers"].split():
--            root, discard = os.path.splitext(mf)
-+            root, _ = os.path.splitext(mf)
+--- a/siputils.py
++++ b/siputils.py
+@@ -1692,6 +1692,9 @@
+             root, discard = os.path.splitext(mf)
              cpp = "moc_" + root + ".cpp"
  
 +            if self._src_dir != self.dir:
 +                mf = os.path.join(self._src_dir, mf)
 +
              mfile.write("\n%s: %s\n" % (cpp, mf))
-             mfile.write("\t$(MOC) -o %s %s\n" % (cpp, mf))
+             mfile.write("\t$(MOC) -o %s $<\n" % cpp)
  
