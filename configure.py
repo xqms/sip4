@@ -1,6 +1,6 @@
 # This script handles the SIP configuration and generates the Makefiles.
 #
-# Copyright (c) 2014 Riverbank Computing Limited <info@riverbankcomputing.com>
+# Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
 #
 # This file is part of SIP.
 #
@@ -30,12 +30,13 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x041005
-sip_version_str = "4.16.5"
+sip_version = 0x041006
+sip_version_str = "4.16.6"
 py_version = sys.hexversion >> 8
 py_platform = sys.platform
 plat_py_site_dir = None
 plat_py_inc_dir = None
+plat_py_venv_inc_dir = None
 plat_py_conf_inc_dir = None
 plat_py_lib_dir = None
 plat_sip_dir = None
@@ -203,12 +204,13 @@ def set_platform_directories():
     """ Initialise the global variables relating to platform-specific
     directories.
     """
-    global plat_py_site_dir, plat_py_inc_dir, plat_py_conf_inc_dir
-    global plat_bin_dir, plat_py_lib_dir, plat_sip_dir
+    global plat_py_site_dir, plat_py_inc_dir, plat_py_venv_inc_dir
+    global plat_py_conf_inc_dir, plat_bin_dir, plat_py_lib_dir, plat_sip_dir
 
     # We trust distutils for some stuff.
     plat_py_site_dir = sysconfig.get_python_lib(plat_specific=1)
     plat_py_inc_dir = sysconfig.get_python_inc()
+    plat_py_venv_inc_dir = sysconfig.get_python_inc(prefix=sys.prefix)
     plat_py_conf_inc_dir = os.path.dirname(sysconfig.get_config_h_filename())
 
     if sys.platform == "win32":
@@ -616,7 +618,7 @@ def create_optparser(sdk_dir):
         setattr(parser.values, option.dest, os.path.abspath(value))
 
     def store_version(option, opt_str, value, parser):
-        version = version_from_string(value)
+        version = siputils.version_from_string(value)
         if version is None:
             raise optparse.OptionValueError(
                     "'%s' is not a valid version number" % value)
@@ -704,7 +706,7 @@ def create_optparser(sdk_dir):
     g.add_option("-e", "--incdir", action="callback", type="string",
             metavar="DIR", dest="sipincdir", callback=store_abspath,
             help="where the SIP header file will be installed [default: "
-                    "%s]" % plat_py_inc_dir)
+                    "%s]" % plat_py_venv_inc_dir)
     g.add_option("-v", "--sipdir", action="callback", type="string",
             metavar="DIR", dest="sipsipdir", callback=store_abspath,
             help="where .sip files are normally installed [default: "
@@ -804,7 +806,7 @@ def main(argv):
 
     # Set defaults.
     sip_bin_dir = plat_bin_dir
-    sip_inc_dir = plat_py_inc_dir
+    sip_inc_dir = plat_py_venv_inc_dir
     sip_module_dir = plat_py_site_dir
     sip_sip_dir = plat_sip_dir
 

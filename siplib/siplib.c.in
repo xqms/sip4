@@ -1,7 +1,7 @@
 /*
  * SIP library code.
  *
- * Copyright (c) 2014 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -616,7 +616,8 @@ static int destroy_on_exit = TRUE;      /* Destroy owned objects on exit. */
 static void addClassSlots(sipWrapperType *wt, const sipClassTypeDef *ctd);
 static void addTypeSlots(PyHeapTypeObject *heap_to, sipPySlotDef *slots);
 static void *findSlot(PyObject *self, sipPySlotType st);
-static void *findSlotInType(sipPySlotDef *psd, sipPySlotType st);
+static void *findSlotInClass(const sipClassTypeDef *psd, sipPySlotType st);
+static void *findSlotInSlotList(sipPySlotDef *psd, sipPySlotType st);
 static int objobjargprocSlot(PyObject *self, PyObject *arg1, PyObject *arg2,
         sipPySlotType st);
 static int ssizeobjargprocSlot(PyObject *self, SIP_SSIZE_T arg1,
@@ -3282,12 +3283,6 @@ static int sip_api_parse_kwd_args(PyObject **parseErrp, PyObject *sipArgs,
          */
         *unused = NULL;
     }
-    else if (sipKwdArgs != NULL && kwdlist == NULL)
-    {
-        PyErr_SetString(PyExc_TypeError,
-                "keyword arguments are not supported");
-        return FALSE;
-    }
 
     va_start(va, fmt);
     ok = parseKwdArgs(parseErrp, sipArgs, sipKwdArgs, kwdlist, unused, fmt,
@@ -3845,7 +3840,7 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
             arg = PyTuple_GET_ITEM(sipArgs, argnr);
             failure.arg_nr = argnr + 1;
         }
-        else if (sipKwdArgs != NULL && kwdlist != NULL)
+        else if (nr_kwd_args != 0 && kwdlist != NULL)
         {
             const char *name = kwdlist[argnr - *selfargp];
 
@@ -8346,7 +8341,7 @@ static void *explicit_access_func(sipSimpleWrapper *sw, AccessFuncOp op)
  */
 static void *indirect_access_func(sipSimpleWrapper *sw, AccessFuncOp op)
 {
-    void *addr = NULL;
+    void *addr;
 
     switch (op)
     {
@@ -8356,6 +8351,10 @@ static void *indirect_access_func(sipSimpleWrapper *sw, AccessFuncOp op)
 
     case GuardedPointer:
         addr = *((void **)sw->data);
+        break;
+
+    default:
+        addr = NULL;
         break;
     }
 
@@ -9227,31 +9226,11 @@ static void *findSlot(PyObject *self, sipPySlotType st)
     /* See if it is a wrapper. */
     if (PyObject_TypeCheck((PyObject *)py_type, &sipWrapperType_Type))
     {
-        sipClassTypeDef *ctd;
+        const sipClassTypeDef *ctd;
 
         ctd = (sipClassTypeDef *)((sipWrapperType *)(py_type))->type;
 
-        if (ctd->ctd_pyslots != NULL)
-            slot = findSlotInType(ctd->ctd_pyslots, st);
-        else
-            slot = NULL;
-
-        if (slot == NULL)
-        {
-            sipEncodedTypeDef *sup;
-
-            /* Search any super-types. */
-            if ((sup = ctd->ctd_supers) != NULL)
-                do
-                {
-                    const sipClassTypeDef *sup_ctd = sipGetGeneratedClassType(
-                            sup, ctd);
-
-                    if (sup_ctd->ctd_pyslots != NULL)
-                        slot = findSlotInType(sup_ctd->ctd_pyslots, st);
-                }
-                while (slot == NULL && !sup++->sc_flag);
-        }
+        slot = findSlotInClass(ctd, st);
     }
     else
     {
@@ -9264,7 +9243,41 @@ static void *findSlot(PyObject *self, sipPySlotType st)
 
         assert(etd->etd_pyslots != NULL);
 
-        slot = findSlotInType(etd->etd_pyslots, st);
+        slot = findSlotInSlotList(etd->etd_pyslots, st);
+    }
+
+    return slot;
+}
+
+
+/*
+ * Find a particular slot function in a class hierarchy.
+ */
+static void *findSlotInClass(const sipClassTypeDef *ctd, sipPySlotType st)
+{
+    void *slot;
+
+    if (ctd->ctd_pyslots != NULL)
+        slot = findSlotInSlotList(ctd->ctd_pyslots, st);
+    else
+        slot = NULL;
+
+    if (slot == NULL)
+    {
+        sipEncodedTypeDef *sup;
+
+        /* Search any super-types. */
+        if ((sup = ctd->ctd_supers) != NULL)
+        {
+            do
+            {
+                const sipClassTypeDef *sup_ctd = sipGetGeneratedClassType(
+                        sup, ctd);
+
+                slot = findSlotInClass(sup_ctd, st);
+            }
+            while (slot == NULL && !sup++->sc_flag);
+        }
     }
 
     return slot;
@@ -9274,7 +9287,7 @@ static void *findSlot(PyObject *self, sipPySlotType st)
 /*
  * Find a particular slot function in a particular type.
  */
-static void *findSlotInType(sipPySlotDef *psd, sipPySlotType st)
+static void *findSlotInSlotList(sipPySlotDef *psd, sipPySlotType st)
 {
     while (psd->psd_func != NULL)
     {

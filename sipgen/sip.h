@@ -1,7 +1,7 @@
 /*
  * The main header file for SIP.
  *
- * Copyright (c) 2014 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041005
-#define SIP_VERSION_STR     "4.16.5"
+#define SIP_VERSION         0x041006
+#define SIP_VERSION_STR     "4.16.6"
 
 
 #ifdef TRUE
@@ -898,6 +898,7 @@ typedef struct _ifaceFileDef {
     scopedNameDef *fqcname;             /* The fully qualified C++ name. */
     moduleDef *module;                  /* The owning module. */
     codeBlockList *hdrcode;             /* Header code. */
+    const char *file_extension;         /* The optional file extension. */
     struct _ifaceFileList *used;        /* Interface files used. */
     struct _ifaceFileDef *next;         /* Next in the list. */
 } ifaceFileDef;

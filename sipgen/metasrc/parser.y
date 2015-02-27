@@ -1,7 +1,7 @@
 /*
  * The SIP parser.
  *
- * Copyright (c) 2014 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -2771,6 +2771,7 @@ struct:     TK_STRUCT scopedname {
                     "Deprecated",
                     "ExportDerived",
                     "External",
+                    "FileExtension",
                     "Metatype",
                     "Mixin",
                     "NoDefaultCtors",
@@ -2845,6 +2846,7 @@ class:  TK_CLASS scopedname {
                     "Deprecated",
                     "ExportDerived",
                     "External",
+                    "FileExtension",
                     "Metatype",
                     "Mixin",
                     "NoDefaultCtors",
@@ -4684,6 +4686,7 @@ ifaceFileDef *findIfaceFile(sipSpec *pt, moduleDef *mod, scopedNameDef *fqname,
     iff->module = NULL;
     iff->hdrcode = NULL;
     iff->used = NULL;
+    iff->file_extension = NULL;
     iff->next = pt->ifacefiles;
 
     pt->ifacefiles = iff;
@@ -4925,6 +4928,9 @@ static void finishClass(sipSpec *pt, moduleDef *mod, classDef *cd,
 
     if (getOptFlag(of, "Mixin", bool_flag) != NULL)
         setMixin(cd);
+
+    if ((flg = getOptFlag(of, "FileExtension", string_flag)) != NULL)
+        cd->iff->file_extension = flg->fvalue.sval;
 
     if ((flg = getOptFlag(of, "PyQtFlags", integer_flag)) != NULL)
         cd->pyqt_flags = flg->fvalue.ival;
