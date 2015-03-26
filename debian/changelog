@@ -2,6 +2,7 @@ sip4 (4.16.7+dfsg-1) UNRELEASED; urgency=medium
 
   * New upstream release.
   * Backport upstream patch to fix a regression in this release.
+  * Merge two siputils patches into a single one.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Thu, 26 Mar 2015 13:25:14 +0300
 
