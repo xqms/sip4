@@ -1,3 +1,10 @@
+sip4 (4.16.7+dfsg-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+  * Backport upstream patch to fix a regression in this release.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Thu, 26 Mar 2015 13:25:14 +0300
+
 sip4 (4.16.6+dfsg-1) experimental; urgency=medium
 
   * New upstream release.
