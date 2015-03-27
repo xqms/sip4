@@ -1,3 +1,13 @@
+sip4 (4.16.7+dfsg-1) experimental; urgency=medium
+
+  * New upstream release.
+  * Backport upstream patch to fix a regression in this release.
+  * Merge two siputils patches into a single one.
+  * Get rid of useless python call in debian/rules.
+  * Revert upstream change that breaks build with Sphinx 1.2.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Fri, 27 Mar 2015 11:17:15 +0300
+
 sip4 (4.16.6+dfsg-1) experimental; urgency=medium
 
   * New upstream release.

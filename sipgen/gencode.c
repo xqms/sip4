@@ -149,6 +149,8 @@ static void generateHandleResult(moduleDef *, overDef *, int, int, char *,
 static void generateOrdinaryFunction(sipSpec *pt, moduleDef *mod,
         classDef *c_scope, mappedTypeDef *mt_scope, memberDef *md, FILE *fp);
 static void generateSimpleFunctionCall(fcallDef *, FILE *);
+static int generateResultVar(ifaceFileDef *scope, overDef *od, argDef *res,
+        const char *indent, FILE *fp);
 static void generateFunctionCall(classDef *c_scope, mappedTypeDef *mt_scope,
         ifaceFileDef *o_scope, overDef *od, int deref, moduleDef *mod,
         FILE *fp);
@@ -6909,8 +6911,44 @@ static void generateVirtualCatcher(sipSpec *pt, moduleDef *mod, classDef *cd,
 "    if (!sipMeth)\n"
         );
 
-    if (isAbstract(od))
+    if (od->virtcallcode != NULL)
+    {
+        argDef *res = &od->cppsig->result;
+
+        prcode(fp,
+"    {\n");
+
+        if (res->atype != void_type || res->nrderefs != 0)
+        {
+            prcode(fp,
+"        ");
+
+            generateNamedBaseType(cd->iff, res, "sipRes", TRUE, fp);
+
+            prcode(fp, ";\n"
+                );
+        }
+        else
+        {
+            res = NULL;
+        }
+
+        prcode(fp,
+"\n"
+            );
+
+        generateCppCodeBlock(od->virtcallcode, fp);
+
+        prcode(fp,
+"\n"
+"        return%s;\n"
+"    }\n"
+            , (res != NULL ? " sipRes" : ""));
+    }
+    else if (isAbstract(od))
+    {
         generateDefaultInstanceReturn(res, "    ", fp);
+    }
     else
     {
         int a;
@@ -9263,6 +9301,10 @@ static void generateNamedBaseType(ifaceFileDef *scope, argDef *ad,
             break;
 
         case uint_type:
+            /*
+             * Qt4 moc uses "uint" in signal signatures.  We do all the time
+             * and hope it is always defined.
+             */
             prcode(fp, "uint");
             break;
 
@@ -12288,6 +12330,44 @@ static int copyConstRefArg(argDef *ad)
 
 
 /*
+ * Generate a variable to hold the result of a function call if one is needed.
+ */
+static int generateResultVar(ifaceFileDef *scope, overDef *od, argDef *res,
+        const char *indent, FILE *fp)
+{
+    int is_result;
+
+    /* See if sipRes is needed. */
+    is_result = (!isInplaceNumberSlot(od->common) &&
+             !isInplaceSequenceSlot(od->common) &&
+             (res->atype != void_type || res->nrderefs != 0));
+
+    if (is_result)
+    {
+        prcode(fp, "%s", indent);
+
+        generateNamedValueType(scope, res, "sipRes", fp);
+
+        /*
+         * The typical %MethodCode usually causes a compiler warning, so we
+         * initialise the result in that case to try and suppress it.
+         */
+        if (od->methodcode != NULL)
+        {
+            prcode(fp," = ");
+
+            generateCastZero(res, fp);
+        }
+
+        prcode(fp,";\n"
+            );
+    }
+
+    return is_result;
+}
+
+
+/*
  * Generate a function call.
  */
 static void generateFunctionCall(classDef *c_scope, mappedTypeDef *mt_scope,
@@ -12345,36 +12425,8 @@ static void generateFunctionCall(classDef *c_scope, mappedTypeDef *mt_scope,
     if (needsNew)
         resetIsConstArg(res);
 
-    /* See if sipRes is needed. */
-    is_result = (!isInplaceNumberSlot(od->common) &&
-             !isInplaceSequenceSlot(od->common) &&
-             (res->atype != void_type || res->nrderefs != 0));
-
-    newline = FALSE;
-
-    if (is_result)
-    {
-        prcode(fp,
-"            ");
-
-        generateNamedValueType(scope, res, "sipRes", fp);
-
-        /*
-         * The typical %MethodCode usually causes a compiler warning, so we
-         * initialise the result in that case to try and suppress it.
-         */
-        if (od->methodcode != NULL)
-        {
-            prcode(fp," = ");
-
-            generateCastZero(res,fp);
-        }
-
-        prcode(fp,";\n"
-            );
-
-        newline = TRUE;
-    }
+    is_result = newline = generateResultVar(scope, od, res, "            ",
+            fp);
 
     result_size = -1;
     deltemps = TRUE;
