@@ -5,7 +5,7 @@
 PY2_PROVIDES=sip-api-11.0, sip-api-11.1
 PY3_PROVIDES=sip-py3api-11.0, sip-py3api-11.1
 # `dh_python3 --depends sip3` should generate dependency on newest API only
-PYDIST=sip $(shell python -c "a=[i.strip() for i in '$(PY3_PROVIDES)'.split(',')]; print sorted(a, reverse=True)[0]")
+PYDIST=sip $(lastword $(PY3_PROVIDES))
 
 INSTDIR=$(CURDIR)/debian
 
