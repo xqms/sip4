@@ -102,7 +102,7 @@ install-arch: build
 
 	for i in $$(find debian/python*-sip-dbg -name '*.so'); do \
 		b=$$(basename $$i .so); \
-		mv $$i $$(dirname $$i)/$${b}_d.so; \
+		mv -v $$i $$(dirname $$i)/$${b}_d.so; \
 	done
 	find debian/python*-sip-dbg ! -type d ! -name '*_d.*' ! -name *sipconfig_d* | xargs rm -f
 	find debian/python*-sip-dbg -depth -empty -exec rmdir {} \;
