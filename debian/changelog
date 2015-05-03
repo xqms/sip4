@@ -2,6 +2,8 @@ sip4 (4.16.7+dfsg-2) UNRELEASED; urgency=medium
 
   * Bump debhelper compatibility level to 9.
   * Be verbose when renaming extension files.
+  * Add a temporary hack to use upstream stylesheet when building the
+    documentation with Sphinx 1.2.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Sat, 02 May 2015 19:22:59 +0300
 
