@@ -2,12 +2,14 @@
 .\" Created by Ricardo Cardenes Medina <ricardo@conysis.com>
 .\" for the Debian 'sip' package
 .\"
-.TH SIP 1 "2014/09/13"
+.TH SIP 1 "2015/05/06"
 .SH NAME
 sip \- generates C++/Python bindings
 .SH SYNOPSIS
 .B sip
-[\-h] [\-V] [\-a file] [\-b file] [\-B tag] [\-c dir] [\-d file] [\-e] [\-g] [\-I dir] [\-j number] [\-k] [\-m file] [\-o] [\-p module] [\-P] [\-r] [\-s suffix] [\-t tag] [\-T] [\-w] [\-x feature] [\-X id:file] [\-z file] [file]
+[\-h] [\-V] [\-a\~file] [\-b\~file] [\-B\~tag] [\-c\~dir] [\-d\~file] [\-e] [\-g]
+[\-I\~dir] [\-j\~number] [\-k] [\-m\~file] [\-o] [\-p\~module] [\-P] [\-r] [\-s\~suffix]
+[\-t\~tag] [\-w] [\-x\~feature] [\-X\~id:file] [\-z\~file] [@file] [file]
 .SH DESCRIPTION
 .B sip
 takes a set of specification files and generates C++ code, documentation and build files.
@@ -77,9 +79,6 @@ The suffix used for generated C or C++ files (".c" or ".cpp" if none specified)
 .B \-t tag
 The version/platform to generate code for.
 .TP
-.B \-T
-Disable the timestamp in the header of generated files.
-.TP
 .B \-w
 Enable warning messages.
 .TP
@@ -91,6 +90,10 @@ Create the extracts for an \fIid\fR in a \fIfile\fR.
 .TP
 .B \-z file
 The name of a file containing additional command line flags.
+This option is deprecated, use \fI@file\fR instead.
+.TP
+.B @file
+The name of a file containing more command line flags.
 .TP
 .B file
 The name of the file containing the specification. If you skip it,

@@ -1,3 +1,14 @@
+sip4 (4.16.7+dfsg-2) unstable; urgency=medium
+
+  * Bump debhelper compatibility level to 9.
+  * Be verbose when renaming extension files.
+  * Add a temporary hack to use upstream stylesheet when building the
+    documentation with Sphinx 1.2.
+  * Update sip.1 manpage, some options changed since last update.
+  * Upload to unstable.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Wed, 06 May 2015 21:13:39 +0300
+
 sip4 (4.16.7+dfsg-1) experimental; urgency=medium
 
   * New upstream release.
