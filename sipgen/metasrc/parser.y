@@ -916,17 +916,19 @@ baseexception:  {
                 /* See if it is a builtin exception. */
 
                 static char *builtins[] = {
+                    "BaseException",
                     "Exception",
                     "StopIteration",
-                    "StandardError",
+                    "GeneratorExit",
                     "ArithmeticError",
                     "LookupError",
+                    "StandardError",                /* Python v2. */
+
                     "AssertionError",
                     "AttributeError",
+                    "BufferError",
                     "EOFError",
                     "FloatingPointError",
-                    "EnvironmentError",
-                    "IOError",
                     "OSError",
                     "ImportError",
                     "IndexError",
@@ -951,8 +953,39 @@ baseexception:  {
                     "UnicodeTranslateError",
                     "ValueError",
                     "ZeroDivisionError",
-                    "WindowsError",
-                    "VMSError",
+                    "EnvironmentError",             /* Python v2. */
+                    "IOError",                      /* Python v2. */
+                    "WindowsError",                 /* Python v2. */
+                    "VMSError",                     /* Python v2. */
+
+                    "BlockingIOError",
+                    "BrokenPipeError",
+                    "ChildProcessError",
+                    "ConnectionError",
+                    "ConnectionAbortedError",
+                    "ConnectionRefusedError",
+                    "ConnectionResetError",
+                    "FileExistsError",
+                    "FileNotFoundError",
+                    "InterruptedError",
+                    "IsADirectoryError",
+                    "NotADirectoryError",
+                    "PermissionError",
+                    "ProcessLookupError",
+                    "TimeoutError",
+
+                    "Warning",
+                    "UserWarning",
+                    "DeprecationWarning",
+                    "PendingDeprecationWarning",
+                    "SyntaxWarning",
+                    "RuntimeWarning",
+                    "FutureWarning",
+                    "ImportWarning",
+                    "UnicodeWarning",
+                    "BytesWarning",
+                    "ResourceWarning",
+
                     NULL
                 };
 
@@ -4543,9 +4576,7 @@ static moduleDef *allocModule()
     newmod->encoding = no_type;
     newmod->qobjclass = -1;
     newmod->nrvirthandlers = -1;
-
-    /* -1 is reserved for variable getters. */
-    newmod->next_key = -2;
+    newmod->next_key = -1;
 
     /*
      * The consolidated module support needs these to be in order that they
@@ -7172,7 +7203,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         len->common = findFunction(pt, mod, c_scope, mt_scope, len->cppname,
                 TRUE, 0, FALSE);
 
-        if (od->methodcode == NULL)
+        if ((len->methodcode = od->methodcode) == NULL)
         {
             char *buf = sipStrdup("            sipRes = (SIP_SSIZE_T)sipCpp->");
             codeBlock *code;

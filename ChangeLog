@@ -1,8 +1,72 @@
+2015-06-11  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.16.8 for changeset f87e232098eb
+	[95abaccb67d6] [tip] <4.16-maint>
+
+	* NEWS:
+	Released as v4.16.8.
+	[f87e232098eb] [4.16.8] <4.16-maint>
+
+2015-06-09  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/sip.h.in.in:
+	Bump the internal API version number.
+	[6069463e8937] <4.16-maint>
+
+	* sipgen/gencode.c, sipgen/metasrc/parser.y, siplib/sip.h.in.in,
+	siplib/siplib.c.in:
+	Fixed the handling of non-pointer object variables so that they are
+	only wrapped once and the Python object cached.
+	[11a92ebd4840] <4.16-maint>
+
+2015-06-08  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/using.rst:
+	Fixed a type in the docs.
+	[7d0d2cede024] <4.16-maint>
+
+2015-06-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Updated the NEWS file.
+	[92c83f02758f] <4.16-maint>
+
+2015-05-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y, sphinx/specification_files.rst:
+	Added support for the current Python3 exceptions.
+	[79afcf752c2a] <4.16-maint>
+
+2015-05-08  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Fixed bugs maintaining the deleted state of wrapped instances.
+	[e5674f034e48] <4.16-maint>
+
+2015-03-26  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/conf.py.in, sphinx/static/classic.css,
+	sphinx/static/default.css:
+	Updated for Sphinx v1.3.
+	[4cc6f083e826] <5-devel>
+
 2015-03-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y,
+	sipgen/sip.h, sipgen/transform.c, siplib/siplib.c,
+	sphinx/directives.rst, sphinx/specification_files.rst:
+	Added the relevant changes from v4.16.7.
+	[b122ecdb2347] <5-devel>
+
+	* sipgen/metasrc/parser.y:
+	Fixed a regression in v4.16.7 that affects methods with %MethodCode
+	and the __len__ annotation.
+	[765b6874363f] <4.16-maint>
 
 	* .hgtags:
 	Added tag 4.16.7 for changeset 9076f70a012c
-	[dffe9ad569c9] [tip] <4.16-maint>
+	[dffe9ad569c9] <4.16-maint>
 
 	* NEWS:
 	Released as v4.16.7.
