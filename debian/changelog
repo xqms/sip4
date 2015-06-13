@@ -1,3 +1,11 @@
+sip4 (4.16.8+dfsg-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+  * Drop fix_methodcode_regression.diff, applied upstream.
+  * Bump API version to 11.2 (keep 11.0 and 11.1 in provided versions).
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 13 Jun 2015 14:12:52 +0300
+
 sip4 (4.16.7+dfsg-2) unstable; urgency=medium
 
   * Bump debhelper compatibility level to 9.
