@@ -1,4 +1,4 @@
-sip4 (4.16.8+dfsg-1) UNRELEASED; urgency=medium
+sip4 (4.16.8+dfsg-1) unstable; urgency=medium
 
   * New upstream release.
   * Drop fix_methodcode_regression.diff, applied upstream.
