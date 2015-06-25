@@ -4,7 +4,7 @@ if sys.version_info[1] == @MINORVERS@:
             from sipconfig_d@MINORVERS@ import *
             from sipconfig_d@MINORVERS@ import _pkg_config, _default_macros
         except ImportError as msg:
-            raise ImportError('No module named sipconfig; package python3-sip4-dbg not installed')
+            raise ImportError('No module named sipconfig; package python3-sip-dbg not installed')
     else:
         from sipconfig_nd@MINORVERS@ import *
         from sipconfig_nd@MINORVERS@ import _pkg_config, _default_macros
