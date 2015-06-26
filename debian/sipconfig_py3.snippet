@@ -3,7 +3,7 @@ if sys.version_info[1] == @MINORVERS@:
         try:
             from sipconfig_d@MINORVERS@ import *
             from sipconfig_d@MINORVERS@ import _pkg_config, _default_macros
-        except ImportError as msg:
+        except ImportError:
             raise ImportError('No module named sipconfig; package python3-sip-dbg not installed')
     else:
         from sipconfig_nd@MINORVERS@ import *
