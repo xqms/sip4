@@ -7454,11 +7454,20 @@ static void sip_api_bad_class(const char *classname)
 
 
 /*
- * Report a Python member function with an unexpected return type.
+ * Report a Python member function with an unexpected result.
  */
 static void sip_api_bad_catcher_result(PyObject *method)
 {
-    PyObject *mname;
+    PyObject *mname, *etype, *evalue, *etraceback;
+
+    /*
+     * Get the current exception object if there is one.  Its string
+     * representation will be used as the detail of a new exception.
+     */
+    PyErr_Fetch(&etype, &evalue, &etraceback);
+    PyErr_NormalizeException(&etype, &evalue, &etraceback);
+    Py_XDECREF(etype);
+    Py_XDECREF(etraceback);
 
     /*
      * This is part of the public API so we make no assumptions about the
@@ -7476,14 +7485,34 @@ static void sip_api_bad_catcher_result(PyObject *method)
 
     mname = ((PyFunctionObject *)PyMethod_GET_FUNCTION(method))->func_name;
 
+    if (evalue != NULL)
+    {
 #if PY_MAJOR_VERSION >= 3
-    PyErr_Format(PyExc_TypeError, "invalid result type from %s.%U()",
-            Py_TYPE(PyMethod_GET_SELF(method))->tp_name, mname);
+        PyErr_Format(PyExc_TypeError, "invalid result from %s.%U(), %S",
+                Py_TYPE(PyMethod_GET_SELF(method))->tp_name, mname, evalue);
 #else
-    PyErr_Format(PyExc_TypeError, "invalid result type from %s.%s()",
-            Py_TYPE(PyMethod_GET_SELF(method))->tp_name,
-            PyString_AsString(mname));
+        PyObject *evalue_s = PyObject_Str(evalue);
+
+        PyErr_Format(PyExc_TypeError, "invalid result from %s.%s(), %s",
+                Py_TYPE(PyMethod_GET_SELF(method))->tp_name,
+                PyString_AsString(mname), PyString_AsString(evalue_s));
+
+        Py_XDECREF(evalue_s);
 #endif
+
+        Py_DECREF(evalue);
+    }
+    else
+    {
+#if PY_MAJOR_VERSION >= 3
+        PyErr_Format(PyExc_TypeError, "invalid result from %s.%U()",
+                Py_TYPE(PyMethod_GET_SELF(method))->tp_name, mname);
+#else
+        PyErr_Format(PyExc_TypeError, "invalid result from %s.%s()",
+                Py_TYPE(PyMethod_GET_SELF(method))->tp_name,
+                PyString_AsString(mname));
+#endif
+    }
 }
 
 
@@ -8517,10 +8546,17 @@ static int sip_api_can_convert_to_type(PyObject *pyObj, const sipTypeDef *td,
 {
     int ok;
 
-    assert(sipTypeIsClass(td) || sipTypeIsMapped(td));
+    assert(td == NULL || sipTypeIsClass(td) || sipTypeIsMapped(td));
 
-    /* None is handled outside the type checkers. */
-    if (pyObj == Py_None)
+    if (td == NULL)
+    {
+        /*
+         * The type must be /External/ and the module that contains the
+         * implementation hasn't been imported.
+         */
+        ok = FALSE;
+    }
+    else if (pyObj == Py_None)
     {
         /* If the type explicitly handles None then ignore the flags. */
         if (sipTypeAllowNone(td))
@@ -10623,7 +10659,7 @@ static int sipWrapper_clear(sipWrapper *self)
     vret = sipSimpleWrapper_clear(sw);
 
     /* Remove any slots connected via a proxy. */
-    if (sipQtSupport != NULL && sipPossibleProxy(sw))
+    if (sipQtSupport != NULL && sipPossibleProxy(sw) && !sipNotInMap(sw))
     {
         void *tx = sip_api_get_address(sw);
 
@@ -10682,8 +10718,13 @@ static int sipWrapper_traverse(sipWrapper *self, visitproc visit, void *arg)
     if ((vret = sipSimpleWrapper_traverse(sw, visit, arg)) != 0)
         return vret;
 
-    /* This should be handwritten code in PyQt. */
-    if (sipQtSupport != NULL && sipQtSupport->qt_find_sipslot)
+    /*
+     * This should be handwritten code in PyQt.  The map check is a bit of a
+     * hack to work around PyQt4 problems with qApp and a user created
+     * instance.  qt_find_sipslot() will return the same slot information for
+     * both causing the gc module to trigger assert() failures.
+     */
+    if (sipQtSupport != NULL && sipQtSupport->qt_find_sipslot && !sipNotInMap(sw))
     {
         void *tx = sip_api_get_address(sw);
 
@@ -12283,6 +12324,8 @@ static void clear_wrapper(sipSimpleWrapper *sw)
      * Python object is garbage collected.
      */
     sipResetPyOwned(sw);
+
+    sipOMRemoveObject(&cppPyMap, sw);
 
     clear_access_func(sw);
 }

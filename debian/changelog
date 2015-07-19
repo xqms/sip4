@@ -1,3 +1,13 @@
+sip4 (4.16.9+dfsg-1) unstable; urgency=medium
+
+  [ Dmitry Shachnev ]
+  * More minor simplifications to sipconfig wrappers.
+
+  [ Scott Kitterman ]
+  * New upstream release
+
+ -- Scott Kitterman <scott@kitterman.com>  Sun, 19 Jul 2015 12:17:06 -0400
+
 sip4 (4.16.8+dfsg-2) unstable; urgency=medium
 
   * Fix package names in error messages in sipconfig files.
