@@ -30,7 +30,8 @@ Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Breaks: python-qscintilla (<< 2.7.2),
         python-qwt5-qt4 (<< 5.2.1~cvs20091107+dfsg-7~),
         python-qwt3d-qt4 (<< 0.1.7~cvs20090625-12~),
-        python-qt4 (<< 4.10.2~)
+        python-qt4 (<< 4.10.2~),
+        python-sip4-dbg
 Description: Python/C++ bindings generator runtime library
  SIP is a tool for generating bindings for C++ classes with some ideas
  borrowed from SWIG, but capable of tighter bindings because of its
