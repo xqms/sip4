@@ -72,7 +72,7 @@ dbg-build-%/build-stamp: dbg-build-%/configure-stamp
 	touch $@
 
 build-arch: build
-build-indep: build
+build-indep:
 
 clean:
 	dh_testdir
