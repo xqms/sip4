@@ -49,7 +49,7 @@ dbg-build-%/configure-stamp:
 			-e /usr/include/python$*_d \
 			-u CFLAGS="${CFLAGS} ${CPPFLAGS}" CFLAGS_RELEASE="" \
 			CXXFLAGS="${CXXFLAGS} ${CPPFLAGS}" CXXFLAGS_RELEASE="" \
-                        LFLAGS="${LDFLAGS}" LFLAGS_RELEASE="" STRIP="" 
+			LFLAGS="${LDFLAGS}" LFLAGS_RELEASE="" STRIP="" 
 	touch $@
 
 sipconfig-3.%:
