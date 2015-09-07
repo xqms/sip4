@@ -7,8 +7,6 @@ PY3_PROVIDES=sip-py3api-11.0, sip-py3api-11.1, sip-py3api-11.2
 # `dh_python3 --depends sip3` should generate dependency on newest API only
 PYDIST=sip $(lastword $(PY3_PROVIDES))
 
-INSTDIR=$(CURDIR)/debian
-
 CFLAGS=
 CPPFLAGS=
 CXXFLAGS=
@@ -49,7 +47,7 @@ dbg-build-%/configure-stamp:
 			-e /usr/include/python$*_d \
 			-u CFLAGS="${CFLAGS} ${CPPFLAGS}" CFLAGS_RELEASE="" \
 			CXXFLAGS="${CXXFLAGS} ${CPPFLAGS}" CXXFLAGS_RELEASE="" \
-                        LFLAGS="${LDFLAGS}" LFLAGS_RELEASE="" STRIP="" 
+			LFLAGS="${LDFLAGS}" LFLAGS_RELEASE="" STRIP="" 
 	touch $@
 
 sipconfig-3.%:
@@ -72,7 +70,7 @@ dbg-build-%/build-stamp: dbg-build-%/configure-stamp
 	touch $@
 
 build-arch: build
-build-indep: build
+build-indep:
 
 clean:
 	dh_testdir
@@ -188,8 +186,6 @@ endif
 # Build architecture independant packages using the common target.
 binary-indep:
 	sphinx-build sphinx debian/python-sip-doc/usr/share/doc/python-sip-doc/html
-	# Temporary hack to use upstream stylesheet with Sphinx 1.2
-	cd debian/python-sip-doc/usr/share/doc/python-sip-doc/html/_static && mv classic.css default.css
 	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
 
 # Build architecture dependant packages using the common target.

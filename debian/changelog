@@ -1,3 +1,18 @@
+sip4 (4.16.9+dfsg-2) unstable; urgency=medium
+
+  [ Andreas Beckmann ]
+  * python-sip: Add Breaks against obsolete and buggy transitional
+    package python-sip4-dbg to ensure its removal.  (Closes: #789452)
+
+  [ Dmitry Shachnev ]
+  * Build with Sphinx 1.3.
+  * Do not compile C code during arch-indep build, to speed it up.
+  * Move python-sphinx to Build-Depends-Indep.
+  * Unify indentation in debian/rules.
+  * Remove unused INSTDIR variable.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Mon, 07 Sep 2015 12:10:41 +0300
+
 sip4 (4.16.9+dfsg-1) unstable; urgency=medium
 
   [ Dmitry Shachnev ]
