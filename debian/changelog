@@ -9,6 +9,7 @@ sip4 (4.16.9+dfsg-2) UNRELEASED; urgency=medium
   * Do not compile C code during arch-indep build, to speed it up.
   * Move python-sphinx to Build-Depends-Indep.
   * Unify indentation in debian/rules.
+  * Remove unused INSTDIR variable.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Mon, 20 Jul 2015 22:28:06 +0300
 

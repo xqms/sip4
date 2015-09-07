@@ -7,8 +7,6 @@ PY3_PROVIDES=sip-py3api-11.0, sip-py3api-11.1, sip-py3api-11.2
 # `dh_python3 --depends sip3` should generate dependency on newest API only
 PYDIST=sip $(lastword $(PY3_PROVIDES))
 
-INSTDIR=$(CURDIR)/debian
-
 CFLAGS=
 CPPFLAGS=
 CXXFLAGS=
