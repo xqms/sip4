@@ -68,7 +68,7 @@
 /* Copy the first part of user declarations.  */
 
 /* Line 189 of yacc.c  */
-#line 19 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 19 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
 
 #include <stdlib.h>
 #include <string.h>
@@ -221,7 +221,7 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
 
 
 /* Line 189 of yacc.c  */
-#line 225 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.c"
+#line 225 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -522,7 +522,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 170 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 170 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
 
     char            qchar;
     char            *text;
@@ -563,7 +563,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 567 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.c"
+#line 567 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -575,7 +575,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 579 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.c"
+#line 579 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.c"
 
 #ifdef short
 # undef short
@@ -2830,7 +2830,7 @@ yyreduce:
         case 4:
 
 /* Line 1455 of yacc.c  */
-#line 491 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 491 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /*
              * We don't do these in parserEOF() because the parser is reading
@@ -2853,7 +2853,7 @@ yyreduce:
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 555 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 555 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -2870,7 +2870,7 @@ yyreduce:
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 568 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 568 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -2883,7 +2883,7 @@ yyreduce:
   case 51:
 
 /* Line 1455 of yacc.c  */
-#line 577 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 577 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -2894,7 +2894,7 @@ yyreduce:
   case 52:
 
 /* Line 1455 of yacc.c  */
-#line 582 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 582 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.defencoding) = (yyvsp[(2) - (3)].defencoding);
         }
@@ -2903,7 +2903,7 @@ yyreduce:
   case 54:
 
 /* Line 1455 of yacc.c  */
-#line 588 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 588 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.defencoding) = (yyvsp[(1) - (3)].defencoding);
 
@@ -2917,7 +2917,7 @@ yyreduce:
   case 55:
 
 /* Line 1455 of yacc.c  */
-#line 598 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 598 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.defencoding).token = TK_NAME;
 
@@ -2928,7 +2928,7 @@ yyreduce:
   case 56:
 
 /* Line 1455 of yacc.c  */
-#line 605 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 605 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* Note that %Plugin is internal in SIP v4. */
 
@@ -2940,7 +2940,7 @@ yyreduce:
   case 57:
 
 /* Line 1455 of yacc.c  */
-#line 613 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 613 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -2951,7 +2951,7 @@ yyreduce:
   case 58:
 
 /* Line 1455 of yacc.c  */
-#line 618 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 618 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.plugin) = (yyvsp[(2) - (3)].plugin);
         }
@@ -2960,7 +2960,7 @@ yyreduce:
   case 60:
 
 /* Line 1455 of yacc.c  */
-#line 624 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 624 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.plugin) = (yyvsp[(1) - (3)].plugin);
 
@@ -2974,7 +2974,7 @@ yyreduce:
   case 61:
 
 /* Line 1455 of yacc.c  */
-#line 634 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 634 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.plugin).token = TK_NAME;
 
@@ -2985,7 +2985,7 @@ yyreduce:
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 641 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 641 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3015,7 +3015,7 @@ yyreduce:
   case 63:
 
 /* Line 1455 of yacc.c  */
-#line 667 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 667 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -3029,7 +3029,7 @@ yyreduce:
   case 64:
 
 /* Line 1455 of yacc.c  */
-#line 675 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 675 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.api) = (yyvsp[(2) - (3)].api);
         }
@@ -3038,7 +3038,7 @@ yyreduce:
   case 66:
 
 /* Line 1455 of yacc.c  */
-#line 681 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 681 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.api) = (yyvsp[(1) - (3)].api);
 
@@ -3053,7 +3053,7 @@ yyreduce:
   case 67:
 
 /* Line 1455 of yacc.c  */
-#line 692 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 692 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.api).token = TK_NAME;
 
@@ -3065,7 +3065,7 @@ yyreduce:
   case 68:
 
 /* Line 1455 of yacc.c  */
-#line 698 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 698 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.api).token = TK_VERSION;
 
@@ -3077,7 +3077,7 @@ yyreduce:
   case 69:
 
 /* Line 1455 of yacc.c  */
-#line 706 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 706 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3131,7 +3131,7 @@ yyreduce:
   case 70:
 
 /* Line 1455 of yacc.c  */
-#line 756 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 756 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.exceptionbase).bibase = NULL;
             (yyval.exceptionbase).base = NULL;
@@ -3141,7 +3141,7 @@ yyreduce:
   case 71:
 
 /* Line 1455 of yacc.c  */
-#line 760 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 760 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             exceptionDef *xd;
 
@@ -3219,7 +3219,7 @@ yyreduce:
   case 72:
 
 /* Line 1455 of yacc.c  */
-#line 834 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 834 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.exception) = (yyvsp[(2) - (4)].exception);
         }
@@ -3228,7 +3228,7 @@ yyreduce:
   case 74:
 
 /* Line 1455 of yacc.c  */
-#line 840 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 840 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.exception) = (yyvsp[(1) - (2)].exception);
 
@@ -3243,7 +3243,7 @@ yyreduce:
   case 75:
 
 /* Line 1455 of yacc.c  */
-#line 851 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 851 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.exception).token = TK_IF;
         }
@@ -3252,7 +3252,7 @@ yyreduce:
   case 76:
 
 /* Line 1455 of yacc.c  */
-#line 854 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 854 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.exception).token = TK_END;
         }
@@ -3261,7 +3261,7 @@ yyreduce:
   case 77:
 
 /* Line 1455 of yacc.c  */
-#line 857 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 857 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3279,7 +3279,7 @@ yyreduce:
   case 78:
 
 /* Line 1455 of yacc.c  */
-#line 869 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 869 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3297,7 +3297,7 @@ yyreduce:
   case 79:
 
 /* Line 1455 of yacc.c  */
-#line 883 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 883 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -3306,7 +3306,7 @@ yyreduce:
   case 80:
 
 /* Line 1455 of yacc.c  */
-#line 888 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 888 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3329,7 +3329,7 @@ yyreduce:
   case 82:
 
 /* Line 1455 of yacc.c  */
-#line 907 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 907 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3392,7 +3392,7 @@ yyreduce:
   case 84:
 
 /* Line 1455 of yacc.c  */
-#line 966 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 966 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3410,7 +3410,7 @@ yyreduce:
   case 89:
 
 /* Line 1455 of yacc.c  */
-#line 986 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 986 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentMappedType->iff->hdrcode, (yyvsp[(1) - (1)].codeb));
@@ -3420,7 +3420,7 @@ yyreduce:
   case 90:
 
 /* Line 1455 of yacc.c  */
-#line 990 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 990 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentMappedType->typecode, (yyvsp[(1) - (1)].codeb));
@@ -3430,7 +3430,7 @@ yyreduce:
   case 91:
 
 /* Line 1455 of yacc.c  */
-#line 994 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 994 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3445,7 +3445,7 @@ yyreduce:
   case 92:
 
 /* Line 1455 of yacc.c  */
-#line 1003 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1003 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3460,7 +3460,7 @@ yyreduce:
   case 95:
 
 /* Line 1455 of yacc.c  */
-#line 1016 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1016 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3478,7 +3478,7 @@ yyreduce:
   case 96:
 
 /* Line 1455 of yacc.c  */
-#line 1030 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1030 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (currentSpec -> genc)
                 yyerror("namespace definition not allowed in a C module");
@@ -3506,7 +3506,7 @@ yyreduce:
   case 97:
 
 /* Line 1455 of yacc.c  */
-#line 1051 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1051 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3526,7 +3526,7 @@ yyreduce:
   case 102:
 
 /* Line 1455 of yacc.c  */
-#line 1075 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1075 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3542,7 +3542,7 @@ yyreduce:
   case 103:
 
 /* Line 1455 of yacc.c  */
-#line 1085 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1085 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3565,7 +3565,7 @@ yyreduce:
   case 106:
 
 /* Line 1455 of yacc.c  */
-#line 1108 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1108 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             newQualifier(currentModule,-1,-1,(yyvsp[(1) - (1)].text),platform_qualifier);
         }
@@ -3574,7 +3574,7 @@ yyreduce:
   case 107:
 
 /* Line 1455 of yacc.c  */
-#line 1113 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1113 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 newQualifier(currentModule, -1, -1, (yyvsp[(2) - (2)].feature).name,
@@ -3585,7 +3585,7 @@ yyreduce:
   case 108:
 
 /* Line 1455 of yacc.c  */
-#line 1120 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1120 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -3596,7 +3596,7 @@ yyreduce:
   case 109:
 
 /* Line 1455 of yacc.c  */
-#line 1125 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1125 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.feature) = (yyvsp[(2) - (3)].feature);
         }
@@ -3605,7 +3605,7 @@ yyreduce:
   case 111:
 
 /* Line 1455 of yacc.c  */
-#line 1131 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1131 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.feature) = (yyvsp[(1) - (3)].feature);
 
@@ -3619,7 +3619,7 @@ yyreduce:
   case 112:
 
 /* Line 1455 of yacc.c  */
-#line 1141 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1141 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.feature).token = TK_NAME;
 
@@ -3630,7 +3630,7 @@ yyreduce:
   case 113:
 
 /* Line 1455 of yacc.c  */
-#line 1148 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1148 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             currentTimelineOrder = 0;
         }
@@ -3639,7 +3639,7 @@ yyreduce:
   case 114:
 
 /* Line 1455 of yacc.c  */
-#line 1151 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1151 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3666,7 +3666,7 @@ yyreduce:
   case 117:
 
 /* Line 1455 of yacc.c  */
-#line 1178 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1178 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             newQualifier(currentModule, currentModule->nrtimelines,
                     currentTimelineOrder++, (yyvsp[(1) - (1)].text), time_qualifier);
@@ -3676,7 +3676,7 @@ yyreduce:
   case 118:
 
 /* Line 1455 of yacc.c  */
-#line 1184 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1184 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (skipStackPtr >= MAX_NESTED_IF)
                 yyerror("Internal error: increase the value of MAX_NESTED_IF");
@@ -3693,7 +3693,7 @@ yyreduce:
   case 119:
 
 /* Line 1455 of yacc.c  */
-#line 1197 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1197 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.boolean) = platOrFeature((yyvsp[(1) - (1)].text),FALSE);
         }
@@ -3702,7 +3702,7 @@ yyreduce:
   case 120:
 
 /* Line 1455 of yacc.c  */
-#line 1200 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1200 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.boolean) = platOrFeature((yyvsp[(2) - (2)].text),TRUE);
         }
@@ -3711,7 +3711,7 @@ yyreduce:
   case 121:
 
 /* Line 1455 of yacc.c  */
-#line 1203 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1203 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.boolean) = (platOrFeature((yyvsp[(3) - (3)].text),FALSE) || (yyvsp[(1) - (3)].boolean));
         }
@@ -3720,7 +3720,7 @@ yyreduce:
   case 122:
 
 /* Line 1455 of yacc.c  */
-#line 1206 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1206 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.boolean) = (platOrFeature((yyvsp[(4) - (4)].text),TRUE) || (yyvsp[(1) - (4)].boolean));
         }
@@ -3729,7 +3729,7 @@ yyreduce:
   case 124:
 
 /* Line 1455 of yacc.c  */
-#line 1212 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1212 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.boolean) = timePeriod((yyvsp[(1) - (3)].text), (yyvsp[(3) - (3)].text));
         }
@@ -3738,7 +3738,7 @@ yyreduce:
   case 125:
 
 /* Line 1455 of yacc.c  */
-#line 1217 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1217 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (skipStackPtr-- <= 0)
                 yyerror("Too many %End directives");
@@ -3748,7 +3748,7 @@ yyreduce:
   case 126:
 
 /* Line 1455 of yacc.c  */
-#line 1223 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1223 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             optFlag *of;
 
@@ -3789,7 +3789,7 @@ yyreduce:
   case 127:
 
 /* Line 1455 of yacc.c  */
-#line 1260 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1260 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -3803,7 +3803,7 @@ yyreduce:
   case 128:
 
 /* Line 1455 of yacc.c  */
-#line 1268 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1268 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.license).type = (yyvsp[(1) - (1)].text);
             (yyval.license).licensee = NULL;
@@ -3815,7 +3815,7 @@ yyreduce:
   case 129:
 
 /* Line 1455 of yacc.c  */
-#line 1274 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1274 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.license) = (yyvsp[(2) - (3)].license);
         }
@@ -3824,7 +3824,7 @@ yyreduce:
   case 131:
 
 /* Line 1455 of yacc.c  */
-#line 1280 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1280 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.license) = (yyvsp[(1) - (3)].license);
 
@@ -3841,7 +3841,7 @@ yyreduce:
   case 132:
 
 /* Line 1455 of yacc.c  */
-#line 1293 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1293 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.license).token = TK_NAME;
 
@@ -3855,7 +3855,7 @@ yyreduce:
   case 133:
 
 /* Line 1455 of yacc.c  */
-#line 1301 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1301 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.license).token = TK_LICENSEE;
 
@@ -3869,7 +3869,7 @@ yyreduce:
   case 134:
 
 /* Line 1455 of yacc.c  */
-#line 1309 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1309 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.license).token = TK_SIGNATURE;
 
@@ -3883,7 +3883,7 @@ yyreduce:
   case 135:
 
 /* Line 1455 of yacc.c  */
-#line 1317 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1317 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.license).token = TK_TIMESTAMP;
 
@@ -3897,7 +3897,7 @@ yyreduce:
   case 136:
 
 /* Line 1455 of yacc.c  */
-#line 1327 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1327 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3912,7 +3912,7 @@ yyreduce:
   case 137:
 
 /* Line 1455 of yacc.c  */
-#line 1338 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1338 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -3923,7 +3923,7 @@ yyreduce:
   case 138:
 
 /* Line 1455 of yacc.c  */
-#line 1343 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1343 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.defmetatype) = (yyvsp[(2) - (3)].defmetatype);
         }
@@ -3932,7 +3932,7 @@ yyreduce:
   case 140:
 
 /* Line 1455 of yacc.c  */
-#line 1349 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1349 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.defmetatype) = (yyvsp[(1) - (3)].defmetatype);
 
@@ -3946,7 +3946,7 @@ yyreduce:
   case 141:
 
 /* Line 1455 of yacc.c  */
-#line 1359 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1359 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.defmetatype).token = TK_NAME;
 
@@ -3957,7 +3957,7 @@ yyreduce:
   case 142:
 
 /* Line 1455 of yacc.c  */
-#line 1366 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1366 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -3972,7 +3972,7 @@ yyreduce:
   case 143:
 
 /* Line 1455 of yacc.c  */
-#line 1377 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1377 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -3983,7 +3983,7 @@ yyreduce:
   case 144:
 
 /* Line 1455 of yacc.c  */
-#line 1382 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1382 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.defsupertype) = (yyvsp[(2) - (3)].defsupertype);
         }
@@ -3992,7 +3992,7 @@ yyreduce:
   case 146:
 
 /* Line 1455 of yacc.c  */
-#line 1388 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1388 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.defsupertype) = (yyvsp[(1) - (3)].defsupertype);
 
@@ -4006,7 +4006,7 @@ yyreduce:
   case 147:
 
 /* Line 1455 of yacc.c  */
-#line 1398 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1398 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.defsupertype).token = TK_NAME;
 
@@ -4017,7 +4017,7 @@ yyreduce:
   case 148:
 
 /* Line 1455 of yacc.c  */
-#line 1405 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1405 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -4039,7 +4039,7 @@ yyreduce:
   case 149:
 
 /* Line 1455 of yacc.c  */
-#line 1423 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1423 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -4050,7 +4050,7 @@ yyreduce:
   case 150:
 
 /* Line 1455 of yacc.c  */
-#line 1428 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1428 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.consmodule) = (yyvsp[(2) - (3)].consmodule);
         }
@@ -4059,7 +4059,7 @@ yyreduce:
   case 152:
 
 /* Line 1455 of yacc.c  */
-#line 1434 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1434 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.consmodule) = (yyvsp[(1) - (3)].consmodule);
 
@@ -4073,7 +4073,7 @@ yyreduce:
   case 153:
 
 /* Line 1455 of yacc.c  */
-#line 1444 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1444 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.consmodule).token = TK_NAME;
 
@@ -4084,7 +4084,7 @@ yyreduce:
   case 154:
 
 /* Line 1455 of yacc.c  */
-#line 1451 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1451 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.consmodule).token = 0;
             (yyval.consmodule).docstring = NULL;
@@ -4094,7 +4094,7 @@ yyreduce:
   case 155:
 
 /* Line 1455 of yacc.c  */
-#line 1455 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1455 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.consmodule) = (yyvsp[(2) - (4)].consmodule);
         }
@@ -4103,7 +4103,7 @@ yyreduce:
   case 157:
 
 /* Line 1455 of yacc.c  */
-#line 1461 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1461 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.consmodule) = (yyvsp[(1) - (2)].consmodule);
 
@@ -4117,7 +4117,7 @@ yyreduce:
   case 158:
 
 /* Line 1455 of yacc.c  */
-#line 1471 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1471 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.consmodule).token = TK_IF;
         }
@@ -4126,7 +4126,7 @@ yyreduce:
   case 159:
 
 /* Line 1455 of yacc.c  */
-#line 1474 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1474 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.consmodule).token = TK_END;
         }
@@ -4135,7 +4135,7 @@ yyreduce:
   case 160:
 
 /* Line 1455 of yacc.c  */
-#line 1477 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1477 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -4153,7 +4153,7 @@ yyreduce:
   case 161:
 
 /* Line 1455 of yacc.c  */
-#line 1491 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1491 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -4175,7 +4175,7 @@ yyreduce:
   case 162:
 
 /* Line 1455 of yacc.c  */
-#line 1509 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1509 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -4186,7 +4186,7 @@ yyreduce:
   case 163:
 
 /* Line 1455 of yacc.c  */
-#line 1514 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1514 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.compmodule) = (yyvsp[(2) - (3)].compmodule);
         }
@@ -4195,7 +4195,7 @@ yyreduce:
   case 165:
 
 /* Line 1455 of yacc.c  */
-#line 1520 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1520 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.compmodule) = (yyvsp[(1) - (3)].compmodule);
 
@@ -4209,7 +4209,7 @@ yyreduce:
   case 166:
 
 /* Line 1455 of yacc.c  */
-#line 1530 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1530 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.compmodule).token = TK_NAME;
 
@@ -4220,7 +4220,7 @@ yyreduce:
   case 167:
 
 /* Line 1455 of yacc.c  */
-#line 1537 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1537 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.compmodule).token = 0;
             (yyval.compmodule).docstring = NULL;
@@ -4230,7 +4230,7 @@ yyreduce:
   case 168:
 
 /* Line 1455 of yacc.c  */
-#line 1541 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1541 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.compmodule) = (yyvsp[(2) - (4)].compmodule);
         }
@@ -4239,7 +4239,7 @@ yyreduce:
   case 170:
 
 /* Line 1455 of yacc.c  */
-#line 1547 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1547 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.compmodule) = (yyvsp[(1) - (2)].compmodule);
 
@@ -4253,7 +4253,7 @@ yyreduce:
   case 171:
 
 /* Line 1455 of yacc.c  */
-#line 1557 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1557 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.compmodule).token = TK_IF;
         }
@@ -4262,7 +4262,7 @@ yyreduce:
   case 172:
 
 /* Line 1455 of yacc.c  */
-#line 1560 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1560 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.compmodule).token = TK_END;
         }
@@ -4271,7 +4271,7 @@ yyreduce:
   case 173:
 
 /* Line 1455 of yacc.c  */
-#line 1563 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1563 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -4289,7 +4289,7 @@ yyreduce:
   case 174:
 
 /* Line 1455 of yacc.c  */
-#line 1577 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1577 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if ((yyvsp[(2) - (3)].module).name == NULL)
                 yyerror("%Module must have a 'name' argument");
@@ -4305,7 +4305,7 @@ yyreduce:
   case 175:
 
 /* Line 1455 of yacc.c  */
-#line 1587 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1587 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             deprecated("%CModule is deprecated, use %Module and the 'language' argument instead");
 
@@ -4319,7 +4319,7 @@ yyreduce:
   case 176:
 
 /* Line 1455 of yacc.c  */
-#line 1597 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1597 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -4337,7 +4337,7 @@ yyreduce:
   case 177:
 
 /* Line 1455 of yacc.c  */
-#line 1609 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1609 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.module) = (yyvsp[(2) - (3)].module);
         }
@@ -4346,7 +4346,7 @@ yyreduce:
   case 179:
 
 /* Line 1455 of yacc.c  */
-#line 1615 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1615 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.module) = (yyvsp[(1) - (3)].module);
 
@@ -4364,7 +4364,7 @@ yyreduce:
   case 180:
 
 /* Line 1455 of yacc.c  */
-#line 1629 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1629 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.module).token = TK_KWARGS;
 
@@ -4379,7 +4379,7 @@ yyreduce:
   case 181:
 
 /* Line 1455 of yacc.c  */
-#line 1638 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1638 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.module).token = TK_LANGUAGE;
 
@@ -4400,7 +4400,7 @@ yyreduce:
   case 182:
 
 /* Line 1455 of yacc.c  */
-#line 1653 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1653 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.module).token = TK_NAME;
 
@@ -4415,7 +4415,7 @@ yyreduce:
   case 183:
 
 /* Line 1455 of yacc.c  */
-#line 1662 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1662 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.module).token = TK_USEARGNAMES;
 
@@ -4430,7 +4430,7 @@ yyreduce:
   case 184:
 
 /* Line 1455 of yacc.c  */
-#line 1671 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1671 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if ((yyvsp[(3) - (3)].number) < 0)
                 yyerror("%Module 'version' argument cannot be negative");
@@ -4448,7 +4448,7 @@ yyreduce:
   case 185:
 
 /* Line 1455 of yacc.c  */
-#line 1685 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1685 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.module).token = 0;
             (yyval.module).docstring = NULL;
@@ -4458,7 +4458,7 @@ yyreduce:
   case 186:
 
 /* Line 1455 of yacc.c  */
-#line 1689 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1689 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.module) = (yyvsp[(2) - (4)].module);
         }
@@ -4467,7 +4467,7 @@ yyreduce:
   case 188:
 
 /* Line 1455 of yacc.c  */
-#line 1695 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1695 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.module) = (yyvsp[(1) - (2)].module);
 
@@ -4481,7 +4481,7 @@ yyreduce:
   case 189:
 
 /* Line 1455 of yacc.c  */
-#line 1705 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1705 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.module).token = TK_IF;
         }
@@ -4490,7 +4490,7 @@ yyreduce:
   case 190:
 
 /* Line 1455 of yacc.c  */
-#line 1708 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1708 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.module).token = TK_END;
         }
@@ -4499,7 +4499,7 @@ yyreduce:
   case 191:
 
 /* Line 1455 of yacc.c  */
-#line 1711 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1711 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.module).token = TK_AUTOPYNAME;
         }
@@ -4508,7 +4508,7 @@ yyreduce:
   case 192:
 
 /* Line 1455 of yacc.c  */
-#line 1714 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1714 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -4526,7 +4526,7 @@ yyreduce:
   case 194:
 
 /* Line 1455 of yacc.c  */
-#line 1729 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1729 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /*
              * The grammar design is a bit broken and this is the easiest way
@@ -4546,7 +4546,7 @@ yyreduce:
   case 195:
 
 /* Line 1455 of yacc.c  */
-#line 1745 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1745 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.number) = -1;
         }
@@ -4555,7 +4555,7 @@ yyreduce:
   case 197:
 
 /* Line 1455 of yacc.c  */
-#line 1751 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1751 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if ((yyvsp[(2) - (2)].include).name == NULL)
                 yyerror("%Include must have a 'name' argument");
@@ -4568,7 +4568,7 @@ yyreduce:
   case 198:
 
 /* Line 1455 of yacc.c  */
-#line 1760 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1760 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -4580,7 +4580,7 @@ yyreduce:
   case 199:
 
 /* Line 1455 of yacc.c  */
-#line 1766 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1766 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.include) = (yyvsp[(2) - (3)].include);
         }
@@ -4589,7 +4589,7 @@ yyreduce:
   case 201:
 
 /* Line 1455 of yacc.c  */
-#line 1772 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1772 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.include) = (yyvsp[(1) - (3)].include);
 
@@ -4604,7 +4604,7 @@ yyreduce:
   case 202:
 
 /* Line 1455 of yacc.c  */
-#line 1783 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1783 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.include).token = TK_NAME;
 
@@ -4616,7 +4616,7 @@ yyreduce:
   case 203:
 
 /* Line 1455 of yacc.c  */
-#line 1789 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1789 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.include).token = TK_OPTIONAL;
 
@@ -4628,7 +4628,7 @@ yyreduce:
   case 204:
 
 /* Line 1455 of yacc.c  */
-#line 1797 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1797 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             deprecated("%OptionalInclude is deprecated, use %Include and the 'optional' argument instead");
 
@@ -4640,7 +4640,7 @@ yyreduce:
   case 205:
 
 /* Line 1455 of yacc.c  */
-#line 1805 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1805 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 newImport((yyvsp[(2) - (2)].import).name);
@@ -4650,7 +4650,7 @@ yyreduce:
   case 206:
 
 /* Line 1455 of yacc.c  */
-#line 1811 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1811 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -4661,7 +4661,7 @@ yyreduce:
   case 207:
 
 /* Line 1455 of yacc.c  */
-#line 1816 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1816 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.import) = (yyvsp[(2) - (3)].import);
         }
@@ -4670,7 +4670,7 @@ yyreduce:
   case 209:
 
 /* Line 1455 of yacc.c  */
-#line 1822 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1822 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.import) = (yyvsp[(1) - (3)].import);
 
@@ -4684,7 +4684,7 @@ yyreduce:
   case 210:
 
 /* Line 1455 of yacc.c  */
-#line 1832 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1832 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.import).token = TK_NAME;
 
@@ -4695,7 +4695,7 @@ yyreduce:
   case 211:
 
 /* Line 1455 of yacc.c  */
-#line 1839 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1839 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = NULL;
         }
@@ -4704,7 +4704,7 @@ yyreduce:
   case 212:
 
 /* Line 1455 of yacc.c  */
-#line 1842 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1842 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4713,7 +4713,7 @@ yyreduce:
   case 213:
 
 /* Line 1455 of yacc.c  */
-#line 1847 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1847 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = NULL;
         }
@@ -4722,7 +4722,7 @@ yyreduce:
   case 214:
 
 /* Line 1455 of yacc.c  */
-#line 1850 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1850 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4731,7 +4731,7 @@ yyreduce:
   case 215:
 
 /* Line 1455 of yacc.c  */
-#line 1855 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1855 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = NULL;
         }
@@ -4740,7 +4740,7 @@ yyreduce:
   case 216:
 
 /* Line 1455 of yacc.c  */
-#line 1858 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1858 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4749,7 +4749,7 @@ yyreduce:
   case 217:
 
 /* Line 1455 of yacc.c  */
-#line 1863 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1863 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentModule->copying, (yyvsp[(2) - (2)].codeb));
@@ -4759,7 +4759,7 @@ yyreduce:
   case 218:
 
 /* Line 1455 of yacc.c  */
-#line 1869 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1869 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentSpec->exphdrcode, (yyvsp[(2) - (2)].codeb));
@@ -4769,7 +4769,7 @@ yyreduce:
   case 219:
 
 /* Line 1455 of yacc.c  */
-#line 1875 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1875 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentModule->hdrcode, (yyvsp[(2) - (2)].codeb));
@@ -4779,7 +4779,7 @@ yyreduce:
   case 220:
 
 /* Line 1455 of yacc.c  */
-#line 1881 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1881 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4788,7 +4788,7 @@ yyreduce:
   case 221:
 
 /* Line 1455 of yacc.c  */
-#line 1886 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1886 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4797,7 +4797,7 @@ yyreduce:
   case 222:
 
 /* Line 1455 of yacc.c  */
-#line 1891 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1891 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4806,7 +4806,7 @@ yyreduce:
   case 223:
 
 /* Line 1455 of yacc.c  */
-#line 1896 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1896 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4815,7 +4815,7 @@ yyreduce:
   case 224:
 
 /* Line 1455 of yacc.c  */
-#line 1901 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1901 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4824,7 +4824,7 @@ yyreduce:
   case 225:
 
 /* Line 1455 of yacc.c  */
-#line 1906 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1906 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4833,7 +4833,7 @@ yyreduce:
   case 226:
 
 /* Line 1455 of yacc.c  */
-#line 1911 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1911 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4842,7 +4842,7 @@ yyreduce:
   case 227:
 
 /* Line 1455 of yacc.c  */
-#line 1916 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1916 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4851,7 +4851,7 @@ yyreduce:
   case 228:
 
 /* Line 1455 of yacc.c  */
-#line 1921 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1921 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4860,7 +4860,7 @@ yyreduce:
   case 229:
 
 /* Line 1455 of yacc.c  */
-#line 1926 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1926 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4869,7 +4869,7 @@ yyreduce:
   case 230:
 
 /* Line 1455 of yacc.c  */
-#line 1931 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1931 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentModule->cppcode, (yyvsp[(2) - (2)].codeb));
@@ -4879,7 +4879,7 @@ yyreduce:
   case 231:
 
 /* Line 1455 of yacc.c  */
-#line 1937 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1937 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -4888,7 +4888,7 @@ yyreduce:
   case 232:
 
 /* Line 1455 of yacc.c  */
-#line 1942 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1942 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentModule->preinitcode, (yyvsp[(2) - (2)].codeb));
@@ -4898,7 +4898,7 @@ yyreduce:
   case 233:
 
 /* Line 1455 of yacc.c  */
-#line 1948 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1948 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentModule->initcode, (yyvsp[(2) - (2)].codeb));
@@ -4908,7 +4908,7 @@ yyreduce:
   case 234:
 
 /* Line 1455 of yacc.c  */
-#line 1954 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1954 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentModule->postinitcode, (yyvsp[(2) - (2)].codeb));
@@ -4918,7 +4918,7 @@ yyreduce:
   case 235:
 
 /* Line 1455 of yacc.c  */
-#line 1960 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1960 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentModule->unitcode, (yyvsp[(2) - (2)].codeb));
@@ -4928,7 +4928,7 @@ yyreduce:
   case 236:
 
 /* Line 1455 of yacc.c  */
-#line 1966 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1966 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentModule->unitpostinccode, (yyvsp[(2) - (2)].codeb));
@@ -4938,7 +4938,7 @@ yyreduce:
   case 237:
 
 /* Line 1455 of yacc.c  */
-#line 1972 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1972 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* Deprecated. */
         }
@@ -4947,7 +4947,7 @@ yyreduce:
   case 238:
 
 /* Line 1455 of yacc.c  */
-#line 1977 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1977 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping() && inMainModule())
                 appendCodeBlock(&currentSpec->docs, (yyvsp[(2) - (2)].codeb));
@@ -4957,7 +4957,7 @@ yyreduce:
   case 239:
 
 /* Line 1455 of yacc.c  */
-#line 1983 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1983 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentSpec->docs, (yyvsp[(2) - (2)].codeb));
@@ -4967,7 +4967,7 @@ yyreduce:
   case 240:
 
 /* Line 1455 of yacc.c  */
-#line 1989 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1989 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 addAutoPyName(currentModule, (yyvsp[(2) - (2)].autopyname).remove_leading);
@@ -4977,7 +4977,7 @@ yyreduce:
   case 241:
 
 /* Line 1455 of yacc.c  */
-#line 1995 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 1995 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.autopyname) = (yyvsp[(2) - (3)].autopyname);
         }
@@ -4986,7 +4986,7 @@ yyreduce:
   case 243:
 
 /* Line 1455 of yacc.c  */
-#line 2001 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2001 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.autopyname) = (yyvsp[(1) - (3)].autopyname);
 
@@ -5000,7 +5000,7 @@ yyreduce:
   case 244:
 
 /* Line 1455 of yacc.c  */
-#line 2011 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2011 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.autopyname).token = TK_REMOVELEADING;
 
@@ -5011,7 +5011,7 @@ yyreduce:
   case 245:
 
 /* Line 1455 of yacc.c  */
-#line 2018 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2018 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if ((yyvsp[(2) - (3)].extract).id == NULL)
                 yyerror("%Extract must have an 'id' argument");
@@ -5024,7 +5024,7 @@ yyreduce:
   case 246:
 
 /* Line 1455 of yacc.c  */
-#line 2027 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2027 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             resetLexerState();
 
@@ -5036,7 +5036,7 @@ yyreduce:
   case 247:
 
 /* Line 1455 of yacc.c  */
-#line 2033 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2033 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.extract) = (yyvsp[(2) - (3)].extract);
         }
@@ -5045,7 +5045,7 @@ yyreduce:
   case 249:
 
 /* Line 1455 of yacc.c  */
-#line 2039 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2039 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.extract) = (yyvsp[(1) - (3)].extract);
 
@@ -5060,7 +5060,7 @@ yyreduce:
   case 250:
 
 /* Line 1455 of yacc.c  */
-#line 2050 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2050 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.extract).token = TK_ID;
 
@@ -5072,7 +5072,7 @@ yyreduce:
   case 251:
 
 /* Line 1455 of yacc.c  */
-#line 2056 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2056 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.extract).token = TK_ORDER;
 
@@ -5087,7 +5087,7 @@ yyreduce:
   case 252:
 
 /* Line 1455 of yacc.c  */
-#line 2067 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2067 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* Deprecated. */
         }
@@ -5096,7 +5096,7 @@ yyreduce:
   case 255:
 
 /* Line 1455 of yacc.c  */
-#line 2076 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2076 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(1) - (2)].codeb);
 
@@ -5111,7 +5111,7 @@ yyreduce:
   case 256:
 
 /* Line 1455 of yacc.c  */
-#line 2087 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2087 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5134,7 +5134,7 @@ yyreduce:
   case 258:
 
 /* Line 1455 of yacc.c  */
-#line 2106 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2106 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.text) = NULL;
         }
@@ -5143,7 +5143,7 @@ yyreduce:
   case 259:
 
 /* Line 1455 of yacc.c  */
-#line 2109 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2109 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.text) = (yyvsp[(1) - (1)].text);
         }
@@ -5152,7 +5152,7 @@ yyreduce:
   case 260:
 
 /* Line 1455 of yacc.c  */
-#line 2114 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2114 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.text) = NULL;
         }
@@ -5161,7 +5161,7 @@ yyreduce:
   case 261:
 
 /* Line 1455 of yacc.c  */
-#line 2117 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2117 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.text) = (yyvsp[(1) - (1)].text);
         }
@@ -5170,7 +5170,7 @@ yyreduce:
   case 268:
 
 /* Line 1455 of yacc.c  */
-#line 2132 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2132 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5210,7 +5210,7 @@ yyreduce:
   case 273:
 
 /* Line 1455 of yacc.c  */
-#line 2176 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2176 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.valp) = NULL;
         }
@@ -5219,7 +5219,7 @@ yyreduce:
   case 274:
 
 /* Line 1455 of yacc.c  */
-#line 2179 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2179 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.valp) = (yyvsp[(2) - (2)].valp);
         }
@@ -5228,7 +5228,7 @@ yyreduce:
   case 276:
 
 /* Line 1455 of yacc.c  */
-#line 2185 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2185 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             valueDef *vd;
  
@@ -5250,7 +5250,7 @@ yyreduce:
   case 277:
 
 /* Line 1455 of yacc.c  */
-#line 2203 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2203 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.qchar) = '-';
         }
@@ -5259,7 +5259,7 @@ yyreduce:
   case 278:
 
 /* Line 1455 of yacc.c  */
-#line 2206 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2206 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.qchar) = '+';
         }
@@ -5268,7 +5268,7 @@ yyreduce:
   case 279:
 
 /* Line 1455 of yacc.c  */
-#line 2209 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2209 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.qchar) = '*';
         }
@@ -5277,7 +5277,7 @@ yyreduce:
   case 280:
 
 /* Line 1455 of yacc.c  */
-#line 2212 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2212 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.qchar) = '/';
         }
@@ -5286,7 +5286,7 @@ yyreduce:
   case 281:
 
 /* Line 1455 of yacc.c  */
-#line 2215 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2215 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.qchar) = '&';
         }
@@ -5295,7 +5295,7 @@ yyreduce:
   case 282:
 
 /* Line 1455 of yacc.c  */
-#line 2218 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2218 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.qchar) = '|';
         }
@@ -5304,7 +5304,7 @@ yyreduce:
   case 283:
 
 /* Line 1455 of yacc.c  */
-#line 2223 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2223 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.qchar) = '\0';
         }
@@ -5313,7 +5313,7 @@ yyreduce:
   case 284:
 
 /* Line 1455 of yacc.c  */
-#line 2226 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2226 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.qchar) = '!';
         }
@@ -5322,7 +5322,7 @@ yyreduce:
   case 285:
 
 /* Line 1455 of yacc.c  */
-#line 2229 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2229 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.qchar) = '~';
         }
@@ -5331,7 +5331,7 @@ yyreduce:
   case 286:
 
 /* Line 1455 of yacc.c  */
-#line 2232 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2232 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.qchar) = '-';
         }
@@ -5340,7 +5340,7 @@ yyreduce:
   case 287:
 
 /* Line 1455 of yacc.c  */
-#line 2235 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2235 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.qchar) = '+';
         }
@@ -5349,7 +5349,7 @@ yyreduce:
   case 288:
 
 /* Line 1455 of yacc.c  */
-#line 2240 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2240 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if ((yyvsp[(1) - (2)].qchar) != '\0' && (yyvsp[(2) - (2)].value).vtype == string_value)
                 yyerror("Invalid unary operator for string");
@@ -5371,7 +5371,7 @@ yyreduce:
   case 290:
 
 /* Line 1455 of yacc.c  */
-#line 2259 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2259 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (currentSpec -> genc)
                 yyerror("Scoped names are not allowed in a C module");
@@ -5383,7 +5383,7 @@ yyreduce:
   case 291:
 
 /* Line 1455 of yacc.c  */
-#line 2267 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2267 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.scpvalp) = text2scopePart((yyvsp[(1) - (1)].text));
         }
@@ -5392,7 +5392,7 @@ yyreduce:
   case 292:
 
 /* Line 1455 of yacc.c  */
-#line 2272 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2272 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.boolean) = TRUE;
         }
@@ -5401,7 +5401,7 @@ yyreduce:
   case 293:
 
 /* Line 1455 of yacc.c  */
-#line 2275 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2275 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.boolean) = FALSE;
         }
@@ -5410,7 +5410,7 @@ yyreduce:
   case 294:
 
 /* Line 1455 of yacc.c  */
-#line 2280 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2280 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /*
              * We let the C++ compiler decide if the value is a valid one - no
@@ -5425,7 +5425,7 @@ yyreduce:
   case 295:
 
 /* Line 1455 of yacc.c  */
-#line 2289 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2289 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             fcallDef *fcd;
 
@@ -5441,7 +5441,7 @@ yyreduce:
   case 296:
 
 /* Line 1455 of yacc.c  */
-#line 2299 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2299 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.value).vtype = real_value;
             (yyval.value).u.vreal = (yyvsp[(1) - (1)].real);
@@ -5451,7 +5451,7 @@ yyreduce:
   case 297:
 
 /* Line 1455 of yacc.c  */
-#line 2303 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2303 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.value).vtype = numeric_value;
             (yyval.value).u.vnum = (yyvsp[(1) - (1)].number);
@@ -5461,7 +5461,7 @@ yyreduce:
   case 298:
 
 /* Line 1455 of yacc.c  */
-#line 2307 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2307 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.value).vtype = numeric_value;
             (yyval.value).u.vnum = (yyvsp[(1) - (1)].boolean);
@@ -5471,7 +5471,7 @@ yyreduce:
   case 299:
 
 /* Line 1455 of yacc.c  */
-#line 2311 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2311 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.value).vtype = numeric_value;
             (yyval.value).u.vnum = 0;
@@ -5481,7 +5481,7 @@ yyreduce:
   case 300:
 
 /* Line 1455 of yacc.c  */
-#line 2315 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2315 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.value).vtype = string_value;
             (yyval.value).u.vstr = (yyvsp[(1) - (1)].text);
@@ -5491,7 +5491,7 @@ yyreduce:
   case 301:
 
 /* Line 1455 of yacc.c  */
-#line 2319 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2319 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.value).vtype = qchar_value;
             (yyval.value).u.vqchar = (yyvsp[(1) - (1)].qchar);
@@ -5501,7 +5501,7 @@ yyreduce:
   case 302:
 
 /* Line 1455 of yacc.c  */
-#line 2325 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2325 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* No values. */
 
@@ -5512,7 +5512,7 @@ yyreduce:
   case 303:
 
 /* Line 1455 of yacc.c  */
-#line 2330 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2330 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* The single or first expression. */
 
@@ -5524,7 +5524,7 @@ yyreduce:
   case 304:
 
 /* Line 1455 of yacc.c  */
-#line 2336 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2336 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* Check that it wasn't ...(,expression...). */
 
@@ -5546,7 +5546,7 @@ yyreduce:
   case 305:
 
 /* Line 1455 of yacc.c  */
-#line 2354 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2354 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5569,7 +5569,7 @@ yyreduce:
   case 306:
 
 /* Line 1455 of yacc.c  */
-#line 2371 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2371 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5608,7 +5608,7 @@ yyreduce:
   case 307:
 
 /* Line 1455 of yacc.c  */
-#line 2406 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2406 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (currentSpec -> genc && (yyvsp[(2) - (2)].scpvalp)->next != NULL)
                 yyerror("Namespaces not allowed in a C module");
@@ -5621,7 +5621,7 @@ yyreduce:
   case 308:
 
 /* Line 1455 of yacc.c  */
-#line 2412 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2412 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5655,7 +5655,7 @@ yyreduce:
   case 309:
 
 /* Line 1455 of yacc.c  */
-#line 2439 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2439 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 completeClass((yyvsp[(2) - (8)].scpvalp), &(yyvsp[(5) - (8)].optflags), (yyvsp[(7) - (8)].boolean));
@@ -5665,14 +5665,14 @@ yyreduce:
   case 310:
 
 /* Line 1455 of yacc.c  */
-#line 2445 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2445 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {currentIsTemplate = TRUE;}
     break;
 
   case 311:
 
 /* Line 1455 of yacc.c  */
-#line 2445 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2445 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (currentSpec->genc)
                 yyerror("Class templates not allowed in a C module");
@@ -5702,7 +5702,7 @@ yyreduce:
   case 312:
 
 /* Line 1455 of yacc.c  */
-#line 2471 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2471 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.signature) = (yyvsp[(3) - (4)].signature);
         }
@@ -5711,7 +5711,7 @@ yyreduce:
   case 313:
 
 /* Line 1455 of yacc.c  */
-#line 2476 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2476 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (currentSpec->genc)
                 yyerror("Class definition not allowed in a C module");
@@ -5724,7 +5724,7 @@ yyreduce:
   case 314:
 
 /* Line 1455 of yacc.c  */
-#line 2482 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2482 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5755,7 +5755,7 @@ yyreduce:
   case 315:
 
 /* Line 1455 of yacc.c  */
-#line 2506 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2506 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 (yyval.klass) = completeClass((yyvsp[(2) - (8)].scpvalp), &(yyvsp[(5) - (8)].optflags), (yyvsp[(7) - (8)].boolean));
@@ -5765,7 +5765,7 @@ yyreduce:
   case 320:
 
 /* Line 1455 of yacc.c  */
-#line 2520 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2520 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5808,7 +5808,7 @@ yyreduce:
   case 321:
 
 /* Line 1455 of yacc.c  */
-#line 2559 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2559 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.boolean) = FALSE;
         }
@@ -5817,7 +5817,7 @@ yyreduce:
   case 322:
 
 /* Line 1455 of yacc.c  */
-#line 2562 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2562 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.boolean) = TRUE;
         }
@@ -5826,7 +5826,7 @@ yyreduce:
   case 334:
 
 /* Line 1455 of yacc.c  */
-#line 2580 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2580 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentScope()->docstring, (yyvsp[(1) - (1)].codeb));
@@ -5836,7 +5836,7 @@ yyreduce:
   case 335:
 
 /* Line 1455 of yacc.c  */
-#line 2584 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2584 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentScope()->cppcode, (yyvsp[(1) - (1)].codeb));
@@ -5846,7 +5846,7 @@ yyreduce:
   case 336:
 
 /* Line 1455 of yacc.c  */
-#line 2588 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2588 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
                 appendCodeBlock(&currentScope()->iff->hdrcode, (yyvsp[(1) - (1)].codeb));
@@ -5856,7 +5856,7 @@ yyreduce:
   case 337:
 
 /* Line 1455 of yacc.c  */
-#line 2592 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2592 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5873,7 +5873,7 @@ yyreduce:
   case 338:
 
 /* Line 1455 of yacc.c  */
-#line 2603 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2603 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5890,7 +5890,7 @@ yyreduce:
   case 339:
 
 /* Line 1455 of yacc.c  */
-#line 2614 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2614 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5907,7 +5907,7 @@ yyreduce:
   case 340:
 
 /* Line 1455 of yacc.c  */
-#line 2625 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2625 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5924,7 +5924,7 @@ yyreduce:
   case 341:
 
 /* Line 1455 of yacc.c  */
-#line 2636 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2636 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5941,7 +5941,7 @@ yyreduce:
   case 342:
 
 /* Line 1455 of yacc.c  */
-#line 2647 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2647 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5958,7 +5958,7 @@ yyreduce:
   case 343:
 
 /* Line 1455 of yacc.c  */
-#line 2658 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2658 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5975,7 +5975,7 @@ yyreduce:
   case 344:
 
 /* Line 1455 of yacc.c  */
-#line 2669 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2669 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -5992,7 +5992,7 @@ yyreduce:
   case 345:
 
 /* Line 1455 of yacc.c  */
-#line 2680 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2680 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -6009,7 +6009,7 @@ yyreduce:
   case 349:
 
 /* Line 1455 of yacc.c  */
-#line 2694 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2694 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -6026,7 +6026,7 @@ yyreduce:
   case 350:
 
 /* Line 1455 of yacc.c  */
-#line 2705 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2705 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -6043,7 +6043,7 @@ yyreduce:
   case 351:
 
 /* Line 1455 of yacc.c  */
-#line 2716 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2716 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (currentSpec -> genc)
                 yyerror("public section not allowed in a C module");
@@ -6056,7 +6056,7 @@ yyreduce:
   case 352:
 
 /* Line 1455 of yacc.c  */
-#line 2723 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2723 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (currentSpec -> genc)
                 yyerror("protected section not allowed in a C module");
@@ -6069,7 +6069,7 @@ yyreduce:
   case 353:
 
 /* Line 1455 of yacc.c  */
-#line 2730 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2730 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (currentSpec -> genc)
                 yyerror("private section not allowed in a C module");
@@ -6082,7 +6082,7 @@ yyreduce:
   case 354:
 
 /* Line 1455 of yacc.c  */
-#line 2737 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2737 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (currentSpec -> genc)
                 yyerror("signals section not allowed in a C module");
@@ -6095,7 +6095,7 @@ yyreduce:
   case 355:
 
 /* Line 1455 of yacc.c  */
-#line 2746 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2746 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if ((yyvsp[(2) - (3)].property).name == NULL)
                 yyerror("A %Property directive must have a 'name' argument");
@@ -6112,7 +6112,7 @@ yyreduce:
   case 356:
 
 /* Line 1455 of yacc.c  */
-#line 2759 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2759 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.property) = (yyvsp[(2) - (3)].property);
         }
@@ -6121,7 +6121,7 @@ yyreduce:
   case 358:
 
 /* Line 1455 of yacc.c  */
-#line 2765 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2765 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.property) = (yyvsp[(1) - (3)].property);
 
@@ -6137,7 +6137,7 @@ yyreduce:
   case 359:
 
 /* Line 1455 of yacc.c  */
-#line 2777 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2777 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.property).token = TK_GET;
 
@@ -6150,7 +6150,7 @@ yyreduce:
   case 360:
 
 /* Line 1455 of yacc.c  */
-#line 2784 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2784 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.property).token = TK_NAME;
 
@@ -6163,7 +6163,7 @@ yyreduce:
   case 361:
 
 /* Line 1455 of yacc.c  */
-#line 2791 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2791 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.property).token = TK_SET;
 
@@ -6176,7 +6176,7 @@ yyreduce:
   case 362:
 
 /* Line 1455 of yacc.c  */
-#line 2800 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2800 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.property).token = 0;
             (yyval.property).docstring = NULL;
@@ -6186,7 +6186,7 @@ yyreduce:
   case 363:
 
 /* Line 1455 of yacc.c  */
-#line 2804 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2804 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.property) = (yyvsp[(2) - (4)].property);
         }
@@ -6195,7 +6195,7 @@ yyreduce:
   case 365:
 
 /* Line 1455 of yacc.c  */
-#line 2810 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2810 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.property) = (yyvsp[(1) - (2)].property);
 
@@ -6209,7 +6209,7 @@ yyreduce:
   case 366:
 
 /* Line 1455 of yacc.c  */
-#line 2820 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2820 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.property).token = TK_IF;
         }
@@ -6218,7 +6218,7 @@ yyreduce:
   case 367:
 
 /* Line 1455 of yacc.c  */
-#line 2823 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2823 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.property).token = TK_END;
         }
@@ -6227,7 +6227,7 @@ yyreduce:
   case 368:
 
 /* Line 1455 of yacc.c  */
-#line 2826 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2826 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -6245,7 +6245,7 @@ yyreduce:
   case 369:
 
 /* Line 1455 of yacc.c  */
-#line 2840 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2840 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.number) = 0;
         }
@@ -6254,7 +6254,7 @@ yyreduce:
   case 370:
 
 /* Line 1455 of yacc.c  */
-#line 2843 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2843 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.number) = SECT_IS_SLOT;
         }
@@ -6263,7 +6263,7 @@ yyreduce:
   case 371:
 
 /* Line 1455 of yacc.c  */
-#line 2848 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2848 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* Note that we allow non-virtual dtors in C modules. */
 
@@ -6329,14 +6329,14 @@ yyreduce:
   case 372:
 
 /* Line 1455 of yacc.c  */
-#line 2910 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2910 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {currentCtorIsExplicit = TRUE;}
     break;
 
   case 375:
 
 /* Line 1455 of yacc.c  */
-#line 2914 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2914 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* Note that we allow ctors in C modules. */
 
@@ -6383,7 +6383,7 @@ yyreduce:
   case 376:
 
 /* Line 1455 of yacc.c  */
-#line 2957 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2957 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.optsignature) = NULL;
         }
@@ -6392,7 +6392,7 @@ yyreduce:
   case 377:
 
 /* Line 1455 of yacc.c  */
-#line 2960 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2960 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             parsingCSignature = TRUE;
         }
@@ -6401,7 +6401,7 @@ yyreduce:
   case 378:
 
 /* Line 1455 of yacc.c  */
-#line 2962 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2962 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.optsignature) = sipMalloc(sizeof (signatureDef));
 
@@ -6414,7 +6414,7 @@ yyreduce:
   case 379:
 
 /* Line 1455 of yacc.c  */
-#line 2971 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2971 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.optsignature) = NULL;
         }
@@ -6423,7 +6423,7 @@ yyreduce:
   case 380:
 
 /* Line 1455 of yacc.c  */
-#line 2974 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2974 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             parsingCSignature = TRUE;
         }
@@ -6432,7 +6432,7 @@ yyreduce:
   case 381:
 
 /* Line 1455 of yacc.c  */
-#line 2976 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2976 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.optsignature) = sipMalloc(sizeof (signatureDef));
 
@@ -6446,7 +6446,7 @@ yyreduce:
   case 382:
 
 /* Line 1455 of yacc.c  */
-#line 2986 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2986 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.number) = FALSE;
         }
@@ -6455,7 +6455,7 @@ yyreduce:
   case 383:
 
 /* Line 1455 of yacc.c  */
-#line 2989 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2989 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.number) = TRUE;
         }
@@ -6464,7 +6464,7 @@ yyreduce:
   case 384:
 
 /* Line 1455 of yacc.c  */
-#line 2994 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 2994 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -6488,7 +6488,7 @@ yyreduce:
   case 385:
 
 /* Line 1455 of yacc.c  */
-#line 3012 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3012 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /*
              * It looks like an assignment operator (though we don't bother to
@@ -6514,7 +6514,7 @@ yyreduce:
   case 386:
 
 /* Line 1455 of yacc.c  */
-#line 3032 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3032 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -6556,7 +6556,7 @@ yyreduce:
   case 387:
 
 /* Line 1455 of yacc.c  */
-#line 3068 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3068 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -6641,210 +6641,210 @@ yyreduce:
   case 388:
 
 /* Line 1455 of yacc.c  */
-#line 3149 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3149 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__add__";}
     break;
 
   case 389:
 
 /* Line 1455 of yacc.c  */
-#line 3150 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3150 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__sub__";}
     break;
 
   case 390:
 
 /* Line 1455 of yacc.c  */
-#line 3151 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3151 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__mul__";}
     break;
 
   case 391:
 
 /* Line 1455 of yacc.c  */
-#line 3152 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3152 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__div__";}
     break;
 
   case 392:
 
 /* Line 1455 of yacc.c  */
-#line 3153 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3153 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__mod__";}
     break;
 
   case 393:
 
 /* Line 1455 of yacc.c  */
-#line 3154 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3154 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__and__";}
     break;
 
   case 394:
 
 /* Line 1455 of yacc.c  */
-#line 3155 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3155 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__or__";}
     break;
 
   case 395:
 
 /* Line 1455 of yacc.c  */
-#line 3156 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3156 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__xor__";}
     break;
 
   case 396:
 
 /* Line 1455 of yacc.c  */
-#line 3157 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3157 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__lshift__";}
     break;
 
   case 397:
 
 /* Line 1455 of yacc.c  */
-#line 3158 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3158 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__rshift__";}
     break;
 
   case 398:
 
 /* Line 1455 of yacc.c  */
-#line 3159 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3159 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__iadd__";}
     break;
 
   case 399:
 
 /* Line 1455 of yacc.c  */
-#line 3160 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3160 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__isub__";}
     break;
 
   case 400:
 
 /* Line 1455 of yacc.c  */
-#line 3161 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3161 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__imul__";}
     break;
 
   case 401:
 
 /* Line 1455 of yacc.c  */
-#line 3162 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3162 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__idiv__";}
     break;
 
   case 402:
 
 /* Line 1455 of yacc.c  */
-#line 3163 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3163 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__imod__";}
     break;
 
   case 403:
 
 /* Line 1455 of yacc.c  */
-#line 3164 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3164 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__iand__";}
     break;
 
   case 404:
 
 /* Line 1455 of yacc.c  */
-#line 3165 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3165 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__ior__";}
     break;
 
   case 405:
 
 /* Line 1455 of yacc.c  */
-#line 3166 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3166 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__ixor__";}
     break;
 
   case 406:
 
 /* Line 1455 of yacc.c  */
-#line 3167 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3167 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__ilshift__";}
     break;
 
   case 407:
 
 /* Line 1455 of yacc.c  */
-#line 3168 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3168 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__irshift__";}
     break;
 
   case 408:
 
 /* Line 1455 of yacc.c  */
-#line 3169 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3169 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__invert__";}
     break;
 
   case 409:
 
 /* Line 1455 of yacc.c  */
-#line 3170 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3170 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__call__";}
     break;
 
   case 410:
 
 /* Line 1455 of yacc.c  */
-#line 3171 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3171 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__getitem__";}
     break;
 
   case 411:
 
 /* Line 1455 of yacc.c  */
-#line 3172 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3172 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__lt__";}
     break;
 
   case 412:
 
 /* Line 1455 of yacc.c  */
-#line 3173 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3173 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__le__";}
     break;
 
   case 413:
 
 /* Line 1455 of yacc.c  */
-#line 3174 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3174 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__eq__";}
     break;
 
   case 414:
 
 /* Line 1455 of yacc.c  */
-#line 3175 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3175 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__ne__";}
     break;
 
   case 415:
 
 /* Line 1455 of yacc.c  */
-#line 3176 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3176 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__gt__";}
     break;
 
   case 416:
 
 /* Line 1455 of yacc.c  */
-#line 3177 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3177 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {(yyval.text) = "__ge__";}
     break;
 
   case 417:
 
 /* Line 1455 of yacc.c  */
-#line 3180 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3180 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.number) = FALSE;
         }
@@ -6853,7 +6853,7 @@ yyreduce:
   case 418:
 
 /* Line 1455 of yacc.c  */
-#line 3183 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3183 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.number) = TRUE;
         }
@@ -6862,7 +6862,7 @@ yyreduce:
   case 419:
 
 /* Line 1455 of yacc.c  */
-#line 3188 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3188 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.number) = 0;
         }
@@ -6871,7 +6871,7 @@ yyreduce:
   case 420:
 
 /* Line 1455 of yacc.c  */
-#line 3191 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3191 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if ((yyvsp[(2) - (2)].number) != 0)
                 yyerror("Abstract virtual function '= 0' expected");
@@ -6883,7 +6883,7 @@ yyreduce:
   case 421:
 
 /* Line 1455 of yacc.c  */
-#line 3199 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3199 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.optflags).nrFlags = 0;
         }
@@ -6892,7 +6892,7 @@ yyreduce:
   case 422:
 
 /* Line 1455 of yacc.c  */
-#line 3202 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3202 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.optflags) = (yyvsp[(2) - (3)].optflags);
         }
@@ -6901,7 +6901,7 @@ yyreduce:
   case 423:
 
 /* Line 1455 of yacc.c  */
-#line 3208 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3208 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.optflags).flags[0] = (yyvsp[(1) - (1)].flag);
             (yyval.optflags).nrFlags = 1;
@@ -6911,7 +6911,7 @@ yyreduce:
   case 424:
 
 /* Line 1455 of yacc.c  */
-#line 3212 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3212 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* Check there is room. */
 
@@ -6927,7 +6927,7 @@ yyreduce:
   case 425:
 
 /* Line 1455 of yacc.c  */
-#line 3224 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3224 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.flag).ftype = bool_flag;
             (yyval.flag).fname = (yyvsp[(1) - (1)].text);
@@ -6937,7 +6937,7 @@ yyreduce:
   case 426:
 
 /* Line 1455 of yacc.c  */
-#line 3228 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3228 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.flag) = (yyvsp[(3) - (3)].flag);
             (yyval.flag).fname = (yyvsp[(1) - (3)].text);
@@ -6947,7 +6947,7 @@ yyreduce:
   case 427:
 
 /* Line 1455 of yacc.c  */
-#line 3234 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3234 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.flag).ftype = (strchr((yyvsp[(1) - (1)].text), '.') != NULL) ? dotted_name_flag : name_flag;
             (yyval.flag).fvalue.sval = (yyvsp[(1) - (1)].text);
@@ -6957,7 +6957,7 @@ yyreduce:
   case 428:
 
 /* Line 1455 of yacc.c  */
-#line 3238 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3238 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             apiVersionRangeDef *avd;
             int from, to;
@@ -6986,7 +6986,7 @@ yyreduce:
   case 429:
 
 /* Line 1455 of yacc.c  */
-#line 3261 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3261 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.flag).ftype = string_flag;
             (yyval.flag).fvalue.sval = convertFeaturedString((yyvsp[(1) - (1)].text));
@@ -6996,7 +6996,7 @@ yyreduce:
   case 430:
 
 /* Line 1455 of yacc.c  */
-#line 3265 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3265 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.flag).ftype = integer_flag;
             (yyval.flag).fvalue.ival = (yyvsp[(1) - (1)].number);
@@ -7006,7 +7006,7 @@ yyreduce:
   case 431:
 
 /* Line 1455 of yacc.c  */
-#line 3271 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3271 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -7015,7 +7015,7 @@ yyreduce:
   case 432:
 
 /* Line 1455 of yacc.c  */
-#line 3276 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3276 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = NULL;
         }
@@ -7024,7 +7024,7 @@ yyreduce:
   case 434:
 
 /* Line 1455 of yacc.c  */
-#line 3282 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3282 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = NULL;
         }
@@ -7033,7 +7033,7 @@ yyreduce:
   case 435:
 
 /* Line 1455 of yacc.c  */
-#line 3285 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3285 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -7042,7 +7042,7 @@ yyreduce:
   case 436:
 
 /* Line 1455 of yacc.c  */
-#line 3290 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3290 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = NULL;
         }
@@ -7051,7 +7051,7 @@ yyreduce:
   case 437:
 
 /* Line 1455 of yacc.c  */
-#line 3293 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3293 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.codeb) = (yyvsp[(2) - (2)].codeb);
         }
@@ -7060,7 +7060,7 @@ yyreduce:
   case 438:
 
 /* Line 1455 of yacc.c  */
-#line 3298 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3298 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             int a, nrrxcon, nrrxdis, nrslotcon, nrslotdis, nrarray, nrarraysize;
 
@@ -7112,7 +7112,7 @@ yyreduce:
   case 439:
 
 /* Line 1455 of yacc.c  */
-#line 3346 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3346 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* No arguments. */
 
@@ -7123,7 +7123,7 @@ yyreduce:
   case 440:
 
 /* Line 1455 of yacc.c  */
-#line 3351 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3351 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* The single or first argument. */
 
@@ -7135,7 +7135,7 @@ yyreduce:
   case 441:
 
 /* Line 1455 of yacc.c  */
-#line 3357 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3357 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* Check that it wasn't ...(,arg...). */
             if ((yyvsp[(1) - (3)].signature).nrArgs == 0)
@@ -7166,7 +7166,7 @@ yyreduce:
   case 442:
 
 /* Line 1455 of yacc.c  */
-#line 3384 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3384 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             checkNoAnnos(&(yyvsp[(3) - (4)].optflags), "SIP_SIGNAL has no annotations");
 
@@ -7183,7 +7183,7 @@ yyreduce:
   case 443:
 
 /* Line 1455 of yacc.c  */
-#line 3395 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3395 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             checkNoAnnos(&(yyvsp[(3) - (4)].optflags), "SIP_SLOT has no annotations");
 
@@ -7200,7 +7200,7 @@ yyreduce:
   case 444:
 
 /* Line 1455 of yacc.c  */
-#line 3406 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3406 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             checkNoAnnos(&(yyvsp[(3) - (4)].optflags), "SIP_ANYSLOT has no annotations");
 
@@ -7217,7 +7217,7 @@ yyreduce:
   case 445:
 
 /* Line 1455 of yacc.c  */
-#line 3417 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3417 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             const char *annos[] = {
                 "SingleShot",
@@ -7241,7 +7241,7 @@ yyreduce:
   case 446:
 
 /* Line 1455 of yacc.c  */
-#line 3435 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3435 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             checkNoAnnos(&(yyvsp[(3) - (3)].optflags), "SIP_RXOBJ_DIS has no annotations");
 
@@ -7257,7 +7257,7 @@ yyreduce:
   case 447:
 
 /* Line 1455 of yacc.c  */
-#line 3445 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3445 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             checkNoAnnos(&(yyvsp[(6) - (6)].optflags), "SIP_SLOT_CON has no annotations");
 
@@ -7279,7 +7279,7 @@ yyreduce:
   case 448:
 
 /* Line 1455 of yacc.c  */
-#line 3461 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3461 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             checkNoAnnos(&(yyvsp[(6) - (6)].optflags), "SIP_SLOT_DIS has no annotations");
 
@@ -7301,7 +7301,7 @@ yyreduce:
   case 449:
 
 /* Line 1455 of yacc.c  */
-#line 3477 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3477 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             checkNoAnnos(&(yyvsp[(3) - (3)].optflags), "SIP_QOBJECT has no annotations");
 
@@ -7315,7 +7315,7 @@ yyreduce:
   case 450:
 
 /* Line 1455 of yacc.c  */
-#line 3485 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3485 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.memArg) = (yyvsp[(1) - (2)].memArg);
             (yyval.memArg).defval = (yyvsp[(2) - (2)].valp);
@@ -7325,35 +7325,35 @@ yyreduce:
   case 451:
 
 /* Line 1455 of yacc.c  */
-#line 3492 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3492 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {currentIsSignal = TRUE;}
     break;
 
   case 453:
 
 /* Line 1455 of yacc.c  */
-#line 3493 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3493 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {currentIsSlot = TRUE;}
     break;
 
   case 456:
 
 /* Line 1455 of yacc.c  */
-#line 3498 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3498 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {currentIsStatic = TRUE;}
     break;
 
   case 461:
 
 /* Line 1455 of yacc.c  */
-#line 3508 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3508 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {currentOverIsVirt = TRUE;}
     break;
 
   case 464:
 
 /* Line 1455 of yacc.c  */
-#line 3512 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3512 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -7409,7 +7409,7 @@ yyreduce:
   case 465:
 
 /* Line 1455 of yacc.c  */
-#line 3564 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3564 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.variable).token = 0;
             (yyval.variable).access_code = NULL;
@@ -7421,7 +7421,7 @@ yyreduce:
   case 466:
 
 /* Line 1455 of yacc.c  */
-#line 3570 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3570 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.variable) = (yyvsp[(2) - (3)].variable);
         }
@@ -7430,7 +7430,7 @@ yyreduce:
   case 468:
 
 /* Line 1455 of yacc.c  */
-#line 3576 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3576 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.variable) = (yyvsp[(1) - (2)].variable);
 
@@ -7446,7 +7446,7 @@ yyreduce:
   case 469:
 
 /* Line 1455 of yacc.c  */
-#line 3588 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3588 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.variable).token = TK_IF;
         }
@@ -7455,7 +7455,7 @@ yyreduce:
   case 470:
 
 /* Line 1455 of yacc.c  */
-#line 3591 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3591 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.variable).token = TK_END;
         }
@@ -7464,7 +7464,7 @@ yyreduce:
   case 471:
 
 /* Line 1455 of yacc.c  */
-#line 3594 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3594 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -7485,7 +7485,7 @@ yyreduce:
   case 472:
 
 /* Line 1455 of yacc.c  */
-#line 3609 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3609 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -7506,7 +7506,7 @@ yyreduce:
   case 473:
 
 /* Line 1455 of yacc.c  */
-#line 3624 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3624 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (notSkipping())
             {
@@ -7527,7 +7527,7 @@ yyreduce:
   case 474:
 
 /* Line 1455 of yacc.c  */
-#line 3641 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3641 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.memArg) = (yyvsp[(2) - (4)].memArg);
             (yyval.memArg).nrderefs += (yyvsp[(3) - (4)].number);
@@ -7538,7 +7538,7 @@ yyreduce:
   case 475:
 
 /* Line 1455 of yacc.c  */
-#line 3646 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3646 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.memArg) = (yyvsp[(1) - (3)].memArg);
             (yyval.memArg).nrderefs += (yyvsp[(2) - (3)].number);
@@ -7556,7 +7556,7 @@ yyreduce:
   case 476:
 
 /* Line 1455 of yacc.c  */
-#line 3660 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3660 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             const char *annos[] = {
                 "AllowNone",
@@ -7653,7 +7653,7 @@ yyreduce:
   case 477:
 
 /* Line 1455 of yacc.c  */
-#line 3753 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3753 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.number) = 0;
         }
@@ -7662,7 +7662,7 @@ yyreduce:
   case 478:
 
 /* Line 1455 of yacc.c  */
-#line 3756 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3756 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (currentSpec -> genc)
                 yyerror("References not allowed in a C module");
@@ -7674,7 +7674,7 @@ yyreduce:
   case 479:
 
 /* Line 1455 of yacc.c  */
-#line 3764 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3764 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.number) = 0;
         }
@@ -7683,7 +7683,7 @@ yyreduce:
   case 480:
 
 /* Line 1455 of yacc.c  */
-#line 3767 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3767 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.number) = (yyvsp[(1) - (2)].number) + 1;
         }
@@ -7692,7 +7692,7 @@ yyreduce:
   case 481:
 
 /* Line 1455 of yacc.c  */
-#line 3772 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3772 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = defined_type;
@@ -7706,7 +7706,7 @@ yyreduce:
   case 482:
 
 /* Line 1455 of yacc.c  */
-#line 3780 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3780 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             templateDef *td;
 
@@ -7723,7 +7723,7 @@ yyreduce:
   case 483:
 
 /* Line 1455 of yacc.c  */
-#line 3791 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3791 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
 
@@ -7744,7 +7744,7 @@ yyreduce:
   case 484:
 
 /* Line 1455 of yacc.c  */
-#line 3806 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3806 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = ushort_type;
@@ -7754,7 +7754,7 @@ yyreduce:
   case 485:
 
 /* Line 1455 of yacc.c  */
-#line 3810 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3810 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = short_type;
@@ -7764,7 +7764,7 @@ yyreduce:
   case 486:
 
 /* Line 1455 of yacc.c  */
-#line 3814 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3814 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = uint_type;
@@ -7774,7 +7774,7 @@ yyreduce:
   case 487:
 
 /* Line 1455 of yacc.c  */
-#line 3818 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3818 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = uint_type;
@@ -7784,7 +7784,7 @@ yyreduce:
   case 488:
 
 /* Line 1455 of yacc.c  */
-#line 3822 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3822 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = int_type;
@@ -7794,7 +7794,7 @@ yyreduce:
   case 489:
 
 /* Line 1455 of yacc.c  */
-#line 3826 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3826 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = long_type;
@@ -7804,7 +7804,7 @@ yyreduce:
   case 490:
 
 /* Line 1455 of yacc.c  */
-#line 3830 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3830 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = ulong_type;
@@ -7814,7 +7814,7 @@ yyreduce:
   case 491:
 
 /* Line 1455 of yacc.c  */
-#line 3834 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3834 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = longlong_type;
@@ -7824,7 +7824,7 @@ yyreduce:
   case 492:
 
 /* Line 1455 of yacc.c  */
-#line 3838 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3838 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = ulonglong_type;
@@ -7834,7 +7834,7 @@ yyreduce:
   case 493:
 
 /* Line 1455 of yacc.c  */
-#line 3842 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3842 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = float_type;
@@ -7844,7 +7844,7 @@ yyreduce:
   case 494:
 
 /* Line 1455 of yacc.c  */
-#line 3846 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3846 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = double_type;
@@ -7854,7 +7854,7 @@ yyreduce:
   case 495:
 
 /* Line 1455 of yacc.c  */
-#line 3850 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3850 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = bool_type;
@@ -7864,7 +7864,7 @@ yyreduce:
   case 496:
 
 /* Line 1455 of yacc.c  */
-#line 3854 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3854 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = sstring_type;
@@ -7874,7 +7874,7 @@ yyreduce:
   case 497:
 
 /* Line 1455 of yacc.c  */
-#line 3858 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3858 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = ustring_type;
@@ -7884,7 +7884,7 @@ yyreduce:
   case 498:
 
 /* Line 1455 of yacc.c  */
-#line 3862 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3862 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = string_type;
@@ -7894,7 +7894,7 @@ yyreduce:
   case 499:
 
 /* Line 1455 of yacc.c  */
-#line 3866 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3866 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = wstring_type;
@@ -7904,7 +7904,7 @@ yyreduce:
   case 500:
 
 /* Line 1455 of yacc.c  */
-#line 3870 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3870 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = void_type;
@@ -7914,7 +7914,7 @@ yyreduce:
   case 501:
 
 /* Line 1455 of yacc.c  */
-#line 3874 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3874 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = pyobject_type;
@@ -7924,7 +7924,7 @@ yyreduce:
   case 502:
 
 /* Line 1455 of yacc.c  */
-#line 3878 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3878 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = pytuple_type;
@@ -7934,7 +7934,7 @@ yyreduce:
   case 503:
 
 /* Line 1455 of yacc.c  */
-#line 3882 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3882 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = pylist_type;
@@ -7944,7 +7944,7 @@ yyreduce:
   case 504:
 
 /* Line 1455 of yacc.c  */
-#line 3886 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3886 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = pydict_type;
@@ -7954,7 +7954,7 @@ yyreduce:
   case 505:
 
 /* Line 1455 of yacc.c  */
-#line 3890 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3890 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = pycallable_type;
@@ -7964,7 +7964,7 @@ yyreduce:
   case 506:
 
 /* Line 1455 of yacc.c  */
-#line 3894 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3894 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = pyslice_type;
@@ -7974,7 +7974,7 @@ yyreduce:
   case 507:
 
 /* Line 1455 of yacc.c  */
-#line 3898 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3898 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = pytype_type;
@@ -7984,7 +7984,7 @@ yyreduce:
   case 508:
 
 /* Line 1455 of yacc.c  */
-#line 3902 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3902 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = ssize_type;
@@ -7994,7 +7994,7 @@ yyreduce:
   case 509:
 
 /* Line 1455 of yacc.c  */
-#line 3906 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3906 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             memset(&(yyval.memArg), 0, sizeof (argDef));
             (yyval.memArg).atype = ellipsis_type;
@@ -8004,7 +8004,7 @@ yyreduce:
   case 510:
 
 /* Line 1455 of yacc.c  */
-#line 3912 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3912 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* The single or first type. */
 
@@ -8016,7 +8016,7 @@ yyreduce:
   case 511:
 
 /* Line 1455 of yacc.c  */
-#line 3918 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3918 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* Check there is nothing after an ellipsis. */
             if ((yyvsp[(1) - (3)].signature).args[(yyvsp[(1) - (3)].signature).nrArgs - 1].atype == ellipsis_type)
@@ -8036,7 +8036,7 @@ yyreduce:
   case 512:
 
 /* Line 1455 of yacc.c  */
-#line 3934 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3934 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             (yyval.throwlist) = NULL;
         }
@@ -8045,7 +8045,7 @@ yyreduce:
   case 513:
 
 /* Line 1455 of yacc.c  */
-#line 3937 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3937 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             if (currentSpec->genc)
                 yyerror("Exceptions not allowed in a C module");
@@ -8057,7 +8057,7 @@ yyreduce:
   case 514:
 
 /* Line 1455 of yacc.c  */
-#line 3945 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3945 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* Empty list so use a blank. */
 
@@ -8069,7 +8069,7 @@ yyreduce:
   case 515:
 
 /* Line 1455 of yacc.c  */
-#line 3951 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3951 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* The only or first exception. */
 
@@ -8082,7 +8082,7 @@ yyreduce:
   case 516:
 
 /* Line 1455 of yacc.c  */
-#line 3958 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3958 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
     {
             /* Check that it wasn't ...(,arg...). */
 
@@ -8102,7 +8102,7 @@ yyreduce:
 
 
 /* Line 1455 of yacc.c  */
-#line 8106 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.c"
+#line 8106 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -8314,7 +8314,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 3974 "/home/phil/hg/sip/sip-4.12.3/sipgen/parser.y"
+#line 3974 "/home/phil/hg/sip/sip-4.12.4/sipgen/parser.y"
 
 
 

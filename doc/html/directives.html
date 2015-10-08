@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,22 +7,23 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Directives &mdash; SIP 4.12.3 Reference Guide</title>
+    <title>Directives &mdash; SIP 4.12.4 Reference Guide</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.12.3',
-        COLLAPSE_MODINDEX: false,
+        VERSION:     '4.12.4',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.12.3 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.12.4 Reference Guide" href="index.html" />
     <link rel="next" title="Annotations" href="annotations.html" />
     <link rel="prev" title="SIP Specification Files" href="specification_files.html" /> 
   </head>
@@ -32,15 +35,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -61,7 +64,7 @@ are enclosed in [<em>brackets</em>].</p>
 not define names that start with the prefix <tt class="docutils literal"><span class="pre">sip</span></tt>.</p>
 <div class="section" id="revised-directive-syntax">
 <h2>Revised Directive Syntax<a class="headerlink" href="#revised-directive-syntax" title="Permalink to this headline">¶</a></h2>
-<p>
+<p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
 <p>The directive syntax used in the current version has some problems:</p>
 <ul class="simple">
@@ -135,21 +138,21 @@ Klass *klassInstance
 </div>
 <div class="admonition-see-also admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#directive-%GetCode"><tt class="xref docutils literal"><span class="pre">%GetCode</span></tt></a>, <a class="reference internal" href="#directive-%SetCode"><tt class="xref docutils literal"><span class="pre">%SetCode</span></tt></a></p>
+<p class="last"><a class="reference internal" href="#directive-%GetCode"><tt class="xref std std-directive docutils literal"><span class="pre">%GetCode</span></tt></a>, <a class="reference internal" href="#directive-%SetCode"><tt class="xref std std-directive docutils literal"><span class="pre">%SetCode</span></tt></a></p>
 </div>
 <dl class="directive">
 <dt id="directive-%API">
 <tt class="descname">%API</tt><a class="headerlink" href="#directive-%API" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>
+<p class="versionadded">
 <span class="versionmodified">New in version 4.9.</span></p>
 <pre class="literal-block">
 %API(name = <em>name</em>, version = <em>integer</em>)
 </pre>
 <p>This directive is used to define an API and set its default version number.  A
 version number must be greater than or equal to 1.</p>
-<p>See <a class="reference external" href="using.html#ref-incompat-apis"><em>Managing Incompatible APIs</em></a> for more detail.</p>
+<p>See <a class="reference internal" href="using.html#ref-incompat-apis"><em>Managing Incompatible APIs</em></a> for more detail.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%API(name=PyQt4, version=1)</pre>
 </div>
@@ -158,12 +161,12 @@ version number must be greater than or equal to 1.</p>
 <tt class="descname">%AutoPyName</tt><a class="headerlink" href="#directive-%AutoPyName" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>
+<p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
 <pre class="literal-block">
 %AutoPyName(remove_leading = <em>string</em>)
 </pre>
-<p>This is a sub-directive of the <a class="reference internal" href="#directive-%Module"><tt class="xref docutils literal"><span class="pre">%Module</span></tt></a> directive used to specify a
+<p>This is a sub-directive of the <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive used to specify a
 rule for automatically providing Python names for classes, enums, functions,
 methods, variables and exceptions.  The directive may be specified any number
 of times and each rule will be applied in turn.  Rules will not be applied if
@@ -186,7 +189,7 @@ C++ or C name.</p>
     <em>code</em>
 %End
 </pre>
-<p>This directive (along with <a class="reference internal" href="#directive-%BIReleaseBufferCode"><tt class="xref docutils literal"><span class="pre">%BIReleaseBufferCode</span></tt></a>) is used to
+<p>This directive (along with <a class="reference internal" href="#directive-%BIReleaseBufferCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIReleaseBufferCode</span></tt></a>) is used to
 specify code that implements the buffer interface of Python v3.  If Python v2
 is being used then this is ignored.</p>
 <p>The following variables are made available to the handwritten code:</p>
@@ -217,8 +220,8 @@ there was an error.</dd>
     <em>code</em>
 %End
 </pre>
-<p>This directive (along with <a class="reference internal" href="#directive-%BIGetReadBufferCode"><tt class="xref docutils literal"><span class="pre">%BIGetReadBufferCode</span></tt></a>,
-<a class="reference internal" href="#directive-%BIGetSegCountCode"><tt class="xref docutils literal"><span class="pre">%BIGetSegCountCode</span></tt></a> and <a class="reference internal" href="#directive-%BIGetWriteBufferCode"><tt class="xref docutils literal"><span class="pre">%BIGetWriteBufferCode</span></tt></a>) is used
+<p>This directive (along with <a class="reference internal" href="#directive-%BIGetReadBufferCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetReadBufferCode</span></tt></a>,
+<a class="reference internal" href="#directive-%BIGetSegCountCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetSegCountCode</span></tt></a> and <a class="reference internal" href="#directive-%BIGetWriteBufferCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetWriteBufferCode</span></tt></a>) is used
 to specify code that implements the buffer interface of Python v2.  If Python
 v3 is being used then this is ignored.</p>
 <p>The following variables are made available to the handwritten code:</p>
@@ -228,10 +231,10 @@ v3 is being used then this is ignored.</p>
 pointer to the structure or class.</dd>
 <dt>void **sipPtrPtr</dt>
 <dd>This is the pointer used to return the address of the character buffer.</dd>
-<dt><a title="SIP_SSIZE_T" class="reference external" href="c_api.html#SIP_SSIZE_T"><tt class="xref docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
+<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
 <dd>The handwritten code should set this to the length of the character buffer
 or -1 if there was an error.</dd>
-<dt><a title="SIP_SSIZE_T" class="reference external" href="c_api.html#SIP_SSIZE_T"><tt class="xref docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipSegment</dt>
+<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipSegment</dt>
 <dd>This is the number of the segment of the character buffer.</dd>
 <dt>PyObject *sipSelf</dt>
 <dd>This is the Python object that wraps the structure or class instance, i.e.
@@ -247,8 +250,8 @@ or -1 if there was an error.</dd>
     <em>code</em>
 %End
 </pre>
-<p>This directive (along with <a class="reference internal" href="#directive-%BIGetCharBufferCode"><tt class="xref docutils literal"><span class="pre">%BIGetCharBufferCode</span></tt></a>,
-<a class="reference internal" href="#directive-%BIGetSegCountCode"><tt class="xref docutils literal"><span class="pre">%BIGetSegCountCode</span></tt></a> and <a class="reference internal" href="#directive-%BIGetWriteBufferCode"><tt class="xref docutils literal"><span class="pre">%BIGetWriteBufferCode</span></tt></a>) is used
+<p>This directive (along with <a class="reference internal" href="#directive-%BIGetCharBufferCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetCharBufferCode</span></tt></a>,
+<a class="reference internal" href="#directive-%BIGetSegCountCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetSegCountCode</span></tt></a> and <a class="reference internal" href="#directive-%BIGetWriteBufferCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetWriteBufferCode</span></tt></a>) is used
 to specify code that implements the buffer interface of Python v2.  If
 Python v3 is being used then this is ignored.</p>
 <p>The following variables are made available to the handwritten code:</p>
@@ -258,10 +261,10 @@ Python v3 is being used then this is ignored.</p>
 pointer to the structure or class.</dd>
 <dt>void **sipPtrPtr</dt>
 <dd>This is the pointer used to return the address of the read buffer.</dd>
-<dt><a title="SIP_SSIZE_T" class="reference external" href="c_api.html#SIP_SSIZE_T"><tt class="xref docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
+<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
 <dd>The handwritten code should set this to the length of the read buffer or
 -1 if there was an error.</dd>
-<dt><a title="SIP_SSIZE_T" class="reference external" href="c_api.html#SIP_SSIZE_T"><tt class="xref docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipSegment</dt>
+<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipSegment</dt>
 <dd>This is the number of the segment of the read buffer.</dd>
 <dt>PyObject *sipSelf</dt>
 <dd>This is the Python object that wraps the structure or class instance, i.e.
@@ -277,8 +280,8 @@ pointer to the structure or class.</dd>
     <em>code</em>
 %End
 </pre>
-<p>This directive (along with <a class="reference internal" href="#directive-%BIGetCharBufferCode"><tt class="xref docutils literal"><span class="pre">%BIGetCharBufferCode</span></tt></a>,
-<a class="reference internal" href="#directive-%BIGetReadBufferCode"><tt class="xref docutils literal"><span class="pre">%BIGetReadBufferCode</span></tt></a> and <a class="reference internal" href="#directive-%BIGetWriteBufferCode"><tt class="xref docutils literal"><span class="pre">%BIGetWriteBufferCode</span></tt></a>) is
+<p>This directive (along with <a class="reference internal" href="#directive-%BIGetCharBufferCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetCharBufferCode</span></tt></a>,
+<a class="reference internal" href="#directive-%BIGetReadBufferCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetReadBufferCode</span></tt></a> and <a class="reference internal" href="#directive-%BIGetWriteBufferCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetWriteBufferCode</span></tt></a>) is
 used to specify code that implements the buffer interface of Python v2.  If
 Python v3 is being used then this is ignored.</p>
 <p>The following variables are made available to the handwritten code:</p>
@@ -286,10 +289,10 @@ Python v3 is being used then this is ignored.</p>
 <dt><em>type</em> *sipCpp</dt>
 <dd>This is a pointer to the structure or class instance.  Its <em>type</em> is a
 pointer to the structure or class.</dd>
-<dt><a title="SIP_SSIZE_T" class="reference external" href="c_api.html#SIP_SSIZE_T"><tt class="xref docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> *sipLenPtr</dt>
+<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> *sipLenPtr</dt>
 <dd>This is the pointer used to return the total length in bytes of all
 segments of the buffer.</dd>
-<dt><a title="SIP_SSIZE_T" class="reference external" href="c_api.html#SIP_SSIZE_T"><tt class="xref docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
+<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
 <dd>The handwritten code should set this to the number of segments that make
 up the buffer.</dd>
 <dt>PyObject *sipSelf</dt>
@@ -306,8 +309,8 @@ up the buffer.</dd>
     <em>code</em>
 %End
 </pre>
-<p>This directive (along with <a class="reference internal" href="#directive-%BIGetCharBufferCode"><tt class="xref docutils literal"><span class="pre">%BIGetCharBufferCode</span></tt></a>,
-<a class="reference internal" href="#directive-%BIGetReadBufferCode"><tt class="xref docutils literal"><span class="pre">%BIGetReadBufferCode</span></tt></a> and <a class="reference internal" href="#directive-%BIGetSegCountCode"><tt class="xref docutils literal"><span class="pre">%BIGetSegCountCode</span></tt></a> is used
+<p>This directive (along with <a class="reference internal" href="#directive-%BIGetCharBufferCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetCharBufferCode</span></tt></a>,
+<a class="reference internal" href="#directive-%BIGetReadBufferCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetReadBufferCode</span></tt></a> and <a class="reference internal" href="#directive-%BIGetSegCountCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetSegCountCode</span></tt></a> is used
 to specify code that implements the buffer interface of Python v2.  If Python
 v3 is being used then this is ignored.</p>
 <p>The following variables are made available to the handwritten code:</p>
@@ -317,10 +320,10 @@ v3 is being used then this is ignored.</p>
 pointer to the structure or class.</dd>
 <dt>void **sipPtrPtr</dt>
 <dd>This is the pointer used to return the address of the write buffer.</dd>
-<dt><a title="SIP_SSIZE_T" class="reference external" href="c_api.html#SIP_SSIZE_T"><tt class="xref docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
+<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipRes</dt>
 <dd>The handwritten code should set this to the length of the write buffer or
 -1 if there was an error.</dd>
-<dt><a title="SIP_SSIZE_T" class="reference external" href="c_api.html#SIP_SSIZE_T"><tt class="xref docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipSegment</dt>
+<dt><a class="reference internal" href="c_api.html#SIP_SSIZE_T" title="SIP_SSIZE_T"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_SSIZE_T</span></tt></a> sipSegment</dt>
 <dd>This is the number of the segment of the write buffer.</dd>
 <dt>PyObject *sipSelf</dt>
 <dd>This is the Python object that wraps the structure or class instance, i.e.
@@ -336,7 +339,7 @@ pointer to the structure or class.</dd>
     <em>code</em>
 %End
 </pre>
-<p>This directive (along with <a class="reference internal" href="#directive-%BIGetBufferCode"><tt class="xref docutils literal"><span class="pre">%BIGetBufferCode</span></tt></a>) is used to specify
+<p>This directive (along with <a class="reference internal" href="#directive-%BIGetBufferCode"><tt class="xref std std-directive docutils literal"><span class="pre">%BIGetBufferCode</span></tt></a>) is used to specify
 code that implements the buffer interface of Python v3.  If Python v2 is being
 used then this is ignored.</p>
 <p>The following variables are made available to the handwritten code:</p>
@@ -355,15 +358,15 @@ pointer to the structure or class.</dd>
 <tt class="descname">%CModule</tt><a class="headerlink" href="#directive-%CModule" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>
-<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Module"><tt class="xref docutils literal"><span class="pre">%Module</span></tt></a> directive with the <tt class="docutils literal"><span class="pre">language</span></tt> argument set
+<p class="deprecated">
+<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive with the <tt class="docutils literal"><span class="pre">language</span></tt> argument set
 to <tt class="docutils literal"><span class="pre">&quot;C&quot;</span></tt> instead.</p>
 <pre class="literal-block">
 %CModule <em>name</em> [<em>version</em>]
 </pre>
 <p>This directive is used to identify that the library being wrapped is a C
 library and to define the name of the module and it&#8217;s optional version number.</p>
-<p>See the <a class="reference internal" href="#directive-%Module"><tt class="xref docutils literal"><span class="pre">%Module</span></tt></a> directive for an explanation of the version
+<p>See the <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive for an explanation of the version
 number.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%CModule dbus 1</pre>
@@ -376,7 +379,7 @@ number.</p>
 <pre class="literal-block">
 %CompositeModule(name = <em>dotted-name</em>)
 {
-    [<a class="reference internal" href="#directive-%Docstring"><tt class="xref docutils literal"><span class="pre">%Docstring</span></tt></a>]
+    [<a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a>]
 };
 </pre>
 <p>A composite module is one that merges a number of related SIP generated
@@ -390,9 +393,9 @@ and <tt class="docutils literal"><span class="pre">c_mod</span></tt> is equivale
 <p>Clearly the individual modules should not define module-level objects with the
 same name.</p>
 <p>This directive is used to specify the name of a composite module.  Any
-subsequent <a class="reference internal" href="#directive-%Module"><tt class="xref docutils literal"><span class="pre">%Module</span></tt></a> directive is interpreted as defining a
+subsequent <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive is interpreted as defining a
 component module.</p>
-<p>The optional <a class="reference internal" href="#directive-%Docstring"><tt class="xref docutils literal"><span class="pre">%Docstring</span></tt></a> sub-directive is used to specify the
+<p>The optional <a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a> sub-directive is used to specify the
 module&#8217;s docstring.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%CompositeModule PyQt4.Qt
@@ -409,15 +412,15 @@ don&#8217;t have to remember which individual module an object is defined in.</p
 <pre class="literal-block">
 %ConsolidatedModule(name = <em>dotted-name</em>)
 {
-    [<a class="reference internal" href="#directive-%Docstring"><tt class="xref docutils literal"><span class="pre">%Docstring</span></tt></a>]
+    [<a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a>]
 };
 </pre>
 <p>A consolidated module is one that consolidates the wrapper code of a number of
 SIP generated modules (refered to as component modules in this context).</p>
 <p>This directive is used to specify the name of a consolidated module.  Any
-subsequent <a class="reference internal" href="#directive-%Module"><tt class="xref docutils literal"><span class="pre">%Module</span></tt></a> directive is interpreted as defining a
+subsequent <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive is interpreted as defining a
 component module.</p>
-<p>The optional <a class="reference internal" href="#directive-%Docstring"><tt class="xref docutils literal"><span class="pre">%Docstring</span></tt></a> sub-directive is used to specify the
+<p>The optional <a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a> sub-directive is used to specify the
 module&#8217;s docstring.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%ConsolidatedModule PyQt4._qt
@@ -446,7 +449,7 @@ specify the name of the consolidated module.</p>
     <em>code</em>
 %End
 </pre>
-<p>This directive is used as part of the <a class="reference internal" href="#directive-%MappedType"><tt class="xref docutils literal"><span class="pre">%MappedType</span></tt></a> directive to
+<p>This directive is used as part of the <a class="reference internal" href="#directive-%MappedType"><tt class="xref std std-directive docutils literal"><span class="pre">%MappedType</span></tt></a> directive to
 specify the handwritten code that converts an instance of a mapped type to a
 Python object.</p>
 <p>The following variables are made available to the handwritten code:</p>
@@ -546,7 +549,7 @@ recognised then <tt class="docutils literal"><span class="pre">sipType</span></t
 have to recognise the exact class, only the most specific sub-class that
 it can.</dd>
 <dt>sipWrapperType *sipClass</dt>
-<dd><p class="first">
+<dd><p class="first deprecated">
 <span class="versionmodified">Deprecated since version 4.8: </span>Use <tt class="docutils literal"><span class="pre">sipType</span></tt> instead.</p>
 <p class="last">The handwritten code must set this to the SIP generated Python type object
 that corresponds to the class instance.  (The type object for class
@@ -598,7 +601,7 @@ class hierarchy in PyQt:</p>
 </pre>
 <p>This directive is used to specify the handwritten code that converts a Python
 object to a mapped type instance and to handle any ownership transfers.  It is
-used as part of the <a class="reference internal" href="#directive-%MappedType"><tt class="xref docutils literal"><span class="pre">%MappedType</span></tt></a> directive and as part of a class
+used as part of the <a class="reference internal" href="#directive-%MappedType"><tt class="xref std std-directive docutils literal"><span class="pre">%MappedType</span></tt></a> directive and as part of a class
 specification.  The code is also called to determine if the Python object is of
 the correct type prior to conversion.</p>
 <p>When used as part of a class specification it can automatically convert
@@ -635,11 +638,11 @@ returned.</p>
 returned.</p>
 <blockquote>
 <ul class="simple">
-<li><tt class="xref docutils literal"><span class="pre">SIP_TEMPORARY</span></tt> is set to indicate that the returned instance
+<li><tt class="xref c c-macro docutils literal"><span class="pre">SIP_TEMPORARY</span></tt> is set to indicate that the returned instance
 is a temporary and should be released to avoid a memory leak.</li>
-<li><tt class="xref docutils literal"><span class="pre">SIP_DERIVED_CLASS</span></tt> is set to indicate that the type of the
+<li><tt class="xref c c-macro docutils literal"><span class="pre">SIP_DERIVED_CLASS</span></tt> is set to indicate that the type of the
 returned instance is a derived class.  See
-<a class="reference external" href="c_api.html#ref-derived-classes"><em>Generated Derived Classes</em></a>.</li>
+<a class="reference internal" href="c_api.html#ref-derived-classes"><em>Generated Derived Classes</em></a>.</li>
 </ul>
 </blockquote>
 <p>The following example converts a Python list of <tt class="docutils literal"><span class="pre">QPoint</span></tt> instances to a
@@ -718,9 +721,9 @@ returned instance is a derived class.  See
 would normally be automatically generated.  This means that the handwritten
 code must also handle instances of the class itself and not just the additional
 types that are being supported.  This should be done by making calls to
-<a title="sipCanConvertToType" class="reference external" href="c_api.html#sipCanConvertToType"><tt class="xref docutils literal"><span class="pre">sipCanConvertToType()</span></tt></a> to check the object type and
-<a title="sipConvertToType" class="reference external" href="c_api.html#sipConvertToType"><tt class="xref docutils literal"><span class="pre">sipConvertToType()</span></tt></a> to convert the object.  The
-<a title="SIP_NO_CONVERTORS" class="reference external" href="c_api.html#SIP_NO_CONVERTORS"><tt class="xref docutils literal"><span class="pre">SIP_NO_CONVERTORS</span></tt></a> flag <em>must</em> be passed to both these functions to
+<a class="reference internal" href="c_api.html#sipCanConvertToType" title="sipCanConvertToType"><tt class="xref c c-func docutils literal"><span class="pre">sipCanConvertToType()</span></tt></a> to check the object type and
+<a class="reference internal" href="c_api.html#sipConvertToType" title="sipConvertToType"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertToType()</span></tt></a> to convert the object.  The
+<a class="reference internal" href="c_api.html#SIP_NO_CONVERTORS" title="SIP_NO_CONVERTORS"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_NO_CONVERTORS</span></tt></a> flag <em>must</em> be passed to both these functions to
 prevent recursive calls to the handwritten code.</p>
 <dl class="directive">
 <dt id="directive-%Copying">
@@ -750,7 +753,7 @@ Copyright (c) 2011 Riverbank Computing Limited
 <p>This directive is used to specify the default encoding used for <tt class="docutils literal"><span class="pre">char</span></tt>,
 <tt class="docutils literal"><span class="pre">const</span> <span class="pre">char</span></tt>, <tt class="docutils literal"><span class="pre">char</span> <span class="pre">*</span></tt> or <tt class="docutils literal"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></tt> values.  An encoding of
 <tt class="docutils literal"><span class="pre">&quot;None&quot;</span></tt> means that the value is unencoded.  The default can be overridden
-for a particular value using the <a class="reference external" href="annotations.html#aanno-Encoding"><tt class="xref docutils literal"><span class="pre">Encoding</span></tt></a> annotation.</p>
+for a particular value using the <tt class="xref std std-aanno docutils literal"><span class="pre">Encoding</span></tt> annotation.</p>
 <p>If the directive is not specified then the default encoding of the last
 imported module is used, if any.</p>
 <p>For example:</p>
@@ -768,9 +771,9 @@ imported module is used, if any.</p>
 meta-type for any C/C++ data type defined in the same module, and by importing
 modules, that doesn&#8217;t have an explicit meta-type.</p>
 <p>If this is not specified then <tt class="docutils literal"><span class="pre">sip.wrappertype</span></tt> is used.</p>
-<p>You can also use the <a class="reference external" href="annotations.html#canno-Metatype"><tt class="xref docutils literal"><span class="pre">Metatype</span></tt></a> class annotation to specify the
+<p>You can also use the <tt class="xref std std-canno docutils literal"><span class="pre">Metatype</span></tt> class annotation to specify the
 meta-type used by a particular C/C++ type.</p>
-<p>See the section <a class="reference external" href="using.html#ref-types-metatypes"><em>Types and Meta-types</em></a> for more details.</p>
+<p>See the section <a class="reference internal" href="using.html#ref-types-metatypes"><em>Types and Meta-types</em></a> for more details.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%DefaultMetatype PyQt4.QtCore.pyqtWrapperType</pre>
 </div>
@@ -786,9 +789,9 @@ meta-type used by a particular C/C++ type.</p>
 super-type for any C/C++ data type defined in the same module that doesn&#8217;t have
 an explicit super-type.</p>
 <p>If this is not specified then <tt class="docutils literal"><span class="pre">sip.wrapper</span></tt> is used.</p>
-<p>You can also use the <a class="reference external" href="annotations.html#canno-Supertype"><tt class="xref docutils literal"><span class="pre">Supertype</span></tt></a> class annotation to specify the
+<p>You can also use the <tt class="xref std std-canno docutils literal"><span class="pre">Supertype</span></tt> class annotation to specify the
 super-type used by a particular C/C++ type.</p>
-<p>See the section <a class="reference external" href="using.html#ref-types-metatypes"><em>Types and Meta-types</em></a> for more details.</p>
+<p>See the section <a class="reference internal" href="using.html#ref-types-metatypes"><em>Types and Meta-types</em></a> for more details.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%DefaultSupertype sip.simplewrapper</pre>
 </div>
@@ -797,8 +800,8 @@ super-type used by a particular C/C++ type.</p>
 <tt class="descname">%Doc</tt><a class="headerlink" href="#directive-%Doc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>
-<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Extract"><tt class="xref docutils literal"><span class="pre">%Extract</span></tt></a> directive instead.</p>
+<p class="deprecated">
+<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Extract"><tt class="xref std std-directive docutils literal"><span class="pre">%Extract</span></tt></a> directive instead.</p>
 <pre class="literal-block">
 %Doc
     <em>text</em>
@@ -809,9 +812,9 @@ by SIP when the <tt class="docutils literal"><span class="pre">-d</span></tt> co
 specified any number of times and SIP will concatenate all the separate pieces
 of text in the order that it sees them.</p>
 <p>Documentation that is specified using this directive is local to the module in
-which it appears.  It is ignored by modules that <a class="reference internal" href="#directive-%Import"><tt class="xref docutils literal"><span class="pre">%Import</span></tt></a> it.  Use
-the <a class="reference internal" href="#directive-%ExportedDoc"><tt class="xref docutils literal"><span class="pre">%ExportedDoc</span></tt></a> directive for documentation that should be
-included by all modules that <a class="reference internal" href="#directive-%Import"><tt class="xref docutils literal"><span class="pre">%Import</span></tt></a> this one.</p>
+which it appears.  It is ignored by modules that <a class="reference internal" href="#directive-%Import"><tt class="xref std std-directive docutils literal"><span class="pre">%Import</span></tt></a> it.  Use
+the <a class="reference internal" href="#directive-%ExportedDoc"><tt class="xref std std-directive docutils literal"><span class="pre">%ExportedDoc</span></tt></a> directive for documentation that should be
+included by all modules that <a class="reference internal" href="#directive-%Import"><tt class="xref std std-directive docutils literal"><span class="pre">%Import</span></tt></a> this one.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%Doc
 &lt;h1&gt;An Example&lt;/h1&gt;
@@ -826,7 +829,7 @@ which it is defined.
 <tt class="descname">%Docstring</tt><a class="headerlink" href="#directive-%Docstring" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>
+<p class="versionadded">
 <span class="versionmodified">New in version 4.10.</span></p>
 <pre class="literal-block">
 %Docstring
@@ -873,8 +876,8 @@ directives that allow a block of handwritten code or text to be specified.</p>
 <pre class="literal-block">
 %Exception <em>name</em> [(<em>base-exception</em>)]
 {
-    [<a class="reference internal" href="#directive-%TypeHeaderCode"><tt class="xref docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a>]
-    <a class="reference internal" href="#directive-%RaiseCode"><tt class="xref docutils literal"><span class="pre">%RaiseCode</span></tt></a>
+    [<a class="reference internal" href="#directive-%TypeHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a>]
+    <a class="reference internal" href="#directive-%RaiseCode"><tt class="xref std std-directive docutils literal"><span class="pre">%RaiseCode</span></tt></a>
 };
 </pre>
 <p>This directive is used to define new Python exceptions, or to provide a stub
@@ -885,10 +888,10 @@ names of Python exceptions defined by this directive.</p>
 <p><em>name</em> is the name of the exception.</p>
 <p><em>base-exception</em> is the optional base exception.  This may be either one of
 the standard Python exceptions or one defined with a previous
-<a class="reference internal" href="#directive-%Exception"><tt class="xref docutils literal"><span class="pre">%Exception</span></tt></a> directive.</p>
-<p>The optional <a class="reference internal" href="#directive-%TypeHeaderCode"><tt class="xref docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a> sub-directive is used to specify any
+<a class="reference internal" href="#directive-%Exception"><tt class="xref std std-directive docutils literal"><span class="pre">%Exception</span></tt></a> directive.</p>
+<p>The optional <a class="reference internal" href="#directive-%TypeHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a> sub-directive is used to specify any
 external interface to the exception being defined.</p>
-<p>The <a class="reference internal" href="#directive-%RaiseCode"><tt class="xref docutils literal"><span class="pre">%RaiseCode</span></tt></a> sub-directive is used to specify the handwritten
+<p>The <a class="reference internal" href="#directive-%RaiseCode"><tt class="xref std std-directive docutils literal"><span class="pre">%RaiseCode</span></tt></a> sub-directive is used to specify the handwritten
 code that converts a reference to the C++ exception to the Python exception.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%Exception std::exception(SIP_Exception) /PyName=StdException/
@@ -908,15 +911,15 @@ code that converts a reference to the C++ exception to the Python exception.</p>
 <p>In this example we map the standard C++ exception to a new Python exception.
 The new exception is called <tt class="docutils literal"><span class="pre">StdException</span></tt> and is derived from the standard
 Python exception <tt class="docutils literal"><span class="pre">Exception</span></tt>.</p>
-<p>An exception may be annotated with <a class="reference external" href="annotations.html#xanno-Default"><tt class="xref docutils literal"><span class="pre">Default</span></tt></a> to specify that it should
+<p>An exception may be annotated with <tt class="xref std std-xanno docutils literal"><span class="pre">Default</span></tt> to specify that it should
 be caught by default if there is no <tt class="docutils literal"><span class="pre">throw</span></tt> clause.</p>
 <dl class="directive">
 <dt id="directive-%ExportedDoc">
 <tt class="descname">%ExportedDoc</tt><a class="headerlink" href="#directive-%ExportedDoc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>
-<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Extract"><tt class="xref docutils literal"><span class="pre">%Extract</span></tt></a> directive instead.</p>
+<p class="deprecated">
+<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Extract"><tt class="xref std std-directive docutils literal"><span class="pre">%Extract</span></tt></a> directive instead.</p>
 <pre class="literal-block">
 %ExportedDoc
     <em>text</em>
@@ -927,7 +930,7 @@ by SIP when the <tt class="docutils literal"><span class="pre">-d</span></tt> co
 specified any number of times and SIP will concatenate all the separate pieces
 of text in the order that it sees them.</p>
 <p>Documentation that is specified using this directive will also be included by
-modules that <a class="reference internal" href="#directive-%Import"><tt class="xref docutils literal"><span class="pre">%Import</span></tt></a> it.</p>
+modules that <a class="reference internal" href="#directive-%Import"><tt class="xref std std-directive docutils literal"><span class="pre">%Import</span></tt></a> it.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%ExportedDoc
 ==========
@@ -954,14 +957,14 @@ code for all modules.  It should not include function declarations because
 Python modules should not explicitly call functions in another Python module.</p>
 <div class="admonition-see-also admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#directive-%ModuleCode"><tt class="xref docutils literal"><span class="pre">%ModuleCode</span></tt></a>, <a class="reference internal" href="#directive-%ModuleHeaderCode"><tt class="xref docutils literal"><span class="pre">%ModuleHeaderCode</span></tt></a></p>
+<p class="last"><a class="reference internal" href="#directive-%ModuleCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ModuleCode</span></tt></a>, <a class="reference internal" href="#directive-%ModuleHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ModuleHeaderCode</span></tt></a></p>
 </div>
 <dl class="directive">
 <dt id="directive-%Extract">
 <tt class="descname">%Extract</tt><a class="headerlink" href="#directive-%Extract" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>
+<p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
 <pre class="literal-block">
 %Extract(id = <em>name</em> [, order = <em>integer</em>])
@@ -976,7 +979,7 @@ documentation, tests etc.</p>
 <p>The part&#8217;s optional <tt class="docutils literal"><span class="pre">order</span></tt> determines its position relative to the extract&#8217;s
 other parts.  If the order is not specified then the part is appended to the
 extract.</p>
-<p>An extract is written to a file using the <a class="reference external" href="command_line.html#cmdoption-sip-X"><em class="xref">-X</em></a> command line
+<p>An extract is written to a file using the <a class="reference internal" href="command_line.html#cmdoption-sip-X"><em class="xref std std-option">-X</em></a> command line
 option.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%Extract example
@@ -1000,12 +1003,12 @@ This will be the first line.
 %Feature(name = <em>name</em>)
 </pre>
 <p>This directive is used to declare a feature.  Features (along with
-<a class="reference internal" href="#directive-%Platforms"><tt class="xref docutils literal"><span class="pre">%Platforms</span></tt></a> and <a class="reference internal" href="#directive-%Timeline"><tt class="xref docutils literal"><span class="pre">%Timeline</span></tt></a>) are used by the
-<a class="reference internal" href="#directive-%If"><tt class="xref docutils literal"><span class="pre">%If</span></tt></a> directive to control whether or not parts of a specification
+<a class="reference internal" href="#directive-%Platforms"><tt class="xref std std-directive docutils literal"><span class="pre">%Platforms</span></tt></a> and <a class="reference internal" href="#directive-%Timeline"><tt class="xref std std-directive docutils literal"><span class="pre">%Timeline</span></tt></a>) are used by the
+<a class="reference internal" href="#directive-%If"><tt class="xref std std-directive docutils literal"><span class="pre">%If</span></tt></a> directive to control whether or not parts of a specification
 are processed or ignored.</p>
 <p>Features are mutually independent of each other - any combination of features
 may be enabled or disable.  By default all features are enabled.  The
-<a class="reference external" href="command_line.html#cmdoption-sip-x"><em class="xref">-x</em></a> command line option is used to disable a feature.</p>
+<a class="reference internal" href="command_line.html#cmdoption-sip-x"><em class="xref std std-option">-x</em></a> command line option is used to disable a feature.</p>
 <p>If a feature is enabled then SIP will automatically generate a corresponding C
 preprocessor symbol for use by handwritten code.  The symbol is the name of
 the feature prefixed by <tt class="docutils literal"><span class="pre">SIP_FEATURE_</span></tt>.</p>
@@ -1035,7 +1038,7 @@ to traverse and potentially clear those embedded references.</p>
 Extending the Python Interpreter</a>
 for the details.</p>
 <p>This directive is used to specify the code that clears any embedded references.
-(See <a class="reference internal" href="#directive-%GCTraverseCode"><tt class="xref docutils literal"><span class="pre">%GCTraverseCode</span></tt></a> for specifying the code that traverses any
+(See <a class="reference internal" href="#directive-%GCTraverseCode"><tt class="xref std std-directive docutils literal"><span class="pre">%GCTraverseCode</span></tt></a> for specifying the code that traverses any
 embedded references.)</p>
 <p>The following variables are made available to the handwritten code:</p>
 <dl class="docutils">
@@ -1076,7 +1079,7 @@ always a Python object and so should be handled by the garbage collector:</p>
 </pre>
 <p>This directive is used to specify the code that traverses any embedded
 references for Python&#8217;s cyclic garbage collector.  (See
-<a class="reference internal" href="#directive-%GCClearCode"><tt class="xref docutils literal"><span class="pre">%GCClearCode</span></tt></a> for a full explanation.)</p>
+<a class="reference internal" href="#directive-%GCClearCode"><tt class="xref std std-directive docutils literal"><span class="pre">%GCClearCode</span></tt></a> for a full explanation.)</p>
 <p>The following variables are made available to the handwritten code:</p>
 <dl class="docutils">
 <dt><em>type</em> *sipCpp</dt>
@@ -1176,7 +1179,7 @@ PyTypeObject * or a sipWrapperType *.</dd>
 </div>
 <div class="admonition-see-also admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#directive-%AccessCode"><tt class="xref docutils literal"><span class="pre">%AccessCode</span></tt></a>, <a class="reference internal" href="#directive-%SetCode"><tt class="xref docutils literal"><span class="pre">%SetCode</span></tt></a></p>
+<p class="last"><a class="reference internal" href="#directive-%AccessCode"><tt class="xref std std-directive docutils literal"><span class="pre">%AccessCode</span></tt></a>, <a class="reference internal" href="#directive-%SetCode"><tt class="xref std std-directive docutils literal"><span class="pre">%SetCode</span></tt></a></p>
 </div>
 <dl class="directive">
 <dt id="directive-%If">
@@ -1199,8 +1202,8 @@ PyTypeObject * or a sipWrapperType *.</dd>
 <em>range</em> ::= [<em>version</em>] <strong>-</strong> [<em>version</em>]
 </pre>
 <p>This directive is used in conjunction with features (see
-<a class="reference internal" href="#directive-%Feature"><tt class="xref docutils literal"><span class="pre">%Feature</span></tt></a>), platforms (see <a class="reference internal" href="#directive-%Platforms"><tt class="xref docutils literal"><span class="pre">%Platforms</span></tt></a>) and versions
-(see <a class="reference internal" href="#directive-%Timeline"><tt class="xref docutils literal"><span class="pre">%Timeline</span></tt></a>) to control whether or not parts of a specification
+<a class="reference internal" href="#directive-%Feature"><tt class="xref std std-directive docutils literal"><span class="pre">%Feature</span></tt></a>), platforms (see <a class="reference internal" href="#directive-%Platforms"><tt class="xref std std-directive docutils literal"><span class="pre">%Platforms</span></tt></a>) and versions
+(see <a class="reference internal" href="#directive-%Timeline"><tt class="xref std std-directive docutils literal"><span class="pre">%Timeline</span></tt></a>) to control whether or not parts of a specification
 are processed or not.</p>
 <p>A <em>range</em> of versions means all versions starting with the lower bound up to
 but excluding the upper bound.  If the lower bound is omitted then it is
@@ -1237,7 +1240,7 @@ omitted then it is interpreted as being after the latest version.</p>
 %End</pre>
 </div>
 <p>Also note that the only way to specify the logical and of qualifiers is to use
-nested <a class="reference internal" href="#directive-%If"><tt class="xref docutils literal"><span class="pre">%If</span></tt></a> directives.</p>
+nested <a class="reference internal" href="#directive-%If"><tt class="xref std std-directive docutils literal"><span class="pre">%If</span></tt></a> directives.</p>
 <dl class="directive">
 <dt id="directive-%Import">
 <tt class="descname">%Import</tt><a class="headerlink" href="#directive-%Import" title="Permalink to this definition">¶</a></dt>
@@ -1251,9 +1254,9 @@ needed if the current module makes use of any types defined in the imported
 module, e.g. as an argument to a function, or to sub-class.</p>
 <p>If <tt class="docutils literal"><span class="pre">name</span></tt> cannot be opened then SIP prepends <tt class="docutils literal"><span class="pre">name</span></tt> with the name of the
 directory containing the current specification file (i.e. the one containing
-the <a class="reference internal" href="#directive-%Import"><tt class="xref docutils literal"><span class="pre">%Import</span></tt></a> directive) and tries again.  If this also fails then
+the <a class="reference internal" href="#directive-%Import"><tt class="xref std std-directive docutils literal"><span class="pre">%Import</span></tt></a> directive) and tries again.  If this also fails then
 SIP prepends <tt class="docutils literal"><span class="pre">name</span></tt> with each of the directories, in turn, specified by the
-<a class="reference external" href="command_line.html#cmdoption-sip-I"><em class="xref">-I</em></a> command line option.</p>
+<a class="reference internal" href="command_line.html#cmdoption-sip-I"><em class="xref std std-option">-I</em></a> command line option.</p>
 <p>Directory separators must always be <tt class="docutils literal"><span class="pre">/</span></tt>.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%Import qt/qtmod.sip</pre>
@@ -1270,8 +1273,8 @@ SIP prepends <tt class="docutils literal"><span class="pre">name</span></tt> wit
 specification of the current module.  It is the equivalent of the C
 preprocessor&#8217;s <tt class="docutils literal"><span class="pre">#include</span></tt> directive and is used to structure a large module
 specification into manageable pieces.</p>
-<p><a class="reference internal" href="#directive-%Include"><tt class="xref docutils literal"><span class="pre">%Include</span></tt></a> follows the same search process as the
-<a class="reference internal" href="#directive-%Import"><tt class="xref docutils literal"><span class="pre">%Import</span></tt></a> directive when trying to open <tt class="docutils literal"><span class="pre">name</span></tt>.</p>
+<p><a class="reference internal" href="#directive-%Include"><tt class="xref std std-directive docutils literal"><span class="pre">%Include</span></tt></a> follows the same search process as the
+<a class="reference internal" href="#directive-%Import"><tt class="xref std std-directive docutils literal"><span class="pre">%Import</span></tt></a> directive when trying to open <tt class="docutils literal"><span class="pre">name</span></tt>.</p>
 <p>if <tt class="docutils literal"><span class="pre">optional</span></tt> is set then SIP will silently continue processing if the file
 could not be opened.</p>
 <p>Directory separators must always be <tt class="docutils literal"><span class="pre">/</span></tt>.</p>
@@ -1291,7 +1294,7 @@ could not be opened.</p>
 <p>This directive is used to specify handwritten code that is embedded in-line
 in the generated module initialisation code after the SIP module has been
 imported but before the module itself has been initialised.</p>
-<p>It is typically used to call <a title="sipRegisterPyType" class="reference external" href="c_api.html#sipRegisterPyType"><tt class="xref docutils literal"><span class="pre">sipRegisterPyType()</span></tt></a>.</p>
+<p>It is typically used to call <a class="reference internal" href="c_api.html#sipRegisterPyType" title="sipRegisterPyType"><tt class="xref c c-func docutils literal"><span class="pre">sipRegisterPyType()</span></tt></a>.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%InitialisationCode
     // The code will be executed when the module is first imported, after
@@ -1311,7 +1314,7 @@ imported but before the module itself has been initialised.</p>
         [, timestamp = <em>string</em>])
 </pre>
 <p>This directive is used to specify the contents of an optional license
-dictionary.  The license dictionary is called <tt class="xref docutils literal"><span class="pre">__license__</span></tt> and is stored
+dictionary.  The license dictionary is called <tt class="xref py py-data docutils literal"><span class="pre">__license__</span></tt> and is stored
 in the module dictionary.</p>
 <p><tt class="docutils literal"><span class="pre">type</span></tt> is the type of the license and its value in the license dictionary is
 accessed using the <tt class="docutils literal"><span class="pre">&quot;Type&quot;</span></tt> key.  No restrictions are placed on the value.</p>
@@ -1339,16 +1342,16 @@ in a module so that it is accessible to Python scripts.</p>
 template&lt;<em>type-list</em>&gt;
 %MappedType <em>type</em>
 {
-    [<a class="reference internal" href="#directive-%TypeHeaderCode"><tt class="xref docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a>]
-    [<a class="reference internal" href="#directive-%ConvertToTypeCode"><tt class="xref docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a>]
-    [<a class="reference internal" href="#directive-%ConvertFromTypeCode"><tt class="xref docutils literal"><span class="pre">%ConvertFromTypeCode</span></tt></a>]
+    [<a class="reference internal" href="#directive-%TypeHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a>]
+    [<a class="reference internal" href="#directive-%ConvertToTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a>]
+    [<a class="reference internal" href="#directive-%ConvertFromTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertFromTypeCode</span></tt></a>]
 };
 
 %MappedType <em>type</em>
 {
-    [<a class="reference internal" href="#directive-%TypeHeaderCode"><tt class="xref docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a>]
-    [<a class="reference internal" href="#directive-%ConvertToTypeCode"><tt class="xref docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a>]
-    [<a class="reference internal" href="#directive-%ConvertFromTypeCode"><tt class="xref docutils literal"><span class="pre">%ConvertFromTypeCode</span></tt></a>]
+    [<a class="reference internal" href="#directive-%TypeHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a>]
+    [<a class="reference internal" href="#directive-%ConvertToTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a>]
+    [<a class="reference internal" href="#directive-%ConvertFromTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertFromTypeCode</span></tt></a>]
 };
 </pre>
 <p>This directive is used to define an automatic mapping between a C or C++ type
@@ -1362,12 +1365,12 @@ instantiated.  Template mapped types are instantiated automatically as required
 <p>Any explicit mapped type will be used in preference to any template that maps
 the same type, ie. a template will not be automatically instantiated if there
 is an explicit mapped type.</p>
-<p>The optional <a class="reference internal" href="#directive-%TypeHeaderCode"><tt class="xref docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a> sub-directive is used to specify the
+<p>The optional <a class="reference internal" href="#directive-%TypeHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a> sub-directive is used to specify the
 library interface to the type being mapped.</p>
-<p>The optional <a class="reference internal" href="#directive-%ConvertToTypeCode"><tt class="xref docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a> sub-directive is used to specify
+<p>The optional <a class="reference internal" href="#directive-%ConvertToTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a> sub-directive is used to specify
 the handwritten code that converts a Python object to an instance of the mapped
 type.</p>
-<p>The optional <a class="reference internal" href="#directive-%ConvertFromTypeCode"><tt class="xref docutils literal"><span class="pre">%ConvertFromTypeCode</span></tt></a> sub-directive is used to specify
+<p>The optional <a class="reference internal" href="#directive-%ConvertFromTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertFromTypeCode</span></tt></a> sub-directive is used to specify
 the handwritten code that converts an instance of the mapped type to a Python
 object.</p>
 <p>For example:</p>
@@ -1483,7 +1486,7 @@ automatically.</p>
 have been successfully converted from Python objects to their C or C++
 equivalents.  In this case the specified code must not include any <tt class="docutils literal"><span class="pre">return</span></tt>
 statements.</p>
-<p>However if the <a class="reference external" href="annotations.html#fanno-NoArgParser"><tt class="xref docutils literal"><span class="pre">NoArgParser</span></tt></a> annotation has been used then the specified
+<p>However if the <tt class="xref std std-fanno docutils literal"><span class="pre">NoArgParser</span></tt> annotation has been used then the specified
 code is also responsible for parsing the arguments.  No other code is generated
 by SIP and the specified code must include a <tt class="docutils literal"><span class="pre">return</span></tt> statement.</p>
 <p>In the context of a destructor the specified code is embedded in-line in the
@@ -1501,21 +1504,21 @@ Py_END_ALLOW_THREADS</pre>
 </div>
 <p>If compatibility with SIP v3.x is not required then this is optional but
 should be done if the C++ function might block the current thread or take a
-significant amount of time to execute.  (See <a class="reference external" href="using.html#ref-gil"><em>The Python Global Interpreter Lock</em></a> and the
-<a class="reference external" href="annotations.html#fanno-ReleaseGIL"><tt class="xref docutils literal"><span class="pre">ReleaseGIL</span></tt></a> and <a class="reference external" href="annotations.html#fanno-HoldGIL"><tt class="xref docutils literal"><span class="pre">HoldGIL</span></tt></a> annotations.)</p>
-<p>If the <a class="reference external" href="annotations.html#fanno-NoArgParser"><tt class="xref docutils literal"><span class="pre">NoArgParser</span></tt></a> annotation has not been used then the following
+significant amount of time to execute.  (See <a class="reference internal" href="using.html#ref-gil"><em>The Python Global Interpreter Lock</em></a> and the
+<tt class="xref std std-fanno docutils literal"><span class="pre">ReleaseGIL</span></tt> and <tt class="xref std std-fanno docutils literal"><span class="pre">HoldGIL</span></tt> annotations.)</p>
+<p>If the <tt class="xref std std-fanno docutils literal"><span class="pre">NoArgParser</span></tt> annotation has not been used then the following
 variables are made available to the handwritten code:</p>
 <dl class="docutils">
 <dt><em>type</em> a0</dt>
 <dd><p class="first">There is a variable for each argument of the Python signature (excluding
 any <tt class="docutils literal"><span class="pre">self</span></tt> argument) named <tt class="docutils literal"><span class="pre">a0</span></tt>, <tt class="docutils literal"><span class="pre">a1</span></tt>, etc.  If
-<tt class="docutils literal"><span class="pre">use_argument_names</span></tt> has been set in the <a class="reference internal" href="#directive-%Module"><tt class="xref docutils literal"><span class="pre">%Module</span></tt></a> directive
+<tt class="docutils literal"><span class="pre">use_argument_names</span></tt> has been set in the <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive
 then the name of the argument is the real name.  The <em>type</em> of the variable
 is the same as the type defined in the specification with the following
 exceptions:</p>
 <ul class="simple">
 <li>if the argument is only used to return a value (e.g. it is an <tt class="docutils literal"><span class="pre">int</span> <span class="pre">*</span></tt>
-without an <a class="reference external" href="annotations.html#aanno-In"><tt class="xref docutils literal"><span class="pre">In</span></tt></a> annotation) then the type has one less level of
+without an <tt class="xref std std-aanno docutils literal"><span class="pre">In</span></tt> annotation) then the type has one less level of
 indirection (e.g. it will be an <tt class="docutils literal"><span class="pre">int</span></tt>)</li>
 <li>if the argument is a structure or class (or a reference or a pointer to a
 structure or class) then <em>type</em> will always be a pointer to the structure
@@ -1524,10 +1527,10 @@ or class.</li>
 <p class="last">Note that handwritten code for destructors never has any arguments.</p>
 </dd>
 <dt>PyObject *a0Wrapper</dt>
-<dd><p class="first">This variable is made available only if the <a class="reference external" href="annotations.html#aanno-GetWrapper"><tt class="xref docutils literal"><span class="pre">GetWrapper</span></tt></a> annotation
+<dd><p class="first">This variable is made available only if the <tt class="xref std std-aanno docutils literal"><span class="pre">GetWrapper</span></tt> annotation
 is specified for the corresponding argument.  The variable is a pointer to
 the Python object that wraps the argument.</p>
-<p class="last">If <tt class="docutils literal"><span class="pre">use_argument_names</span></tt> has been set in the <a class="reference internal" href="#directive-%Module"><tt class="xref docutils literal"><span class="pre">%Module</span></tt></a>
+<p class="last">If <tt class="docutils literal"><span class="pre">use_argument_names</span></tt> has been set in the <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a>
 directive then the name of the variable is the real name of the argument
 with <tt class="docutils literal"><span class="pre">Wrapper</span></tt> appended.</p>
 </dd>
@@ -1537,7 +1540,7 @@ must be set by the handwritten code to the constructed instance.  If it is
 set to <tt class="docutils literal"><span class="pre">0</span></tt> and no Python exception is raised then SIP will continue to
 try other Python signatures.</p>
 <p>If the directive is used in the context of a method (but not the standard
-binary operator methods, e.g. <tt class="xref docutils literal"><span class="pre">__add__()</span></tt>) or a destructor then this is
+binary operator methods, e.g. <tt class="xref py py-meth docutils literal"><span class="pre">__add__()</span></tt>) or a destructor then this is
 a pointer to the C structure or C++ class instance.</p>
 <p>Its <em>type</em> is a pointer to the structure or class.</p>
 <p class="last">Standard binary operator methods follow the same convention as global
@@ -1573,7 +1576,7 @@ structure or class) then <em>type</em> will always be a pointer to the structure
 or class.</li>
 </ul>
 <p class="last"><tt class="docutils literal"><span class="pre">sipRes</span></tt> is not provided for inplace operators (e.g. <tt class="docutils literal"><span class="pre">+=</span></tt> or
-<tt class="xref docutils literal"><span class="pre">__imul__()</span></tt>) as their results are handled automatically, nor for class
+<tt class="xref py py-meth docutils literal"><span class="pre">__imul__()</span></tt>) as their results are handled automatically, nor for class
 constructors or destructors.</p>
 </dd>
 <dt>PyObject *sipSelf</dt>
@@ -1593,7 +1596,7 @@ rather than being bound to the method.  In other words, the call was:</p>
 </div>
 </dd>
 </dl>
-<p>If the <a class="reference external" href="annotations.html#fanno-NoArgParser"><tt class="xref docutils literal"><span class="pre">NoArgParser</span></tt></a> annotation has been used then only the following
+<p>If the <tt class="xref std std-fanno docutils literal"><span class="pre">NoArgParser</span></tt> annotation has been used then only the following
 variables are made available to the handwritten code:</p>
 <dl class="docutils">
 <dt>PyObject *sipArgs</dt>
@@ -1651,7 +1654,7 @@ then the pattern should instead be:</p>
 <table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>See <a class="reference internal" href="#directive-%VirtualCatcherCode"><tt class="xref docutils literal"><span class="pre">%VirtualCatcherCode</span></tt></a> for a description of how SIP
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>See <a class="reference internal" href="#directive-%VirtualCatcherCode"><tt class="xref std std-directive docutils literal"><span class="pre">%VirtualCatcherCode</span></tt></a> for a description of how SIP
 generated code handles the reimplementation of C++ virtual methods in
 Python.</td></tr>
 </tbody>
@@ -1668,38 +1671,38 @@ Python.</td></tr>
         [, use_argument_names = [True | False]]
         [, version = <em>integer</em>])
 {
-    [<a class="reference internal" href="#directive-%AutoPyName"><tt class="xref docutils literal"><span class="pre">%AutoPyName</span></tt></a>]
-    [<a class="reference internal" href="#directive-%Docstring"><tt class="xref docutils literal"><span class="pre">%Docstring</span></tt></a>]
+    [<a class="reference internal" href="#directive-%AutoPyName"><tt class="xref std std-directive docutils literal"><span class="pre">%AutoPyName</span></tt></a>]
+    [<a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a>]
 };
 </pre>
 <p>This directive is used to specify the name of a module and a number of other
 attributes.  <tt class="docutils literal"><span class="pre">name</span></tt> may contain periods to specify that the module is part of
 a Python package.</p>
 <p><tt class="docutils literal"><span class="pre">keyword_arguments</span></tt> specifies the default level of support for Python keyword
-arguments.  See the <a class="reference external" href="annotations.html#fanno-KeywordArgs"><tt class="xref docutils literal"><span class="pre">KeywordArgs</span></tt></a> annotation for an explaination of the
+arguments.  See the <tt class="xref std std-fanno docutils literal"><span class="pre">KeywordArgs</span></tt> annotation for an explaination of the
 possible values and their effect.  If it is not specified then the value
-implied by the (deprecated) <a class="reference external" href="command_line.html#cmdoption-sip-k"><em class="xref">-k</em></a> command line option is used.</p>
+implied by the (deprecated) <a class="reference internal" href="command_line.html#cmdoption-sip-k"><em class="xref std std-option">-k</em></a> command line option is used.</p>
 <p><tt class="docutils literal"><span class="pre">language</span></tt> specifies the implementation language of the library being
 wrapped.  Its value is either <tt class="docutils literal"><span class="pre">&quot;C++&quot;</span></tt> (the default) or <tt class="docutils literal"><span class="pre">&quot;C&quot;</span></tt>.</p>
-<p>When providing handwritten code as part of either the <a class="reference internal" href="#directive-%MethodCode"><tt class="xref docutils literal"><span class="pre">%MethodCode</span></tt></a>
-or <a class="reference internal" href="#directive-%VirtualCatcherCode"><tt class="xref docutils literal"><span class="pre">%VirtualCatcherCode</span></tt></a> directives the names of the arguments of
+<p>When providing handwritten code as part of either the <a class="reference internal" href="#directive-%MethodCode"><tt class="xref std std-directive docutils literal"><span class="pre">%MethodCode</span></tt></a>
+or <a class="reference internal" href="#directive-%VirtualCatcherCode"><tt class="xref std std-directive docutils literal"><span class="pre">%VirtualCatcherCode</span></tt></a> directives the names of the arguments of
 the function or method are based on the number of the argument, i.e. the first
 argument is named <tt class="docutils literal"><span class="pre">a0</span></tt>, the second <tt class="docutils literal"><span class="pre">a1</span></tt> and so on.  <tt class="docutils literal"><span class="pre">use_argument_names</span></tt>
 is set to specify that the real name of the argument, if any, should be used
 instead.  It also affects the name of the variable created when the
-<a class="reference external" href="annotations.html#aanno-GetWrapper"><tt class="xref docutils literal"><span class="pre">GetWrapper</span></tt></a> argument annotation is used.</p>
+<tt class="xref std std-aanno docutils literal"><span class="pre">GetWrapper</span></tt> argument annotation is used.</p>
 <p><tt class="docutils literal"><span class="pre">version</span></tt> is an optional version number that is useful if you (or others)
 might create other modules that build on this module, i.e. if another module
-might <a class="reference internal" href="#directive-%Import"><tt class="xref docutils literal"><span class="pre">%Import</span></tt></a> this module.  Under the covers, a module exports an
-API that is used by modules that <a class="reference internal" href="#directive-%Import"><tt class="xref docutils literal"><span class="pre">%Import</span></tt></a> it and the API is given a
+might <a class="reference internal" href="#directive-%Import"><tt class="xref std std-directive docutils literal"><span class="pre">%Import</span></tt></a> this module.  Under the covers, a module exports an
+API that is used by modules that <a class="reference internal" href="#directive-%Import"><tt class="xref std std-directive docutils literal"><span class="pre">%Import</span></tt></a> it and the API is given a
 version number.  A module built on that module knows the version number of the
 API that it is expecting.  If, when the modules are imported at run-time, the
 version numbers do not match then a Python exception is raised.  The dependent
 module must then be re-built using the correct specification files for the base
 module.</p>
-<p>The optional <a class="reference internal" href="#directive-%AutoPyName"><tt class="xref docutils literal"><span class="pre">%AutoPyName</span></tt></a> sub-directive is used to specify a rule
+<p>The optional <a class="reference internal" href="#directive-%AutoPyName"><tt class="xref std std-directive docutils literal"><span class="pre">%AutoPyName</span></tt></a> sub-directive is used to specify a rule
 for automatically providing Python names.</p>
-<p>The optional <a class="reference internal" href="#directive-%Docstring"><tt class="xref docutils literal"><span class="pre">%Docstring</span></tt></a> sub-directive is used to specify the
+<p>The optional <a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a> sub-directive is used to specify the
 module&#8217;s docstring.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%Module(name=PyQt4.QtCore, version=5)</pre>
@@ -1729,7 +1732,7 @@ void dump_object(PyObject *o)
 </div>
 <div class="admonition-see-also admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#directive-%ExportedHeaderCode"><tt class="xref docutils literal"><span class="pre">%ExportedHeaderCode</span></tt></a>, <a class="reference internal" href="#directive-%ModuleHeaderCode"><tt class="xref docutils literal"><span class="pre">%ModuleHeaderCode</span></tt></a></p>
+<p class="last"><a class="reference internal" href="#directive-%ExportedHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ExportedHeaderCode</span></tt></a>, <a class="reference internal" href="#directive-%ModuleHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ModuleHeaderCode</span></tt></a></p>
 </div>
 <dl class="directive">
 <dt id="directive-%ModuleHeaderCode">
@@ -1751,7 +1754,7 @@ void dump_object(PyObject *o);
 </div>
 <div class="admonition-see-also admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#directive-%ExportedHeaderCode"><tt class="xref docutils literal"><span class="pre">%ExportedHeaderCode</span></tt></a>, <a class="reference internal" href="#directive-%ModuleCode"><tt class="xref docutils literal"><span class="pre">%ModuleCode</span></tt></a></p>
+<p class="last"><a class="reference internal" href="#directive-%ExportedHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ExportedHeaderCode</span></tt></a>, <a class="reference internal" href="#directive-%ModuleCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ModuleCode</span></tt></a></p>
 </div>
 <dl class="directive">
 <dt id="directive-%OptionalInclude">
@@ -1761,10 +1764,10 @@ void dump_object(PyObject *o);
 <pre class="literal-block">
 %OptionalInclude <em>filename</em>
 </pre>
-<p>
-<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Include"><tt class="xref docutils literal"><span class="pre">%Include</span></tt></a> directive with the <tt class="docutils literal"><span class="pre">optional</span></tt> argument set
+<p class="deprecated">
+<span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Include"><tt class="xref std std-directive docutils literal"><span class="pre">%Include</span></tt></a> directive with the <tt class="docutils literal"><span class="pre">optional</span></tt> argument set
 to <tt class="xref docutils literal"><span class="pre">True</span></tt> instead.</p>
-<p>This directive is identical to the <a class="reference internal" href="#directive-%Include"><tt class="xref docutils literal"><span class="pre">%Include</span></tt></a> directive except that
+<p>This directive is identical to the <a class="reference internal" href="#directive-%Include"><tt class="xref std std-directive docutils literal"><span class="pre">%Include</span></tt></a> directive except that
 SIP silently continues processing if <em>filename</em> could not be opened.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%OptionalInclude license.sip</pre>
@@ -1818,11 +1821,11 @@ handwritten code.</p>
 %Platforms {<em>name</em> <em>name</em> ...}
 </pre>
 <p>This directive is used to declare a set of platforms.  Platforms (along with
-<a class="reference internal" href="#directive-%Feature"><tt class="xref docutils literal"><span class="pre">%Feature</span></tt></a> and <a class="reference internal" href="#directive-%Timeline"><tt class="xref docutils literal"><span class="pre">%Timeline</span></tt></a>) are used by the
-<a class="reference internal" href="#directive-%If"><tt class="xref docutils literal"><span class="pre">%If</span></tt></a> directive to control whether or not parts of a specification
+<a class="reference internal" href="#directive-%Feature"><tt class="xref std std-directive docutils literal"><span class="pre">%Feature</span></tt></a> and <a class="reference internal" href="#directive-%Timeline"><tt class="xref std std-directive docutils literal"><span class="pre">%Timeline</span></tt></a>) are used by the
+<a class="reference internal" href="#directive-%If"><tt class="xref std std-directive docutils literal"><span class="pre">%If</span></tt></a> directive to control whether or not parts of a specification
 are processed or ignored.</p>
 <p>Platforms are mutually exclusive - only one platform can be enabled at a time.
-By default all platforms are disabled.  The SIP <a class="reference external" href="command_line.html#cmdoption-sip-t"><em class="xref">-t</em></a> command
+By default all platforms are disabled.  The SIP <a class="reference internal" href="command_line.html#cmdoption-sip-t"><em class="xref std std-option">-t</em></a> command
 line option is used to enable a platform.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>%Platforms {WIN32_PLATFORM POSIX_PLATFORM MACOS_PLATFORM}
@@ -1883,12 +1886,12 @@ at the very start of the generated module initialisation code.</p>
 <tt class="descname">%Property</tt><a class="headerlink" href="#directive-%Property" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>
+<p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
 <pre class="literal-block">
 %Property(name = <em>name</em>, get = <em>name</em> [, set = <em>name</em>])
 {
-    [<a class="reference internal" href="#directive-%Docstring"><tt class="xref docutils literal"><span class="pre">%Docstring</span></tt></a>]
+    [<a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a>]
 };
 </pre>
 <p>This directive is used to define a Python property.  <tt class="docutils literal"><span class="pre">name</span></tt> is the name of
@@ -1897,7 +1900,7 @@ the property.</p>
 the same class.</p>
 <p><tt class="docutils literal"><span class="pre">set</span></tt> is the Python name of the optional setter method and must refer to a
 method in the same class.</p>
-<p>The optional <a class="reference internal" href="#directive-%Docstring"><tt class="xref docutils literal"><span class="pre">%Docstring</span></tt></a> sub-directive is used to specify the
+<p>The optional <a class="reference internal" href="#directive-%Docstring"><tt class="xref std std-directive docutils literal"><span class="pre">%Docstring</span></tt></a> sub-directive is used to specify the
 property&#8217;s docstring.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>class Klass
@@ -1920,7 +1923,7 @@ public:
 %End
 </pre>
 <p>This directive is used as part of the definition of an exception using the
-<a class="reference internal" href="#directive-%Exception"><tt class="xref docutils literal"><span class="pre">%Exception</span></tt></a> directive to specify handwritten code that raises a
+<a class="reference internal" href="#directive-%Exception"><tt class="xref std std-directive docutils literal"><span class="pre">%Exception</span></tt></a> directive to specify handwritten code that raises a
 Python exception when a C++ exception has been caught.  The code is embedded
 in-line as the body of a C++ <tt class="docutils literal"><span class="pre">catch</span> <span class="pre">()</span></tt> clause.</p>
 <p>The specified code must handle the Python Global Interpreter Lock (GIL) if
@@ -1938,7 +1941,7 @@ released after the last call as shown in this example fragment:</p>
 <dd>This is a reference to the caught C++ exception.  The <em>type</em> of the
 reference is the same as the type defined in the <tt class="docutils literal"><span class="pre">throw</span> <span class="pre">()</span></tt> specifier.</dd>
 </dl>
-<p>See the <a class="reference internal" href="#directive-%Exception"><tt class="xref docutils literal"><span class="pre">%Exception</span></tt></a> directive for an example.</p>
+<p>See the <a class="reference internal" href="#directive-%Exception"><tt class="xref std std-directive docutils literal"><span class="pre">%Exception</span></tt></a> directive for an example.</p>
 <dl class="directive">
 <dt id="directive-%SetCode">
 <tt class="descname">%SetCode</tt><a class="headerlink" href="#directive-%SetCode" title="Permalink to this definition">¶</a></dt>
@@ -1973,7 +1976,7 @@ PyTypeObject * or a sipWrapperType *.</dd>
 </dl>
 <div class="admonition-see-also admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#directive-%AccessCode"><tt class="xref docutils literal"><span class="pre">%AccessCode</span></tt></a>, <a class="reference internal" href="#directive-%GetCode"><tt class="xref docutils literal"><span class="pre">%GetCode</span></tt></a></p>
+<p class="last"><a class="reference internal" href="#directive-%AccessCode"><tt class="xref std std-directive docutils literal"><span class="pre">%AccessCode</span></tt></a>, <a class="reference internal" href="#directive-%GetCode"><tt class="xref std std-directive docutils literal"><span class="pre">%GetCode</span></tt></a></p>
 </div>
 <dl class="directive">
 <dt id="directive-%Timeline">
@@ -1984,15 +1987,15 @@ PyTypeObject * or a sipWrapperType *.</dd>
 %Timeline {<em>name</em> <em>name</em> ...}
 </pre>
 <p>This directive is used to declare a set of versions released over a period of
-time.  Versions (along with <a class="reference internal" href="#directive-%Feature"><tt class="xref docutils literal"><span class="pre">%Feature</span></tt></a> and <a class="reference internal" href="#directive-%Platforms"><tt class="xref docutils literal"><span class="pre">%Platforms</span></tt></a>)
-are used by the <a class="reference internal" href="#directive-%If"><tt class="xref docutils literal"><span class="pre">%If</span></tt></a> directive to control whether or not parts of a
+time.  Versions (along with <a class="reference internal" href="#directive-%Feature"><tt class="xref std std-directive docutils literal"><span class="pre">%Feature</span></tt></a> and <a class="reference internal" href="#directive-%Platforms"><tt class="xref std std-directive docutils literal"><span class="pre">%Platforms</span></tt></a>)
+are used by the <a class="reference internal" href="#directive-%If"><tt class="xref std std-directive docutils literal"><span class="pre">%If</span></tt></a> directive to control whether or not parts of a
 specification are processed or ignored.</p>
 <p>Versions are mutually exclusive - only one version can be enabled at a time.
-By default all versions are disabled.  The SIP <a class="reference external" href="command_line.html#cmdoption-sip-t"><em class="xref">-t</em></a> command
+By default all versions are disabled.  The SIP <a class="reference internal" href="command_line.html#cmdoption-sip-t"><em class="xref std std-option">-t</em></a> command
 line option is used to enable a version.</p>
-<p>The <a class="reference internal" href="#directive-%Timeline"><tt class="xref docutils literal"><span class="pre">%Timeline</span></tt></a> directive can be used any number of times in a
+<p>The <a class="reference internal" href="#directive-%Timeline"><tt class="xref std std-directive docutils literal"><span class="pre">%Timeline</span></tt></a> directive can be used any number of times in a
 module to allow multiple libraries to be wrapped in the same module.</p>
-<p>
+<p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
 <p>SIP automatically defines a timeline containing all versions of SIP since
 v4.12.  The name of the version is <tt class="docutils literal"><span class="pre">SIP_</span></tt> followed by the individual parts of
@@ -2024,7 +2027,7 @@ void bar();
 %End
 </pre>
 <p>This directive is used as part of the specification of a C structure, a C++
-class or a <a class="reference internal" href="#directive-%MappedType"><tt class="xref docutils literal"><span class="pre">%MappedType</span></tt></a> directive to specify handwritten code,
+class or a <a class="reference internal" href="#directive-%MappedType"><tt class="xref std std-directive docutils literal"><span class="pre">%MappedType</span></tt></a> directive to specify handwritten code,
 typically the implementations of utility functions, that can be called by other
 handwritten code in the structure or class.</p>
 <p>For example:</p>
@@ -2059,7 +2062,7 @@ option is used.</p>
 </pre>
 <p>This directive is used to specify handwritten code that defines the interface
 to a C or C++ type being wrapped, either a structure, a class, or a template.
-It is used within a class definition or a <a class="reference internal" href="#directive-%MappedType"><tt class="xref docutils literal"><span class="pre">%MappedType</span></tt></a> directive.</p>
+It is used within a class definition or a <a class="reference internal" href="#directive-%MappedType"><tt class="xref std std-directive docutils literal"><span class="pre">%MappedType</span></tt></a> directive.</p>
 <p>Normally <em>code</em> will be a pre-processor <tt class="docutils literal"><span class="pre">#include</span></tt> statement.</p>
 <p>For example:</p>
 <div class="highlight-python"><pre>// Wrap the Klass class.
@@ -2090,7 +2093,7 @@ typically used to <tt class="docutils literal"><span class="pre">#include</span>
 <tt class="descname">%UnitPostIncludeCode</tt><a class="headerlink" href="#directive-%UnitPostIncludeCode" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>
+<p class="versionadded">
 <span class="versionmodified">New in version 4.11.</span></p>
 <pre class="literal-block">
 %UnitPostIncludeCode
@@ -2110,7 +2113,7 @@ C++ source file).</p>
     <em>code</em>
 %End
 </pre>
-<p>For most classes there are corresponding <a class="reference external" href="c_api.html#ref-derived-classes"><em>generated derived classes</em></a> that contain reimplementations of the class&#8217;s virtual
+<p>For most classes there are corresponding <a class="reference internal" href="c_api.html#ref-derived-classes"><em>generated derived classes</em></a> that contain reimplementations of the class&#8217;s virtual
 methods.  These methods (which SIP calls catchers) determine if there is a
 corresponding Python reimplementation and call it if so.  If there is no Python
 reimplementation then the method in the original class is called instead.</p>
@@ -2138,7 +2141,7 @@ context of a method:</p>
 <dt><em>type</em> a0</dt>
 <dd>There is a variable for each argument of the C++ signature named <tt class="docutils literal"><span class="pre">a0</span></tt>,
 <tt class="docutils literal"><span class="pre">a1</span></tt>, etc.  If <tt class="docutils literal"><span class="pre">use_argument_names</span></tt> has been set in the
-<a class="reference internal" href="#directive-%Module"><tt class="xref docutils literal"><span class="pre">%Module</span></tt></a> directive then the name of the argument is the real
+<a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive then the name of the argument is the real
 name.  The <em>type</em> of the variable is the same as the type defined in the
 specification.</dd>
 <dt>int a0Key</dt>
@@ -2146,9 +2149,9 @@ specification.</dd>
 where it is important to ensure that the corresponding Python object is not
 garbage collected too soon.  This only applies to output arguments that
 return <tt class="docutils literal"><span class="pre">'\0'</span></tt> terminated strings.  The variable would normally be passed
-to <a title="sipParseResult" class="reference external" href="c_api.html#sipParseResult"><tt class="xref docutils literal"><span class="pre">sipParseResult()</span></tt></a> using either the <tt class="docutils literal"><span class="pre">A</span></tt> or <tt class="docutils literal"><span class="pre">B</span></tt> format
+to <a class="reference internal" href="c_api.html#sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a> using either the <tt class="docutils literal"><span class="pre">A</span></tt> or <tt class="docutils literal"><span class="pre">B</span></tt> format
 characters.</p>
-<p class="last">If <tt class="docutils literal"><span class="pre">use_argument_names</span></tt> has been set in the <a class="reference internal" href="#directive-%Module"><tt class="xref docutils literal"><span class="pre">%Module</span></tt></a>
+<p class="last">If <tt class="docutils literal"><span class="pre">use_argument_names</span></tt> has been set in the <a class="reference internal" href="#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a>
 directive then the name of the variable is the real name of the argument
 with <tt class="docutils literal"><span class="pre">Key</span></tt> appended.</p>
 </dd>
@@ -2157,7 +2160,7 @@ with <tt class="docutils literal"><span class="pre">Key</span></tt> appended.</p
 appropriate Python exception, if an error is detected.</dd>
 <dt>PyObject *sipMethod</dt>
 <dd>This object is the Python reimplementation of the virtual C++ method.  It
-is normally passed to <a title="sipCallMethod" class="reference external" href="c_api.html#sipCallMethod"><tt class="xref docutils literal"><span class="pre">sipCallMethod()</span></tt></a>.</dd>
+is normally passed to <a class="reference internal" href="c_api.html#sipCallMethod" title="sipCallMethod"><tt class="xref c c-func docutils literal"><span class="pre">sipCallMethod()</span></tt></a>.</dd>
 <dt><em>type</em> sipRes</dt>
 <dd>The handwritten code should set this to the result to be returned.  The
 <em>type</em> of the variable is the same as the type defined in the C++ signature
@@ -2166,13 +2169,13 @@ in the specification.</dd>
 <dd>This variable is only made available if the result has a type where it is
 important to ensure that the corresponding Python object is not garbage
 collected too soon.  This only applies to <tt class="docutils literal"><span class="pre">'\0'</span></tt> terminated strings.  The
-variable would normally be passed to <a title="sipParseResult" class="reference external" href="c_api.html#sipParseResult"><tt class="xref docutils literal"><span class="pre">sipParseResult()</span></tt></a> using either
+variable would normally be passed to <a class="reference internal" href="c_api.html#sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a> using either
 the <tt class="docutils literal"><span class="pre">A</span></tt> or <tt class="docutils literal"><span class="pre">B</span></tt> format characters.</dd>
 <dt>sipSimpleWrapper *sipPySelf</dt>
 <dd>This variable is only made available if either the <tt class="docutils literal"><span class="pre">a0Key</span></tt> or
 <tt class="docutils literal"><span class="pre">sipResKey</span></tt> are made available.  It defines the context within which keys
 are unique.  The variable would normally be passed to
-<a title="sipParseResult" class="reference external" href="c_api.html#sipParseResult"><tt class="xref docutils literal"><span class="pre">sipParseResult()</span></tt></a> using the <tt class="docutils literal"><span class="pre">S</span></tt> format character.</dd>
+<a class="reference internal" href="c_api.html#sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a> using the <tt class="docutils literal"><span class="pre">S</span></tt> format character.</dd>
 </dl>
 <p>No variables are made available in the context of a destructor.</p>
 <p>For example:</p>
@@ -2228,34 +2231,34 @@ public:
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
             </a></p>
-            <h3><a href="index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">Directives</a><ul>
-<li><a class="reference external" href="#revised-directive-syntax">Revised Directive Syntax</a></li>
-<li><a class="reference external" href="#list-of-directives">List of Directives</a></li>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Directives</a><ul>
+<li><a class="reference internal" href="#revised-directive-syntax">Revised Directive Syntax</a></li>
+<li><a class="reference internal" href="#list-of-directives">List of Directives</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="specification_files.html"
-                                  title="previous chapter">SIP Specification Files</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="annotations.html"
-                                  title="next chapter">Annotations</a></p>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="specification_files.html"
+                        title="previous chapter">SIP Specification Files</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="annotations.html"
+                        title="next chapter">Annotations</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -2267,7 +2270,7 @@ public:
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="annotations.html" title="Annotations"
@@ -2275,12 +2278,12 @@ public:
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
+        &copy; Copyright 2011 Riverbank Computing Limited.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
     </div>
   </body>
 </html>

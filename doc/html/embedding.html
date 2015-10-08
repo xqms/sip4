@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,22 +7,23 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Using the C API when Embedding &mdash; SIP 4.12.3 Reference Guide</title>
+    <title>Using the C API when Embedding &mdash; SIP 4.12.4 Reference Guide</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.12.3',
-        COLLAPSE_MODINDEX: false,
+        VERSION:     '4.12.4',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.12.3 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.12.4 Reference Guide" href="index.html" />
     <link rel="next" title="Python API for Applications" href="python_api.html" />
     <link rel="prev" title="C API for Handwritten Code" href="c_api.html" /> 
   </head>
@@ -32,15 +35,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="python_api.html" title="Python API for Applications"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="c_api.html" title="C API for Handwritten Code"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -51,7 +54,7 @@
             
   <div class="section" id="using-the-c-api-when-embedding">
 <h1>Using the C API when Embedding<a class="headerlink" href="#using-the-c-api-when-embedding" title="Permalink to this headline">¶</a></h1>
-<p>The <a class="reference external" href="c_api.html#ref-c-api"><em>C API</em></a> is intended to be called from handwritten code in
+<p>The <a class="reference internal" href="c_api.html#ref-c-api"><em>C API</em></a> is intended to be called from handwritten code in
 SIP generated modules.  However it is also often necessary to call it from C or
 C++ applications that embed the Python interpreter and need to pass C or C++
 instances between the application and the interpreter.</p>
@@ -70,9 +73,9 @@ name to lower case and preceding it with an underscore.  For example:</p>
 <p><tt class="docutils literal"><span class="pre">sipWrapperCheck</span></tt> becomes <tt class="docutils literal"><span class="pre">api_wrapper_check</span></tt></p>
 </blockquote>
 <p>Note that the type objects that SIP generates for a wrapped module (see
-<a class="reference external" href="c_api.html#ref-type-structures"><em>Generated Type Structures</em></a>, <a class="reference external" href="c_api.html#ref-enum-type-objects"><em>Generated Named Enum Type Objects</em></a> and
-<a class="reference external" href="c_api.html#ref-exception-objects"><em>Generated Exception Objects</em></a>) cannot be refered to directly and must be
-obtained using the <a title="sipFindType" class="reference external" href="c_api.html#sipFindType"><tt class="xref docutils literal"><span class="pre">sipFindType()</span></tt></a> function.  Of course, the
+<a class="reference internal" href="c_api.html#ref-type-structures"><em>Generated Type Structures</em></a>, <a class="reference internal" href="c_api.html#ref-enum-type-objects"><em>Generated Named Enum Type Objects</em></a> and
+<a class="reference internal" href="c_api.html#ref-exception-objects"><em>Generated Exception Objects</em></a>) cannot be refered to directly and must be
+obtained using the <a class="reference internal" href="c_api.html#sipFindType" title="sipFindType"><tt class="xref c c-func docutils literal"><span class="pre">sipFindType()</span></tt></a> function.  Of course, the
 corresponding modules must already have been imported into the interpreter.</p>
 <p>The following code fragment shows how to get a pointer to the <tt class="docutils literal"><span class="pre">sipAPIDef</span></tt>
 data structure:</p>
@@ -111,7 +114,7 @@ const sipAPIDef *get_sip_api()
 #endif
 }</pre>
 </div>
-<p>The use of <a title="SIP_USE_PYCAPSULE" class="reference external" href="c_api.html#SIP_USE_PYCAPSULE"><tt class="xref docutils literal"><span class="pre">SIP_USE_PYCAPSULE</span></tt></a> means that code will run under all
+<p>The use of <a class="reference internal" href="c_api.html#SIP_USE_PYCAPSULE" title="SIP_USE_PYCAPSULE"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_USE_PYCAPSULE</span></tt></a> means that code will run under all
 versions of Python.</p>
 </div>
 
@@ -124,25 +127,25 @@ versions of Python.</p>
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
             </a></p>
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="c_api.html"
-                                  title="previous chapter">C API for Handwritten Code</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="python_api.html"
-                                  title="next chapter">Python API for Applications</a></p>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="c_api.html"
+                        title="previous chapter">C API for Handwritten Code</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="python_api.html"
+                        title="next chapter">Python API for Applications</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -154,7 +157,7 @@ versions of Python.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="python_api.html" title="Python API for Applications"
@@ -162,12 +165,12 @@ versions of Python.</p>
         <li class="right" >
           <a href="c_api.html" title="C API for Handwritten Code"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
+        &copy; Copyright 2011 Riverbank Computing Limited.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
     </div>
   </body>
 </html>
