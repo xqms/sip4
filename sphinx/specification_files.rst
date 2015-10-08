@@ -99,7 +99,8 @@ file.
     *class* ::= **class** *name* [**:** *super-classes*] [*class-annotations*]
             **{** {*class-line*} **};**
 
-    *super-classes* ::= *name* [**,** *super-classes*]
+    *super-classes* ::= [**public** | **protected** | **private**] *name*
+            [**,** *super-classes*]
 
     *class-line* ::= [
             *class-statement* |

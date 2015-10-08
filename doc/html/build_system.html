@@ -3,17 +3,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The Build System &mdash; SIP 4.13 Reference Guide</title>
+    <title>The Build System &mdash; SIP 4.13.1 Reference Guide</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.13',
+        VERSION:     '4.13.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.13 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.13.1 Reference Guide" href="index.html" />
     <link rel="next" title="Building Your Extension with distutils" href="distutils.html" />
     <link rel="prev" title="Python API for Applications" href="python_api.html" /> 
   </head>
@@ -43,7 +46,7 @@
         <li class="right" >
           <a href="python_api.html" title="Python API for Applications"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13.1 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -82,7 +85,7 @@ file and a string.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>module</strong> &#8211; the name of the configuration module file to create.</li>
 <li><strong>template</strong> &#8211; the name of the template file.</li>
 <li><strong>content</strong> &#8211; a string which replaces every occurence of the pattern
@@ -112,13 +115,13 @@ typically used to generate the content string for
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>dict</strong> &#8211; the Python dictionary to convert.</li>
 <li><strong>macros</strong> &#8211; the optional dictionary of platform specific build macros.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the string representation of the dictionary.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the string representation of the dictionary.</p>
 </td>
 </tr>
 </tbody>
@@ -134,7 +137,7 @@ script.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>script</strong> &#8211; the full pathname of the script.</li>
 <li><strong>wrapper</strong> &#8211; the full pathname of the wrapper to create, excluding any platform
 specific extension.</li>
@@ -144,7 +147,7 @@ on platforms that require it.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the platform specific name of the wrapper.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the platform specific name of the wrapper.</p>
 </td>
 </tr>
 </tbody>
@@ -159,7 +162,7 @@ on platforms that require it.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msg</strong> &#8211; the text of the message and should not include any newline characters.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msg</strong> &#8211; the text of the message and should not include any newline characters.</td>
 </tr>
 </tbody>
 </table>
@@ -174,14 +177,14 @@ places.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>msg</strong> &#8211; the text of the message and should not include any newline characters.</li>
 <li><strong>leftmargin</strong> &#8211; the optional position of the left margin.</li>
 <li><strong>rightmargin</strong> &#8211; the optional position of the right margin.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the formatted message.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the formatted message.</p>
 </td>
 </tr>
 </tbody>
@@ -196,7 +199,7 @@ places.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msg</strong> &#8211; the text of the message and should not include any newline characters.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msg</strong> &#8211; the text of the message and should not include any newline characters.</td>
 </tr>
 </tbody>
 </table>
@@ -212,7 +215,7 @@ be augmented or replaced.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>filename</strong> &#8211; the name of the file to parse.</li>
 <li><strong>names</strong> &#8211; the list of the macro names to extract from the file.</li>
 <li><strong>overrides</strong> &#8211; the optional list of macro names and values that modify those found in
@@ -224,7 +227,7 @@ resolve any expressions of the form <tt class="docutils literal"><span class="pr
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the dictionary of parsed macros or <tt class="xref docutils literal"><span class="pre">None</span></tt> if any of the overrides
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the dictionary of parsed macros or <tt class="docutils literal"><span class="pre">None</span></tt> if any of the overrides
 were invalid.</p>
 </td>
 </tr>
@@ -243,17 +246,17 @@ value.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>filename</strong> &#8211; the name of the file to read.</li>
 <li><strong>description</strong> &#8211; a descriptive name of the package used in error messages.</li>
 <li><strong>numdefine</strong> &#8211; the optional name of the <tt class="docutils literal"><span class="pre">#define</span></tt> of the version as a number.  If it
-is <tt class="xref docutils literal"><span class="pre">None</span></tt> then the numeric version is ignored.</li>
+is <tt class="docutils literal"><span class="pre">None</span></tt> then the numeric version is ignored.</li>
 <li><strong>strdefine</strong> &#8211; the optional name of the <tt class="docutils literal"><span class="pre">#define</span></tt> of the version as a string.  If it
-is <tt class="xref docutils literal"><span class="pre">None</span></tt> then the string version is ignored.</li>
+is <tt class="docutils literal"><span class="pre">None</span></tt> then the string version is ignored.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple of the numeric and string versions.  <a class="reference internal" href="#sipconfig.error" title="sipconfig.error"><tt class="xref py py-func docutils literal"><span class="pre">sipconfig.error()</span></tt></a>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple of the numeric and string versions.  <a class="reference internal" href="#sipconfig.error" title="sipconfig.error"><tt class="xref py py-func docutils literal"><span class="pre">sipconfig.error()</span></tt></a>
 is called if either were required but could not be found.</p>
 </td>
 </tr>
@@ -273,7 +276,7 @@ those versions that affect the library&#8217;s API as SIP sees it.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>version</strong> &#8211; the numeric version number of the C/C++ library being wrapped.  If it
 is negative then the latest version is assumed.  (This is typically
 useful if a snapshot is indicated by a negative version number.)</li>
@@ -284,7 +287,7 @@ library version number.  The tag used is the one with the smallest key
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the SIP version tag.  <a class="reference internal" href="#sipconfig.error" title="sipconfig.error"><tt class="xref py py-func docutils literal"><span class="pre">sipconfig.error()</span></tt></a> is called if the C/C++
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the SIP version tag.  <a class="reference internal" href="#sipconfig.error" title="sipconfig.error"><tt class="xref py py-func docutils literal"><span class="pre">sipconfig.error()</span></tt></a> is called if the C/C++
 library version number did not correspond to a SIP version tag.</p>
 </td>
 </tr>
@@ -301,9 +304,9 @@ string.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>v</strong> &#8211; the version number.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>v</strong> &#8211; the version number.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">a string.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a string.</td>
 </tr>
 </tbody>
 </table>
@@ -437,7 +440,7 @@ with <tt class="docutils literal"><span class="pre">snapshot-</span></tt>.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sub_cfg</strong> &#8211; an optional list of sub-class configurations.  It should only be
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sub_cfg</strong> &#8211; an optional list of sub-class configurations.  It should only be
 used by the <tt class="docutils literal"><span class="pre">__init__()</span></tt> method of a sub-class to append its own
 dictionary of configuration values before passing the list to its
 super-class.</td>
@@ -454,7 +457,7 @@ super-class.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">the macros dictionary.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the macros dictionary.</td>
 </tr>
 </tbody>
 </table>
@@ -470,7 +473,7 @@ macros.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>macros</strong> &#8211; the macros dictionary.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>macros</strong> &#8211; the macros dictionary.</td>
 </tr>
 </tbody>
 </table>
@@ -586,7 +589,7 @@ and <tt class="docutils literal"><span class="pre">BMAKE</span></tt>.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>configuration</strong> &#8211; the current configuration and is an instance of the
 <a class="reference internal" href="#sipconfig.Configuration" title="sipconfig.Configuration"><tt class="xref py py-class docutils literal"><span class="pre">Configuration</span></tt></a> class or a sub-class.</li>
 <li><strong>console</strong> &#8211; is set if the target is a console (rather than GUI) target.  This
@@ -599,23 +602,23 @@ be specified and a simple non-zero value implies QtCore and QtGui.</li>
 automatically if the target uses Qt and Qt has thread support
 enabled.</li>
 <li><strong>warnings</strong> &#8211; is set if compiler warning messages should be enabled.  The default
-of <tt class="xref docutils literal"><span class="pre">None</span></tt> means that warnings are enabled for SIP v4.x and
+of <tt class="docutils literal"><span class="pre">None</span></tt> means that warnings are enabled for SIP v4.x and
 disabled for SIP v3.x.</li>
 <li><strong>debug</strong> &#8211; is set if debugging symbols should be generated.</li>
 <li><strong>dir</strong> &#8211; the name of the directory where build files are read from (if they
 are not absolute file names) and Makefiles are written to.  The
-default of <tt class="xref docutils literal"><span class="pre">None</span></tt> means the current directory is used.</li>
+default of <tt class="docutils literal"><span class="pre">None</span></tt> means the current directory is used.</li>
 <li><strong>makefile</strong> &#8211; the name of the generated Makefile.</li>
 <li><strong>installs</strong> &#8211; the list of extra install targets.  Each element is a two part
 list, the first of which is the source and the second is the
 destination.  If the source is another list then it is a list of
 source files and the destination is a directory.</li>
 <li><strong>universal</strong> &#8211; the name of the SDK if universal binaries are to be created under
-MacOS/X.  If it is <tt class="xref docutils literal"><span class="pre">None</span></tt> then the value is taken from the
+MacOS/X.  If it is <tt class="docutils literal"><span class="pre">None</span></tt> then the value is taken from the
 configuration.</li>
 <li><strong>arch</strong> &#8211; the space separated MacOS/X architectures to build.  If it is
-<tt class="xref docutils literal"><span class="pre">None</span></tt> then the value is taken from the configuration.</li>
-<li><strong>deployment_target</strong> &#8211; the MacOS/X deployment target.  If it is <tt class="xref docutils literal"><span class="pre">None</span></tt> then the value is
+<tt class="docutils literal"><span class="pre">None</span></tt> then the value is taken from the configuration.</li>
+<li><strong>deployment_target</strong> &#8211; the MacOS/X deployment target.  If it is <tt class="docutils literal"><span class="pre">None</span></tt> then the value is
 taken from the configuration.</li>
 </ul>
 </td>
@@ -633,7 +636,7 @@ generated during the build of the default target.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>mfile</strong> &#8211; the Python file object of the Makefile.</li>
 <li><strong>build</strong> &#8211; the dictionary created from parsing the build file.</li>
 </ul>
@@ -665,7 +668,7 @@ generation.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mfile</strong> &#8211; the Python file object of the Makefile.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mfile</strong> &#8211; the Python file object of the Makefile.</td>
 </tr>
 </tbody>
 </table>
@@ -680,7 +683,7 @@ generation.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mfile</strong> &#8211; the Python file object of the Makefile.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mfile</strong> &#8211; the Python file object of the Makefile.</td>
 </tr>
 </tbody>
 </table>
@@ -695,7 +698,7 @@ generation.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mfile</strong> &#8211; the Python file object of the Makefile.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mfile</strong> &#8211; the Python file object of the Makefile.</td>
 </tr>
 </tbody>
 </table>
@@ -710,7 +713,7 @@ generation.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mfile</strong> &#8211; the Python file object of the Makefile.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mfile</strong> &#8211; the Python file object of the Makefile.</td>
 </tr>
 </tbody>
 </table>
@@ -725,7 +728,7 @@ directory.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>mfile</strong> &#8211; the Python file object of the Makefile.</li>
 <li><strong>src</strong> &#8211; the name of a single file to install or a list of a number of files
 to install.</li>
@@ -747,9 +750,9 @@ having been installed.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; the name of the macro.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; the name of the macro.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">the macro as a list.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the macro as a list.</td>
 </tr>
 </tbody>
 </table>
@@ -763,13 +766,13 @@ having been installed.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> &#8211; the name of the macro.</li>
 <li><strong>default</strong> &#8211; the optional default value of the macro.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the macro as a string.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the macro as a string.</p>
 </td>
 </tr>
 </tbody>
@@ -786,14 +789,14 @@ validate an existing dictionary created through other means.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> &#8211; is the name of the build file, or is a dictionary to
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> &#8211; is the name of the build file, or is a dictionary to
 be validated.  A valid dictionary will contain the name of the
 target to build (excluding any platform specific extension) keyed
 by <tt class="docutils literal"><span class="pre">target</span></tt>; the names of all source files keyed by <tt class="docutils literal"><span class="pre">sources</span></tt>;
 and, optionally, the names of all header files keyed by
 <tt class="docutils literal"><span class="pre">headers</span></tt>.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">a dictionary corresponding to the parsed build file.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a dictionary corresponding to the parsed build file.</td>
 </tr>
 </tbody>
 </table>
@@ -807,13 +810,13 @@ and, optionally, the names of all header files keyed by
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>clib</strong> &#8211; the name of the library in cannonical form.</li>
 <li><strong>framework</strong> &#8211; is set if the library is implemented as a MacOS framework.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the platform specific name.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the platform specific name.</p>
 </td>
 </tr>
 </tbody>
@@ -835,9 +838,9 @@ normally called automatically when needed.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; the name of the macro.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; the name of the macro.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">the macro as a string.  An exception is raised if the macro does
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the macro as a string.  An exception is raised if the macro does
 not exist or has an empty value.</td>
 </tr>
 </tbody>
@@ -859,7 +862,7 @@ module.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>configuration</strong> &#8211; see <a class="reference internal" href="#sipconfig.Makefile.__init__" title="sipconfig.Makefile.__init__"><tt class="xref py py-meth docutils literal"><span class="pre">sipconfig.Makefile.__init__()</span></tt></a>.</li>
 <li><strong>build_file</strong> &#8211; the name of the build file.  Build files are generated using the
 <a class="reference internal" href="command_line.html#cmdoption-sip-b"><em class="xref std std-option">-b</em></a> SIP command line option.</li>
@@ -939,9 +942,9 @@ used with SIP v4.x modules.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mname</strong> &#8211; the name of the module.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mname</strong> &#8211; the name of the module.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">the corresponding library name.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the corresponding library name.</td>
 </tr>
 </tbody>
 </table>
@@ -962,7 +965,7 @@ Makefiles in sub-directories.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>configuration</strong> &#8211; see <a class="reference internal" href="#sipconfig.Makefile.__init__" title="sipconfig.Makefile.__init__"><tt class="xref py py-meth docutils literal"><span class="pre">sipconfig.Makefile.__init__()</span></tt></a>.</li>
 <li><strong>subdirs</strong> &#8211; the sequence of sub-directories.</li>
 <li><strong>dir</strong> &#8211; see <a class="reference internal" href="#sipconfig.Makefile.__init__" title="sipconfig.Makefile.__init__"><tt class="xref py py-meth docutils literal"><span class="pre">sipconfig.Makefile.__init__()</span></tt></a>.</li>
@@ -1017,7 +1020,7 @@ Makefiles in sub-directories.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>configuration</strong> &#8211; see <a class="reference internal" href="#sipconfig.Makefile.__init__" title="sipconfig.Makefile.__init__"><tt class="xref py py-meth docutils literal"><span class="pre">sipconfig.Makefile.__init__()</span></tt></a>.</li>
 <li><strong>build_file</strong> &#8211; the name of the optional build file.  Build files are generated
 using the <a class="reference internal" href="command_line.html#cmdoption-sip-b"><em class="xref std std-option">-b</em></a> SIP command line option.</li>
@@ -1052,9 +1055,9 @@ program from a single source file.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source</strong> &#8211; the name of the source file.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source</strong> &#8211; the name of the source file.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">a tuple of the name of the executable that will be created and the
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a tuple of the name of the executable that will be created and the
 command line.</td>
 </tr>
 </tbody>
@@ -1109,7 +1112,7 @@ command line.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>configuration</strong> &#8211; see <a class="reference internal" href="#sipconfig.Makefile.__init__" title="sipconfig.Makefile.__init__"><tt class="xref py py-meth docutils literal"><span class="pre">sipconfig.Makefile.__init__()</span></tt></a>.</li>
 <li><strong>dstdir</strong> &#8211; the name of the directory in which the module&#8217;s Python code will be
 installed.</li>
@@ -1154,7 +1157,7 @@ extension module.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>configuration</strong> &#8211; see <a class="reference internal" href="#sipconfig.Makefile.__init__" title="sipconfig.Makefile.__init__"><tt class="xref py py-meth docutils literal"><span class="pre">sipconfig.Makefile.__init__()</span></tt></a>.</li>
 <li><strong>build_file</strong> &#8211; see <a class="reference internal" href="#sipconfig.ModuleMakefile.__init__" title="sipconfig.ModuleMakefile.__init__"><tt class="xref py py-meth docutils literal"><span class="pre">sipconfig.ModuleMakefile.__init__()</span></tt></a>.</li>
 <li><strong>install_dir</strong> &#8211; see <a class="reference internal" href="#sipconfig.ModuleMakefile.__init__" title="sipconfig.ModuleMakefile.__init__"><tt class="xref py py-meth docutils literal"><span class="pre">sipconfig.ModuleMakefile.__init__()</span></tt></a>.</li>
@@ -1210,7 +1213,7 @@ compiling the generated module.</li>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -1239,12 +1242,12 @@ compiling the generated module.</li>
         <li class="right" >
           <a href="python_api.html" title="Python API for Applications"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13.1 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

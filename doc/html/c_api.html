@@ -3,17 +3,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>C API for Handwritten Code &mdash; SIP 4.13 Reference Guide</title>
+    <title>C API for Handwritten Code &mdash; SIP 4.13.1 Reference Guide</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.13',
+        VERSION:     '4.13.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.13 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.13.1 Reference Guide" href="index.html" />
     <link rel="next" title="Using the C API when Embedding" href="embedding.html" />
     <link rel="prev" title="Annotations" href="annotations.html" /> 
   </head>
@@ -43,7 +46,7 @@
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13.1 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -162,14 +165,14 @@ arguments.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>arg_nr</strong> &#8211; the number of the argument.  Arguments are numbered from 0 but are
 numbered from 1 in the detail of the exception.</li>
 <li><strong>arg</strong> &#8211; the argument.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the value that should be assigned to <tt class="docutils literal"><span class="pre">sipError</span></tt>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the value that should be assigned to <tt class="docutils literal"><span class="pre">sipError</span></tt>.</p>
 </td>
 </tr>
 </tbody>
@@ -187,7 +190,7 @@ directive.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>method</strong> &#8211; the Python method and would normally be the supplied <tt class="docutils literal"><span class="pre">sipMethod</span></tt>.</li>
 </ul>
 </td>
@@ -206,7 +209,7 @@ handwritten code specified for <tt class="xref py py-meth docutils literal"><spa
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>seqlen</strong> &#8211; the length of the sequence.</li>
 <li><strong>slicelen</strong> &#8211; the length of the slice.</li>
 </ul>
@@ -225,14 +228,14 @@ values in a similar way to the Python <tt class="xref c c-func docutils literal"
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>iserr</strong> &#8211; if this is not <tt class="docutils literal"><span class="pre">NULL</span></tt> then the location it points to is set to a
 non-zero value.</li>
 <li><strong>format</strong> &#8211; the string of format characters.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If there was an error then <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned and a Python exception
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If there was an error then <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned and a Python exception
 is raised.</p>
 </td>
 </tr>
@@ -392,7 +395,7 @@ string and associated values in a similar way to the Python
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>iserr</strong> &#8211; if this is not <tt class="docutils literal"><span class="pre">NULL</span></tt> then the location it points to is set to a
 non-zero value if there was an error.</li>
 <li><strong>method</strong> &#8211; the Python bound method to call.</li>
@@ -400,7 +403,7 @@ non-zero value if there was an error.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If there was an error then <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned and a Python exception
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If there was an error then <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned and a Python exception
 is raised.</p>
 </td>
 </tr>
@@ -419,13 +422,13 @@ int <tt class="descname">sipCanConvertToEnum</tt><big>(</big>PyObject<em>&nbsp;*
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> &#8211; the Python object.</li>
 <li><strong>td</strong> &#8211; the enum&#8217;s <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a>.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the object can be converted.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the object can be converted.</p>
 </td>
 </tr>
 </tbody>
@@ -443,7 +446,7 @@ structure or C++ class.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> &#8211; the Python object.</li>
 <li><strong>type</strong> &#8211; the C/C++ type&#8217;s <a class="reference internal" href="#ref-type-objects"><em>generated type object</em></a>.</li>
 <li><strong>flags</strong> &#8211; any combination of the <a class="reference internal" href="#SIP_NOT_NONE" title="SIP_NOT_NONE"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_NOT_NONE</span></tt></a> and
@@ -451,7 +454,7 @@ structure or C++ class.</p>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the object can be converted.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the object can be converted.</p>
 </td>
 </tr>
 </tbody>
@@ -469,14 +472,14 @@ structure or C++ class which has been implemented as a mapped type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> &#8211; the Python object.</li>
 <li><strong>mt</strong> &#8211; the opaque structure returned by <a class="reference internal" href="#sipFindMappedType" title="sipFindMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipFindMappedType()</span></tt></a>.</li>
 <li><strong>flags</strong> &#8211; this may be the <a class="reference internal" href="#SIP_NOT_NONE" title="SIP_NOT_NONE"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_NOT_NONE</span></tt></a> flag.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the object can be converted.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the object can be converted.</p>
 </td>
 </tr>
 </tbody>
@@ -492,7 +495,7 @@ structure, C++ class or mapped type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> &#8211; the Python object.</li>
 <li><strong>td</strong> &#8211; the C/C++ type&#8217;s <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a>.</li>
 <li><strong>flags</strong> &#8211; any combination of the <a class="reference internal" href="#SIP_NOT_NONE" title="SIP_NOT_NONE"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_NOT_NONE</span></tt></a> and
@@ -500,7 +503,7 @@ structure, C++ class or mapped type.</p>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the object can be converted.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the object can be converted.</p>
 </td>
 </tr>
 </tbody>
@@ -520,12 +523,12 @@ comes with a reference.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> &#8211; the wrapped instance.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the name of the instance&#8217;s class.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the name of the instance&#8217;s class.</p>
 </td>
 </tr>
 </tbody>
@@ -541,12 +544,12 @@ object will not be writeable and has no associated size.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cpp</strong> &#8211; the memory address.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> object.</p>
 </td>
 </tr>
 </tbody>
@@ -562,13 +565,13 @@ object will not be writeable and can be used as an immutable buffer object.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cpp</strong> &#8211; the memory address.</li>
 <li><strong>size</strong> &#8211; the size associated with the address.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> object.</p>
 </td>
 </tr>
 </tbody>
@@ -584,13 +587,13 @@ generated Python type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>eval</strong> &#8211; the enumerated value to convert.</li>
 <li><strong>td</strong> &#8211; the enum&#8217;s <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a>.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
 </td>
 </tr>
 </tbody>
@@ -608,14 +611,14 @@ corresponding generated Python type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cpp</strong> &#8211; the C/C++ instance.</li>
 <li><strong>type</strong> &#8211; the type&#8217;s <a class="reference internal" href="#ref-type-objects"><em>generated type object</em></a>.</li>
 <li><strong>transferObj</strong> &#8211; this controls the ownership of the returned value.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
 </td>
 </tr>
 </tbody>
@@ -645,14 +648,14 @@ type to an instance of the corresponding generated Python type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cpp</strong> &#8211; the C/C++ instance.</li>
 <li><strong>mt</strong> &#8211; the opaque structure returned by <a class="reference internal" href="#sipFindMappedType" title="sipFindMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipFindMappedType()</span></tt></a>.</li>
 <li><strong>transferObj</strong> &#8211; this controls the ownership of the returned value.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
 </td>
 </tr>
 </tbody>
@@ -675,13 +678,13 @@ generated Python type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>eval</strong> &#8211; the enumerated value to convert.</li>
 <li><strong>type</strong> &#8211; the enum&#8217;s <a class="reference internal" href="#ref-type-objects"><em>generated type object</em></a>.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
 </td>
 </tr>
 </tbody>
@@ -699,14 +702,14 @@ the corresponding generated Python type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cpp</strong> &#8211; the C/C++ instance.</li>
 <li><strong>type</strong> &#8211; the type&#8217;s <a class="reference internal" href="#ref-type-objects"><em>generated type object</em></a>.</li>
 <li><strong>transferObj</strong> &#8211; this controls the ownership of the returned value.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
 </td>
 </tr>
 </tbody>
@@ -728,14 +731,14 @@ the corresponding generated Python type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cpp</strong> &#8211; the C/C++ instance.</li>
 <li><strong>td</strong> &#8211; the type&#8217;s <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a>.</li>
 <li><strong>transferObj</strong> &#8211; this controls the ownership of the returned value.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
 </td>
 </tr>
 </tbody>
@@ -759,13 +762,13 @@ exception raised.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>idx</strong> &#8211; the sequence index.</li>
 <li><strong>len</strong> &#8211; the length of the sequence.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the unsigned array index.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the unsigned array index.</p>
 </td>
 </tr>
 </tbody>
@@ -789,14 +792,14 @@ corresponding generated Python type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cpp</strong> &#8211; the C/C++ instance.</li>
 <li><strong>td</strong> &#8211; the type&#8217;s <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a>.</li>
 <li><strong>transferObj</strong> &#8211; this controls the ownership of the returned value.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.</p>
 </td>
 </tr>
 </tbody>
@@ -824,12 +827,12 @@ object will be writeable but has no associated size.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cpp</strong> &#8211; the memory address.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> object.</p>
 </td>
 </tr>
 </tbody>
@@ -845,13 +848,13 @@ object will be writeable and can be used as a mutable buffer object.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cpp</strong> &#8211; the memory address.</li>
 <li><strong>size</strong> &#8211; the size associated with the address.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> object.</p>
 </td>
 </tr>
 </tbody>
@@ -870,7 +873,7 @@ been successful.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> &#8211; the Python object.</li>
 <li><strong>type</strong> &#8211; the type&#8217;s <a class="reference internal" href="#ref-type-objects"><em>generated type object</em></a>.</li>
 <li><strong>transferObj</strong> &#8211; this controls any ownership changes to <em>obj</em>.</li>
@@ -881,7 +884,7 @@ been successful.</p>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the C/C++ instance.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the C/C++ instance.</p>
 </td>
 </tr>
 </tbody>
@@ -915,7 +918,7 @@ class that is implemented as a mapped type assuming that a previous call to
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> &#8211; the Python object.</li>
 <li><strong>mt</strong> &#8211; the opaque structure returned by <a class="reference internal" href="#sipFindMappedType" title="sipFindMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipFindMappedType()</span></tt></a>.</li>
 <li><strong>transferObj</strong> &#8211; this controls any ownership changes to <em>obj</em>.</li>
@@ -925,7 +928,7 @@ class that is implemented as a mapped type assuming that a previous call to
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the C/C++ instance.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the C/C++ instance.</p>
 </td>
 </tr>
 </tbody>
@@ -957,7 +960,7 @@ has been successful.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> &#8211; the Python object.</li>
 <li><strong>td</strong> &#8211; the type&#8217;s <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a>.</li>
 <li><strong>transferObj</strong> &#8211; this controls any ownership changes to <em>obj</em>.</li>
@@ -968,7 +971,7 @@ has been successful.</p>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the C/C++ instance.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the C/C++ instance.</p>
 </td>
 </tr>
 </tbody>
@@ -1000,13 +1003,13 @@ successful.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> &#8211; the Python object which may be <tt class="docutils literal"><span class="pre">Py_None</span></tt>, a <a class="reference internal" href="python_api.html#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a> or a
 <tt class="xref c c-type docutils literal"><span class="pre">PyCObject</span></tt>.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the memory address.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the memory address.</p>
 </td>
 </tr>
 </tbody>
@@ -1024,13 +1027,13 @@ another module.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> &#8211; the name of the symbol.</li>
 <li><strong>sym</strong> &#8211; the value of the symbol.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">0 if there was no error.  A negative value is returned if <em>name</em> is
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">0 if there was no error.  A negative value is returned if <em>name</em> is
 already associated with a symbol or there was some other error.</p>
 </td>
 </tr>
@@ -1049,12 +1052,12 @@ already associated with a symbol or there was some other error.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>type</strong> &#8211; the C/C++ declaration of the type.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the generated type object.  This will not change and may be saved in a
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the generated type object.  This will not change and may be saved in a
 static cache.  <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned if the C/C++ type doesn&#8217;t exist.</p>
 </td>
 </tr>
@@ -1072,12 +1075,12 @@ const sipMappedType *<tt class="descname">sipFindMappedType</tt><big>(</big>cons
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>type</strong> &#8211; the C/C++ declaration of the type.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the opaque structure.  This will not change and may be saved in a
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the opaque structure.  This will not change and may be saved in a
 static cache.  <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned if the C/C++ type doesn&#8217;t exist.</p>
 </td>
 </tr>
@@ -1095,12 +1098,12 @@ PyTypeObject *<tt class="descname">sipFindNamedEnum</tt><big>(</big>const char<e
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>type</strong> &#8211; the C/C++ declaration of the enum.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the generated Python type object.  This will not change and may be
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the generated Python type object.  This will not change and may be
 saved in a static cache.  <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned if the C/C++ enum
 doesn&#8217;t exist.</p>
 </td>
@@ -1117,12 +1120,12 @@ const sipTypeDef *<tt class="descname">sipFindType</tt><big>(</big>const char<em
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>type</strong> &#8211; the C/C++ declaration of the type.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the generated type structure.  This will not change and may be saved in
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the generated type structure.  This will not change and may be saved in
 a static cache.  <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned if the C/C++ type doesn&#8217;t exist.</p>
 </td>
 </tr>
@@ -1173,7 +1176,7 @@ heap.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>mem</strong> &#8211; the memory address.</li>
 </ul>
 </td>
@@ -1193,12 +1196,12 @@ by a Python object.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> &#8211; the Python object.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the address of the C/C++ instance</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the address of the C/C++ instance</p>
 </td>
 </tr>
 </tbody>
@@ -1214,14 +1217,14 @@ C++ class instance.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cppptr</strong> &#8211; the pointer to the C/C++ instance.</li>
 <li><strong>td</strong> &#8211; the <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a> corresponding
 to the C/C++ type.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object or <tt class="docutils literal"><span class="pre">NULL</span></tt> (and no exception is raised) if the
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object or <tt class="docutils literal"><span class="pre">NULL</span></tt> (and no exception is raised) if the
 C/C++ instance hasn&#8217;t been wrapped.</p>
 </td>
 </tr>
@@ -1241,12 +1244,12 @@ when the converted value is a temporary.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>transferObj</strong> &#8211; the object that describes the requested transfer of ownership.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the state of the converted value.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the state of the converted value.</p>
 </td>
 </tr>
 </tbody>
@@ -1264,14 +1267,14 @@ structure or C++ class instance.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>cppptr</strong> &#8211; the pointer to the C/C++ instance.</li>
 <li><strong>type</strong> &#8211; the <a class="reference internal" href="#ref-type-objects"><em>generated type object</em></a> corresponding to
 the C/C++ type.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object or <tt class="docutils literal"><span class="pre">NULL</span></tt> (and no exception is raised) if the
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object or <tt class="docutils literal"><span class="pre">NULL</span></tt> (and no exception is raised) if the
 C/C++ instance hasn&#8217;t been wrapped.</p>
 </td>
 </tr>
@@ -1290,12 +1293,12 @@ another module.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> &#8211; the name of the symbol.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the value of the symbol.  <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned if there is no such
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the value of the symbol.  <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned if there is no such
 symbol.</p>
 </td>
 </tr>
@@ -1335,7 +1338,7 @@ given range.  See <a class="reference internal" href="using.html#ref-incompat-ap
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> &#8211; the name of the API.</li>
 <li><strong>from</strong> &#8211; the lower bound of the range.  For the API to be enabled its version
 number must be greater than or equal to <em>from</em>.  If <em>from</em> is 0 then
@@ -1346,7 +1349,7 @@ made.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the API is enabled.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the API is enabled.</p>
 </td>
 </tr>
 </tbody>
@@ -1371,12 +1374,12 @@ void *<tt class="descname">sipMalloc</tt><big>(</big>size_t<em>&nbsp;nbytes</em>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>nbytes</strong> &#8211; the number of bytes to allocate.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the memory address.  If there was an error then <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the memory address.  If there was an error then <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned
 and a Python exception raised.</p>
 </td>
 </tr>
@@ -1396,7 +1399,7 @@ convenient way of converting integer based RTTI to the corresponding
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>type</strong> &#8211; the integer RTTI.</li>
 <li><strong>map</strong> &#8211; the table of known RTTI and the corresponding type objects (see
 <a class="reference internal" href="#sipIntTypeClassMap" title="sipIntTypeClassMap"><tt class="xref c c-type docutils literal"><span class="pre">sipIntTypeClassMap</span></tt></a>).  The entries in the table must be sorted
@@ -1405,7 +1408,7 @@ in ascending order of RTTI.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the corresponding type object, or <tt class="docutils literal"><span class="pre">NULL</span></tt> if <em>type</em> wasn&#8217;t in <em>map</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the corresponding type object, or <tt class="docutils literal"><span class="pre">NULL</span></tt> if <em>type</em> wasn&#8217;t in <em>map</em>.</p>
 </td>
 </tr>
 </tbody>
@@ -1424,7 +1427,7 @@ corresponding <a class="reference internal" href="#ref-type-objects"><em>generat
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>type</strong> &#8211; the string RTTI.</li>
 <li><strong>map</strong> &#8211; the table of known RTTI and the corresponding type objects (see
 <a class="reference internal" href="#sipStringTypeClassMap" title="sipStringTypeClassMap"><tt class="xref c c-type docutils literal"><span class="pre">sipStringTypeClassMap</span></tt></a>).  The entries in the table must be
@@ -1433,7 +1436,7 @@ sorted in ascending order of RTTI.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the corresponding type object, or <tt class="docutils literal"><span class="pre">NULL</span></tt> if <em>type</em> wasn&#8217;t in <em>map</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the corresponding type object, or <tt class="docutils literal"><span class="pre">NULL</span></tt> if <em>type</em> wasn&#8217;t in <em>map</em>.</p>
 </td>
 </tr>
 </tbody>
@@ -1450,7 +1453,7 @@ on a format string and associated values in a similar way to the Python
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>iserr</strong> &#8211; if this is not <tt class="docutils literal"><span class="pre">NULL</span></tt> then the location it points to is set to a
 non-zero value if there was an error.</li>
 <li><strong>method</strong> &#8211; the Python method that returned <em>result</em>.</li>
@@ -1459,7 +1462,7 @@ non-zero value if there was an error.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">0 if there was no error.  Otherwise a negative value is returned, and
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">0 if there was no error.  Otherwise a negative value is returned, and
 an exception raised.</p>
 </td>
 </tr>
@@ -1652,14 +1655,14 @@ must then populate the type&#8217;s dictionary with any lazy attributes.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>td</strong> &#8211; the optional <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a> that
 determines which types the handler will be called for.</li>
 <li><strong>getter</strong> &#8211; the handler function.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">0 if there was no error, otherwise -1 is returned.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">0 if there was no error, otherwise -1 is returned.</p>
 </td>
 </tr>
 </tbody>
@@ -1687,12 +1690,12 @@ super-type of a wrapped C++ type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>type</strong> &#8211; the type object.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">0 if there was no error, otherwise -1 is returned.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">0 if there was no error, otherwise -1 is returned.</p>
 </td>
 </tr>
 </tbody>
@@ -1712,7 +1715,7 @@ is called after a call to either <a class="reference internal" href="#sipConvert
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>cpp</strong> &#8211; the C/C++ instance.</li>
 <li><strong>type</strong> &#8211; the type&#8217;s <a class="reference internal" href="#ref-type-objects"><em>generated type object</em></a>.</li>
 <li><strong>state</strong> &#8211; describes the state of the C/C++ instance.</li>
@@ -1735,7 +1738,7 @@ It is called after a call to either <a class="reference internal" href="#sipConv
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>cpp</strong> &#8211; the C/C++ instance.</li>
 <li><strong>mt</strong> &#8211; the opaque structure returned by <a class="reference internal" href="#sipFindMappedType" title="sipFindMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipFindMappedType()</span></tt></a>.</li>
 <li><strong>state</strong> &#8211; describes the state of the C/C++ instance.</li>
@@ -1756,7 +1759,7 @@ or <a class="reference internal" href="#sipForceConvertToType" title="sipForceCo
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>cpp</strong> &#8211; the C/C++ instance.</li>
 <li><strong>td</strong> &#8211; the type&#8217;s <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a>.</li>
 <li><strong>state</strong> &#8211; describes the state of the C/C++ instance.</li>
@@ -1775,12 +1778,12 @@ const char *<tt class="descname">sipResolveTypedef</tt><big>(</big>const char<em
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> &#8211; the name of the typedef.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the value of the typedef or <tt class="docutils literal"><span class="pre">NULL</span></tt> if there was no such typedef.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the value of the typedef or <tt class="docutils literal"><span class="pre">NULL</span></tt> if there was no such typedef.</p>
 </td>
 </tr>
 </tbody>
@@ -1866,7 +1869,7 @@ void <tt class="descname">sipTransferBack</tt><big>(</big>PyObject<em>&nbsp;*obj
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>obj</strong> &#8211; the wrapped instance.</li>
 </ul>
 </td>
@@ -1887,7 +1890,7 @@ instance should be with C++.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>obj</strong> &#8211; the wrapped instance.</li>
 </ul>
 </td>
@@ -1905,7 +1908,7 @@ void <tt class="descname">sipTransferTo</tt><big>(</big>PyObject<em>&nbsp;*obj</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>obj</strong> &#8211; the wrapped instance.</li>
 <li><strong>owner</strong> &#8211; an optional wrapped instance that <em>obj</em> becomes associated with with
 regard to the cyclic garbage collector.  If <em>owner</em> is <tt class="docutils literal"><span class="pre">NULL</span></tt> then no
@@ -1929,12 +1932,12 @@ PyTypeObject *<tt class="descname">sipTypeAsPyTypeObject</tt><big>(</big>sipType
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>td</strong> &#8211; the type structure.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python type object.  If the type structure refers to a mapped type
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python type object.  If the type structure refers to a mapped type
 then <tt class="docutils literal"><span class="pre">NULL</span></tt> will be returned.</p>
 </td>
 </tr>
@@ -1953,12 +1956,12 @@ a Python type object.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>py_type</strong> &#8211; the Python type object.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the type structure or <tt class="docutils literal"><span class="pre">NULL</span></tt> if the Python type object doesn&#8217;t
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the type structure or <tt class="docutils literal"><span class="pre">NULL</span></tt> if the Python type object doesn&#8217;t
 correspond to a type structure.</p>
 </td>
 </tr>
@@ -1975,12 +1978,12 @@ refers to a C structure or C++ class.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>td</strong> &#8211; the type structure.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the type structure refers to a structure or class.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the type structure refers to a structure or class.</p>
 </td>
 </tr>
 </tbody>
@@ -1996,12 +1999,12 @@ refers to a named enum.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>td</strong> &#8211; the type structure.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the type structure refers to an enum.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the type structure refers to an enum.</p>
 </td>
 </tr>
 </tbody>
@@ -2017,12 +2020,12 @@ refers to a mapped type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>td</strong> &#8211; the type structure.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the type structure refers to a mapped type.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the type structure refers to a mapped type.</p>
 </td>
 </tr>
 </tbody>
@@ -2038,12 +2041,12 @@ refers to a C++ namespace.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>td</strong> &#8211; the type structure.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the type structure refers to a namespace.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the type structure refers to a namespace.</p>
 </td>
 </tr>
 </tbody>
@@ -2058,12 +2061,12 @@ const char *<tt class="descname">sipTypeName</tt><big>(</big>const sipTypeDef<em
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>td</strong> &#8211; the type&#8217;s <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a>.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the name of the C/C++ type.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the name of the C/C++ type.</p>
 </td>
 </tr>
 </tbody>
@@ -2079,12 +2082,12 @@ the enclosing scope of another generated type structure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>td</strong> &#8211; the type structure.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the type structure of the scope or <tt class="docutils literal"><span class="pre">NULL</span></tt> if the type has no scope.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the type structure of the scope or <tt class="docutils literal"><span class="pre">NULL</span></tt> if the type has no scope.</p>
 </td>
 </tr>
 </tbody>
@@ -2119,12 +2122,12 @@ int <tt class="descname">sipWrapper_Check</tt><big>(</big>PyObject<em>&nbsp;*obj
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> &#8211; the Python object.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the Python object is a wrapped instance.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a non-zero value if the Python object is a wrapped instance.</p>
 </td>
 </tr>
 </tbody>
@@ -2248,7 +2251,7 @@ object for enum <tt class="docutils literal"><span class="pre">Except</span></tt
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -2277,12 +2280,12 @@ object for enum <tt class="docutils literal"><span class="pre">Except</span></tt
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13.1 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

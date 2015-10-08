@@ -3,17 +3,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Annotations &mdash; SIP 4.13 Reference Guide</title>
+    <title>Annotations &mdash; SIP 4.13.1 Reference Guide</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.13',
+        VERSION:     '4.13.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.13 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.13.1 Reference Guide" href="index.html" />
     <link rel="next" title="C API for Handwritten Code" href="c_api.html" />
     <link rel="prev" title="Directives" href="directives.html" /> 
   </head>
@@ -43,7 +46,7 @@
         <li class="right" >
           <a href="directives.html" title="Directives"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13.1 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -101,8 +104,6 @@ void hex() /PyName=hex_, API=PyQt4:2-/</pre>
 <p>The following example shows argument and function annotations:</p>
 <div class="highlight-python"><pre>void exec(QWidget * /Transfer/) /ReleaseGIL, PyName=call_exec/;</pre>
 </div>
-<p>Note that the current version of SIP does not complain about unknown
-annotations, or annotations used out of their correct context.</p>
 <div class="section" id="argument-annotations">
 <span id="ref-arg-annos"></span><h2>Argument Annotations<a class="headerlink" href="#argument-annotations" title="Permalink to this headline">¶</a></h2>
 <dl class="argument-annotation">
@@ -111,7 +112,7 @@ annotations, or annotations used out of their correct context.</p>
 <dd><p>This boolean annotation specifies that the value of the corresponding
 argument (which should be either <a class="reference internal" href="specification_files.html#sip-type-SIP_PYCALLABLE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYCALLABLE</span></tt></a>,
 <a class="reference internal" href="specification_files.html#sip-type-SIP_PYDICT"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYDICT</span></tt></a>, <a class="reference internal" href="specification_files.html#sip-type-SIP_PYLIST"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYLIST</span></tt></a>, <a class="reference internal" href="specification_files.html#sip-type-SIP_PYSLICE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYSLICE</span></tt></a>,
-<a class="reference internal" href="specification_files.html#sip-type-SIP_PYTUPLE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTUPLE</span></tt></a> or <a class="reference internal" href="specification_files.html#sip-type-SIP_PYTYPE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTYPE</span></tt></a>) may be <tt class="xref docutils literal"><span class="pre">None</span></tt>.</p>
+<a class="reference internal" href="specification_files.html#sip-type-SIP_PYTUPLE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTUPLE</span></tt></a> or <a class="reference internal" href="specification_files.html#sip-type-SIP_PYTYPE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYTYPE</span></tt></a>) may be <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
 </dd></dl>
 
 <dl class="argument-annotation">
@@ -197,7 +198,7 @@ the specified encoding.  The encoding can be either <tt class="docutils literal"
 <tt class="docutils literal"><span class="pre">&quot;Latin-1&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;UTF-8&quot;</span></tt> or <tt class="docutils literal"><span class="pre">&quot;None&quot;</span></tt>.  An encoding of <tt class="docutils literal"><span class="pre">&quot;None&quot;</span></tt> means
 that the corresponding argument refers to an unencoded character or string.</p>
 <p>The default encoding is specified by the <a class="reference internal" href="directives.html#directive-%DefaultEncoding"><tt class="xref std std-directive docutils literal"><span class="pre">%DefaultEncoding</span></tt></a>
-directive.  If the directive is not specified then <tt class="xref docutils literal"><span class="pre">None</span></tt> is used.</p>
+directive.  If the directive is not specified then <tt class="docutils literal"><span class="pre">None</span></tt> is used.</p>
 <p>Python v3 will use the <tt class="docutils literal"><span class="pre">bytes</span></tt> type to represent the argument if the
 encoding is <tt class="docutils literal"><span class="pre">&quot;None&quot;</span></tt> and the <tt class="docutils literal"><span class="pre">str</span></tt> type otherwise.</p>
 <p>Python v2 will use the <tt class="docutils literal"><span class="pre">str</span></tt> type to represent the argument if the
@@ -331,13 +332,13 @@ with another instance is removed.</p>
 the context of a constructor or factory method it specifies that ownership
 of the instance being created is transferred from Python to C++ if the
 corresponding argument (which should be a wrapped C structure or C++ class
-instance) is not <tt class="xref docutils literal"><span class="pre">None</span></tt>.  In addition, the newly created instance is
+instance) is not <tt class="docutils literal"><span class="pre">None</span></tt>.  In addition, the newly created instance is
 associated with the argument with regard to the cyclic garbage collector.</p>
 <p>In the context of a non-factory method it specifies that ownership of
 <tt class="docutils literal"><span class="pre">this</span></tt> is transferred from Python to C++ if the corresponding argument is
-not <tt class="xref docutils literal"><span class="pre">None</span></tt>.  If it is <tt class="xref docutils literal"><span class="pre">None</span></tt> then ownership is transferred to Python.</p>
+not <tt class="docutils literal"><span class="pre">None</span></tt>.  If it is <tt class="docutils literal"><span class="pre">None</span></tt> then ownership is transferred to Python.</p>
 <p>The annotation may be used more that once, in which case ownership is
-transferred to last instance that is not <tt class="xref docutils literal"><span class="pre">None</span></tt>.</p>
+transferred to last instance that is not <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
 <p>See <a class="reference internal" href="using.html#ref-object-ownership"><em>Ownership of Objects</em></a> for more detail.</p>
 </dd></dl>
 
@@ -357,10 +358,10 @@ instantiated or sub-classed from Python.</p>
 <tt class="descname">AllowNone</tt><a class="headerlink" href="#class-annotation-AllowNone" title="Permalink to this definition">¶</a></dt>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.8.2.</span></p>
-<p>Normally when a Python object is converted to a C/C++ instance <tt class="xref docutils literal"><span class="pre">None</span></tt>
+<p>Normally when a Python object is converted to a C/C++ instance <tt class="docutils literal"><span class="pre">None</span></tt>
 is handled automatically before the class&#8217;s
 <a class="reference internal" href="directives.html#directive-%ConvertToTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a> is called.  This boolean annotation
-specifies that the handling of <tt class="xref docutils literal"><span class="pre">None</span></tt> will be left to the
+specifies that the handling of <tt class="docutils literal"><span class="pre">None</span></tt> will be left to the
 <a class="reference internal" href="directives.html#directive-%ConvertToTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a>.  The annotation is ignored if the class
 does not have any <a class="reference internal" href="directives.html#directive-%ConvertToTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a>.</p>
 </dd></dl>
@@ -403,7 +404,7 @@ void <tt class="descname">sipDelayedDtors</tt><big>(</big>const <a class="refere
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>dd_list</strong> &#8211; the linked list of delayed instances.</li>
 </ul>
 </td>
@@ -509,10 +510,10 @@ creating the type object for this C structure or C++ type.</p>
 <dl class="mapped-type-annotation">
 <dt id="mapped-type-annotation-AllowNone">
 <tt class="descname">AllowNone</tt><a class="headerlink" href="#mapped-type-annotation-AllowNone" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normally when a Python object is converted to a C/C++ instance <tt class="xref docutils literal"><span class="pre">None</span></tt>
+<dd><p>Normally when a Python object is converted to a C/C++ instance <tt class="docutils literal"><span class="pre">None</span></tt>
 is handled automatically before the mapped type&#8217;s
 <a class="reference internal" href="directives.html#directive-%ConvertToTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a> is called.  This boolean annotation
-specifies that the handling of <tt class="xref docutils literal"><span class="pre">None</span></tt> will be left to the
+specifies that the handling of <tt class="docutils literal"><span class="pre">None</span></tt> will be left to the
 <a class="reference internal" href="directives.html#directive-%ConvertToTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a>.</p>
 </dd></dl>
 
@@ -764,6 +765,19 @@ like certain functions to only support positional arguments.</p>
 </dd></dl>
 
 <dl class="function-annotation">
+<dt id="function-annotation-NoRaisesPyException">
+<tt class="descname">NoRaisesPyException</tt><a class="headerlink" href="#function-annotation-NoRaisesPyException" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.13.1.</span></p>
+<p>This boolean annotation specifies that the function does not raise a Python
+exception to indicate that an error occurred.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#function-annotation-RaisesPyException"><tt class="xref std std-fanno docutils literal"><span class="pre">RaisesPyException</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="function-annotation">
 <dt id="function-annotation-Numeric">
 <tt class="descname">Numeric</tt><a class="headerlink" href="#function-annotation-Numeric" title="Permalink to this definition">¶</a></dt>
 <dd><p>This boolean annotation specifies that the operator should be interpreted
@@ -830,6 +844,10 @@ function.</p>
 exception to indicate that an error occurred.  Any current exception is
 cleared before the function is called.  It is ignored if the
 <a class="reference internal" href="directives.html#directive-%MethodCode"><tt class="xref std std-directive docutils literal"><span class="pre">%MethodCode</span></tt></a> directive is used.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#function-annotation-NoRaisesPyException"><tt class="xref std std-fanno docutils literal"><span class="pre">NoRaisesPyException</span></tt></a></p>
+</div>
 </dd></dl>
 
 <dl class="function-annotation">
@@ -919,6 +937,23 @@ code instead.</p>
 argument annotation when applied to the type being defined.</p>
 </dd></dl>
 
+<dl class="typedef-annotation">
+<dt id="typedef-annotation-PyName">
+<tt class="descname">PyName</tt><a class="headerlink" href="#typedef-annotation-PyName" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.13.1.</span></p>
+<p>This name annotation only applies when the typedef is being used to create
+the wrapping for a class defined using a template and specifies an
+alternative name for the class when it is referred to from Python.  It is
+required when a class name is the same as a Python keyword.  It may also
+be used to avoid name clashes with other objects (e.g. enums, exceptions,
+functions) that have the same name in the same C++ scope.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="directives.html#directive-%AutoPyName"><tt class="xref std std-directive docutils literal"><span class="pre">%AutoPyName</span></tt></a></p>
+</div>
+</dd></dl>
+
 </div>
 <div class="section" id="variable-annotations">
 <span id="ref-variable-annos"></span><h2>Variable Annotations<a class="headerlink" href="#variable-annotations" title="Permalink to this headline">¶</a></h2>
@@ -997,7 +1032,7 @@ have the same name in the same C++ scope.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -1026,12 +1061,12 @@ have the same name in the same C++ scope.</p>
         <li class="right" >
           <a href="directives.html" title="Directives"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13.1 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

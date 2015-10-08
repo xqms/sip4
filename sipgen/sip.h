@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040d00
-#define SIP_VERSION_STR     "4.13"
+#define SIP_VERSION         0x040d01
+#define SIP_VERSION_STR     "4.13.1"
 
 
 #ifdef TRUE
@@ -61,6 +61,7 @@
 #define MOD_IS_COMPOSITE        0x0004  /* It is a composite module. */
 #define MOD_IS_TRANSFORMED      0x0008  /* It's types have been transformed. */
 #define MOD_USE_ARG_NAMES       0x0010  /* Use real argument names. */
+#define MOD_ALL_RAISE_PY_EXC    0x0020  /* All callable raise a Python exception. */
 
 #define hasDelayedDtors(m)  ((m)->modflags & MOD_HAS_DELAYED_DTORS)
 #define setHasDelayedDtors(m)   ((m)->modflags |= MOD_HAS_DELAYED_DTORS)
@@ -73,6 +74,8 @@
 #define isTransformed(m)    ((m)->modflags & MOD_IS_TRANSFORMED)
 #define setUseArgNames(m)   ((m)->modflags |= MOD_USE_ARG_NAMES)
 #define useArgNames(m)      ((m)->modflags & MOD_USE_ARG_NAMES)
+#define setAllRaisePyException(m)   ((m)->modflags |= MOD_ALL_RAISE_PY_EXC)
+#define allRaisePyException(m)  ((m)->modflags & MOD_ALL_RAISE_PY_EXC)
 
 
 /* Handle section flags. */
@@ -169,6 +172,13 @@
 #define isPrivateDtor(cd)   ((cd)->classflags & SECT_IS_PRIVATE)
 
 #define isDtor(cd)          ((cd)->classflags & (SECT_IS_PUBLIC | SECT_IS_PROT | SECT_IS_PRIVATE))
+
+
+/* Handle the second group of class flags. */
+#define CLASS2_TMPL_ARG     0x01        /* The class is a template argument. */
+
+#define isTemplateArg(cd)   ((cd)->classflags2 & CLASS2_TMPL_ARG)
+#define setTemplateArg(cd)  ((cd)->classflags2 |= CLASS2_TMPL_ARG)
 
 
 /* Handle ctor flags.  These are combined with the section flags. */
@@ -1056,6 +1066,7 @@ typedef struct _mroDef {
 
 typedef struct _classDef {
     unsigned classflags;                /* The class flags. */
+    unsigned classflags2;               /* The class flags, part 2. */
     int pyqt4_flags;                    /* The PyQt4 specific flags. */
     nameDef *pyname;                    /* The Python name. */
     ifaceFileDef *iff;                  /* The interface file. */
@@ -1390,6 +1401,7 @@ typedef struct _moduleCfg {
     KwArgs kwargs;
     const char *name;
     int use_arg_names;
+    int all_raise_py_exc;
     int version;
     codeBlock *docstring;
 } moduleCfg;

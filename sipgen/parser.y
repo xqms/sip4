@@ -69,7 +69,9 @@ static exceptionDef *findException(sipSpec *pt, scopedNameDef *fqname, int new);
 static mappedTypeDef *newMappedType(sipSpec *,argDef *, optFlags *);
 static enumDef *newEnum(sipSpec *pt, moduleDef *mod, mappedTypeDef *mt_scope,
         char *name, optFlags *of, int flags);
-static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod, classDef *scope, scopedNameDef *fqname, classTmplDef *tcd, templateDef *td);
+static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
+        classDef *scope, scopedNameDef *fqname, classTmplDef *tcd,
+        templateDef *td, const char *pyname);
 static void newTypedef(sipSpec *, moduleDef *, char *, argDef *, optFlags *);
 static void newVar(sipSpec *pt, moduleDef *mod, char *name, int isstatic,
         argDef *type, optFlags *of, codeBlock *acode, codeBlock *gcode,
@@ -159,7 +161,8 @@ static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
         codeBlock *docstring);
 static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
         const char *filename, const char *name, int version, int c_module,
-        KwArgs kwargs, int use_arg_names, codeBlock *docstring);
+        KwArgs kwargs, int use_arg_names, int all_raise_py_exc,
+        codeBlock *docstring);
 static void addAutoPyName(moduleDef *mod, const char *remove_leading);
 static KwArgs convertKwArgs(const char *kwargs);
 static void checkAnnos(optFlags *annos, const char *valid[]);
@@ -206,6 +209,7 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
     pluginCfg       plugin;
     propertyCfg     property;
     variableCfg     variable;
+    int             token;
 }
 
 %token          TK_API
@@ -341,6 +345,7 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
 %token          TK_TIMESTAMP
 %token          TK_TYPE
 %token          TK_USEARGNAMES
+%token          TK_ALLRAISEPYEXC
 %token          TK_VERSION
 
 %type <memArg>          argvalue
@@ -406,6 +411,7 @@ static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
 %type <boolean>         bool_value
 %type <exceptionbase>   baseexception
 %type <klass>           class
+%type <token>           class_access
 
 %type <api>             api_args
 %type <api>             api_arg_list
@@ -1630,7 +1636,7 @@ module: TK_MODULE module_args module_body {
                 currentModule = configureModule(currentSpec, currentModule,
                         currentContext.filename, $2.name, $2.version,
                         $2.c_module, $2.kwargs, $2.use_arg_names,
-                        $3.docstring);
+                        $2.all_raise_py_exc, $3.docstring);
         }
     |   TK_CMODULE dottedname optnumber {
             deprecated("%CModule is deprecated, use %Module and the 'language' argument instead");
@@ -1638,7 +1644,7 @@ module: TK_MODULE module_args module_body {
             if (notSkipping())
                 currentModule = configureModule(currentSpec, currentModule,
                         currentContext.filename, $2, $3, TRUE, defaultKwArgs,
-                        FALSE, NULL);
+                        FALSE, FALSE, NULL);
         }
     ;
 
@@ -1652,6 +1658,7 @@ module_args:    dottedname optnumber {
             $$.kwargs = defaultKwArgs;
             $$.name = $1;
             $$.use_arg_names = FALSE;
+            $$.all_raise_py_exc = FALSE;
             $$.version = $2;
         }
     |   '(' module_arg_list ')' {
@@ -1669,6 +1676,7 @@ module_arg_list:    module_arg
             case TK_LANGUAGE: $$.c_module = $3.c_module; break;
             case TK_NAME: $$.name = $3.name; break;
             case TK_USEARGNAMES: $$.use_arg_names = $3.use_arg_names; break;
+            case TK_ALLRAISEPYEXC: $$.all_raise_py_exc = $3.all_raise_py_exc; break;
             case TK_VERSION: $$.version = $3.version; break;
             }
         }
@@ -1681,6 +1689,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = convertKwArgs($3);
             $$.name = NULL;
             $$.use_arg_names = FALSE;
+            $$.all_raise_py_exc = FALSE;
             $$.version = -1;
         }
     |   TK_LANGUAGE '=' TK_STRING_VALUE {
@@ -1696,6 +1705,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = defaultKwArgs;
             $$.name = NULL;
             $$.use_arg_names = FALSE;
+            $$.all_raise_py_exc = FALSE;
             $$.version = -1;
         }
     |   TK_NAME '=' dottedname {
@@ -1705,6 +1715,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = defaultKwArgs;
             $$.name = $3;
             $$.use_arg_names = FALSE;
+            $$.all_raise_py_exc = FALSE;
             $$.version = -1;
         }
     |   TK_USEARGNAMES '=' bool_value {
@@ -1714,6 +1725,17 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = defaultKwArgs;
             $$.name = NULL;
             $$.use_arg_names = $3;
+            $$.all_raise_py_exc = FALSE;
+            $$.version = -1;
+        }
+    |   TK_ALLRAISEPYEXC '=' bool_value {
+            $$.token = TK_ALLRAISEPYEXC;
+
+            $$.c_module = FALSE;
+            $$.kwargs = defaultKwArgs;
+            $$.name = NULL;
+            $$.use_arg_names = FALSE;
+            $$.all_raise_py_exc = $3;
             $$.version = -1;
         }
     |   TK_VERSION '=' TK_NUMBER_VALUE {
@@ -1726,6 +1748,7 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = defaultKwArgs;
             $$.name = NULL;
             $$.use_arg_names = FALSE;
+            $$.all_raise_py_exc = FALSE;
             $$.version = $3;
         }
     ;
@@ -2526,6 +2549,7 @@ typedef:    TK_TYPEDEF cpptype TK_NAME_VALUE optflags ';' {
                     "Encoding",
                     "NoTypeName",
                     "PyInt",
+                    "PyName",
                     NULL
                 };
 
@@ -2543,6 +2567,7 @@ typedef:    TK_TYPEDEF cpptype TK_NAME_VALUE optflags ';' {
                     "Encoding",
                     "NoTypeName",
                     "PyInt",
+                    "PyName",
                     NULL
                 };
 
@@ -2684,12 +2709,12 @@ superlist:  superclass
     |   superlist ',' superclass 
     ;
 
-superclass: scopedname {
-            if (notSkipping())
+superclass: class_access scopedname {
+            if (notSkipping() && $1 == TK_PUBLIC)
             {
                 argDef ad;
                 classDef *super;
-                scopedNameDef *snd = $1;
+                scopedNameDef *snd = $2;
 
                 /*
                  * This is a hack to allow typedef'ed classes to be used before
@@ -2720,6 +2745,20 @@ superclass: scopedname {
                 super = findClass(currentSpec, class_iface, NULL, snd);
                 appendToClassList(&currentSupers, super);
             }
+        }
+    ;
+
+class_access:   {
+        $$ = TK_PUBLIC;
+        }
+    |   TK_PUBLIC {
+        $$ = TK_PUBLIC;
+        }
+    |   TK_PROTECTED {
+        $$ = TK_PROTECTED;
+        }
+    |   TK_PRIVATE {
+        $$ = TK_PRIVATE;
         }
     ;
 
@@ -5304,6 +5343,10 @@ static char *type2string(argDef *ad)
             s = "bool";
             break;
 
+        case void_type:
+            s = "void";
+            break;
+
         default:
             fatal("Unsupported type argument to type2string(): %d\n", ad->atype);
         }
@@ -5377,13 +5420,14 @@ static char *scopedNameToString(scopedNameDef *name)
  */
 static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
         classDef *scope, scopedNameDef *fqname, classTmplDef *tcd,
-        templateDef *td)
+        templateDef *td, const char *pyname)
 {
     scopedNameDef *type_names, *type_values;
     classDef *cd;
     ctorDef *oct, **cttail;
     argDef *ad;
     ifaceFileList *iffl, **used;
+    classList *cl;
 
     type_names = type_values = NULL;
     appendTypeStrings(classFQCName(tcd->cd), &tcd->sig, &td->types, NULL, &type_names, &type_values);
@@ -5407,7 +5451,7 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
     *cd = *tcd->cd;
 
     resetIsTemplateClass(cd);
-    cd->pyname = cacheName(pt, scopedNameTail(fqname));
+    cd->pyname = cacheName(pt, pyname);
     cd->td = td;
 
     /* Handle the interface file. */
@@ -5434,6 +5478,40 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
     }
 
     cd->ecd = currentScope();
+
+    /* Handle the super-classes. */
+    for (cl = cd->supers; cl != NULL; cl = cl->next)
+    {
+        const char *name;
+        int a;
+
+        /* Ignore defined or scoped classes. */
+        if (cl->cd->iff->module != NULL || cl->cd->iff->fqcname->next != NULL)
+            continue;
+
+        name = cl->cd->iff->fqcname->name;
+
+        for (a = 0; a < tcd->sig.nrArgs - 1; ++a)
+            if (strcmp(name, scopedNameTail(tcd->sig.args[a].u.snd)) == 0)
+            {
+                argDef *tad = &td->types.args[a];
+                classDef *icd;
+
+                if (tad->atype == defined_type)
+                    icd = findClass(pt, class_iface, NULL, tad->u.snd);
+                else if (tad->atype == class_type)
+                    icd = tad->u.cd;
+                else
+                    fatal("Template argument %s must expand to a class\n", name);
+
+                /*
+                 * Don't complain about the template argument being undefined.
+                 */
+                setTemplateArg(cl->cd);
+
+                cl->cd = icd;
+            }
+    }
 
     /* Handle the enums. */
     instantiateTemplateEnums(pt, tcd, td, cd, used, type_names, type_values);
@@ -5598,16 +5676,8 @@ static overDef *instantiateTemplateOverloads(sipSpec *pt, overDef *tod,
             /* Start with a shallow copy. */
             *nod->virthandler = *od->virthandler;
 
-            if (od->virthandler->cppsig == &od->pysig)
-                nod->virthandler->cppsig = &nod->pysig;
-            else
-            {
-                nod->virthandler->cppsig = sipMalloc(sizeof (signatureDef));
-
-                *nod->virthandler->cppsig = *od->virthandler->cppsig;
-
-                templateSignature(nod->virthandler->cppsig, TRUE, tcd, td, cd);
-            }
+            nod->virthandler->pysig = &nod->pysig;
+            nod->virthandler->cppsig = nod->cppsig;
 
             nod->virthandler->module = mod;
             nod->virthandler->virtcode = templateCode(pt, used, nod->virthandler->virtcode, type_names, type_values);
@@ -6117,7 +6187,8 @@ static void newTypedef(sipSpec *pt, moduleDef *mod, char *name, argDef *type,
             if (foundInScope(tcd->cd->iff->fqcname, td->fqname) &&
                 sameTemplateSignature(&tcd->sig, &td->types, FALSE))
             {
-                instantiateClassTemplate(pt, mod, scope, fqname, tcd, td);
+                instantiateClassTemplate(pt, mod, scope, fqname, tcd, td,
+                        getPythonName(mod, optflgs, name));
 
                 /* All done. */
                 return;
@@ -6423,6 +6494,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         "NewThread",
         "NoArgParser",
         "NoCopy",
+        "NoRaisesPyException",
         "Numeric",
         "PostHook",
         "PreHook",
@@ -6548,8 +6620,11 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
     if (getOptFlag(optflgs, "TransferThis", bool_flag) != NULL)
         setIsThisTransferredMeth(od);
 
-    if (methodcode == NULL && getOptFlag(optflgs, "RaisesPyException", bool_flag) != NULL)
-        setRaisesPyException(od);
+    if (methodcode == NULL && getOptFlag(optflgs, "NoRaisesPyException", bool_flag) == NULL)
+    {
+        if (allRaisePyException(mod) || getOptFlag(optflgs, "RaisesPyException", bool_flag) != NULL)
+            setRaisesPyException(od);
+    }
 
     if (isProtected(od))
         setHasShadow(c_scope);
@@ -8275,7 +8350,8 @@ static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
  */
 static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
         const char *filename, const char *name, int version, int c_module,
-        KwArgs kwargs, int use_arg_names, codeBlock *docstring)
+        KwArgs kwargs, int use_arg_names, int all_raise_py_exc,
+        codeBlock *docstring)
 {
     moduleDef *mod;
 
@@ -8302,6 +8378,9 @@ static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
     module->kwargs = kwargs;
     module->version = version;
     appendCodeBlock(&module->docstring, docstring);
+
+    if (all_raise_py_exc)
+        setAllRaisePyException(module);
 
     if (use_arg_names)
         setUseArgNames(module);

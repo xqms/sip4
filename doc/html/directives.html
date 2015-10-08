@@ -3,17 +3,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Directives &mdash; SIP 4.13 Reference Guide</title>
+    <title>Directives &mdash; SIP 4.13.1 Reference Guide</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.13',
+        VERSION:     '4.13.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.13 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.13.1 Reference Guide" href="index.html" />
     <link rel="next" title="Annotations" href="annotations.html" />
     <link rel="prev" title="SIP Specification Files" href="specification_files.html" /> 
   </head>
@@ -43,7 +46,7 @@
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13.1 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -66,7 +69,7 @@ not define names that start with the prefix <tt class="docutils literal"><span c
 <h2>Revised Directive Syntax<a class="headerlink" href="#revised-directive-syntax" title="Permalink to this headline">¶</a></h2>
 <p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
-<p>The directive syntax used in the current version has some problems:</p>
+<p>The directive syntax used in older versions has some problems:</p>
 <ul class="simple">
 <li>it is inconsistent in places</li>
 <li>it can be problematic to parse</li>
@@ -856,7 +859,7 @@ which it is defined.
 <p class="versionadded">
 <span class="versionmodified">New in version 4.10.</span></p>
 <pre class="literal-block">
-%Docstring(format = [&#8220;raw&#8221; | &#8220;deindented&#8221;])
+%Docstring(format = [&quot;raw&quot; | &quot;deindented&quot;])
     <em>text</em>
 %End
 </pre>
@@ -1701,7 +1704,8 @@ Python.</td></tr>
 
 <pre class="literal-block">
 %Module(name = <em>dotted-name</em>
-        [, keyword_arguments = [&#8220;None&#8221; | &#8220;All&#8221; | &#8220;Optional&#8221;]]
+        [, all_raise_py_exception = [True | False]]
+        [, keyword_arguments = [&quot;None&quot; | &quot;All&quot; | &quot;Optional&quot;]]
         [, language = <em>string</em>]
         [, use_argument_names = [True | False]]
         [, version = <em>integer</em>])
@@ -1713,6 +1717,10 @@ Python.</td></tr>
 <p>This directive is used to specify the name of a module and a number of other
 attributes.  <tt class="docutils literal"><span class="pre">name</span></tt> may contain periods to specify that the module is part of
 a Python package.</p>
+<p><tt class="docutils literal"><span class="pre">all_raise_py_exception</span></tt> specifies that all functions and methods defined in
+in the module raise a Python exception to indicate that an error occurred.  It
+is the equivalent of using the <a class="reference internal" href="annotations.html#function-annotation-RaisesPyException"><tt class="xref std std-fanno docutils literal"><span class="pre">RaisesPyException</span></tt></a> function annotation
+on every function and method.</p>
 <p><tt class="docutils literal"><span class="pre">keyword_arguments</span></tt> specifies the default level of support for Python keyword
 arguments.  See the <a class="reference internal" href="annotations.html#function-annotation-KeywordArgs"><tt class="xref std std-fanno docutils literal"><span class="pre">KeywordArgs</span></tt></a> annotation for an explaination of the
 possible values and their effect.  If it is not specified then the value
@@ -1801,7 +1809,7 @@ void dump_object(PyObject *o);
 </pre>
 <p class="deprecated">
 <span class="versionmodified">Deprecated since version 4.12: </span>Use the <a class="reference internal" href="#directive-%Include"><tt class="xref std std-directive docutils literal"><span class="pre">%Include</span></tt></a> directive with the <tt class="docutils literal"><span class="pre">optional</span></tt> argument set
-to <tt class="xref docutils literal"><span class="pre">True</span></tt> instead.</p>
+to <tt class="docutils literal"><span class="pre">True</span></tt> instead.</p>
 <p>This directive is identical to the <a class="reference internal" href="#directive-%Include"><tt class="xref std std-directive docutils literal"><span class="pre">%Include</span></tt></a> directive except that
 SIP silently continues processing if <em>filename</em> could not be opened.</p>
 <p>For example:</p>
@@ -2284,7 +2292,7 @@ public:
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -2313,12 +2321,12 @@ public:
         <li class="right" >
           <a href="specification_files.html" title="SIP Specification Files"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13.1 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

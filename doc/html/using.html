@@ -3,17 +3,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Using SIP &mdash; SIP 4.13 Reference Guide</title>
+    <title>Using SIP &mdash; SIP 4.13.1 Reference Guide</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.13',
+        VERSION:     '4.13.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.13 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.13.1 Reference Guide" href="index.html" />
     <link rel="next" title="The SIP Command Line" href="command_line.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
   </head>
@@ -43,7 +46,7 @@
         <li class="right" >
           <a href="installation.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13.1 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -81,7 +84,7 @@ public:
 <p>The corresponding SIP specification file would then look something like this:</p>
 <div class="highlight-python"><pre>// Define the SIP wrapper to the word library.
 
-%Module word 0
+%Module word
 
 class Word {
 
@@ -101,10 +104,7 @@ differences between the two files.</p>
 <blockquote>
 <div><ul class="simple">
 <li>The <a class="reference internal" href="directives.html#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive has been added <a class="footnote-reference" href="#id4" id="id1">[1]</a>.  This is used to
-name the Python module that is being created and to give it a
-<em>generation</em> number.  In this example these are <tt class="docutils literal"><span class="pre">word</span></tt> and <tt class="docutils literal"><span class="pre">0</span></tt>
-respectively.  The generation number is effectively the version number of
-the module.</li>
+name the Python module that is being created, <tt class="docutils literal"><span class="pre">word</span></tt> in this example.</li>
 <li>The <a class="reference internal" href="directives.html#directive-%TypeHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a> directive has been added.  The text
 between this and the following <a class="reference internal" href="directives.html#directive-%End"><tt class="xref std std-directive docutils literal"><span class="pre">%End</span></tt></a> directive is included
 literally in the code that SIP generates.  Normally it is used, as in
@@ -206,7 +206,7 @@ char *reverse(struct Word *word);</pre>
 <p>The corresponding SIP specification file would then look something like this:</p>
 <div class="highlight-python"><pre>/* Define the SIP wrapper to the word library. */
 
-%CModule word 0
+%Module(name=word, language="C")
 
 struct Word {
 
@@ -223,10 +223,10 @@ char *reverse(struct Word *word);</pre>
 <p>Again, let&#8217;s look at the differences between the two files.</p>
 <blockquote>
 <div><ul class="simple">
-<li>The <a class="reference internal" href="directives.html#directive-%CModule"><tt class="xref std std-directive docutils literal"><span class="pre">%CModule</span></tt></a> directive has been added.  This has the same
-syntax as the <a class="reference internal" href="directives.html#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive used in the previous example
-but tells SIP that the library being wrapped is implemented in C rather
-than C++.</li>
+<li>The <a class="reference internal" href="directives.html#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a> directive specifies that the library being
+wrapped is implemented in C rather than C++.  Because we are now
+supplying an optional argument to the directive we must also specify the
+module name as an argument.</li>
 <li>The <a class="reference internal" href="directives.html#directive-%TypeHeaderCode"><tt class="xref std std-directive docutils literal"><span class="pre">%TypeHeaderCode</span></tt></a> directive has been added.</li>
 <li>The <a class="reference internal" href="annotations.html#function-annotation-Factory"><tt class="xref std std-fanno docutils literal"><span class="pre">Factory</span></tt></a> annotation has been added to the <tt class="docutils literal"><span class="pre">create_word()</span></tt>
 function.  This tells SIP that a newly created structure is being
@@ -275,13 +275,13 @@ void setDefault(const QString &amp;def);
 <p>The corresponding SIP specification file would then look something like this:</p>
 <div class="highlight-python"><pre>// Define the SIP wrapper to the hello library.
 
-%Module hello 0
+%Module hello
 
 %Import QtGui/QtGuimod.sip
 
 %If (Qt_4_2_0 -)
 
-class Hello : QLabel {
+class Hello : public QLabel {
 
 %TypeHeaderCode
 #include &lt;hello.h&gt;
@@ -317,8 +317,6 @@ wrapping allowing you to maintain all the different versions in a single
 SIP specification.  The build system provides support to <tt class="docutils literal"><span class="pre">configure.py</span></tt>
 scripts for working out the correct tags to use according to which
 version of the library is actually installed.</li>
-<li>The <tt class="docutils literal"><span class="pre">public</span></tt> keyword used in defining the super-classes has been
-removed.  This is not supported by SIP.</li>
 <li>The <a class="reference internal" href="annotations.html#argument-annotation-TransferThis"><tt class="xref std std-aanno docutils literal"><span class="pre">TransferThis</span></tt></a> annotation has been added to the constructor&#8217;s
 argument.  It specifies that if the argument is not 0 (i.e. the <tt class="docutils literal"><span class="pre">Hello</span></tt>
 instance being constructed has a parent) then ownership of the instance
@@ -721,7 +719,7 @@ private copy of <tt class="docutils literal"><span class="pre">sip.h</span></tt>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -750,12 +748,12 @@ private copy of <tt class="docutils literal"><span class="pre">sip.h</span></tt>
         <li class="right" >
           <a href="installation.html" title="Installation"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13.1 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>
