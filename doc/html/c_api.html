@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>C API for Handwritten Code &mdash; SIP 4.14.6 Reference Guide</title>
+    <title>C API for Handwritten Code &mdash; SIP 4.14.7 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.14.6',
+        VERSION:     '4.14.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.14.6 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.14.7 Reference Guide" href="index.html" />
     <link rel="next" title="Using the C API when Embedding" href="embedding.html" />
     <link rel="prev" title="Annotations" href="annotations.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.6 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.7 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -1047,6 +1047,37 @@ successful.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="sipEnableAutoconversion">
+int <tt class="descname">sipEnableAutoconversion</tt><big>(</big>const sipTypeDef<em>&nbsp;*td</em>, int<em>&nbsp;enable</em><big>)</big><a class="headerlink" href="#sipEnableAutoconversion" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.14.7.</span></p>
+<p>Instances of some classes may be automatically converted to other Python
+objects even though the class has been wrapped.  This allows that behaviour
+to be suppressed so that an instances of the wrapped class is returned
+instead.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>td</strong> &#8211; the type&#8217;s <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a>.  This
+must refer to a class.</li>
+<li><strong>enable</strong> &#8211; is non-zero if auto-conversion should be enabled for the type.  This is
+the default behaviour.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">1</span></tt> or <tt class="docutils literal"><span class="pre">0</span></tt> depending on whether or not auto-conversion was
+previously enabled for the type.  This allows the previous state to be
+restored later on.  <tt class="docutils literal"><span class="pre">-1</span></tt> is returned, and a Python exception raised,
+if there was an error.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="sipExportSymbol">
 int <tt class="descname">sipExportSymbol</tt><big>(</big>const char<em>&nbsp;*name</em>, void<em>&nbsp;*sym</em><big>)</big><a class="headerlink" href="#sipExportSymbol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Python does not allow extension modules to directly access symbols in
@@ -1838,6 +1869,31 @@ const char *<tt class="descname">sipResolveTypedef</tt><big>(</big>const char<em
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="sipSetDestroyOnExit">
+void <tt class="descname">sipSetDestroyOnExit</tt><big>(</big>int<em>&nbsp;destroy</em><big>)</big><a class="headerlink" href="#sipSetDestroyOnExit" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.14.7.</span></p>
+<p>When the Python interpreter exits it garbage collects those objects that it
+can.  This means that any corresponding C++ instances and C structures
+owned by Python are destroyed.  Unfortunately this happens in an
+unpredictable order and so can cause memory faults within the wrapped
+library.  Calling this function with a value of zero disables the automatic
+destruction of C++ instances and C structures.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>destroy</strong> &#8211; non-zero if all C++ instances and C structures owned by Python should
+be destroyed when the interpreter exits.  This is the default.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="type">
 <dt id="sipSimpleWrapper">
 <tt class="descname">sipSimpleWrapper</tt><a class="headerlink" href="#sipSimpleWrapper" title="Permalink to this definition">¶</a></dt>
@@ -2334,7 +2390,7 @@ object for enum <tt class="docutils literal"><span class="pre">Except</span></tt
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.6 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.7 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

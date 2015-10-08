@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040e06
-#define SIP_VERSION_STR     "4.14.6"
+#define SIP_VERSION         0x040e07
+#define SIP_VERSION_STR     "4.14.7"
 
 
 #ifdef TRUE
@@ -216,13 +216,16 @@
 /* Handle member flags. */
 
 #define MEMBR_NUMERIC       0x0001      /* It is a numeric slot. */
-#define MEMBR_NO_ARG_PARSER 0x0002      /* Don't generate an argument parser. */
-#define MEMBR_NOT_VERSIONED 0x0004      /* There is an unversioned overload. */
-#define MEMBR_KEYWORD_ARGS  0x0008      /* It allows keyword arguments. */
-#define MEMBR_HAS_PROTECTED 0x0010      /* It has a protected overload. */
+#define MEMBR_SEQUENCE      0x0002      /* It is a sequnce slot. */
+#define MEMBR_NO_ARG_PARSER 0x0004      /* Don't generate an argument parser. */
+#define MEMBR_NOT_VERSIONED 0x0008      /* There is an unversioned overload. */
+#define MEMBR_KEYWORD_ARGS  0x0010      /* It allows keyword arguments. */
+#define MEMBR_HAS_PROTECTED 0x0011      /* It has a protected overload. */
 
 #define isNumeric(m)        ((m)->memberflags & MEMBR_NUMERIC)
 #define setIsNumeric(m)     ((m)->memberflags |= MEMBR_NUMERIC)
+#define isSequence(m)       ((m)->memberflags & MEMBR_SEQUENCE)
+#define setIsSequence(m)    ((m)->memberflags |= MEMBR_SEQUENCE)
 #define noArgParser(m)      ((m)->memberflags & MEMBR_NO_ARG_PARSER)
 #define setNoArgParser(m)   ((m)->memberflags |= MEMBR_NO_ARG_PARSER)
 #define notVersioned(m)     ((m)->memberflags & MEMBR_NOT_VERSIONED)
@@ -1122,6 +1125,7 @@ typedef struct _classDef {
     codeBlockList *docstring;           /* Class and ctor docstrings. */
     codeBlockList *instancecode;        /* Create instance code. */
     codeBlockList *convtocode;          /* Convert to C++ code. */
+    codeBlockList *convfromcode;        /* Convert from C++ code. */
     codeBlockList *travcode;            /* Traverse code. */
     codeBlockList *clearcode;           /* Clear code. */
     codeBlockList *getbufcode;          /* Get buffer code (Python v3). */

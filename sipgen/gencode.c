@@ -710,6 +710,8 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipResolveTypedef           sipAPI_%s->api_resolve_typedef\n"
 "#define sipRegisterAttributeGetter  sipAPI_%s->api_register_attribute_getter\n"
 "#define sipIsAPIEnabled             sipAPI_%s->api_is_api_enabled\n"
+"#define sipSetDestroyOnExit         sipAPI_%s->api_set_destroy_on_exit\n"
+"#define sipEnableAutoconversion     sipAPI_%s->api_enable_autoconversion\n"
 "#define sipExportModule             sipAPI_%s->api_export_module\n"
 "#define sipInitModule               sipAPI_%s->api_init_module\n"
 "\n"
@@ -732,6 +734,8 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipConvertFromMappedType    sipConvertFromType\n"
 "#define sipConvertFromNamedEnum(v, pt)  sipConvertFromEnum((v), ((sipEnumTypeObject *)(pt))->type)\n"
 "#define sipConvertFromNewInstance(p, wt, t) sipConvertFromNewType((p), (wt)->type, (t))\n"
+        ,mname
+        ,mname
         ,mname
         ,mname
         ,mname
@@ -3875,7 +3879,6 @@ static void generateMappedTypeCpp(mappedTypeDef *mtd, sipSpec *pt, FILE *fp)
     generateConvertToDefinitions(mtd,NULL,fp);
 
     /* Generate the from type convertor. */
-
     need_xfer = (generating_c || usedInCode(mtd->convfromcode, "sipTransferObj"));
 
     prcode(fp,
@@ -3889,7 +3892,7 @@ static void generateMappedTypeCpp(mappedTypeDef *mtd, sipSpec *pt, FILE *fp)
             , mtd->iff);
 
     prcode(fp,
-"static PyObject *convertFrom_%L(void *sipCppV,PyObject *%s)\n"
+"static PyObject *convertFrom_%L(void *sipCppV, PyObject *%s)\n"
 "{\n"
 "   ", mtd->iff, (need_xfer ? "sipTransferObj" : ""));
 
@@ -4052,7 +4055,44 @@ static void generateClassCpp(classDef *cd, sipSpec *pt, FILE *fp)
     generateAccessFunctions(pt, mod, cd, fp);
 
     if (cd->iff->type != namespace_iface)
+    {
         generateConvertToDefinitions(NULL,cd,fp);
+
+        /* Generate the optional from type convertor. */
+        if (cd->convfromcode != NULL)
+        {
+            int need_xfer;
+
+            need_xfer = (generating_c || usedInCode(cd->convfromcode, "sipTransferObj"));
+
+            prcode(fp,
+"\n"
+"\n"
+                );
+
+            if (!generating_c)
+                prcode(fp,
+"extern \"C\" {static PyObject *convertFrom_%L(void *, PyObject *);}\n"
+                    , cd->iff);
+
+            prcode(fp,
+"static PyObject *convertFrom_%L(void *sipCppV, PyObject *%s)\n"
+"{\n"
+"   ", cd->iff, (need_xfer ? "sipTransferObj" : ""));
+
+            generateClassFromVoid(cd, "sipCpp", "sipCppV", fp);
+
+            prcode(fp, ";\n"
+"\n"
+                );
+
+            generateCppCodeBlock(cd->convfromcode, fp);
+
+            prcode(fp,
+"}\n"
+                );
+        }
+    }
 
     /* The type definition structure. */
     generateTypeDefinition(pt, cd, fp);
@@ -5696,7 +5736,7 @@ static void generateClassFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
         if (canCreate(cd) || isPublicDtor(cd))
         {
             if (pluginPyQt4(pt) && isQObjectSubClass(cd) && isPublicDtor(cd))
-                need_ptr = TRUE;
+                need_ptr = need_cast_ptr = TRUE;
             else if (hasShadow(cd))
                 need_ptr = need_state = TRUE;
             else if (isPublicDtor(cd))
@@ -5719,20 +5759,20 @@ static void generateClassFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
 "{\n"
             , cd->iff, (need_ptr ? "sipCppV" : ""), (need_state ? " sipState" : ""));
 
-        if (cd->dealloccode != NULL)
+        if (need_cast_ptr)
         {
-            if (need_cast_ptr)
-            {
-                prcode(fp,
+            prcode(fp,
 "    ");
 
-                generateClassFromVoid(cd, "sipCpp", "sipCppV", fp);
+            generateClassFromVoid(cd, "sipCpp", "sipCppV", fp);
 
-                prcode(fp, ";\n"
+            prcode(fp, ";\n"
 "\n"
-                    );
-            }
+                );
+        }
 
+        if (cd->dealloccode != NULL)
+        {
             generateCppCodeBlock(cd->dealloccode, fp);
 
             prcode(fp,
@@ -5763,13 +5803,11 @@ static void generateClassFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
                  * belong to.
                  */
                 prcode(fp,
-"    %U *sipCpp = reinterpret_cast<%U *>(sipCppV);\n"
-"\n"
 "    if (QThread::currentThread() == sipCpp->thread())\n"
 "        delete sipCpp;\n"
 "    else\n"
 "        sipCpp->deleteLater();\n"
-                        , cd, cd);
+                        );
             }
             else if (hasShadow(cd))
             {
@@ -10041,14 +10079,34 @@ static void generateTypeDefinition(sipSpec *pt, classDef *cd, FILE *fp)
             , cd->iff);
 
     if (cd->iff->type == namespace_iface)
+    {
         prcode(fp,
 "    0,\n"
             );
+    }
     else
     {
         if (cd->convtocode != NULL)
             prcode(fp,
 "    convertTo_%L,\n"
+                , cd->iff);
+        else
+            prcode(fp,
+"    0,\n"
+                );
+    }
+
+    if (cd->iff->type == namespace_iface)
+    {
+        prcode(fp,
+"    0,\n"
+            );
+    }
+    else
+    {
+        if (cd->convfromcode != NULL)
+            prcode(fp,
+"    convertFrom_%L,\n"
                 , cd->iff);
         else
             prcode(fp,
