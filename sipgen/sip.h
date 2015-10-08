@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040c04
-#define SIP_VERSION_STR     "4.12.4"
+#define SIP_VERSION         0x040d00
+#define SIP_VERSION_STR     "4.13"
 
 
 #ifdef TRUE
@@ -206,6 +206,7 @@
 #define MEMBR_NO_ARG_PARSER 0x0002      /* Don't generate an argument parser. */
 #define MEMBR_NOT_VERSIONED 0x0004      /* There is an unversioned overload. */
 #define MEMBR_KEYWORD_ARGS  0x0008      /* It allows keyword arguments. */
+#define MEMBR_HAS_PROTECTED 0x0010      /* It has a protected overload. */
 
 #define isNumeric(m)        ((m)->memberflags & MEMBR_NUMERIC)
 #define setIsNumeric(m)     ((m)->memberflags |= MEMBR_NUMERIC)
@@ -215,6 +216,8 @@
 #define setNotVersioned(m)  ((m)->memberflags |= MEMBR_NOT_VERSIONED)
 #define useKeywordArgs(m)   ((m)->memberflags & MEMBR_KEYWORD_ARGS)
 #define setUseKeywordArgs(m)    ((m)->memberflags |= MEMBR_KEYWORD_ARGS)
+#define hasProtected(m)     ((m)->memberflags & MEMBR_HAS_PROTECTED)
+#define setHasProtected(m)  ((m)->memberflags |= MEMBR_HAS_PROTECTED)
 
 
 /* Handle enum flags.  These are combined with the section flags. */
@@ -439,6 +442,13 @@ typedef enum {
     ParserWarning,
     DeprecationWarning
 } Warning;
+
+
+/* Docstring formatting. */
+typedef enum {
+    raw,
+    deindented
+} Format;
 
 
 /* Levels of keyword argument support. */
@@ -765,6 +775,7 @@ typedef struct _moduleDef {
     int qobjclass;                      /* QObject class, -1 if none. */
     struct _memberDef *othfuncs;        /* List of other functions. */
     struct _overDef *overs;             /* Global overloads. */
+    Format defdocstring;                /* The default docstring format. */
     argType encoding;                   /* The default string encoding. */
     nameDef *defmetatype;               /* The optional default meta-type. */
     nameDef *defsupertype;              /* The optional default super-type. */
@@ -1300,6 +1311,12 @@ typedef struct _consModuleCfg {
     codeBlock *docstring;
 } consModuleCfg;
 
+/* %DefaultDocstringFormat */
+typedef struct _defDocstringCfg {
+    int token;
+    const char *name;
+} defDocstringCfg;
+
 /* %DefaultEncoding */
 typedef struct _defEncodingCfg {
     int token;
@@ -1317,6 +1334,12 @@ typedef struct _defSupertypeCfg {
     int token;
     const char *name;
 } defSupertypeCfg;
+
+/* %Docstring */
+typedef struct _docstringCfg {
+    int token;
+    Format format;
+} docstringCfg;
 
 /* %Exception */
 typedef struct _exceptionCfg {

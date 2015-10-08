@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Python API for Applications &mdash; SIP 4.12.4 Reference Guide</title>
+    <title>Python API for Applications &mdash; SIP 4.13 Reference Guide</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.12.4',
+        VERSION:     '4.13',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.12.4 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.13 Reference Guide" href="index.html" />
     <link rel="next" title="The Build System" href="build_system.html" />
     <link rel="prev" title="Using the C API when Embedding" href="embedding.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="embedding.html" title="Using the C API when Embedding"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -54,7 +54,7 @@
             
   <div class="section" id="module-sip">
 <span id="python-api-for-applications"></span><span id="ref-python-api"></span><h1>Python API for Applications<a class="headerlink" href="#module-sip" title="Permalink to this headline">¶</a></h1>
-<p>The main purpose of the <a class="reference internal" href="#module-sip"><tt class="xref py py-mod docutils literal"><span class="pre">sip</span></tt></a> module is to provide functionality common to
+<p>The main purpose of the <a class="reference internal" href="#module-sip" title="sip"><tt class="xref py py-mod docutils literal"><span class="pre">sip</span></tt></a> module is to provide functionality common to
 all SIP generated bindings.  It is loaded automatically and most of the time
 you will completely ignore it.  However, it does expose some functionality that
 can be used by applications.</p>
@@ -90,10 +90,7 @@ returns the structure&#8217;s memory to the heap.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> &#8211; the Python object.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; the Python object.</td>
 </tr>
 </tbody>
 </table>
@@ -108,10 +105,7 @@ of the Python object that wraps a C++ instance or C structure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> &#8211; the Python object.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; the Python object.</td>
 </tr>
 </tbody>
 </table>
@@ -129,14 +123,10 @@ implicitly by importing the module that defines it.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> &#8211; the name of the API.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; the name of the API.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The version number that has been set for the API.  An exception will
-be raised if the API is unknown.</p>
-</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">The version number that has been set for the API.  An exception will
+be raised if the API is unknown.</td>
 </tr>
 </tbody>
 </table>
@@ -151,13 +141,9 @@ returned to the heap.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>obj</strong> &#8211; the Python object.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; the Python object.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref docutils literal"><span class="pre">True</span></tt> if the C/C++ instance has been deleted.</p>
-</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref docutils literal"><span class="pre">True</span></tt> if the C/C++ instance has been deleted.</td>
 </tr>
 </tbody>
 </table>
@@ -174,13 +160,9 @@ it was then it is possible to call a C++ instance&#8217;s protected methods.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>obj</strong> &#8211; the Python object.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; the Python object.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref docutils literal"><span class="pre">True</span></tt> if the C/C++ instance was created by Python.</p>
-</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref docutils literal"><span class="pre">True</span></tt> if the C/C++ instance was created by Python.</td>
 </tr>
 </tbody>
 </table>
@@ -194,13 +176,9 @@ it was then it is possible to call a C++ instance&#8217;s protected methods.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>obj</strong> &#8211; the Python object.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; the Python object.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="xref docutils literal"><span class="pre">True</span></tt> if the C/C++ instance is owned by Python.</p>
-</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref docutils literal"><span class="pre">True</span></tt> if the C/C++ instance is owned by Python.</td>
 </tr>
 </tbody>
 </table>
@@ -240,10 +218,7 @@ automatically, but there may be circumstances where this isn&#8217;t possible.</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> &#8211; the Python object.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; the Python object.</td>
 </tr>
 </tbody>
 </table>
@@ -260,10 +235,7 @@ understand the operation of a C++ library&#8217;s virtual function calls.)</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>mask</strong> &#8211; the mask that determines which debugging statements are enabled.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mask</strong> &#8211; the mask that determines which debugging statements are enabled.</td>
 </tr>
 </tbody>
 </table>
@@ -326,13 +298,9 @@ class instance.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>obj</strong> &#8211; the Python object.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> &#8211; the Python object.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">an integer that is the address of the C/C++ instance.</p>
-</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">an integer that is the address of the C/C++ instance.</td>
 </tr>
 </tbody>
 </table>
@@ -393,18 +361,14 @@ the address does not have an associated size.  It behaves like a Python
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>idx</strong> &#8211; is the index which may either be an integer, an object that
-implements <tt class="docutils literal"><span class="pre">__index__()</span></tt> or a slice object.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>idx</strong> &#8211; is the index which may either be an integer, an object that
+implements <tt class="docutils literal"><span class="pre">__index__()</span></tt> or a slice object.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the item.  If the index is an integer then the item will be a
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">the item.  If the index is an integer then the item will be a
 Python v2 string object or a Python v3 bytes object containing the
 single byte at that index.  If the index is a slice object then the
 item will be a new <a class="reference internal" href="#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">voidptr</span></tt></a> object defining the subset of
-the memory corresponding to the slice.</p>
-</td>
+the memory corresponding to the slice.</td>
 </tr>
 </tbody>
 </table>
@@ -506,15 +470,11 @@ or a Python v3 bytes object.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>size</strong> &#8211; the number of bytes to copy.  If it is negative then the size
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> &#8211; the number of bytes to copy.  If it is negative then the size
 associated with the address is used.  If there is no associated
-size then an exception is raised.</li>
-</ul>
-</td>
+size then an exception is raised.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the string or bytes object.</p>
-</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">the string or bytes object.</td>
 </tr>
 </tbody>
 </table>
@@ -542,11 +502,8 @@ size then an exception is raised.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> &#8211; the size to associate.  If it is negative then no size is
-associated.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> &#8211; the size to associate.  If it is negative then no size is
+associated.</td>
 </tr>
 </tbody>
 </table>
@@ -574,10 +531,7 @@ associated.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>writeable</strong> &#8211; the writeable state to set.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>writeable</strong> &#8211; the writeable state to set.</td>
 </tr>
 </tbody>
 </table>
@@ -612,7 +566,7 @@ object is returned.</p>
 <dt id="sip.wrapper">
 <em class="property">class </em><tt class="descclassname">sip.</tt><tt class="descname">wrapper</tt><a class="headerlink" href="#sip.wrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the type object of the default base type of all instances wrapped
-by SIP.  The <tt class="xref std std-canno docutils literal"><span class="pre">Supertype</span></tt> class annotation can be used to specify a
+by SIP.  The <a class="reference internal" href="annotations.html#class-annotation-Supertype"><tt class="xref std std-canno docutils literal"><span class="pre">Supertype</span></tt></a> class annotation can be used to specify a
 different base type for a class.</p>
 </dd></dl>
 
@@ -671,12 +625,12 @@ different base type for a class.</p>
         <li class="right" >
           <a href="embedding.html" title="Using the C API when Embedding"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

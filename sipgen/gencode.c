@@ -518,6 +518,7 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
         prcode(fp,
 "\n"
 "#include <QMetaType>\n"
+"#include <QThread>\n"
             );
 
     /* Define the enabled features. */
@@ -5578,7 +5579,9 @@ static void generateClassFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
 
         if (canCreate(cd) || isPublicDtor(cd))
         {
-            if (hasShadow(cd))
+            if (pluginPyQt4(pt) && isQObjectSubClass(cd) && isPublicDtor(cd))
+                need_ptr = TRUE;
+            else if (hasShadow(cd))
                 need_ptr = need_state = TRUE;
             else if (isPublicDtor(cd))
                 need_ptr = TRUE;
@@ -5637,7 +5640,22 @@ static void generateClassFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
 "\n"
                     );
 
-            if (hasShadow(cd))
+            if (pluginPyQt4(pt) && isQObjectSubClass(cd) && isPublicDtor(cd))
+            {
+                /*
+                 * QObjects should only be deleted in the threads that they
+                 * belong to.
+                 */
+                prcode(fp,
+"    %U *sipCpp = reinterpret_cast<%U *>(sipCppV);\n"
+"\n"
+"    if (QThread::currentThread() == sipCpp->thread())\n"
+"        delete sipCpp;\n"
+"    else\n"
+"        sipCpp->deleteLater();\n"
+                        , cd, cd);
+            }
+            else if (hasShadow(cd))
             {
                 prcode(fp,
 "    if (sipState & SIP_DERIVED_CLASS)\n"
@@ -10740,7 +10758,7 @@ static void generateFunction(sipSpec *pt, memberDef *md, overDef *overs,
         classDef *cd, classDef *ocd, moduleDef *mod, FILE *fp)
 {
     overDef *od;
-    int need_method, need_self, need_args, need_selfarg, need_orig_self, need_kwds;
+    int need_method, need_self, need_args, need_selfarg, need_orig_self;
 
     /*
      * Check that there is at least one overload that needs to be handled.
@@ -10748,7 +10766,7 @@ static void generateFunction(sipSpec *pt, memberDef *md, overDef *overs,
      * compiler warning).  See if we need to remember if "self" was explicitly
      * passed as an argument.  See if we need to handle keyword arguments.
      */
-    need_method = need_self = need_args = need_selfarg = need_orig_self = need_kwds = FALSE;
+    need_method = need_self = need_args = need_selfarg = need_orig_self = FALSE;
 
     for (od = overs; od != NULL; od = od->next)
     {
@@ -10776,9 +10794,6 @@ static void generateFunction(sipSpec *pt, memberDef *md, overDef *overs,
                     else if (isVirtual(od) || isVirtualReimp(od) || usedInCode(od->methodcode, "sipSelfWasArg"))
                         need_selfarg = TRUE;
                 }
-
-                if (od->kwargs != NoKwArgs)
-                    need_kwds = TRUE;
             }
         }
     }
@@ -10819,12 +10834,12 @@ static void generateFunction(sipSpec *pt, memberDef *md, overDef *overs,
         if (!generating_c)
             prcode(fp,
 "extern \"C\" {static PyObject *meth_%L_%s(PyObject *, PyObject *%s);}\n"
-            , cd->iff, pname, (noArgParser(md) || need_kwds ? ", PyObject *" : ""));
+            , cd->iff, pname, (noArgParser(md) || useKeywordArgs(md) ? ", PyObject *" : ""));
 
         prcode(fp,
 "static PyObject *meth_%L_%s(PyObject *%s, PyObject *%s%s)\n"
 "{\n"
-            , cd->iff, pname, (need_self ? "sipSelf" : ""), (need_args ? "sipArgs" : ""), (noArgParser(md) || need_kwds ? ", PyObject *sipKwds" : ""));
+            , cd->iff, pname, (need_self ? "sipSelf" : ""), (need_args ? "sipArgs" : ""), (noArgParser(md) || useKeywordArgs(md) ? ", PyObject *sipKwds" : ""));
 
         if (tracing)
             prcode(fp,
@@ -13022,7 +13037,7 @@ static void deleteTemps(moduleDef *mod, signatureDef *sd, FILE *fp)
     {
         argDef *ad = &sd->args[a];
 
-        if (isArray(ad) && (ad->atype == mapped_type || ad->atype == class_type))
+        if (isArray(ad) && !isTransferred(ad) && (ad->atype == mapped_type || ad->atype == class_type))
         {
             if (generating_c)
                 prcode(fp,

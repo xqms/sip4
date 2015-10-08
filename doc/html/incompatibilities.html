@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Potential Incompatibilities with Earlier Versions &mdash; SIP 4.12.4 Reference Guide</title>
+    <title>Potential Incompatibilities with Earlier Versions &mdash; SIP 4.13 Reference Guide</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.12.4',
+        VERSION:     '4.13',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.12.4 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.13 Reference Guide" href="index.html" />
     <link rel="next" title="Installation" href="installation.html" />
     <link rel="prev" title="Introduction" href="introduction.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="introduction.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -102,8 +102,8 @@ special method must be explicitly defined.</p>
 <div class="section" id="sipwrapper-user-member">
 <h3>sipWrapper user Member<a class="headerlink" href="#sipwrapper-user-member" title="Permalink to this headline">¶</a></h3>
 <p>Prior to this version the <a class="reference internal" href="c_api.html#sipWrapper" title="sipWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipWrapper</span></tt></a> structure had a member called
-<a class="reference internal" href="c_api.html#user" title="user"><tt class="xref c c-type docutils literal"><span class="pre">user</span></tt></a> which is available for handwritten code to use.  From this
-version <a class="reference internal" href="c_api.html#user" title="user"><tt class="xref c c-type docutils literal"><span class="pre">user</span></tt></a> is a member of the <a class="reference internal" href="c_api.html#sipSimpleWrapper" title="sipSimpleWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipSimpleWrapper</span></tt></a> structure.</p>
+<tt class="xref c c-type docutils literal"><span class="pre">user</span></tt> which is available for handwritten code to use.  From this
+version <tt class="xref c c-type docutils literal"><span class="pre">user</span></tt> is a member of the <a class="reference internal" href="c_api.html#sipSimpleWrapper" title="sipSimpleWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipSimpleWrapper</span></tt></a> structure.</p>
 <p><a class="reference internal" href="c_api.html#sipWrapper" title="sipWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipWrapper</span></tt></a> pointers can be safely cast to <a class="reference internal" href="c_api.html#sipSimpleWrapper" title="sipSimpleWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipSimpleWrapper</span></tt></a>
 pointers, so if your code does something like:</p>
 <div class="highlight-python"><pre>((sipWrapper *)obj)-&gt;user = an_object_reference;</pre>
@@ -123,7 +123,7 @@ from <a class="reference internal" href="c_api.html#sipBuildResult" title="sipBu
 <li><tt class="xref c c-func docutils literal"><span class="pre">sipConvertToCpp()</span></tt></li>
 <li><tt class="xref c c-func docutils literal"><span class="pre">sipIsSubClassInstance()</span></tt></li>
 <li><tt class="xref c c-func docutils literal"><span class="pre">sipTransfer()</span></tt></li>
-<li>The <tt class="xref py py-func docutils literal"><span class="pre">transfer()</span></tt> function of the <a class="reference internal" href="python_api.html#module-sip"><tt class="xref py py-mod docutils literal"><span class="pre">sip</span></tt></a> module.</li>
+<li>The <tt class="xref py py-func docutils literal"><span class="pre">transfer()</span></tt> function of the <a class="reference internal" href="python_api.html#module-sip" title="sip"><tt class="xref py py-mod docutils literal"><span class="pre">sip</span></tt></a> module.</li>
 <li>The old-style generated type convertors.</li>
 </ul>
 <p>In addition the <em class="xref std std-option">-a</em> command line option to <tt class="file docutils literal"><span class="pre">configure.py</span></tt> has
@@ -177,7 +177,7 @@ still supported).</p>
 <p>This version allows a Python <tt class="docutils literal"><span class="pre">int</span></tt> object to be passed whenever an enum is
 expected.  This can mean that two signatures that were different with prior
 versions are now the same as far as Python is concerned.</p>
-<p>The <tt class="xref std std-aanno docutils literal"><span class="pre">Constrained</span></tt> argument annotation can now be applied to an enum
+<p>The <a class="reference internal" href="annotations.html#argument-annotation-Constrained"><tt class="xref std std-aanno docutils literal"><span class="pre">Constrained</span></tt></a> argument annotation can now be applied to an enum
 argument to revert to the earlier behaviour.</p>
 </div>
 </div>
@@ -202,7 +202,7 @@ them or make them dependent on the particular version of SIP.</p>
 <h3>%ConvertFromTypeCode and %ConvertToTypeCode<a class="headerlink" href="#convertfromtypecode-and-converttotypecode" title="Permalink to this headline">¶</a></h3>
 <p>Handwritten <a class="reference internal" href="directives.html#directive-%ConvertFromTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertFromTypeCode</span></tt></a> and
 <a class="reference internal" href="directives.html#directive-%ConvertToTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a> now have the responsibility for implementing
-the <tt class="xref std std-aanno docutils literal"><span class="pre">Transfer</span></tt> and <tt class="xref std std-aanno docutils literal"><span class="pre">TransferBack</span></tt> annotations.</p>
+the <a class="reference internal" href="annotations.html#argument-annotation-Transfer"><tt class="xref std std-aanno docutils literal"><span class="pre">Transfer</span></tt></a> and <a class="reference internal" href="annotations.html#argument-annotation-TransferBack"><tt class="xref std std-aanno docutils literal"><span class="pre">TransferBack</span></tt></a> annotations.</p>
 </div>
 <div class="section" id="sip-build">
 <h3>SIP_BUILD<a class="headerlink" href="#sip-build" title="Permalink to this headline">¶</a></h3>
@@ -303,12 +303,12 @@ still supported).</p>
         <li class="right" >
           <a href="introduction.html" title="Introduction"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.12.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.13 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>
