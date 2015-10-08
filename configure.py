@@ -30,8 +30,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x041000
-sip_version_str = "4.16"
+sip_version = 0x041001
+sip_version_str = "4.16.1"
 py_version = sys.hexversion >> 8
 py_platform = sys.platform
 plat_py_site_dir = None
@@ -489,11 +489,11 @@ def _get_configuration_value(config, name, default=None):
 
         return default
 
-    parts = value.split('%(', maxsplit=1)
+    parts = value.split('%(', 1)
     while len(parts) == 2:
         prefix, tail = parts
 
-        parts = tail.split(')', maxsplit=1)
+        parts = tail.split(')', 1)
         if len(parts) != 2:
             siputils.error("Configuration file contains unterminated extrapolated name '%s'." % tail)
 
@@ -508,7 +508,7 @@ def _get_configuration_value(config, name, default=None):
 
         value = prefix + xtra_value + suffix
 
-        parts = value.split('%(', maxsplit=1)
+        parts = value.split('%(', 1)
 
     return value
 
@@ -533,7 +533,7 @@ def update_from_configuration_file(config_file):
         if l == '':
             continue
 
-        parts = l.split('=', maxsplit=1)
+        parts = l.split('=', 1)
         if len(parts) == 2:
             name = parts[0].strip()
             value = parts[1].strip()
