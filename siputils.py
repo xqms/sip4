@@ -2,7 +2,7 @@
 # extension modules created with SIP.  It provides information about file
 # locations, version numbers etc., and provides some classes and functions.
 #
-# Copyright (c) 2014 Riverbank Computing Limited <info@riverbankcomputing.com>
+# Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
 #
 # This file is part of SIP.
 #
@@ -2052,6 +2052,35 @@ def version_to_string(version, parts=3):
     return '.'.join(part_list)
 
 
+def version_from_string(version_str):
+    """ Convert a version string of the form m.n or m.n.o to an encoded version
+    number (or None if it was an invalid format).  version_str is the version
+    string.
+    """
+
+    parts = version_str.split('.')
+    if not isinstance(parts, list):
+        return None
+
+    if len(parts) == 2:
+        parts.append('0')
+
+    if len(parts) != 3:
+        return None
+
+    version = 0
+
+    for part in parts:
+        try:
+            v = int(part)
+        except ValueError:
+            return None
+
+        version = (version << 8) + v
+
+    return version
+
+
 def read_version(filename, description, numdefine=None, strdefine=None):
     """Read the version information for a package from a file.  The information
     is specified as #defines of a numeric (hexadecimal or decimal) value and/or
@@ -2240,8 +2269,8 @@ def version_to_sip_tag(version, tags, description):
     """Convert a version number to a SIP tag.
 
     version is the version number.  If it is negative then the latest version
-    is assumed.  (This is typically useful if a snapshot is indicated by a
-    negative version number.)
+    is assumed.  (This is typically useful if a development preview  is
+    indicated by a negative version number.)
     tags is the dictionary of tags keyed by version number.  The tag used is
     the one with the smallest key (ie. earliest version) that is greater than
     the given version number.
@@ -2252,7 +2281,7 @@ def version_to_sip_tag(version, tags, description):
     vl = list(tags.keys())
     vl.sort()
 
-    # For a snapshot use the latest tag.
+    # For a preview use the latest tag.
     if version < 0:
         tag = tags[vl[-1]]
     else:

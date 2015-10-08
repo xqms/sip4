@@ -1,8 +1,232 @@
+2015-02-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.16.6 for changeset 1c5f5c8c7416
+	[6c73a1f41add] [tip] <4.16-maint>
+
+	* NEWS:
+	Released v4.16.6.
+	[1c5f5c8c7416] [4.16.6] <4.16-maint>
+
+	* NEWS:
+	Updated the NEWS file.
+	[bf261aa4b322] <4.16-maint>
+
+2015-02-23  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Added support for module-level PyObjects.
+	[4ca614b2113e] <5-devel>
+
+	* sipgen/gencode.c:
+	Added support for module-level PyObjects.
+	[136913548818] <4.16-maint>
+
+2015-02-14  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* configure.py.in:
+	Installing into a virtual env should now work.
+	[5e133f99d74e] <4.16-maint>
+
+	* setup.py.in:
+	Installing into a virtual env should now work.
+	[b7f2452856ec] <5-devel>
+
+	* siplib/siplib.c:
+	Fixed the handling of an empty dict of keyword arguments.
+	[9992fcd85517] <5-devel>
+
+	* siplib/siplib.c.in:
+	Fixed the handling of an empty dict of keyword arguments.
+	[5f5542824235] <4.16-maint>
+
+2015-02-09  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sip5/main.py, sipgen/gencode.c, sipgen/pybinding.c, sipgen/sip.h,
+	sphinx/command_line.rst:
+	Removed support for the -T option.
+	[3a070a330692] <5-devel>
+
+	* sip5/main.py, sipgen/metasrc/parser.y, sipgen/sip.h,
+	sphinx/command_line.rst:
+	Remoked support for the -k option.
+	[5979fb20817d] <5-devel>
+
+	* sip5/main.py, sipgen/gencode.c, sipgen/pybinding.c, sipgen/sip.h,
+	sphinx/command_line.rst:
+	Removed support for the -d option.
+	[56b6c770548f] <5-devel>
+
+	* sip5/main.py, sipgen/gencode.c, sipgen/pybinding.c, sipgen/sip.h,
+	sphinx/command_line.rst:
+	Removed support for the -b option.
+	[29b2c39a890f] <5-devel>
+
+	* sipgen/main.c, sphinx/command_line.rst:
+	The -T command line option is now ignored and deprecated. Timestamps
+	in generated files are always disabled.
+	[9b1a195afe04] <4.16-maint>
+
+	* build.py, sip5/__init__.py, sip5/__init__.py.in, sip5/main.py,
+	sip5/main.py.in, sipgen/gencode.c, sipgen/metasrc/parser.y,
+	sipgen/pybinding.c, sipgen/sip.h, sipgen/sip.h.in:
+	Refactored the version handling in the code generator so that only
+	__init__.py needs patching.
+	[f85fae864a4f] <5-devel>
+
+	* sip5/main.py.in, sphinx/command_line.rst:
+	Enabled the fromfile prefix support.
+	[baec81092639] <5-devel>
+
+	* sipgen/main.c, sphinx/command_line.rst:
+	Added support for the '@file' format for passing additional command
+	line options in a file.
+	[6c270132db87] <4.16-maint>
+
+2015-02-08  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* setup.py.in:
+	Install the sip.h file.
+	[b147cd0945ed] <5-devel>
+
+	* sipgen/pybinding.c:
+	Fixed the conversion of string lists.
+	[06d85d1f574e] <5-devel>
+
+	* build.py, setup.py.in, sip5/__init__.py, sip5/main.py.in,
+	sipgen/main.py, sipgen/pybinding.c:
+	The sip5 executable is now built by setuptools.
+	[97e04434add1] <5-devel>
+
+2015-02-07  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/main.py, sipgen/pybinding.c:
+	Implemented the Python argument parser.
+	[1c23f732416f] <5-devel>
+
+	* sipgen/main.c, sphinx/command_line.rst:
+	Deprecated the -z option to the code generator.
+	[b1dff38b9766] <4.16-maint>
+
+	* sipgen/pybinding.c:
+	Completed the initial transitional bindings.
+	[22002896d6db] <5-devel>
+
+	* sipgen/pybinding.c:
+	Implemented the generateCode() wrapper.
+	[67d972260b9e] <5-devel>
+
+2015-02-06  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* setup.py.in, sipgen/pybinding.c:
+	Implemented the parse() and transform() wrappers.
+	[b0ff9e4adcd2] <5-devel>
+
+	* setup.py.in, sipgen/main.c, sipgen/main.py, sipgen/pybinding.c,
+	sipgen/sipgen.sbf:
+	Implemented the basic build of the _sip5 module.
+	[f2e4d7c3fba4] <5-devel>
+
+	* build.py, setup.py.in:
+	Fix the version number handling for the devel branch.
+	[6f6c9ff210a0] <5-devel>
+
+	* siplib/siplib.c:
+	Fixed a couple of compiler warnings.
+	[8af78c63d9d7] <5-devel>
+
+	* siplib/siplib.c.in:
+	Fixed a couple of compiler warnings.
+	[d653de687fd4] <4.16-maint>
+
+	* build.py, configure.py.in, sipdistutils.py, siputils.py,
+	specs/aix-g++, specs/aix-g++-64, specs/aix-xlc, specs/aix-xlc-64,
+	specs/bsdi-g++, specs/cygwin-g++, specs/darwin-g++, specs/dgux-g++,
+	specs/freebsd-g++, specs/freebsd-g++34, specs/freebsd-g++40, specs
+	/freebsd-icc, specs/hpux-acc, specs/hpux-acc-64, specs/hpux-acc-o64,
+	specs/hpux-cc, specs/hpux-g++, specs/hpux-g++-64, specs/hpuxi-acc,
+	specs/hpuxi-acc-64, specs/hurd-g++, specs/irix-cc, specs/irix-cc-64,
+	specs/irix-cc-o32, specs/irix-g++, specs/irix-g++-64, specs/linux-
+	arm-g++, specs/linux-arm-thumb-g++, specs/linux-armv6-g++, specs
+	/linux-cxx, specs/linux-ecc-64, specs/linux-g++, specs/linux-g++-32,
+	specs/linux-g++-64, specs/linux-icc, specs/linux-kcc, specs/linux-
+	kylix, specs/linux-lsb, specs/linux-pgcc, specs/lynxos-g++,
+	specs/macx-g++, specs/macx-mwerks, specs/macx-pbuilder, specs/macx-
+	xlc, specs/netbsd-g++, specs/openbsd-g++, specs/qnx-g++, specs
+	/reliant-cds, specs/reliant-cds-64, specs/sco-cc, specs/sco-g++,
+	specs/solaris-cc, specs/solaris-cc-64, specs/solaris-g++,
+	specs/solaris-g++-64, specs/tru64-cxx, specs/tru64-g++, specs
+	/unixware-cc, specs/unixware-g++, specs/win32-borland,
+	specs/win32-g++, specs/win32-icc, specs/win32-msvc,
+	specs/win32-msvc.net, specs/win32-msvc2005, specs/win32-msvc2008,
+	specs/win32-msvc2010, specs/win32-watcom:
+	Removed a lot of legacy stuff.
+	[f43d97c3bf7f] <5-devel>
+
+	* build.py, setup.py.in, siplib/sip.h.in, siplib/sip.h.in.in,
+	siplib/siplib.c, siplib/siplib.c.in, siplib/siplib.sbf.in:
+	Initial conversion of the sip module to be built using setuptools.
+	[a4daecda1a4c] <5-devel>
+
+2015-02-04  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Merged the current 4.16-maint branch into the trunk.
+	[f207b8886557]
+
+2015-01-30  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Fixed the lookup of slots.
+	[56c254273cd8] <4.16-maint>
+
+2015-01-05  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y:
+	Fixed an invalid deprecation warning.
+	[3c5425fa3c80] <4.16-maint>
+
+2015-01-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/metasrc/parser.y, sipgen/sip.h.in,
+	sphinx/annotations.rst:
+	Added the /FileExtension/ class annotation.
+	[51f7769fe32f] <4.16-maint>
+
+	* LICENSE, Roadmap.rst, build.py, configure.py.in, sipgen/export.c,
+	sipgen/extracts.c, sipgen/gencode.c, sipgen/heap.c, sipgen/main.c,
+	sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y, sipgen/sip.h.in,
+	sipgen/sipgen.sbf, sipgen/transform.c, siplib/apiversions.c,
+	siplib/array.c, siplib/array.h, siplib/bool.cpp,
+	siplib/descriptors.c, siplib/objmap.c, siplib/qtlib.c,
+	siplib/sip.h.in.in, siplib/sipint.h, siplib/siplib.c.in,
+	siplib/siplib.sbf.in, siplib/threads.c, siplib/voidptr.c,
+	siputils.py, sphinx/conf.py.in, sphinx/directives.rst:
+	Updated the copyright notices.
+	[ccd0bdd9b21c] <4.16-maint>
+
+	* siputils.py, sphinx/build_system.rst, sphinx/c_api.rst,
+	sphinx/python_api.rst:
+	Updated the docs in preparation for snapshots being called previews.
+	[c42e02f71e27] <4.16-maint>
+
+2014-12-31  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed a code generation bug when a C/C++ argument was a pointer to a
+	struct/class and the Python argument was a void*.
+	[51b0b1f31cea] <4.16-maint>
+
+2014-12-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* configure.py.in, siputils.py:
+	Fixed the --target-py-version flag to configure.py.
+	[0e9e078d2d18] <4.16-maint>
+
 2014-12-24  Phil Thompson  <phil@riverbankcomputing.com>
 
 	* .hgtags:
 	Added tag 4.16.5 for changeset 9c27ed5e0d77
-	[6aa131ac48e8] [tip] <4.16-maint>
+	[6aa131ac48e8] <4.16-maint>
 
 	* NEWS:
 	Released as v4.16.5.

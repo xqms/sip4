@@ -1,7 +1,7 @@
 /*
  * The code generator module for SIP.
  *
- * Copyright (c) 2014 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -101,6 +101,7 @@ static void generateFunction(sipSpec *, memberDef *, overDef *, classDef *,
         classDef *, moduleDef *, FILE *);
 static void generateFunctionBody(overDef *, classDef *, mappedTypeDef *,
         classDef *, int deref, moduleDef *, FILE *);
+static void generatePyObjects(sipSpec *pt, moduleDef *mod, FILE *fp);
 static void generateTypeDefinition(sipSpec *pt, classDef *cd, FILE *fp);
 static void generateTypeInit(classDef *, moduleDef *, FILE *);
 static void generateCppCodeBlock(codeBlockList *cbl, FILE *fp);
@@ -2292,6 +2293,8 @@ static void generateCpp(sipSpec *pt, moduleDef *mod, const char *codeDir,
 
     generateTypesInline(pt, mod, fp);
 
+    generatePyObjects(pt, mod, fp);
+
     /* Create any exceptions. */
     for (xd = pt->exceptions; xd != NULL; xd = xd->next)
     {
@@ -2374,7 +2377,8 @@ static void generateCpp(sipSpec *pt, moduleDef *mod, const char *codeDir,
             }
 
             generateIfaceCpp(pt, iff, need_postinc, codeDir, srcSuffix,
-                    (parts ? fp : NULL), timestamp);
+                    ((parts && iff->file_extension == NULL) ? fp : NULL),
+                    timestamp);
         }
 
     closeFile(fp);
@@ -3066,6 +3070,53 @@ static void generateAccessFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
         prcode(fp,
 "}\n"
             );
+    }
+}
+
+
+/*
+ * Generate the inline code to add a set of Python objects to a module
+ * dictionary.  Note that we should add these via a table (like int, etc) but
+ * that will require a major API version change so this will do for now.
+ */
+static void generatePyObjects(sipSpec *pt, moduleDef *mod, FILE *fp)
+{
+    int noIntro;
+    varDef *vd;
+
+    noIntro = TRUE;
+
+    for (vd = pt->vars; vd != NULL; vd = vd->next)
+    {
+        if (vd->module != mod)
+            continue;
+
+        if (vd->type.atype != pyobject_type &&
+            vd->type.atype != pytuple_type &&
+            vd->type.atype != pylist_type &&
+            vd->type.atype != pydict_type &&
+            vd->type.atype != pycallable_type &&
+            vd->type.atype != pyslice_type &&
+            vd->type.atype != pytype_type &&
+            vd->type.atype != pybuffer_type)
+            continue;
+
+        if (needsHandler(vd))
+            continue;
+
+        if (noIntro)
+        {
+            prcode(fp,
+"\n"
+"    /* Define the Python objects wrapped as such. */\n"
+                );
+
+            noIntro = FALSE;
+        }
+
+        prcode(fp,
+"    PyDict_SetItemString(sipModuleDict, %N, %S);\n"
+                , vd->pyname, vd->fqcname);
     }
 }
 
@@ -3804,6 +3855,9 @@ static char *createIfaceFileName(const char *codeDir, ifaceFileDef *iff,
         sprintf(buf, "_%d", iff->api_range->index);
         append(&fn, buf);
     }
+
+    if (iff->file_extension != NULL)
+        suffix = iff->file_extension;
 
     append(&fn,suffix);
 
@@ -9053,9 +9107,6 @@ static void generateCallArgs(moduleDef *mod, signatureDef *sd,
                 ind = "&";
         }
 
-        if (ind != NULL)
-            prcode(fp, ind);
-
         /*
          * See if we need to cast a Python void * to the correct C/C++ pointer
          * type.
@@ -9072,6 +9123,9 @@ static void generateCallArgs(moduleDef *mod, signatureDef *sd,
 
         if (py_ad == NULL)
         {
+            if (ind != NULL)
+                prcode(fp, ind);
+
             if (isArraySize(ad))
                 prcode(fp, "(%b)", ad);
 
