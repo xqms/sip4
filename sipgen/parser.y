@@ -295,6 +295,7 @@ static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs);
 %token          TK_PYCALLABLE
 %token          TK_PYSLICE
 %token          TK_PYTYPE
+%token          TK_PYBUFFER
 %token          TK_VIRTUAL
 %token          TK_ENUM
 %token          TK_SIGNED
@@ -2655,6 +2656,7 @@ typedef:    TK_TYPEDEF cpptype TK_NAME_VALUE optflags ';' {
             if (notSkipping())
             {
                 const char *annos[] = {
+                    "Capsule",
                     "DocType",
                     "Encoding",
                     "NoTypeName",
@@ -4221,6 +4223,10 @@ basetype:   scopedname {
             memset(&$$, 0, sizeof (argDef));
             $$.atype = pytype_type;
         }
+    |   TK_PYBUFFER {
+            memset(&$$, 0, sizeof (argDef));
+            $$.atype = pybuffer_type;
+        }
     |   TK_SIPSSIZET {
             memset(&$$, 0, sizeof (argDef));
             $$.atype = ssize_type;
@@ -5457,6 +5463,10 @@ static char *type2string(argDef *ad)
             s = "void";
             break;
 
+        case capsule_type:
+            s = "void *";
+            break;
+
         default:
             fatal("Unsupported type argument to type2string(): %d\n", ad->atype);
         }
@@ -6314,6 +6324,20 @@ static void newTypedef(sipSpec *pt, moduleDef *mod, char *name, argDef *type,
     td->module = mod;
     td->type = *type;
 
+    if (getOptFlag(optflgs, "Capsule", bool_flag) != NULL)
+    {
+        /* Make sure the type is void *. */
+        if (type->atype != void_type || type->nrderefs != 1 || isConstArg(type) || isReference(type))
+        {
+            fatalScopedName(fqname);
+            fatal(" must be a void* if /Capsule/ is specified\n");
+        }
+
+        td->type.atype = capsule_type;
+        td->type.nrderefs = 0;
+        td->type.u.cap = fqname;
+    }
+
     if (getOptFlag(optflgs, "NoTypeName", bool_flag) != NULL)
         setNoTypeName(td);
 
@@ -6439,6 +6463,13 @@ static void newVar(sipSpec *pt, moduleDef *mod, char *name, int isstatic,
     varDef *var;
     classDef *escope = currentScope();
     nameDef *nd;
+
+    /*
+     * For the moment we don't support capsule variables because it needs the
+     * API major version increasing.
+     */
+    if (type->atype == capsule_type)
+        yyerror("Capsule variables not yet supported");
 
     /* Check the section. */
     if (section != 0)
@@ -6646,6 +6677,15 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
 
         if (exceptions != NULL)
             yyerror("Exceptions not allowed in a C module");
+
+        /* Handle C void prototypes. */
+        if (sig->nrArgs == 1)
+        {
+            argDef *vad = &sig->args[0];
+
+            if (vad->atype == void_type && vad->nrderefs == 0)
+                sig->nrArgs = 0;
+        }
     }
 
     if (mt_scope != NULL)

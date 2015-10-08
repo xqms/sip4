@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>SIP Specification Files &mdash; SIP 4.14 Reference Guide</title>
+    <title>SIP Specification Files &mdash; SIP 4.14.2 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.14',
+        VERSION:     '4.14.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.14 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.14.2 Reference Guide" href="index.html" />
     <link rel="next" title="Directives" href="directives.html" />
     <link rel="prev" title="The SIP Command Line" href="command_line.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="command_line.html" title="The SIP Command Line"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.14 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.2 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -387,6 +387,7 @@ file.</p>
         <strong>bool</strong> |
         <strong>void</strong> |
         <strong>PyObject</strong> |
+        <a class="reference internal" href="#sip-type-SIP_PYBUFFER"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYBUFFER</span></tt></a> |
         <a class="reference internal" href="#sip-type-SIP_PYCALLABLE"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYCALLABLE</span></tt></a> |
         <a class="reference internal" href="#sip-type-SIP_PYDICT"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYDICT</span></tt></a> |
         <a class="reference internal" href="#sip-type-SIP_PYLIST"><tt class="xref std std-stype docutils literal"><span class="pre">SIP_PYLIST</span></tt></a> |
@@ -434,6 +435,12 @@ signatures.</p>
 of the member instead of <tt class="docutils literal"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></tt> in functions that implement the
 connection or disconnection of an explicitly generated signal to a slot.
 Handwritten code must be provided to interpret the conversion correctly.</p>
+<dl class="sip-type">
+<dt id="sip-type-SIP_PYBUFFER">
+<tt class="descname">SIP_PYBUFFER</tt><a class="headerlink" href="#sip-type-SIP_PYBUFFER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This is a <tt class="docutils literal"><span class="pre">PyObject</span> <span class="pre">*</span></tt> that implements the Python buffer protocol.</p>
 <dl class="sip-type">
 <dt id="sip-type-SIP_PYCALLABLE">
 <tt class="descname">SIP_PYCALLABLE</tt><a class="headerlink" href="#sip-type-SIP_PYCALLABLE" title="Permalink to this definition">¶</a></dt>
@@ -683,7 +690,7 @@ is at the end of the file.</p>
         <li class="right" >
           <a href="command_line.html" title="The SIP Command Line"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.14 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.2 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

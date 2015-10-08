@@ -118,6 +118,22 @@ can be used by applications.
         the Python object.
 
 
+.. function:: setdestroyonexit(destroy)
+
+    .. versionadded:: 4.14.2
+
+    When the Python interpreter exits it garbage collects those objects that it
+    can.  This means that any corresponding C++ instances and C structures
+    owned by Python are destroyed.  Unfortunately this happens in an
+    unpredictable order and so can cause memory faults within the wrapped
+    library.  Calling this function with a value of ``False`` disables the
+    automatic destruction of C++ instances and C structures.
+
+    :param destroy:
+        ``True`` if all C++ instances and C structures owned by Python should
+        be destroyed when the interpreter exits.  This is the default.
+
+
 .. function:: settracemask(mask)
 
     If the bindings have been created with SIP's :option:`-r <sip -r>` command
@@ -195,7 +211,8 @@ can be used by applications.
 
         :param address:
             the address, either another :class:`sip.voidptr`, ``None``, a
-            Python Capsule, a Python CObject, or an integer.
+            Python Capsule, a Python CObject, an object that implements the
+            buffer protocol or an integer.
         :param size:
             the optional associated size of the block of memory and is negative
             if the size is not known.
@@ -216,8 +233,8 @@ can be used by applications.
         .. versionadded:: 4.12
 
         This returns the item at a given index.  An exception will be raised if
-        the address does not have an associated size.  It behaves like a Python
-        ``memoryview`` object.
+        the address does not have an associated size.  In this way it behaves
+        like a Python ``memoryview`` object.
 
         :param idx:
             is the index which may either be an integer, an object that
@@ -250,8 +267,8 @@ can be used by applications.
         .. versionadded:: 4.12
 
         This updates the memory at a given index.  An exception will be raised
-        if the address does not have an associated size or is not writable.  It
-        behaves like a Python ``memoryview`` object.
+        if the address does not have an associated size or is not writable.  In
+        this way it behaves like a Python ``memoryview`` object.
 
         :param idx:
             is the index which may either be an integer, an object that

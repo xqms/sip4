@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040e00
-#define SIP_VERSION_STR     "4.14"
+#define SIP_VERSION         0x040e02
+#define SIP_VERSION_STR     "4.14.2"
 
 
 #ifdef TRUE
@@ -595,7 +595,9 @@ typedef enum {
     utf8_string_type,
     byte_type,
     sbyte_type,
-    ubyte_type
+    ubyte_type,
+    capsule_type,
+    pybuffer_type
 } argType;
 
 
@@ -755,9 +757,9 @@ typedef struct {
         struct _enumDef *ed;            /* If it is an enum. */
         struct _scopedNameDef *sname;   /* If it is a struct. */
         struct _mappedTypeDef *mtd;     /* If it is a mapped type. */
+        struct _scopedNameDef *cap;     /* If it is a capsule. */
     } u;
 } argDef;
-
 
 
 /* An entry in a linked argument list. */

@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Python API for Applications &mdash; SIP 4.14 Reference Guide</title>
+    <title>Python API for Applications &mdash; SIP 4.14.2 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.14',
+        VERSION:     '4.14.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.14 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.14.2 Reference Guide" href="index.html" />
     <link rel="next" title="The Build System" href="build_system.html" />
     <link rel="prev" title="Using the C API when Embedding" href="embedding.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="embedding.html" title="Using the C API when Embedding"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.14 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.2 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -228,6 +228,28 @@ automatically, but there may be circumstances where this isn&#8217;t possible.</
 </dd></dl>
 
 <dl class="function">
+<dt id="sip.setdestroyonexit">
+<tt class="descclassname">sip.</tt><tt class="descname">setdestroyonexit</tt><big>(</big><em>destroy</em><big>)</big><a class="headerlink" href="#sip.setdestroyonexit" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.14.2.</span></p>
+<p>When the Python interpreter exits it garbage collects those objects that it
+can.  This means that any corresponding C++ instances and C structures
+owned by Python are destroyed.  Unfortunately this happens in an
+unpredictable order and so can cause memory faults within the wrapped
+library.  Calling this function with a value of <tt class="docutils literal"><span class="pre">False</span></tt> disables the
+automatic destruction of C++ instances and C structures.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>destroy</strong> &#8211; <tt class="docutils literal"><span class="pre">True</span></tt> if all C++ instances and C structures owned by Python should
+be destroyed when the interpreter exits.  This is the default.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="sip.settracemask">
 <tt class="descclassname">sip.</tt><tt class="descname">settracemask</tt><big>(</big><em>mask</em><big>)</big><a class="headerlink" href="#sip.settracemask" title="Permalink to this definition">¶</a></dt>
 <dd><p>If the bindings have been created with SIP&#8217;s <a class="reference internal" href="command_line.html#cmdoption-sip-r"><em class="xref std std-option">-r</em></a> command
@@ -325,7 +347,8 @@ methods.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>address</strong> &#8211; the address, either another <a class="reference internal" href="#sip.voidptr" title="sip.voidptr"><tt class="xref py py-class docutils literal"><span class="pre">sip.voidptr</span></tt></a>, <tt class="docutils literal"><span class="pre">None</span></tt>, a
-Python Capsule, a Python CObject, or an integer.</li>
+Python Capsule, a Python CObject, an object that implements the
+buffer protocol or an integer.</li>
 <li><strong>size</strong> &#8211; the optional associated size of the block of memory and is negative
 if the size is not known.</li>
 <li><strong>writeable</strong> &#8211; set if the memory is writeable.  If it is not specified, and
@@ -358,8 +381,8 @@ used.</li>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
 <p>This returns the item at a given index.  An exception will be raised if
-the address does not have an associated size.  It behaves like a Python
-<tt class="docutils literal"><span class="pre">memoryview</span></tt> object.</p>
+the address does not have an associated size.  In this way it behaves
+like a Python <tt class="docutils literal"><span class="pre">memoryview</span></tt> object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -413,8 +436,8 @@ the memory corresponding to the slice.</td>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.12.</span></p>
 <p>This updates the memory at a given index.  An exception will be raised
-if the address does not have an associated size or is not writable.  It
-behaves like a Python <tt class="docutils literal"><span class="pre">memoryview</span></tt> object.</p>
+if the address does not have an associated size or is not writable.  In
+this way it behaves like a Python <tt class="docutils literal"><span class="pre">memoryview</span></tt> object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -628,7 +651,7 @@ different base type for a class.</p>
         <li class="right" >
           <a href="embedding.html" title="Using the C API when Embedding"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.14 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14.2 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
