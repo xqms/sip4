@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>C API for Handwritten Code &mdash; SIP 4.15.1 Reference Guide</title>
+    <title>C API for Handwritten Code &mdash; SIP 4.15.2 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.15.1',
+        VERSION:     '4.15.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.15.1 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.15.2 Reference Guide" href="index.html" />
     <link rel="next" title="Using the C API when Embedding" href="embedding.html" />
     <link rel="prev" title="Annotations" href="annotations.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.15.1 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15.2 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -85,6 +85,15 @@ when the GIL has been acquired.  There must be a corresponding
 </dd></dl>
 
 <dl class="macro">
+<dt id="SIP_OWNS_MEMORY">
+<tt class="descname">SIP_OWNS_MEMORY</tt><a class="headerlink" href="#SIP_OWNS_MEMORY" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.15.2.</span></p>
+<p>This is a flag used by various array constructors that species that the
+array owns the memory that holds the array&#8217;s contents.</p>
+</dd></dl>
+
+<dl class="macro">
 <dt id="SIP_NO_CONVERTORS">
 <tt class="descname">SIP_NO_CONVERTORS</tt><a class="headerlink" href="#SIP_NO_CONVERTORS" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is a flag used by various type convertors that suppresses the use of a
@@ -108,6 +117,15 @@ system to specify that the generated code is being compiled with
 <tt class="docutils literal"><span class="pre">protected</span></tt> redefined as <tt class="docutils literal"><span class="pre">public</span></tt>.  This allows handwritten code to
 determine if the generated helper functions for accessing protected C++
 functions are available (see <a class="reference internal" href="directives.html#directive-%MethodCode"><tt class="xref std std-directive docutils literal"><span class="pre">%MethodCode</span></tt></a>).</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="SIP_READ_ONLY">
+<tt class="descname">SIP_READ_ONLY</tt><a class="headerlink" href="#SIP_READ_ONLY" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.15.2.</span></p>
+<p>This is a flag used by various array constructors that species that the
+array is read-only.</p>
 </dd></dl>
 
 <dl class="function">
@@ -927,7 +945,7 @@ object will be writeable and can be used as a mutable buffer object.</p>
 
 <dl class="function">
 <dt id="sipConvertToArray">
-PyObject *<tt class="descname">sipConvertToArray</tt><big>(</big>void<em>&nbsp;*cpp</em>, const char<em>&nbsp;*format</em>, <a class="reference internal" href="#SIP_SSIZE_T" title="SIP_SSIZE_T">SIP_SSIZE_T</a><em>&nbsp;len</em>, int<em>&nbsp;readonly</em><big>)</big><a class="headerlink" href="#sipConvertToArray" title="Permalink to this definition">¶</a></dt>
+PyObject *<tt class="descname">sipConvertToArray</tt><big>(</big>void<em>&nbsp;*data</em>, const char<em>&nbsp;*format</em>, <a class="reference internal" href="#SIP_SSIZE_T" title="SIP_SSIZE_T">SIP_SSIZE_T</a><em>&nbsp;len</em>, int<em>&nbsp;flags</em><big>)</big><a class="headerlink" href="#sipConvertToArray" title="Permalink to this definition">¶</a></dt>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.15.</span></p>
 <p>This converts a one dimensional array of fundamental types to a
@@ -943,12 +961,15 @@ generator.  They can only be created by handwritten code.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>cpp</strong> &#8211; the address of the start of the C/C++ array.</li>
+<li><strong>data</strong> &#8211; the address of the start of the C/C++ array.</li>
 <li><strong>format</strong> &#8211; the format, as defined by the <tt class="xref py py-mod docutils literal"><span class="pre">struct</span></tt> module, of an array
-element.  At the moment only <tt class="docutils literal"><span class="pre">H</span></tt> (unsigned short) and <tt class="docutils literal"><span class="pre">I</span></tt> (unsigned
-int) are supported.</li>
+element.  At the moment only <tt class="docutils literal"><span class="pre">b</span></tt> (char), <tt class="docutils literal"><span class="pre">B</span></tt> (unsigned char),
+<tt class="docutils literal"><span class="pre">h</span></tt> (short), <tt class="docutils literal"><span class="pre">H</span></tt> (unsigned short), <tt class="docutils literal"><span class="pre">i</span></tt> (int),
+<tt class="docutils literal"><span class="pre">I</span></tt> (unsigned int), <tt class="docutils literal"><span class="pre">f</span></tt> (float) and <tt class="docutils literal"><span class="pre">d</span></tt> (double) are supported.</li>
 <li><strong>len</strong> &#8211; the number of elements in the array.</li>
 <li><strong>readonly</strong> &#8211; is non-zero if the array is read-only.</li>
+<li><strong>flags</strong> &#8211; any combination of the <a class="reference internal" href="#SIP_READ_ONLY" title="SIP_READ_ONLY"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_READ_ONLY</span></tt></a> and
+<a class="reference internal" href="#SIP_OWNS_MEMORY" title="SIP_OWNS_MEMORY"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_OWNS_MEMORY</span></tt></a> flags.</li>
 </ul>
 </td>
 </tr>
@@ -1095,7 +1116,7 @@ rather than after each call.)</p>
 
 <dl class="function">
 <dt id="sipConvertToTypedArray">
-PyObject *<tt class="descname">sipConvertToTypedArray</tt><big>(</big>void<em>&nbsp;*cpp</em>, const sipTypeDef<em>&nbsp;*td</em>, const char<em>&nbsp;*format</em>, size_t<em>&nbsp;stride</em>, <a class="reference internal" href="#SIP_SSIZE_T" title="SIP_SSIZE_T">SIP_SSIZE_T</a><em>&nbsp;len</em>, int<em>&nbsp;readonly</em><big>)</big><a class="headerlink" href="#sipConvertToTypedArray" title="Permalink to this definition">¶</a></dt>
+PyObject *<tt class="descname">sipConvertToTypedArray</tt><big>(</big>void<em>&nbsp;*data</em>, const sipTypeDef<em>&nbsp;*td</em>, const char<em>&nbsp;*format</em>, size_t<em>&nbsp;stride</em>, <a class="reference internal" href="#SIP_SSIZE_T" title="SIP_SSIZE_T">SIP_SSIZE_T</a><em>&nbsp;len</em>, int<em>&nbsp;flags</em><big>)</big><a class="headerlink" href="#sipConvertToTypedArray" title="Permalink to this definition">¶</a></dt>
 <dd><p class="versionadded">
 <span class="versionmodified">New in version 4.15.</span></p>
 <p>This converts a one dimensional array of instances of a C structure, C++
@@ -1112,14 +1133,14 @@ generator.  They can only be created by handwritten code.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>cpp</strong> &#8211; the address of the start of the C/C++ array.</li>
+<li><strong>data</strong> &#8211; the address of the start of the C/C++ array.</li>
 <li><strong>td</strong> &#8211; an element&#8217;s type&#8217;s
 <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a>.</li>
 <li><strong>format</strong> &#8211; the format, as defined by the <tt class="xref py py-mod docutils literal"><span class="pre">struct</span></tt> module, of an array
 element.</li>
 <li><strong>stride</strong> &#8211; the size of an array element, including any padding.</li>
 <li><strong>len</strong> &#8211; the number of elements in the array.</li>
-<li><strong>readonly</strong> &#8211; is non-zero if the array is read-only.</li>
+<li><strong>flags</strong> &#8211; the optional <a class="reference internal" href="#SIP_READ_ONLY" title="SIP_READ_ONLY"><tt class="xref c c-macro docutils literal"><span class="pre">SIP_READ_ONLY</span></tt></a> flag.</li>
 </ul>
 </td>
 </tr>
@@ -2555,7 +2576,7 @@ object for enum <tt class="docutils literal"><span class="pre">Except</span></tt
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.15.1 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15.2 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
