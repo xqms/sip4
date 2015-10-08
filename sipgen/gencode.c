@@ -31,7 +31,7 @@
 #define smtypeName(sm)          (strrchr((sm)->name->text, '.') + 1)
 
 /* Return TRUE if a wrapped variable can be set. */
-#define canSetVariable(vd)      ((vd)->type.nrderefs != 0 || !isConstArg(&(vd)->type))
+#define canSetVariable(vd)      (!noSetter(vd) && ((vd)->type.nrderefs != 0 || !isConstArg(&(vd)->type)))
 
 
 /* Control what generateCalledArgs() actually generates. */
@@ -705,6 +705,7 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipConvertFromVoidPtrAndSize    sipAPI_%s->api_convert_from_void_ptr_and_size\n"
 "#define sipConvertFromConstVoidPtrAndSize   sipAPI_%s->api_convert_from_const_void_ptr_and_size\n"
 "#define sipInvokeSlot               sipAPI_%s->api_invoke_slot\n"
+"#define sipInvokeSlotEx             sipAPI_%s->api_invoke_slot_ex\n"
 "#define sipSaveSlot                 sipAPI_%s->api_save_slot\n"
 "#define sipClearAnySlotReference    sipAPI_%s->api_clear_any_slot_reference\n"
 "#define sipVisitSlot                sipAPI_%s->api_visit_slot\n"
@@ -745,6 +746,7 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipConvertFromMappedType    sipConvertFromType\n"
 "#define sipConvertFromNamedEnum(v, pt)  sipConvertFromEnum((v), ((sipEnumTypeObject *)(pt))->type)\n"
 "#define sipConvertFromNewInstance(p, wt, t) sipConvertFromNewType((p), (wt)->type, (t))\n"
+        ,mname
         ,mname
         ,mname
         ,mname
@@ -2977,6 +2979,9 @@ static int generateEnumMemberTable(sipSpec *pt, moduleDef *mod, classDef *cd,
         prcode(fp,
 "    {%N, ", emd->pyname);
 
+        if (!generating_c)
+            prcode(fp, "static_cast<int>(");
+
         if (!isNoScope(emd->ed))
         {
             if (cd != NULL)
@@ -2994,7 +2999,7 @@ static int generateEnumMemberTable(sipSpec *pt, moduleDef *mod, classDef *cd,
             }
         }
 
-        prcode(fp, "%s, %d},\n", emd->cname, emd->ed->first_alt->enumnr);
+        prcode(fp, "%s%s, %d},\n", emd->cname, (generating_c ? "" : ")"), emd->ed->first_alt->enumnr);
     }
 
     prcode(fp,
@@ -3679,6 +3684,31 @@ static void generateIfaceCpp(sipSpec *pt, ifaceFileDef *iff, int need_postinc,
     classDef *cd;
     mappedTypeDef *mtd;
     FILE *fp;
+    int empty;
+
+    /*
+     * Check that there will be something in the file so that we don't get
+     * warning messages from ranlib.
+     */
+    empty = TRUE;
+
+    for (cd = pt->classes; cd != NULL; cd = cd->next)
+        if (!isProtectedClass(cd) && !isExternal(cd) && cd->iff == iff)
+        {
+            empty = FALSE;
+            break;
+        }
+
+    if (empty)
+        for (mtd = pt->mappedtypes; mtd != NULL; mtd = mtd->next)
+            if (mtd->iff == iff)
+            {
+                empty = FALSE;
+                break;
+            }
+
+    if (empty)
+        return;
 
     if (master == NULL)
     {
@@ -3715,7 +3745,10 @@ static void generateIfaceCpp(sipSpec *pt, ifaceFileDef *iff, int need_postinc,
         if (isProtectedClass(cd))
             continue;
 
-        if (cd->iff == iff && !isExternal(cd))
+        if (isExternal(cd))
+            continue;
+
+        if (cd->iff == iff)
         {
             classDef *pcd;
 
@@ -9085,7 +9118,7 @@ static void generateNamedBaseType(ifaceFileDef *scope, argDef *ad,
     typedefDef *td = ad->original_type;
     int nr_derefs = ad->nrderefs;
     int is_reference = isReference(ad);
-    int i;
+    int i, space_before_name;
 
     if (use_typename && td != NULL && !noTypeName(td) && !isArraySize(ad))
     {
@@ -9300,12 +9333,22 @@ static void generateNamedBaseType(ifaceFileDef *scope, argDef *ad,
         }
     }
 
+    space_before_name = TRUE;
+
     for (i = 0; i < nr_derefs; ++i)
     {
-        prcode(fp, " *");
+        /*
+         * Note that we don't put a space before the '*' so that Qt normalised
+         * signal signatures are correct.  Qt4 can cope with it but Qt5 can't.
+         */
+        prcode(fp, "*");
+        space_before_name = FALSE;
 
         if (ad->derefs[i])
+        {
             prcode(fp, " const");
+            space_before_name = TRUE;
+        }
     }
 
     if (is_reference)
@@ -9313,7 +9356,7 @@ static void generateNamedBaseType(ifaceFileDef *scope, argDef *ad,
 
     if (*name != '\0')
     {
-        if (nr_derefs == 0)
+        if (space_before_name)
             prcode(fp, " ");
 
         prcode(fp, name);

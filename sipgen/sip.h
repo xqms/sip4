@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040f05
-#define SIP_VERSION_STR     "4.15.5"
+#define SIP_VERSION         0x041000
+#define SIP_VERSION_STR     "4.16"
 
 
 #ifdef TRUE
@@ -368,12 +368,15 @@
 /* Handle variable flags. */
 
 #define VAR_IS_STATIC       0x01    /* It is a static variable. */
-#define VAR_NEEDS_HANDLER   0x02    /* It the variable needs a handler. */
+#define VAR_NEEDS_HANDLER   0x02    /* The variable needs a handler. */
+#define VAR_NO_SETTER       0x04    /* The variable has no setter. */
 
 #define isStaticVar(v)      ((v)->varflags & VAR_IS_STATIC)
 #define setIsStaticVar(v)   ((v)->varflags |= VAR_IS_STATIC)
 #define needsHandler(v)     ((v)->varflags & VAR_NEEDS_HANDLER)
 #define setNeedsHandler(v)  ((v)->varflags |= VAR_NEEDS_HANDLER)
+#define noSetter(v)         ((v)->varflags & VAR_NO_SETTER)
+#define setNoSetter(v)      ((v)->varflags |= VAR_NO_SETTER)
 
 
 /* Handle argument flags. */
@@ -677,6 +680,7 @@ typedef struct _qualDef {
     struct _moduleDef *module;          /* The defining module. */
     int line;                           /* Timeline if it is a time. */
     int order;                          /* Order if it is a time. */
+    int default_enabled;                /* Enabled by default. */
     struct _qualDef *next;              /* Next in the list. */
 } qualDef;
 
@@ -1252,7 +1256,8 @@ extern char *sipVersion;                /* The version of SIP. */
 extern stringList *includeDirList;      /* The include directory list for SIP files. */
 
 
-void parse(sipSpec *, FILE *, char *, stringList *, stringList *, KwArgs, int);
+void parse(sipSpec *, FILE *, char *, stringList *, stringList *, stringList *,
+        KwArgs, int);
 void parserEOF(const char *,parserContext *);
 void transform(sipSpec *);
 void generateCode(sipSpec *, char *, char *, char *, const char *, int, int,
