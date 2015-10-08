@@ -209,6 +209,7 @@ static void generateSlot(moduleDef *mod, classDef *cd, enumDef *ed,
         memberDef *md, FILE *fp);
 static void generateCastZero(argDef *ad, FILE *fp);
 static void generateCallDefaultCtor(ctorDef *ct, FILE *fp);
+static void generateVoidPtrCast(argDef *ad, FILE *fp);
 static int countVirtuals(classDef *);
 static int skipOverload(overDef *, memberDef *, classDef *, classDef *, int);
 static int compareMethTab(const void *, const void *);
@@ -4318,7 +4319,7 @@ static void generateVariableGetter(ifaceFileDef *scope, varDef *vd, FILE *fp)
 {
     argType atype = vd->type.atype;
     const char *first_arg, *last_arg;
-    int needsNew;
+    int needsNew, keepRef;
 
     if (generating_c || !isStaticVar(vd))
         first_arg = "sipSelf";
@@ -4326,6 +4327,9 @@ static void generateVariableGetter(ifaceFileDef *scope, varDef *vd, FILE *fp)
         first_arg = "";
 
     last_arg = (generating_c || usedInCode(vd->getcode, "sipPyType")) ? "sipPyType" : "";
+
+    needsNew = ((atype == class_type || atype == mapped_type) && vd->type.nrderefs == 0 && isConstArg(&vd->type));
+    keepRef = (atype == class_type && vd->type.nrderefs == 0 && !isConstArg(&vd->type));
 
     prcode(fp,
 "\n"
@@ -4342,13 +4346,14 @@ static void generateVariableGetter(ifaceFileDef *scope, varDef *vd, FILE *fp)
 "{\n"
         , vd->fqcname, first_arg, last_arg);
 
-    if (vd->getcode != NULL)
+    if (vd->getcode != NULL || keepRef)
     {
         prcode(fp,
 "    PyObject *sipPy;\n"
             );
     }
-    else
+
+    if (vd->getcode == NULL)
     {
         prcode(fp,
 "    ");
@@ -4389,8 +4394,6 @@ static void generateVariableGetter(ifaceFileDef *scope, varDef *vd, FILE *fp)
         return;
     }
 
-    needsNew = ((atype == class_type || atype == mapped_type) && vd->type.nrderefs == 0 && isConstArg(&vd->type));
-
     if (needsNew)
     {
         if (generating_c)
@@ -4428,15 +4431,34 @@ static void generateVariableGetter(ifaceFileDef *scope, varDef *vd, FILE *fp)
                 iff = vd->type.u.cd->iff;
 
             prcode(fp,
-"    return sipConvertFrom%sType(", (needsNew ? "New" : ""));
+"    %s sipConvertFrom%sType(", (keepRef ? "sipPy =" : "return"), (needsNew ? "New" : ""));
 
             if (isConstArg(&vd->type))
                 prcode(fp, "const_cast<%b *>(sipVal)", &vd->type);
             else
                 prcode(fp, "sipVal");
 
-            prcode(fp, ",sipType_%C, NULL);\n"
+            prcode(fp, ", sipType_%C, NULL);\n"
                 , iff->fqcname);
+
+            if (keepRef)
+            {
+                /*
+                 * When the SIP API goes to v9 the self Python object should be
+                 * passed in rather than having to reverse map it.
+                 */
+                prcode(fp,
+"\n"
+"    {\n"
+"        PyObject *sipPySelf = sipConvertFromType(sipSelf, sipType_%C, NULL);\n"
+"\n"
+"        sipKeepReference(sipPy, -1, sipPySelf);\n"
+"        Py_DECREF(sipPySelf);\n"
+"    }\n"
+"\n"
+"    return sipPy;\n"
+                    , classFQCName(vd->ecd));
+            }
         }
 
         break;
@@ -4619,8 +4641,9 @@ static void generateVariableGetter(ifaceFileDef *scope, varDef *vd, FILE *fp)
     case struct_type:
     case void_type:
         prcode(fp,
-"    return sipConvertFrom%sVoidPtr(sipVal);\n"
-            , (isConstArg(&vd->type) ? "Const" : ""));
+"    return sipConvertFrom%sVoidPtr(", (isConstArg(&vd->type) ? "Const" : ""));
+        generateVoidPtrCast(&vd->type, fp);
+        prcode(fp, "sipVal);\n");
         break;
 
     case pyobject_type:
@@ -10559,6 +10582,12 @@ static void generateConstructorCall(classDef *cd, ctorDef *ct, int error_flag,
         int a;
         int rgil = ((release_gil || isReleaseGILCtor(ct)) && !isHoldGILCtor(ct));
 
+        if (raisesPyExceptionCtor(ct))
+            prcode(fp,
+"            PyErr_Clear();\n"
+"\n"
+                );
+
         if (rgil)
             prcode(fp,
 "            Py_BEGIN_ALLOW_THREADS\n"
@@ -10632,6 +10661,18 @@ static void generateConstructorCall(classDef *cd, ctorDef *ct, int error_flag,
     prcode(fp,
 "\n"
         );
+
+    if (raisesPyExceptionCtor(ct))
+    {
+        prcode(fp,
+"            if (PyErr_Occurred())\n"
+"            {\n"
+"                delete sipCpp;\n"
+"                return NULL;\n"
+"            }\n"
+"\n"
+                );
+    }
 
     if (error_flag)
     {
@@ -11412,16 +11453,24 @@ static void generateHandleResult(moduleDef *mod, overDef *od, int isNew,
 
     case void_type:
         {
-            const char *cnst = (isConstArg(ad) ? "Const" : "");
+            prcode(fp,
+"            %s sipConvertFrom%sVoidPtr", prefix, (isConstArg(ad) ? "Const" : ""));
 
             if (result_size < 0)
-                prcode(fp,
-"            %s sipConvertFrom%sVoidPtr(%s);\n"
-                    , prefix, cnst, vname);
+            {
+                prcode(fp, "(");
+                generateVoidPtrCast(ad, fp);
+                prcode(fp, "%s", vname);
+            }
             else
-                prcode(fp,
-"            %s sipConvertFrom%sVoidPtrAndSize(%s,%a);\n"
-                    , prefix, cnst, vname, mod, &od->pysig.args[result_size], result_size);
+            {
+                prcode(fp, "AndSize(");
+                generateVoidPtrCast(ad, fp);
+                prcode(fp, "%s,%a", vname, mod, &od->pysig.args[result_size], result_size);
+            }
+
+            prcode(fp, ");\n"
+                    );
         }
 
         break;
@@ -14272,4 +14321,19 @@ static void generateModDocstring(moduleDef *mod, FILE *fp)
         prcode(fp, ");\n"
             );
     }
+}
+
+
+/*
+ * Generate a void* cast for an argument if needed.
+ */
+static void generateVoidPtrCast(argDef *ad, FILE *fp)
+{
+    /*
+     * Generate a cast if the argument's type was a typedef.  This allows us to
+     * use typedef's to void* to hide something more complex that we don't
+     * handle.
+     */
+    if (ad->original_type != NULL)
+        prcode(fp, "(%svoid *)", (isConstArg(ad) ? "const " : ""));
 }
