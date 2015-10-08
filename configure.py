@@ -21,12 +21,17 @@ import glob
 import optparse
 from distutils import sysconfig
 
+try:
+    from importlib import invalidate_caches
+except ImportError:
+    invalidate_caches = lambda: None
+
 import siputils
 
 
 # Initialise the globals.
-sip_version = 0x040e07
-sip_version_str = "4.14.7"
+sip_version = 0x040f00
+sip_version_str = "4.15"
 py_version = sys.hexversion >> 8
 plat_py_site_dir = None
 plat_py_inc_dir = None
@@ -291,6 +296,7 @@ def create_makefiles(macros):
     """
     # Bootstrap.  Make sure we get the right one.
     sys.path.insert(0, os.path.curdir)
+    invalidate_caches()
     import sipconfig
 
     cfg = sipconfig.Configuration()

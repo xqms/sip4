@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x040e07
-#define SIP_VERSION_STR     "4.14.7"
+#define SIP_VERSION         0x040f00
+#define SIP_VERSION_STR     "4.15"
 
 
 #ifdef TRUE
@@ -46,6 +46,7 @@
 #define DEFAULT_OFILE_EXT   ".o"    /* Default object file extension. */
 
 #define MAX_NR_ARGS         20      /* Max. nr. args. to a function or template. */
+#define MAX_NR_DEREFS       5       /* Max. nr. type derefences. */
 
 
 /* For convenience. */
@@ -62,6 +63,10 @@
 #define MOD_IS_TRANSFORMED      0x0008  /* It's types have been transformed. */
 #define MOD_USE_ARG_NAMES       0x0010  /* Use real argument names. */
 #define MOD_ALL_RAISE_PY_EXC    0x0020  /* All callable raise a Python exception. */
+#define MOD_SUPER_INIT_NO       0x0040  /* Don't call super().__init__(). */
+#define MOD_SUPER_INIT_YES      0x0080  /* Call super().__init__(). */
+#define MOD_SUPER_INIT_UNDEF    0x0000  /* Calling super().__init__() is undefined. */
+#define MOD_SUPER_INIT_MASK     0x00c0  /* The mask for the above flags. */
 
 #define hasDelayedDtors(m)  ((m)->modflags & MOD_HAS_DELAYED_DTORS)
 #define setHasDelayedDtors(m)   ((m)->modflags |= MOD_HAS_DELAYED_DTORS)
@@ -76,6 +81,10 @@
 #define useArgNames(m)      ((m)->modflags & MOD_USE_ARG_NAMES)
 #define setAllRaisePyException(m)   ((m)->modflags |= MOD_ALL_RAISE_PY_EXC)
 #define allRaisePyException(m)  ((m)->modflags & MOD_ALL_RAISE_PY_EXC)
+#define setCallSuperInitNo(m)   ((m)->modflags = ((m)->modflags & MOD_SUPER_INIT_MASK) | MOD_SUPER_INIT_NO)
+#define setCallSuperInitYes(m)  ((m)->modflags = ((m)->modflags & MOD_SUPER_INIT_MASK) | MOD_SUPER_INIT_YES)
+#define isCallSuperInitYes(m)   (((m)->modflags & MOD_SUPER_INIT_MASK) == MOD_SUPER_INIT_YES)
+#define isCallSuperInitUndefined(m) (((m)->modflags & MOD_SUPER_INIT_MASK) == MOD_SUPER_INIT_UNDEF)
 
 
 /* Handle section flags. */
@@ -176,9 +185,15 @@
 
 /* Handle the second group of class flags. */
 #define CLASS2_TMPL_ARG     0x01        /* The class is a template argument. */
+#define CLASS2_MIXIN        0x02        /* The class is a mixin. */
+#define CLASS2_EXPORT_DERIVED   0x04    /* Export the derived class declaration. */
 
 #define isTemplateArg(cd)   ((cd)->classflags2 & CLASS2_TMPL_ARG)
 #define setTemplateArg(cd)  ((cd)->classflags2 |= CLASS2_TMPL_ARG)
+#define isMixin(cd)         ((cd)->classflags2 & CLASS2_MIXIN)
+#define setMixin(cd)        ((cd)->classflags2 |= CLASS2_MIXIN)
+#define isExportDerived(cd) ((cd)->classflags2 & CLASS2_EXPORT_DERIVED)
+#define setExportDerived(cd)    ((cd)->classflags2 |= CLASS2_EXPORT_DERIVED)
 
 
 /* Handle ctor flags.  These are combined with the section flags. */
@@ -239,6 +254,7 @@
 /* Handle enum flags.  These are combined with the section flags. */
 
 #define ENUM_WAS_PROT       0x00000100  /* It was defined as protected. */
+#define ENUM_NO_SCOPE       0x00000200  /* Omit the member scopes. */
 
 #define isProtectedEnum(e)  ((e)->enumflags & SECT_IS_PROT)
 #define setIsProtectedEnum(e)   ((e)->enumflags |= SECT_IS_PROT)
@@ -247,6 +263,8 @@
 #define wasProtectedEnum(e) ((e)->enumflags & ENUM_WAS_PROT)
 #define setWasProtectedEnum(e)  ((e)->enumflags |= ENUM_WAS_PROT)
 #define resetWasProtectedEnum(e)    ((e)->enumflags &= ~ENUM_WAS_PROT)
+#define isNoScope(e)        ((e)->enumflags & ENUM_NO_SCOPE)
+#define setIsNoScope(e)     ((e)->enumflags |= ENUM_NO_SCOPE)
 
 
 /* Handle hierarchy flags. */
@@ -728,6 +746,7 @@ typedef struct _valueDef {
     valueType vtype;                    /* The type. */
     char vunop;                         /* Any unary operator. */
     char vbinop;                        /* Any binary operator. */
+    scopedNameDef *cast;                /* Any cast. */
     union {
         char vqchar;                    /* Quoted character value. */
         long vnum;                      /* Numeric value. */
@@ -748,6 +767,7 @@ typedef struct {
     const char *doctype;                /* The documented type. */
     int argflags;                       /* The argument flags. */
     int nrderefs;                       /* Nr. of dereferences. */
+    int derefs[MAX_NR_DEREFS];          /* The const for each dereference. */
     valueDef *defval;                   /* The default value. */
     const char *docval;                 /* The documented value. */
     int key;                            /* The optional /KeepReference/ key. */
@@ -1080,7 +1100,6 @@ typedef struct _classList {
 
 typedef struct _virtOverDef {
     overDef o;                          /* The overload. */
-    struct _classDef *scope;            /* The overload scope. */
     struct _virtOverDef *next;          /* Next in the list. */
 } virtOverDef;
 
@@ -1100,6 +1119,7 @@ typedef struct _classDef {
     unsigned classflags;                /* The class flags. */
     unsigned classflags2;               /* The class flags, part 2. */
     int pyqt4_flags;                    /* The PyQt4 specific flags. */
+    const char *pyqt_interface;         /* The Qt interface name. */
     nameDef *pyname;                    /* The Python name. */
     ifaceFileDef *iff;                  /* The interface file. */
     struct _classDef *ecd;              /* The enclosing scope. */
@@ -1135,6 +1155,7 @@ typedef struct _classDef {
     codeBlockList *segcountcode;        /* Segment count code (Python v2). */
     codeBlockList *charbufcode;         /* Character buffer code (Python v2). */
     codeBlockList *picklecode;          /* Pickle code. */
+    codeBlockList *finalcode;           /* Finalisation code. */
     propertyDef *properties;            /* The properties. */
     const char *virt_error_handler;     /* The virtual error handler. */
     struct _classDef *next;             /* Next in the list. */
@@ -1293,6 +1314,7 @@ ifaceFileDef *findIfaceFile(sipSpec *pt, moduleDef *mod,
         apiVersionRangeDef *api_range, argDef *ad);
 int pluginPyQt3(sipSpec *pt);
 int pluginPyQt4(sipSpec *pt);
+int pluginPyQt5(sipSpec *pt);
 void yywarning(char *);
 nameDef *cacheName(sipSpec *pt, const char *name);
 scopedNameDef *encodedTemplateName(templateDef *td);
@@ -1442,6 +1464,7 @@ typedef struct _moduleCfg {
     const char *name;
     int use_arg_names;
     int all_raise_py_exc;
+    int call_super_init;
     const char *def_error_handler;
     int version;
     codeBlock *docstring;

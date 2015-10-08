@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>C API for Handwritten Code &mdash; SIP 4.14.7 Reference Guide</title>
+    <title>C API for Handwritten Code &mdash; SIP 4.15 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.14.7',
+        VERSION:     '4.15',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.14.7 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.15 Reference Guide" href="index.html" />
     <link rel="next" title="Using the C API when Embedding" href="embedding.html" />
     <link rel="prev" title="Annotations" href="annotations.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.7 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -751,6 +751,42 @@ Python.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="sipConvertFromNewPyType">
+PyObject *<tt class="descname">sipConvertFromNewPyType</tt><big>(</big>void<em>&nbsp;*cpp</em>, PyTypeObject<em>&nbsp;*py_type</em>, <a class="reference internal" href="#sipWrapper" title="sipWrapper">sipWrapper</a><em>&nbsp;*owner</em>, <a class="reference internal" href="#sipSimpleWrapper" title="sipSimpleWrapper">sipSimpleWrapper</a><em>&nbsp;**selfp</em>, const char<em>&nbsp;*format</em>, ...<big>)</big><a class="headerlink" href="#sipConvertFromNewPyType" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.15.</span></p>
+<p>This converts a new C structure or a C++ class instance to an instance of a
+corresponding Python type (as opposed to the corresponding generated Python
+type).  This is useful when the C/C++ library provides some sort of
+mechanism whereby handwritten code has some control over the exact type of
+structure or class being created.  Typically it would be used to create an
+instance of the generated derived class which would then allow Python
+re-implementations of C++ virtual methods to function properly.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cpp</strong> &#8211; the C/C++ instance.</li>
+<li><strong>py_type</strong> &#8211; the Python type object.  This is called to create the Python object and
+is passed the arguments defined by the string of format characters.</li>
+<li><strong>owner</strong> &#8211; is the optional owner of the Python object.</li>
+<li><strong>selfp</strong> &#8211; is an optional pointer to the <tt class="docutils literal"><span class="pre">sipPySelf</span></tt> instance variable of the
+C/C++ instance if that instance&#8217;s type is a generated derived class.
+Otherwise it should be <tt class="docutils literal"><span class="pre">NULL</span></tt>.</li>
+<li><strong>format</strong> &#8211; the string of format characters (see <a class="reference internal" href="#sipBuildResult" title="sipBuildResult"><tt class="xref c c-func docutils literal"><span class="pre">sipBuildResult()</span></tt></a>).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the Python object.  If there was an error then <tt class="docutils literal"><span class="pre">NULL</span></tt> is returned and
+a Python exception is raised.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="sipConvertFromNewType">
 PyObject *<tt class="descname">sipConvertFromNewType</tt><big>(</big>void<em>&nbsp;*cpp</em>, const sipTypeDef<em>&nbsp;*td</em>, PyObject<em>&nbsp;*transferObj</em><big>)</big><a class="headerlink" href="#sipConvertFromNewType" title="Permalink to this definition">¶</a></dt>
 <dd><p>This converts a new C structure or a C++ class instance to an instance of
@@ -890,6 +926,40 @@ object will be writeable and can be used as a mutable buffer object.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="sipConvertToArray">
+PyObject *<tt class="descname">sipConvertToArray</tt><big>(</big>void<em>&nbsp;*cpp</em>, const char<em>&nbsp;*format</em>, <a class="reference internal" href="#SIP_SSIZE_T" title="SIP_SSIZE_T">SIP_SSIZE_T</a><em>&nbsp;len</em>, int<em>&nbsp;readonly</em><big>)</big><a class="headerlink" href="#sipConvertToArray" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.15.</span></p>
+<p>This converts a one dimensional array of fundamental types to a
+<tt class="xref py py-class docutils literal"><span class="pre">sip.array</span></tt> object.</p>
+<p>An array is very like a Python <tt class="xref py py-class docutils literal"><span class="pre">memoryview</span></tt> object.  The underlying
+memory is not copied and may be modified in situ.  Arrays support the
+buffer protocol and so can be passed to other modules, again without the
+underlying memory being copied.</p>
+<p><tt class="xref py py-class docutils literal"><span class="pre">sip.array</span></tt> objects are not supported by the <strong class="program">sip</strong> code
+generator.  They can only be created by handwritten code.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cpp</strong> &#8211; the address of the start of the C/C++ array.</li>
+<li><strong>format</strong> &#8211; the format, as defined by the <tt class="xref py py-mod docutils literal"><span class="pre">struct</span></tt> module, of an array
+element.  At the moment only <tt class="docutils literal"><span class="pre">H</span></tt> (unsigned short) and <tt class="docutils literal"><span class="pre">I</span></tt> (unsigned
+int) are supported.</li>
+<li><strong>len</strong> &#8211; the number of elements in the array.</li>
+<li><strong>readonly</strong> &#8211; is non-zero if the array is read-only.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the <tt class="xref py py-class docutils literal"><span class="pre">sip.array</span></tt> object.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="sipConvertToInstance">
 void *<tt class="descname">sipConvertToInstance</tt><big>(</big>PyObject<em>&nbsp;*obj</em>, <a class="reference internal" href="#sipWrapperType" title="sipWrapperType">sipWrapperType</a><em>&nbsp;*type</em>, PyObject<em>&nbsp;*transferObj</em>, int<em>&nbsp;flags</em>, int<em>&nbsp;*state</em>, int<em>&nbsp;*iserr</em><big>)</big><a class="headerlink" href="#sipConvertToInstance" title="Permalink to this definition">¶</a></dt>
 <dd><p class="deprecated">
@@ -1021,6 +1091,43 @@ non-zero value.  If it was initially a non-zero value then the conversion
 isn&#8217;t attempted in the first place.  (This allows several calls to be made
 that share the same error flag so that it only needs to be tested once
 rather than after each call.)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sipConvertToTypedArray">
+PyObject *<tt class="descname">sipConvertToTypedArray</tt><big>(</big>void<em>&nbsp;*cpp</em>, const sipTypeDef<em>&nbsp;*td</em>, const char<em>&nbsp;*format</em>, size_t<em>&nbsp;stride</em>, <a class="reference internal" href="#SIP_SSIZE_T" title="SIP_SSIZE_T">SIP_SSIZE_T</a><em>&nbsp;len</em>, int<em>&nbsp;readonly</em><big>)</big><a class="headerlink" href="#sipConvertToTypedArray" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.15.</span></p>
+<p>This converts a one dimensional array of instances of a C structure, C++
+class or mapped type to a <tt class="xref py py-class docutils literal"><span class="pre">sip.array</span></tt> object.</p>
+<p>An array is very like a Python <tt class="xref py py-class docutils literal"><span class="pre">memoryview</span></tt> object but it&#8217;s elements
+correspond to C structures or C++ classes.  The underlying memory is not
+copied and may be modified in situ.  Arrays support the buffer protocol and
+so can be passed to other modules, again without the underlying memory
+being copied.</p>
+<p><tt class="xref py py-class docutils literal"><span class="pre">sip.array</span></tt> objects are not supported by the <strong class="program">sip</strong> code
+generator.  They can only be created by handwritten code.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cpp</strong> &#8211; the address of the start of the C/C++ array.</li>
+<li><strong>td</strong> &#8211; an element&#8217;s type&#8217;s
+<a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a>.</li>
+<li><strong>format</strong> &#8211; the format, as defined by the <tt class="xref py py-mod docutils literal"><span class="pre">struct</span></tt> module, of an array
+element.</li>
+<li><strong>stride</strong> &#8211; the size of an array element, including any padding.</li>
+<li><strong>len</strong> &#8211; the number of elements in the array.</li>
+<li><strong>readonly</strong> &#8211; is non-zero if the array is read-only.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the <tt class="xref py py-class docutils literal"><span class="pre">sip.array</span></tt> object.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1262,6 +1369,31 @@ by a Python object.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the address of the C/C++ instance</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sipGetMixinAddress">
+void *<tt class="descname">sipGetMixinAddress</tt><big>(</big><a class="reference internal" href="#sipSimpleWrapper" title="sipSimpleWrapper">sipSimpleWrapper</a><em>&nbsp;*obj</em>, const sipTypeDef<em>&nbsp;*td</em><big>)</big><a class="headerlink" href="#sipGetMixinAddress" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.15.</span></p>
+<p>This returns the address of the C++ class instance that implements the
+mixin of a wrapped Python object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> &#8211; the Python object.</li>
+<li><strong>td</strong> &#8211; the <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a> corresponding
+to the C++ type of the mixin.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the address of the C++ instance</p>
 </td>
 </tr>
 </tbody>
@@ -1755,9 +1887,42 @@ called for all types.</p>
 <div><p><em>td</em> is the generated type definition of the type whose dictionary is
 to be populated.</p>
 <p><em>dict</em> is the dictionary to be populated.</p>
-<p>0 if there was no error, otherwise -1 is returned.</p>
+<p>0 is returned if there was no error, otherwise -1 is returned.</p>
 </div></blockquote>
 <p>See the section <a class="reference internal" href="using.html#ref-lazy-type-attributes"><em>Lazy Type Attributes</em></a> for more details.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sipRegisterProxyResolver">
+int <tt class="descname">sipRegisterProxyResolver</tt><big>(</big>const sipTypeDef<em>&nbsp;*td</em>, sipProxyResolverFunc<em>&nbsp;resolver</em><big>)</big><a class="headerlink" href="#sipRegisterProxyResolver" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.15.</span></p>
+<p>This registers a resolver that will called just before SIP wraps a C/C++
+pointer in a Python object.  The resolver may choose to replace the C/C++
+pointer with the address of another object.  Typically this is used to
+replace a proxy by the object that is being proxied for.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>td</strong> &#8211; the optional <a class="reference internal" href="#ref-type-structures"><em>generated type structure</em></a> that
+determines which type the resolver will be called for.</li>
+<li><strong>resolver</strong> &#8211; the resolver function.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">0 if there was no error, otherwise -1 is returned.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>A resolver has the following signature.</p>
+<p>void *resolver(void *proxy)</p>
+<blockquote>
+<div><p><em>proxy</em> is C/C++ pointer that is being wrapped.</p>
+<p>The C/C++ pointer that will actually be wrapped is returned.</p>
+</div></blockquote>
 </dd></dl>
 
 <dl class="function">
@@ -2390,7 +2555,7 @@ object for enum <tt class="docutils literal"><span class="pre">Except</span></tt
         <li class="right" >
           <a href="annotations.html" title="Annotations"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.14.7 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
