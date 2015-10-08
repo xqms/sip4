@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Using SIP &mdash; SIP 4.15.4 Reference Guide</title>
+    <title>Using SIP &mdash; SIP 4.15.5 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '4.15.4',
+        URL_ROOT:    './',
+        VERSION:     '4.15.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.15.4 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.15.5 Reference Guide" href="index.html" />
     <link rel="next" title="The SIP Command Line" href="command_line.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
   </head>
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="installation.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.15.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15.5 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -70,7 +68,7 @@ that takes a <tt class="docutils literal"><span class="pre">\0</span></tt> termi
 class has one method called <tt class="docutils literal"><span class="pre">reverse()</span></tt> which takes no arguments and returns
 a <tt class="docutils literal"><span class="pre">\0</span></tt> terminated character string.  The interface to the class is defined in
 a header file called <tt class="docutils literal"><span class="pre">word.h</span></tt> which might look something like this:</p>
-<div class="highlight-python"><pre>// Define the interface to the word library.
+<div class="highlight-python"><div class="highlight"><pre>// Define the interface to the word library.
 
 class Word {
     const char *the_word;
@@ -79,10 +77,11 @@ public:
     Word(const char *w);
 
     char *reverse() const;
-};</pre>
+};
+</pre></div>
 </div>
 <p>The corresponding SIP specification file would then look something like this:</p>
-<div class="highlight-python"><pre>// Define the SIP wrapper to the word library.
+<div class="highlight-python"><div class="highlight"><pre>// Define the SIP wrapper to the word library.
 
 %Module word
 
@@ -96,7 +95,8 @@ public:
     Word(const char *w);
 
     char *reverse() const;
-};</pre>
+};
+</pre></div>
 </div>
 <p>Obviously a SIP specification file looks very much like a C++ (or C) header
 file, but SIP does not include a full C++ parser.  Let&#8217;s look at the
@@ -164,8 +164,9 @@ being created for) the generated C++ code and <tt class="docutils literal"><span
 current directory.</p>
 <p>To compile and install the extension module, just run the following
 commands <a class="footnote-reference" href="#id6" id="id3">[3]</a>:</p>
-<div class="highlight-python"><pre>make
-make install</pre>
+<div class="highlight-python"><div class="highlight"><pre>make
+make install
+</pre></div>
 </div>
 <p>That&#8217;s all there is to it.</p>
 <p>See <a class="reference internal" href="distutils.html#ref-distutils"><em>Building Your Extension with distutils</em></a> for an example of how to build this example using
@@ -194,19 +195,20 @@ supplied code is placed by SIP in the generated code.</td></tr>
 <div class="section" id="id7">
 <h2>A Simple C Example<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p>Let&#8217;s now look at a very similar example of wrapping a fictional C library:</p>
-<div class="highlight-python"><pre>/* Define the interface to the word library. */
+<div class="highlight-python"><div class="highlight"><pre>/* Define the interface to the word library. */
 
 struct Word {
     const char *the_word;
 };
 
 struct Word *create_word(const char *w);
-char *reverse(struct Word *word);</pre>
+char *reverse(struct Word *word);
+</pre></div>
 </div>
 <p>The corresponding SIP specification file would then look something like this:</p>
-<div class="highlight-python"><pre>/* Define the SIP wrapper to the word library. */
+<div class="highlight-python"><div class="highlight"><pre>/* Define the SIP wrapper to the word library. */
 
-%Module(name=word, language="C")
+%Module(name=word, language=&quot;C&quot;)
 
 struct Word {
 
@@ -218,7 +220,8 @@ struct Word {
 };
 
 struct Word *create_word(const char *w) /Factory/;
-char *reverse(struct Word *word);</pre>
+char *reverse(struct Word *word);
+</pre></div>
 </div>
 <p>Again, let&#8217;s look at the differences between the two files.</p>
 <blockquote>
@@ -249,7 +252,7 @@ interesting we&#8217;ll also say that the library only supports Qt v4.2 and late
 and also includes a function called <tt class="docutils literal"><span class="pre">setDefault()</span></tt> that is not implemented
 in the Windows version of the library.</p>
 <p>The <tt class="docutils literal"><span class="pre">hello.h</span></tt> header file looks something like this:</p>
-<div class="highlight-python"><pre>// Define the interface to the hello library.
+<div class="highlight-python"><div class="highlight"><pre>// Define the interface to the hello library.
 
 #include &lt;qlabel.h&gt;
 #include &lt;qwidget.h&gt;
@@ -270,10 +273,11 @@ private:
 
 #if !defined(Q_OS_WIN)
 void setDefault(const QString &amp;def);
-#endif</pre>
+#endif
+</pre></div>
 </div>
 <p>The corresponding SIP specification file would then look something like this:</p>
-<div class="highlight-python"><pre>// Define the SIP wrapper to the hello library.
+<div class="highlight-python"><div class="highlight"><pre>// Define the SIP wrapper to the hello library.
 
 %Module hello
 
@@ -298,7 +302,8 @@ private:
 void setDefault(const QString &amp;def);
 %End
 
-%End</pre>
+%End
+</pre></div>
 </div>
 <p>Again we look at the differences, but we&#8217;ll skip those that we&#8217;ve looked at in
 previous examples.</p>
@@ -506,8 +511,8 @@ Python and C++ call the destructor) and memory leaks (where neither Python and
 C++ call the destructor).</p>
 <p>This applies equally to C structures where the structure is returned to the
 heap using the <tt class="docutils literal"><span class="pre">free()</span></tt> function.</p>
-<p>See also <a class="reference internal" href="c_api.html#sipTransferTo" title="sipTransferTo"><tt class="xref c c-func docutils literal"><span class="pre">sipTransferTo()</span></tt></a>, <a class="reference internal" href="c_api.html#sipTransferBack" title="sipTransferBack"><tt class="xref c c-func docutils literal"><span class="pre">sipTransferBack()</span></tt></a> and
-<a class="reference internal" href="c_api.html#sipTransferBreak" title="sipTransferBreak"><tt class="xref c c-func docutils literal"><span class="pre">sipTransferBreak()</span></tt></a>.</p>
+<p>See also <a class="reference internal" href="c_api.html#c.sipTransferTo" title="sipTransferTo"><tt class="xref c c-func docutils literal"><span class="pre">sipTransferTo()</span></tt></a>, <a class="reference internal" href="c_api.html#c.sipTransferBack" title="sipTransferBack"><tt class="xref c c-func docutils literal"><span class="pre">sipTransferBack()</span></tt></a> and
+<a class="reference internal" href="c_api.html#c.sipTransferBreak" title="sipTransferBreak"><tt class="xref c c-func docutils literal"><span class="pre">sipTransferBreak()</span></tt></a>.</p>
 </div>
 <div class="section" id="types-and-meta-types">
 <span id="ref-types-metatypes"></span><h2>Types and Meta-types<a class="headerlink" href="#types-and-meta-types" title="Permalink to this headline">¶</a></h2>
@@ -535,7 +540,7 @@ directives.  Unlike the default super-type, the default meta-type is inherited
 by importing modules.</p>
 <p>If you want to use your own meta-type or super-type then they must be
 sub-classed from one of the SIP provided types.  Your types must be registered
-using <a class="reference internal" href="c_api.html#sipRegisterPyType" title="sipRegisterPyType"><tt class="xref c c-func docutils literal"><span class="pre">sipRegisterPyType()</span></tt></a>.  This is normally done in code specified
+using <a class="reference internal" href="c_api.html#c.sipRegisterPyType" title="sipRegisterPyType"><tt class="xref c c-func docutils literal"><span class="pre">sipRegisterPyType()</span></tt></a>.  This is normally done in code specified
 using the <a class="reference internal" href="directives.html#directive-%InitialisationCode"><tt class="xref std std-directive docutils literal"><span class="pre">%InitialisationCode</span></tt></a> directive.</p>
 <p>As an example, PyQt4 uses <a class="reference internal" href="directives.html#directive-%DefaultMetatype"><tt class="xref std std-directive docutils literal"><span class="pre">%DefaultMetatype</span></tt></a> to specify a new
 meta-type that handles the interaction with Qt&#8217;s own meta-type system.  It also
@@ -554,7 +559,7 @@ start up time when used to wrap large libraries with hundreds of classes and
 tens of thousands of attributes.</p>
 <p>SIP allows you to extend the handling of lazy attributes to your own attribute
 types by allowing you to register an attribute getter handler (using
-<a class="reference internal" href="c_api.html#sipRegisterAttributeGetter" title="sipRegisterAttributeGetter"><tt class="xref c c-func docutils literal"><span class="pre">sipRegisterAttributeGetter()</span></tt></a>).  This will be called just before a
+<a class="reference internal" href="c_api.html#c.sipRegisterAttributeGetter" title="sipRegisterAttributeGetter"><tt class="xref c c-func docutils literal"><span class="pre">sipRegisterAttributeGetter()</span></tt></a>).  This will be called just before a
 type&#8217;s dictionary is accessed for the first time.</p>
 </div>
 <div class="section" id="support-for-python-s-buffer-interface">
@@ -571,14 +576,14 @@ ignored.</p>
 Python&#8217;s C API includes support for converting between unicode objects and wide
 character strings and arrays.  When converting from a unicode object to wide
 characters SIP creates the string or array on the heap (using memory allocated
-using <a class="reference internal" href="c_api.html#sipMalloc" title="sipMalloc"><tt class="xref c c-func docutils literal"><span class="pre">sipMalloc()</span></tt></a>).  This then raises the problem of how this memory
+using <a class="reference internal" href="c_api.html#c.sipMalloc" title="sipMalloc"><tt class="xref c c-func docutils literal"><span class="pre">sipMalloc()</span></tt></a>).  This then raises the problem of how this memory
 is subsequently freed.</p>
 <p>The following describes how SIP handles this memory in the different situations
 where this is an issue.</p>
 <blockquote>
 <div><ul class="simple">
 <li>When a wide string or array is passed to a function or method then the
-memory is freed (using <a class="reference internal" href="c_api.html#sipFree" title="sipFree"><tt class="xref c c-func docutils literal"><span class="pre">sipFree()</span></tt></a>) after than function or method
+memory is freed (using <a class="reference internal" href="c_api.html#c.sipFree" title="sipFree"><tt class="xref c c-func docutils literal"><span class="pre">sipFree()</span></tt></a>) after than function or method
 returns.</li>
 <li>When a wide string or array is returned from a virtual method then SIP
 does not free the memory until the next time the method is called.</li>
@@ -607,8 +612,9 @@ override this behaviour when required.</p>
 </div>
 <div class="section" id="managing-incompatible-apis">
 <span id="ref-incompat-apis"></span><h2>Managing Incompatible APIs<a class="headerlink" href="#managing-incompatible-apis" title="Permalink to this headline">¶</a></h2>
-<p class="versionadded">
-<span class="versionmodified">New in version 4.9.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.9.</span></p>
+</div>
 <p>Sometimes it is necessary to change the way something is wrapped in a way that
 introduces an incompatibility.  For example a new feature of Python may
 suggest that something may be wrapped in a different way to exploit that
@@ -636,7 +642,7 @@ of the API that should be enabled.  This call must be made before any module
 that has multiple implementations is imported for the first time.</p>
 <p>Note this mechanism is not intended as a way or providing equally valid
 alternative APIs.  For example:</p>
-<div class="highlight-python"><pre>%API(name=MyAPI, version=1)
+<div class="highlight-python"><div class="highlight"><pre>%API(name=MyAPI, version=1)
 
 class Foo
 {
@@ -648,7 +654,8 @@ class Baz : Foo
 {
 public:
     void bar() /API=MyAPI:2-/;
-};</pre>
+};
+</pre></div>
 </div>
 <p>If the following Python code is executed then an exception will be raised:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">b</span> <span class="o">=</span> <span class="n">Baz</span><span class="p">()</span>
@@ -661,8 +668,9 @@ instead as might be expected.</p>
 </div>
 <div class="section" id="building-a-private-copy-of-the-sip-module">
 <span id="ref-private-sip"></span><h2>Building a Private Copy of the <tt class="docutils literal"><span class="pre">sip</span></tt> Module<a class="headerlink" href="#building-a-private-copy-of-the-sip-module" title="Permalink to this headline">¶</a></h2>
-<p class="versionadded">
-<span class="versionmodified">New in version 4.12.</span></p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 4.12.</span></p>
+</div>
 <p>The <tt class="docutils literal"><span class="pre">sip</span></tt> module is intended to be be used by all the SIP generated modules
 of a particular Python installation.  For example PyQt3 and PyQt4 are
 completely independent of each other but will use the same <tt class="docutils literal"><span class="pre">sip</span></tt> module.
@@ -748,12 +756,12 @@ private copy of <tt class="docutils literal"><span class="pre">sip.h</span></tt>
         <li class="right" >
           <a href="installation.html" title="Installation"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.15.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15.5 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2014 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

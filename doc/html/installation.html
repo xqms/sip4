@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installation &mdash; SIP 4.15.4 Reference Guide</title>
+    <title>Installation &mdash; SIP 4.15.5 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '4.15.4',
+        URL_ROOT:    './',
+        VERSION:     '4.15.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.15.4 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.15.5 Reference Guide" href="index.html" />
     <link rel="next" title="Using SIP" href="using.html" />
     <link rel="prev" title="Potential Incompatibilities with Earlier Versions" href="incompatibilities.html" /> 
   </head>
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="incompatibilities.html" title="Potential Incompatibilities with Earlier Versions"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.15.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15.5 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -71,11 +69,13 @@ depending on your platform) you should then check for any <tt class="docutils li
 that relate to your platform.</p>
 <p>Next you need to configure SIP by executing the <tt class="docutils literal"><span class="pre">configure.py</span></tt> script.  For
 example:</p>
-<div class="highlight-python"><pre>python configure.py</pre>
+<div class="highlight-python"><div class="highlight"><pre>python configure.py
+</pre></div>
 </div>
 <p>This assumes that the Python interpreter is on your path.  Something like the
 following may be appropriate on Windows:</p>
-<div class="highlight-python"><pre>c:\python32\python configure.py</pre>
+<div class="highlight-python"><div class="highlight"><pre>c:\python32\python configure.py
+</pre></div>
 </div>
 <p>If you have multiple versions of Python installed then make sure you use the
 interpreter for which you wish SIP to generate bindings for.</p>
@@ -88,7 +88,7 @@ interpreter for which you wish SIP to generate bindings for.</p>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure.py-h">
-<tt class="descname">-h</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--help</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-configure.py-h" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-configure.py--help"></span><tt class="descname">-h</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--help</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-configure.py-h" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a help message.</p>
 </dd></dl>
 
@@ -102,21 +102,22 @@ more than one architecture will cause a universal binary to be created.</p>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure.py-b">
-<tt class="descname">-b</tt><tt class="descclassname"> &lt;DIR&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--bindir</tt><tt class="descclassname"> &lt;DIR&gt;</tt><a class="headerlink" href="#cmdoption-configure.py-b" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-configure.py--bindir"></span><tt class="descname">-b</tt><tt class="descclassname"> &lt;DIR&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--bindir</tt><tt class="descclassname"> &lt;DIR&gt;</tt><a class="headerlink" href="#cmdoption-configure.py-b" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SIP code generator will be installed in the directory <tt class="docutils literal"><span class="pre">&lt;DIR&gt;</span></tt>.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure.py-d">
-<tt class="descname">-d</tt><tt class="descclassname"> &lt;DIR&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--destdir</tt><tt class="descclassname"> &lt;DIR&gt;</tt><a class="headerlink" href="#cmdoption-configure.py-d" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-configure.py--destdir"></span><tt class="descname">-d</tt><tt class="descclassname"> &lt;DIR&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--destdir</tt><tt class="descclassname"> &lt;DIR&gt;</tt><a class="headerlink" href="#cmdoption-configure.py-d" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SIP module will be installed in the directory <tt class="docutils literal"><span class="pre">&lt;DIR&gt;</span></tt>.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure.py--deployment-target">
 <tt class="descname">--deployment-target</tt><tt class="descclassname"> &lt;VERSION&gt;</tt><a class="headerlink" href="#cmdoption-configure.py--deployment-target" title="Permalink to this definition">¶</a></dt>
-<dd><p class="versionadded">
-<span class="versionmodified">New in version 4.12.1.</span></p>
+<dd><div class="versionadded">
+<p><span class="versionmodified">New in version 4.12.1.</span></p>
+</div>
 <p>Each generated Makefile will set the <span class="target" id="index-0"></span><tt class="xref std std-envvar docutils literal"><span class="pre">MACOSX_DEPLOYMENT_TARGET</span></tt>
 environment variable to <tt class="docutils literal"><span class="pre">&lt;VERSION&gt;</span></tt>.  In order to work around bugs in
 some versions of Python, this should be used instead of setting the
@@ -125,20 +126,20 @@ environment variable in the shell.</p>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure.py-e">
-<tt class="descname">-e</tt><tt class="descclassname"> &lt;DIR&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--incdir</tt><tt class="descclassname"> &lt;DIR&gt;</tt><a class="headerlink" href="#cmdoption-configure.py-e" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-configure.py--incdir"></span><tt class="descname">-e</tt><tt class="descclassname"> &lt;DIR&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--incdir</tt><tt class="descclassname"> &lt;DIR&gt;</tt><a class="headerlink" href="#cmdoption-configure.py-e" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SIP header file will be installed in the directory <tt class="docutils literal"><span class="pre">&lt;DIR&gt;</span></tt>.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure.py-k">
-<tt class="descname">-k</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--static</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-configure.py-k" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-configure.py--static"></span><tt class="descname">-k</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--static</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-configure.py-k" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SIP module will be built as a static library.  This is useful when
 building the SIP module as a Python builtin (see <a class="reference internal" href="builtin.html#ref-builtin"><em>Builtin Modules and Custom Interpreters</em></a>).</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure.py-n">
-<tt class="descname">-n</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--universal</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-configure.py-n" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-configure.py--universal"></span><tt class="descname">-n</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--universal</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-configure.py-n" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SIP code generator and module will be built as universal binaries
 under MacOS/X.  If the <a class="reference internal" href="#cmdoption-configure.py--arch"><em class="xref std std-option">--arch</em></a> option has
 not been specified then the universal binary will include the <tt class="docutils literal"><span class="pre">i386</span></tt> and
@@ -147,7 +148,7 @@ not been specified then the universal binary will include the <tt class="docutil
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure.py-p">
-<tt class="descname">-p</tt><tt class="descclassname"> &lt;PLATFORM&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--platform</tt><tt class="descclassname"> &lt;PLATFORM&gt;</tt><a class="headerlink" href="#cmdoption-configure.py-p" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-configure.py--platform"></span><tt class="descname">-p</tt><tt class="descclassname"> &lt;PLATFORM&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--platform</tt><tt class="descclassname"> &lt;PLATFORM&gt;</tt><a class="headerlink" href="#cmdoption-configure.py-p" title="Permalink to this definition">¶</a></dt>
 <dd><p>Explicitly specify the platform/compiler to be used by the build system,
 otherwise a platform specific default will be used.  The
 <a class="reference internal" href="#cmdoption-configure.py--show-platforms"><em class="xref std std-option">--show-platforms</em></a> option will
@@ -156,7 +157,7 @@ display all the supported platform/compilers.</p>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure.py-s">
-<tt class="descname">-s</tt><tt class="descclassname"> &lt;SDK&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--sdk</tt><tt class="descclassname"> &lt;SDK&gt;</tt><a class="headerlink" href="#cmdoption-configure.py-s" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-configure.py--sdk"></span><tt class="descname">-s</tt><tt class="descclassname"> &lt;SDK&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--sdk</tt><tt class="descclassname"> &lt;SDK&gt;</tt><a class="headerlink" href="#cmdoption-configure.py-s" title="Permalink to this definition">¶</a></dt>
 <dd><p>If the <a class="reference internal" href="#cmdoption-configure.py-n"><em class="xref std std-option">--universal</em></a> option was given then this
 specifies the name of the SDK directory.  If a path is not given then it is
 assumed to be a sub-directory of
@@ -166,13 +167,13 @@ or <tt class="docutils literal"><span class="pre">/Developer/SDKs</span></tt>.</
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure.py-u">
-<tt class="descname">-u</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--debug</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-configure.py-u" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-configure.py--debug"></span><tt class="descname">-u</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--debug</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-configure.py-u" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SIP module will be built with debugging symbols.</p>
 </dd></dl>
 
 <dl class="cmdoption">
 <dt id="cmdoption-configure.py-v">
-<tt class="descname">-v</tt><tt class="descclassname"> &lt;DIR&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--sipdir</tt><tt class="descclassname"> &lt;DIR&gt;</tt><a class="headerlink" href="#cmdoption-configure.py-v" title="Permalink to this definition">¶</a></dt>
+<span id="cmdoption-configure.py--sipdir"></span><tt class="descname">-v</tt><tt class="descclassname"> &lt;DIR&gt;</tt><tt class="descclassname">, </tt><tt class="descname">--sipdir</tt><tt class="descclassname"> &lt;DIR&gt;</tt><a class="headerlink" href="#cmdoption-configure.py-v" title="Permalink to this definition">¶</a></dt>
 <dd><p>By default <tt class="docutils literal"><span class="pre">.sip</span></tt> files will be installed in the directory <tt class="docutils literal"><span class="pre">&lt;DIR&gt;</span></tt>.</p>
 </dd></dl>
 
@@ -207,7 +208,8 @@ all are applicable to all platforms.</p>
 value of <tt class="docutils literal"><span class="pre">name</span></tt>.</p>
 <p>For example, the following will disable support for C++ exceptions (and so
 reduce the size of module binaries) when used with GCC:</p>
-<div class="highlight-python"><pre>python configure.py CXXFLAGS+=-fno-exceptions</pre>
+<div class="highlight-python"><div class="highlight"><pre>python configure.py CXXFLAGS+=-fno-exceptions
+</pre></div>
 </div>
 <p>A pure Python module called <tt class="docutils literal"><span class="pre">sipconfig.py</span></tt> is generated by <tt class="docutils literal"><span class="pre">configure.py</span></tt>.
 This defines each <tt class="docutils literal"><span class="pre">name</span></tt> and its corresponding <tt class="docutils literal"><span class="pre">value</span></tt>.  Looking at it will
@@ -218,7 +220,8 @@ covered in detail in <a class="reference internal" href="build_system.html#ref-b
 <p>SIP, and the modules it generates, can be built with MinGW, the Windows port of
 GCC.  You must use the <a class="reference internal" href="#cmdoption-configure.py-p"><em class="xref std std-option">--platform</em></a> command line
 option to specify the correct platform.  For example:</p>
-<div class="highlight-python"><pre>c:\python32\python configure.py --platform win32-g++</pre>
+<div class="highlight-python"><div class="highlight"><pre>c:\python32\python configure.py --platform win32-g++
+</pre></div>
 </div>
 </div>
 <div class="section" id="configuring-for-the-borland-c-compiler">
@@ -226,13 +229,15 @@ option to specify the correct platform.  For example:</p>
 <p>SIP, and the modules it generates, can be built with the free Borland C++
 compiler.  You must use the <a class="reference internal" href="#cmdoption-configure.py-p"><em class="xref std std-option">--platform</em></a> command line
 option to specify the correct platform.  For example:</p>
-<div class="highlight-python"><pre>c:\python32\python configure.py --platform win32-borland</pre>
+<div class="highlight-python"><div class="highlight"><pre>c:\python32\python configure.py --platform win32-borland
+</pre></div>
 </div>
 <p>You must also make sure you have a Borland-compatible version of the Python
 library.  If you are using the standard Python distribution (built using the
 Microsoft compiler) then you must convert the format of the Python library.
 For example:</p>
-<div class="highlight-python"><pre>coff2omf python32.lib python32_bcpp.lib</pre>
+<div class="highlight-python"><div class="highlight"><pre>coff2omf python32.lib python32_bcpp.lib
+</pre></div>
 </div>
 </div>
 </div>
@@ -244,7 +249,8 @@ example:</p>
 </pre></div>
 </div>
 <p>The final step is to install SIP by running the following command:</p>
-<div class="highlight-python"><pre>make install</pre>
+<div class="highlight-python"><div class="highlight"><pre>make install
+</pre></div>
 </div>
 <p>(Depending on your system you may require root or administrator privileges.)</p>
 <p>This will install the various SIP components.</p>
@@ -312,12 +318,12 @@ example:</p>
         <li class="right" >
           <a href="incompatibilities.html" title="Potential Incompatibilities with Earlier Versions"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.15.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15.5 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2014 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

@@ -124,8 +124,10 @@ static void generateBaseType(ifaceFileDef *, argDef *, int, FILE *);
 static void generateNamedBaseType(ifaceFileDef *, argDef *, const char *, int,
         FILE *);
 static void generateTupleBuilder(moduleDef *, signatureDef *, FILE *);
-static void generateEmitters(moduleDef *mod, classDef *cd, FILE *fp);
-static void generateEmitter(moduleDef *, classDef *, visibleList *, FILE *);
+static void generatePyQt3Emitters(moduleDef *mod, classDef *cd, FILE *fp);
+static void generatePyQt3Emitter(moduleDef *, classDef *, visibleList *,
+        FILE *);
+static void generatePyQt5Emitters(moduleDef *mod, classDef *cd, FILE *fp);
 static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
         FILE *fp);
 static void generateDefaultInstanceReturn(argDef *res, const char *indent,
@@ -256,7 +258,7 @@ static void generateNameCache(sipSpec *pt, FILE *fp);
 static const char *resultOwner(overDef *od);
 static void prCachedName(FILE *fp, nameDef *nd, const char *prefix);
 static void generateSignalTableEntry(sipSpec *pt, classDef *cd, overDef *sig,
-        memberDef *md, int membernr, FILE *fp);
+        memberDef *md, int membernr, int optional_args, FILE *fp);
 static void generateTypesTable(sipSpec *pt, moduleDef *mod, FILE *fp);
 static int py2OnlySlot(slotType st);
 static int py2_5LaterSlot(slotType st);
@@ -279,6 +281,7 @@ static int copyConstRefArg(argDef *ad);
 static void generatePreprocLine(int linenr, const char *fname, FILE *fp);
 static virtErrorHandler *getVirtErrorHandler(sipSpec *pt, overDef *od,
         classDef *cd, moduleDef *mod);
+static int hasOptionalArgs(overDef *od);
 
 
 /*
@@ -1447,7 +1450,7 @@ static void generateCpp(sipSpec *pt, moduleDef *mod, const char *codeDir,
             if (cd->ctors != NULL)
             {
                 prcode(fp,
-"    {%P, init_%L, ", cd->iff->api_range, cd->iff);
+"    {%P, init_type_%L, ", cd->iff->api_range, cd->iff);
 
                 generateEncodedType(mod, cd, 0, fp);
 
@@ -5718,7 +5721,7 @@ static void generateClassFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
     for (md = cd->members; md != NULL; md = md->next)
         if (cd->iff->type == namespace_iface)
             generateOrdinaryFunction(pt, mod, cd, NULL, md, fp);
-        else if (md->slot != no_slot && md->slot != unicode_slot)
+        else if (md->slot != no_slot)
             generateSlot(mod, cd, NULL, md, fp);
 
     if (cd->iff->type != namespace_iface && !generating_c)
@@ -6535,7 +6538,7 @@ static void generateShadowCode(sipSpec *pt, moduleDef *mod, classDef *cd,
     /* The meta methods if required. */
     if ((pluginPyQt4(pt) || pluginPyQt5(pt)) && isQObjectSubClass(cd))
     {
-        if (!noPyQt4QMetaObject(cd))
+        if (!noPyQtQMetaObject(cd))
         {
             prcode(fp,
 "\n"
@@ -6623,14 +6626,14 @@ static void generateShadowCode(sipSpec *pt, moduleDef *mod, classDef *cd,
 
     /* Generate the emitters if needed. */
     if (pluginPyQt3(pt))
-        generateEmitters(mod, cd, fp);
+        generatePyQt3Emitters(mod, cd, fp);
 }
 
 
 /*
- * Generate the emitter functions.
+ * Generate the PyQt3 emitter functions.
  */
-static void generateEmitters(moduleDef *mod, classDef *cd, FILE *fp)
+static void generatePyQt3Emitters(moduleDef *mod, classDef *cd, FILE *fp)
 {
     int noIntro;
     visibleList *vl;
@@ -6642,7 +6645,7 @@ static void generateEmitters(moduleDef *mod, classDef *cd, FILE *fp)
         for (od = vl->cd->overs; od != NULL; od = od->next)
             if (od->common == vl->m && isSignal(od))
             {
-                generateEmitter(mod, cd, vl, fp);
+                generatePyQt3Emitter(mod, cd, vl, fp);
                 break;
             }
     }
@@ -7301,9 +7304,9 @@ static void generateCallDefaultCtor(ctorDef *ct, FILE *fp)
 
 
 /*
- * Generate the emitter function for a signal.
+ * Generate the PyQt3 emitter function for a signal.
  */
-static void generateEmitter(moduleDef *mod, classDef *cd, visibleList *vl,
+static void generatePyQt3Emitter(moduleDef *mod, classDef *cd, visibleList *vl,
         FILE *fp)
 {
     const char *pname = vl->m->pyname->text;
@@ -8587,7 +8590,9 @@ static void generateClassAPI(classDef *cd, sipSpec *pt, FILE *fp)
     {
         const char *type_prefix;
 
-        if (pluginPyQt4(pt) || pluginPyQt5(pt))
+        if (pluginPyQt5(pt))
+            type_prefix = "pyqt5";
+        else if (pluginPyQt4(pt))
             type_prefix = "pyqt4";
         else if (pluginPyQt3(pt))
             type_prefix = "pyqt3";
@@ -8758,7 +8763,7 @@ static void generateShadowClassDeclaration(sipSpec *pt,classDef *cd,FILE *fp)
 "    void *qt_metacast(const char *);\n"
             );
 
-        if (!noPyQt4QMetaObject(cd))
+        if (!noPyQtQMetaObject(cd))
             prcode(fp,
 "    const QMetaObject *metaObject() const;\n"
                 );
@@ -9585,11 +9590,13 @@ static void generateTypeDefinition(sipSpec *pt, classDef *cd, FILE *fp)
     nr_methods = generateClassMethodTable(pt, cd, fp);
     nr_enums = generateEnumMemberTable(pt, mod, cd, NULL, fp);
 
-    /* Generate the PyQt4 signals table. */
+    /* Generate the PyQt4/5 signals table. */
     is_signals = FALSE;
 
     if ((pluginPyQt4(pt) || pluginPyQt5(pt)) && isQObjectSubClass(cd))
     {
+        const char *pyqt_prefix = (pluginPyQt5(pt) ? "pyqt5" : "pyqt4");
+
         /* The signals must be grouped by name. */
         for (md = cd->members; md != NULL; md = md->next)
         {
@@ -9598,9 +9605,6 @@ static void generateTypeDefinition(sipSpec *pt, classDef *cd, FILE *fp)
 
             for (od = cd->overs; od != NULL; od = od->next)
             {
-                int a, nr_args;
-                signatureDef *cppsig;
-
                 if (od->common != md || !isSignal(od))
                     continue;
 
@@ -9622,41 +9626,57 @@ static void generateTypeDefinition(sipSpec *pt, classDef *cd, FILE *fp)
                 {
                     is_signals = TRUE;
 
+                    if (pluginPyQt5(pt))
+                        generatePyQt5Emitters(mod, cd, fp);
+
                     prcode(fp,
 "\n"
 "\n"
-"/* Define this type's PyQt4 signals. */\n"
-"static const pyqt4QtSignal pyqt4_signals_%C[] = {\n"
-                        , classFQCName(cd));
+"/* Define this type's signals. */\n"
+"static const %sQtSignal signals_%C[] = {\n"
+                        , pyqt_prefix, classFQCName(cd));
                 }
 
                 /*
-                 * Default arguments are handled as multiple signals.  We make
-                 * sure the largest is first and the smallest last which is
-                 * what Qt does.
+                 * For PyQt4 optional arguments are handled as multiple
+                 * signals.  We make sure the largest is first and the smallest
+                 * last which is what Qt does.  When built against Qt5 we
+                 * enable a hack that supplies any missing optional arguments.
+                 * For PyQt5 we only include the version with all arguments and
+                 * provide an emitter function which handles the optional
+                 * arguments.
                  */
-                cppsig = od->cppsig;
-                nr_args = cppsig->nrArgs;
+                generateSignalTableEntry(pt, cd, od, md, membernr,
+                        hasOptionalArgs(od), fp);
 
-                generateSignalTableEntry(pt, cd, od, md, membernr, fp);
                 membernr = -1;
 
-                for (a = nr_args - 1; a >= 0; --a)
+                if (pluginPyQt4(pt))
                 {
-                    if (cppsig->args[a].defval == NULL)
-                        break;
+                    int a, nr_args;
+                    signatureDef *cppsig;
 
-                    cppsig->nrArgs = a;
-                    generateSignalTableEntry(pt, cd, od, md, -1, fp);
+                    cppsig = od->cppsig;
+                    nr_args = cppsig->nrArgs;
+
+                    for (a = nr_args - 1; a >= 0; --a)
+                    {
+                        if (cppsig->args[a].defval == NULL)
+                            break;
+
+                        cppsig->nrArgs = a;
+                        generateSignalTableEntry(pt, cd, od, md, -1, FALSE,
+                                fp);
+                    }
+
+                    cppsig->nrArgs = nr_args;
                 }
-
-                cppsig->nrArgs = nr_args;
             }
         }
 
         if (is_signals)
             prcode(fp,
-"    {0, 0, 0}\n"
+"    {0, 0, 0, 0}\n"
 "};\n"
                 );
     }
@@ -9784,7 +9804,12 @@ static void generateTypeDefinition(sipSpec *pt, classDef *cd, FILE *fp)
         has_docstring = TRUE;
     }
 
-    if (pluginPyQt4(pt) || pluginPyQt5(pt))
+    if (pluginPyQt5(pt))
+    {
+        type_prefix = "pyqt5";
+        embedded = TRUE;
+    }
+    else if (pluginPyQt4(pt))
     {
         type_prefix = "pyqt4";
         embedded = TRUE;
@@ -10028,7 +10053,7 @@ static void generateTypeDefinition(sipSpec *pt, classDef *cd, FILE *fp)
 
     if (canCreate(cd))
         prcode(fp,
-"    init_%L,\n"
+"    init_type_%L,\n"
             , cd->iff);
     else
         prcode(fp,
@@ -10241,7 +10266,7 @@ static void generateTypeDefinition(sipSpec *pt, classDef *cd, FILE *fp)
 
     if (pluginPyQt4(pt) || pluginPyQt5(pt))
     {
-        if (isQObjectSubClass(cd) && !noPyQt4QMetaObject(cd))
+        if (isQObjectSubClass(cd) && !noPyQtQMetaObject(cd))
             prcode(fp,
 "    &%U::staticMetaObject,\n"
                 , cd);
@@ -10252,25 +10277,39 @@ static void generateTypeDefinition(sipSpec *pt, classDef *cd, FILE *fp)
 
         prcode(fp,
 "    %u,\n"
-            , cd->pyqt4_flags);
+            , cd->pyqt_flags);
 
-        if (is_signals)
-            prcode(fp,
-"    pyqt4_signals_%C,\n"
-                , classFQCName(cd));
-        else
-            prcode(fp,
+        if (pluginPyQt5(pt))
+        {
+            if (is_signals)
+                prcode(fp,
+"    signals_%C,\n"
+                    , classFQCName(cd));
+            else
+                prcode(fp,
 "    0,\n"
-                );
+                    );
 
-        if (cd->pyqt_interface != NULL)
-            prcode(fp,
+            if (cd->pyqt_interface != NULL)
+                prcode(fp,
 "    \"%s\"\n"
-                , cd->pyqt_interface);
-        else
-            prcode(fp,
+                    , cd->pyqt_interface);
+            else
+                prcode(fp,
 "    0\n"
-                );
+                    );
+        }
+        else
+        {
+            if (is_signals)
+                prcode(fp,
+"    signals_%C,\n"
+                    , classFQCName(cd));
+            else
+                prcode(fp,
+"    0\n"
+                    );
+        }
     }
 
     prcode(fp,
@@ -10280,12 +10319,110 @@ static void generateTypeDefinition(sipSpec *pt, classDef *cd, FILE *fp)
 
 
 /*
- * Generate an entry in the PyQt4 signal table.
+ * See if an overload has optional arguments.
+ */
+static int hasOptionalArgs(overDef *od)
+{
+    return (od->cppsig->nrArgs > 0 && od->cppsig->args[od->cppsig->nrArgs - 1].defval != NULL);
+}
+
+
+/*
+ * Generate the PyQt5 emitters for a class.
+ */
+static void generatePyQt5Emitters(moduleDef *mod, classDef *cd, FILE *fp)
+{
+    memberDef *md;
+
+    for (md = cd->members; md != NULL; md = md->next)
+    {
+        int in_emitter = FALSE;
+        overDef *od;
+
+        for (od = cd->overs; od != NULL; od = od->next)
+        {
+            if (od->common != md || !isSignal(od) || !hasOptionalArgs(od))
+                continue;
+
+            if (!in_emitter)
+            {
+                in_emitter = TRUE;
+
+                prcode(fp,
+"\n"
+"\n"
+                    );
+
+                if (!generating_c)
+                    prcode(fp,
+"extern \"C\" {static int emit_%L_%s(void *, PyObject *);}\n"
+"\n"
+                        , cd->iff, od->cppname);
+
+                prcode(fp,
+"static int emit_%L_%s(void *sipCppV, PyObject *sipArgs)\n"
+"{\n"
+"    PyObject *sipParseErr = NULL;\n"
+"    %C *sipCpp = reinterpret_cast<%C *>(sipCppV);\n"
+                    , cd->iff, od->cppname
+                    , classFQCName(cd), classFQCName(cd));
+            }
+
+            /*
+             * Generate the code that parses the args and emits the appropriate
+             * overloaded signal.
+             */
+            prcode(fp,
+"\n"
+"    {\n"
+                );
+
+            generateArgParser(mod, &od->pysig, cd, NULL, NULL, NULL, FALSE, fp);
+
+            prcode(fp,
+"        {\n"
+"            Py_BEGIN_ALLOW_THREADS\n"
+"            sipCpp->%s("
+                , od->cppname);
+
+            generateCallArgs(mod, od->cppsig, &od->pysig, fp);
+
+            prcode(fp, ");\n"
+"            Py_END_ALLOW_THREADS\n"
+"\n"
+                );
+
+            deleteTemps(mod, &od->pysig, fp);
+
+            prcode(fp,
+"\n"
+"            return 0;\n"
+"        }\n"
+"    }\n"
+            );
+        }
+
+        if (in_emitter)
+        {
+            prcode(fp,
+"\n"
+"    sipNoMethod(sipParseErr, %N, %N, NULL);\n"
+"\n"
+"    return -1;\n"
+"}\n"
+                , cd->pyname, md->pyname);
+        }
+    }
+}
+
+
+/*
+ * Generate an entry in the PyQt4 or PyQt5 signal table.
  */
 static void generateSignalTableEntry(sipSpec *pt, classDef *cd, overDef *sig,
-        memberDef *md, int membernr, FILE *fp)
+        memberDef *md, int membernr, int optional_args, FILE *fp)
 {
-    int a;
+    int a, pyqt5 = pluginPyQt5(pt);
 
     prcode(fp,
 "    {\"%s(", sig->cppname);
@@ -10333,9 +10470,21 @@ static void generateSignalTableEntry(sipSpec *pt, classDef *cd, overDef *sig,
     }
 
     if (membernr >= 0)
-        prcode(fp, "&methods_%L[%d]", cd->iff, membernr);
+        prcode(fp, "&methods_%L[%d], ", cd->iff, membernr);
     else
-        prcode(fp, "0");
+        prcode(fp, "0, ");
+
+    if (pyqt5)
+    {
+        if (optional_args)
+            prcode(fp, "emit_%L_%s", cd->iff, sig->cppname);
+        else
+            prcode(fp, "0");
+    }
+    else
+    {
+        prcode(fp, "%d", sig->pyqt_signal_hack);
+    }
 
     prcode(fp,"},\n"
         );
@@ -10654,11 +10803,11 @@ static void generateTypeInit(classDef *cd, moduleDef *mod, FILE *fp)
 
     if (!generating_c)
         prcode(fp,
-"extern \"C\" {static void *init_%L(sipSimpleWrapper *, PyObject *, PyObject *, PyObject **, PyObject **, PyObject **);}\n"
+"extern \"C\" {static void *init_type_%L(sipSimpleWrapper *, PyObject *, PyObject *, PyObject **, PyObject **, PyObject **);}\n"
             , cd->iff);
 
     prcode(fp,
-"static void *init_%L(sipSimpleWrapper *%s, PyObject *sipArgs, PyObject *sipKwds, PyObject **sipUnused, PyObject **%s, PyObject **sipParseErr)\n"
+"static void *init_type_%L(sipSimpleWrapper *%s, PyObject *sipArgs, PyObject *sipKwds, PyObject **sipUnused, PyObject **%s, PyObject **sipParseErr)\n"
 "{\n"
         , cd->iff, (need_self ? "sipSelf" : ""), (need_owner ? "sipOwner" : ""));
 
@@ -10674,7 +10823,7 @@ static void generateTypeInit(classDef *cd, moduleDef *mod, FILE *fp)
     if (tracing)
         prcode(fp,
 "\n"
-"    sipTrace(SIP_TRACE_INITS,\"init_%L()\\n\");\n"
+"    sipTrace(SIP_TRACE_INITS,\"init_type_%L()\\n\");\n"
             , cd->iff);
 
     /*
@@ -12603,8 +12752,8 @@ static void generateFunctionCall(classDef *c_scope, mappedTypeDef *mt_scope,
         if (keepReference(res))
             prcode(fp,
 "\n"
-"            sipKeepReference(sipSelf, %d, sipResObj);\n"
-                , res->key);
+"            sipKeepReference(%s, %d, sipResObj);\n"
+                , (isStatic(od) ? "NULL" : "sipSelf"), res->key);
 
         /*
          * Keep a reference to any argument with the result if the function is

@@ -791,7 +791,7 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
      * Remind ourselves to add support for capsule variables when we have
      * another reason to move to the next major version number.
      */
-#if SIP_API_MAJOR_NR > 10
+#if SIP_API_MAJOR_NR > 11
 #error "Add support for capsule variables"
 #endif
 
@@ -1284,10 +1284,10 @@ static PyObject *unwrapInstance(PyObject *self, PyObject *args)
  */
 static PyObject *wrapInstance(PyObject *self, PyObject *args)
 {
-    unsigned long addr;
+    unsigned PY_LONG_LONG addr;
     sipWrapperType *wt;
 
-    if (PyArg_ParseTuple(args, "kO!:wrapinstance", &addr, &sipWrapperType_Type, &wt))
+    if (PyArg_ParseTuple(args, "KO!:wrapinstance", &addr, &sipWrapperType_Type, &wt))
         return sip_api_convert_from_type((void *)addr, wt->type, NULL);
 
     return NULL;
@@ -9603,14 +9603,22 @@ static int sipSimpleWrapper_init(sipSimpleWrapper *self, PyObject *args,
         from_cpp = FALSE;
     }
 
-    /*
-     * If there is an owner then we assume that the wrapper supports the
-     * concept.
-     */
-    if (owner != NULL)
+    /* Handler any owner if the type supports the concept. */
+    if (PyObject_TypeCheck((PyObject *)self, (PyTypeObject *)&sipWrapper_Type))
     {
-        assert(PyObject_TypeCheck((PyObject *)self, (PyTypeObject *)&sipWrapper_Type));
-        addToParent((sipWrapper *)self, (sipWrapper *)owner);
+        /*
+         * The application may be doing something very unadvisable (like
+         * calling __init__() for a second time), so make sure we don't already
+         * have a parent.
+         */
+        removeFromParent((sipWrapper *)self);
+
+        if (owner != NULL)
+        {
+            assert(PyObject_TypeCheck((PyObject *)owner, (PyTypeObject *)&sipWrapper_Type));
+
+            addToParent((sipWrapper *)self, (sipWrapper *)owner);
+        }
     }
 
     self->data = sipNew;
@@ -9632,10 +9640,7 @@ static int sipSimpleWrapper_init(sipSimpleWrapper *self, PyObject *args,
         return 0;
 
     /* Call any finalisation code. */
-#if SIP_API_MAJOR_NR != 10
-#error Remove test for v10.1
-#endif
-    if (td->td_module->em_api_minor >= 1 && (final_func = find_finalisation(ctd)) != NULL)
+    if ((final_func = find_finalisation(ctd)) != NULL)
     {
         PyObject *new_unused = NULL, **new_unused_p;
 

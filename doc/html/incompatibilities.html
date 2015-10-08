@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Potential Incompatibilities with Earlier Versions &mdash; SIP 4.15.4 Reference Guide</title>
+    <title>Potential Incompatibilities with Earlier Versions &mdash; SIP 4.15.5 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '4.15.4',
+        URL_ROOT:    './',
+        VERSION:     '4.15.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.15.4 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.15.5 Reference Guide" href="index.html" />
     <link rel="next" title="Installation" href="installation.html" />
     <link rel="prev" title="Introduction" href="introduction.html" /> 
   </head>
@@ -46,7 +44,7 @@
         <li class="right" >
           <a href="introduction.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.15.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15.5 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -66,7 +64,7 @@ SIP.  Normally these are the removal of previously deprecated features.</p>
 Global Interpreter Lock (GIL) being held and from an arbitrary thread.</p>
 <p>Starting with this version the code is called with the GIL being held and from
 the thread that raised the error.  In addition the code is provided a value
-called <tt class="docutils literal"><span class="pre">sipGILState</span></tt> that may be passed to <a class="reference internal" href="c_api.html#SIP_RELEASE_GIL" title="SIP_RELEASE_GIL"><tt class="xref c c-func docutils literal"><span class="pre">SIP_RELEASE_GIL()</span></tt></a> in order
+called <tt class="docutils literal"><span class="pre">sipGILState</span></tt> that may be passed to <a class="reference internal" href="c_api.html#c.SIP_RELEASE_GIL" title="SIP_RELEASE_GIL"><tt class="xref c c-func docutils literal"><span class="pre">SIP_RELEASE_GIL()</span></tt></a> in order
 to release the GIL.  This must be done if the code changes the execution path
 (e.g. by throwing a C++ exception).</p>
 </div>
@@ -101,7 +99,7 @@ directive.  Starting with this version all directives are affected by the
 <p>The following parts of the <a class="reference internal" href="c_api.html#ref-c-api"><em>C API</em></a> are now deprecated (but
 still supported).</p>
 <ul class="simple">
-<li>The <tt class="docutils literal"><span class="pre">D</span></tt> format character of <a class="reference internal" href="c_api.html#sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a>.</li>
+<li>The <tt class="docutils literal"><span class="pre">D</span></tt> format character of <a class="reference internal" href="c_api.html#c.sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a>.</li>
 </ul>
 </div>
 </div>
@@ -115,15 +113,17 @@ special method must be explicitly defined.</p>
 </div>
 <div class="section" id="sipwrapper-user-member">
 <h3>sipWrapper user Member<a class="headerlink" href="#sipwrapper-user-member" title="Permalink to this headline">¶</a></h3>
-<p>Prior to this version the <a class="reference internal" href="c_api.html#sipWrapper" title="sipWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipWrapper</span></tt></a> structure had a member called
+<p>Prior to this version the <a class="reference internal" href="c_api.html#c.sipWrapper" title="sipWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipWrapper</span></tt></a> structure had a member called
 <tt class="xref c c-type docutils literal"><span class="pre">user</span></tt> which is available for handwritten code to use.  From this
-version <tt class="xref c c-type docutils literal"><span class="pre">user</span></tt> is a member of the <a class="reference internal" href="c_api.html#sipSimpleWrapper" title="sipSimpleWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipSimpleWrapper</span></tt></a> structure.</p>
-<p><a class="reference internal" href="c_api.html#sipWrapper" title="sipWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipWrapper</span></tt></a> pointers can be safely cast to <a class="reference internal" href="c_api.html#sipSimpleWrapper" title="sipSimpleWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipSimpleWrapper</span></tt></a>
+version <tt class="xref c c-type docutils literal"><span class="pre">user</span></tt> is a member of the <a class="reference internal" href="c_api.html#c.sipSimpleWrapper" title="sipSimpleWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipSimpleWrapper</span></tt></a> structure.</p>
+<p><a class="reference internal" href="c_api.html#c.sipWrapper" title="sipWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipWrapper</span></tt></a> pointers can be safely cast to <a class="reference internal" href="c_api.html#c.sipSimpleWrapper" title="sipSimpleWrapper"><tt class="xref c c-type docutils literal"><span class="pre">sipSimpleWrapper</span></tt></a>
 pointers, so if your code does something like:</p>
-<div class="highlight-python"><pre>((sipWrapper *)obj)-&gt;user = an_object_reference;</pre>
+<div class="highlight-python"><div class="highlight"><pre>((sipWrapper *)obj)-&gt;user = an_object_reference;
+</pre></div>
 </div>
 <p>then you just need to change it to:</p>
-<div class="highlight-python"><pre>((sipSimpleWrapper *)obj)-&gt;user = an_object_reference;</pre>
+<div class="highlight-python"><div class="highlight"><pre>((sipSimpleWrapper *)obj)-&gt;user = an_object_reference;
+</pre></div>
 </div>
 </div>
 <div class="section" id="removal-of-previously-deprecated-features">
@@ -131,9 +131,9 @@ pointers, so if your code does something like:</p>
 <p>The following parts of the <a class="reference internal" href="c_api.html#ref-c-api"><em>C API</em></a> have been removed.</p>
 <ul class="simple">
 <li>The <tt class="docutils literal"><span class="pre">a</span></tt>, <tt class="docutils literal"><span class="pre">A</span></tt>, <tt class="docutils literal"><span class="pre">M</span></tt>, <tt class="docutils literal"><span class="pre">N</span></tt>, <tt class="docutils literal"><span class="pre">O</span></tt>, <tt class="docutils literal"><span class="pre">P</span></tt> and <tt class="docutils literal"><span class="pre">T</span></tt> format characters
-from <a class="reference internal" href="c_api.html#sipBuildResult" title="sipBuildResult"><tt class="xref c c-func docutils literal"><span class="pre">sipBuildResult()</span></tt></a> and <a class="reference internal" href="c_api.html#sipCallMethod" title="sipCallMethod"><tt class="xref c c-func docutils literal"><span class="pre">sipCallMethod()</span></tt></a>.</li>
+from <a class="reference internal" href="c_api.html#c.sipBuildResult" title="sipBuildResult"><tt class="xref c c-func docutils literal"><span class="pre">sipBuildResult()</span></tt></a> and <a class="reference internal" href="c_api.html#c.sipCallMethod" title="sipCallMethod"><tt class="xref c c-func docutils literal"><span class="pre">sipCallMethod()</span></tt></a>.</li>
 <li>The <tt class="docutils literal"><span class="pre">a</span></tt>, <tt class="docutils literal"><span class="pre">A</span></tt>, <tt class="docutils literal"><span class="pre">L</span></tt> and <tt class="docutils literal"><span class="pre">M</span></tt> format characters from
-<a class="reference internal" href="c_api.html#sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a>.</li>
+<a class="reference internal" href="c_api.html#c.sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a>.</li>
 <li><tt class="xref c c-func docutils literal"><span class="pre">sipConvertToCpp()</span></tt></li>
 <li><tt class="xref c c-func docutils literal"><span class="pre">sipIsSubClassInstance()</span></tt></li>
 <li><tt class="xref c c-func docutils literal"><span class="pre">sipTransfer()</span></tt></li>
@@ -160,27 +160,27 @@ still supported).</p>
 <ul class="simple">
 <li>The <a class="reference internal" href="c_api.html#ref-type-objects"><em>Generated Type Objects</em></a>.</li>
 <li>The <a class="reference internal" href="c_api.html#ref-enum-type-objects"><em>Generated Named Enum Type Objects</em></a>.</li>
-<li><a class="reference internal" href="c_api.html#sipConvertFromInstance" title="sipConvertFromInstance"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertFromInstance()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipConvertFromMappedType" title="sipConvertFromMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertFromMappedType()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipConvertFromNamedEnum" title="sipConvertFromNamedEnum"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertFromNamedEnum()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipConvertFromNewInstance" title="sipConvertFromNewInstance"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertFromNewInstance()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipCanConvertToInstance" title="sipCanConvertToInstance"><tt class="xref c c-func docutils literal"><span class="pre">sipCanConvertToInstance()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipCanConvertToMappedType" title="sipCanConvertToMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipCanConvertToMappedType()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipConvertToInstance" title="sipConvertToInstance"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertToInstance()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipConvertToMappedType" title="sipConvertToMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertToMappedType()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipForceConvertToInstance" title="sipForceConvertToInstance"><tt class="xref c c-func docutils literal"><span class="pre">sipForceConvertToInstance()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipForceConvertToMappedType" title="sipForceConvertToMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipForceConvertToMappedType()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipClassName" title="sipClassName"><tt class="xref c c-func docutils literal"><span class="pre">sipClassName()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipFindClass" title="sipFindClass"><tt class="xref c c-func docutils literal"><span class="pre">sipFindClass()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipFindNamedEnum" title="sipFindNamedEnum"><tt class="xref c c-func docutils literal"><span class="pre">sipFindNamedEnum()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipFindMappedType" title="sipFindMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipFindMappedType()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipGetWrapper" title="sipGetWrapper"><tt class="xref c c-func docutils literal"><span class="pre">sipGetWrapper()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipReleaseInstance" title="sipReleaseInstance"><tt class="xref c c-func docutils literal"><span class="pre">sipReleaseInstance()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipReleaseMappedType" title="sipReleaseMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipReleaseMappedType()</span></tt></a></li>
-<li><a class="reference internal" href="c_api.html#sipWrapper_Check" title="sipWrapper_Check"><tt class="xref c c-func docutils literal"><span class="pre">sipWrapper_Check()</span></tt></a></li>
-<li>The <tt class="docutils literal"><span class="pre">B</span></tt>, <tt class="docutils literal"><span class="pre">C</span></tt> and <tt class="docutils literal"><span class="pre">E</span></tt> format characters of <a class="reference internal" href="c_api.html#sipBuildResult" title="sipBuildResult"><tt class="xref c c-func docutils literal"><span class="pre">sipBuildResult()</span></tt></a>
-and <a class="reference internal" href="c_api.html#sipCallMethod" title="sipCallMethod"><tt class="xref c c-func docutils literal"><span class="pre">sipCallMethod()</span></tt></a>.</li>
-<li>The <tt class="docutils literal"><span class="pre">s</span></tt>, <tt class="docutils literal"><span class="pre">C</span></tt> and <tt class="docutils literal"><span class="pre">E</span></tt> format characters of <a class="reference internal" href="c_api.html#sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a>.</li>
+<li><a class="reference internal" href="c_api.html#c.sipConvertFromInstance" title="sipConvertFromInstance"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertFromInstance()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipConvertFromMappedType" title="sipConvertFromMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertFromMappedType()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipConvertFromNamedEnum" title="sipConvertFromNamedEnum"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertFromNamedEnum()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipConvertFromNewInstance" title="sipConvertFromNewInstance"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertFromNewInstance()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipCanConvertToInstance" title="sipCanConvertToInstance"><tt class="xref c c-func docutils literal"><span class="pre">sipCanConvertToInstance()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipCanConvertToMappedType" title="sipCanConvertToMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipCanConvertToMappedType()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipConvertToInstance" title="sipConvertToInstance"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertToInstance()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipConvertToMappedType" title="sipConvertToMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipConvertToMappedType()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipForceConvertToInstance" title="sipForceConvertToInstance"><tt class="xref c c-func docutils literal"><span class="pre">sipForceConvertToInstance()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipForceConvertToMappedType" title="sipForceConvertToMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipForceConvertToMappedType()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipClassName" title="sipClassName"><tt class="xref c c-func docutils literal"><span class="pre">sipClassName()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipFindClass" title="sipFindClass"><tt class="xref c c-func docutils literal"><span class="pre">sipFindClass()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipFindNamedEnum" title="sipFindNamedEnum"><tt class="xref c c-func docutils literal"><span class="pre">sipFindNamedEnum()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipFindMappedType" title="sipFindMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipFindMappedType()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipGetWrapper" title="sipGetWrapper"><tt class="xref c c-func docutils literal"><span class="pre">sipGetWrapper()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipReleaseInstance" title="sipReleaseInstance"><tt class="xref c c-func docutils literal"><span class="pre">sipReleaseInstance()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipReleaseMappedType" title="sipReleaseMappedType"><tt class="xref c c-func docutils literal"><span class="pre">sipReleaseMappedType()</span></tt></a></li>
+<li><a class="reference internal" href="c_api.html#c.sipWrapper_Check" title="sipWrapper_Check"><tt class="xref c c-func docutils literal"><span class="pre">sipWrapper_Check()</span></tt></a></li>
+<li>The <tt class="docutils literal"><span class="pre">B</span></tt>, <tt class="docutils literal"><span class="pre">C</span></tt> and <tt class="docutils literal"><span class="pre">E</span></tt> format characters of <a class="reference internal" href="c_api.html#c.sipBuildResult" title="sipBuildResult"><tt class="xref c c-func docutils literal"><span class="pre">sipBuildResult()</span></tt></a>
+and <a class="reference internal" href="c_api.html#c.sipCallMethod" title="sipCallMethod"><tt class="xref c c-func docutils literal"><span class="pre">sipCallMethod()</span></tt></a>.</li>
+<li>The <tt class="docutils literal"><span class="pre">s</span></tt>, <tt class="docutils literal"><span class="pre">C</span></tt> and <tt class="docutils literal"><span class="pre">E</span></tt> format characters of <a class="reference internal" href="c_api.html#c.sipParseResult" title="sipParseResult"><tt class="xref c c-func docutils literal"><span class="pre">sipParseResult()</span></tt></a>.</li>
 </ul>
 </div>
 </div>
@@ -318,12 +318,12 @@ still supported).</p>
         <li class="right" >
           <a href="introduction.html" title="Introduction"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.15.4 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.15.5 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2014 Riverbank Computing Limited.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

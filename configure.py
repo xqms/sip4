@@ -30,8 +30,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x040f04
-sip_version_str = "4.15.4"
+sip_version = 0x040f05
+sip_version_str = "4.15.5"
 py_version = sys.hexversion >> 8
 plat_py_site_dir = None
 plat_py_inc_dir = None
@@ -283,7 +283,8 @@ def create_config(module, template, macros):
         "py_lib_dir":       plat_py_lib_dir,
         "universal":        opts.universal,
         "arch":             opts.arch,
-        "deployment_target":    opts.deployment_target
+        "deployment_target":    opts.deployment_target,
+        "qt_framework":     0
     }
 
     siputils.create_config_module(module, template, content, macros)
