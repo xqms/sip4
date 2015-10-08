@@ -2,7 +2,7 @@
 # extension modules created with SIP.  It provides information about file
 # locations, version numbers etc., and provides some classes and functions.
 #
-# Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+# Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
 #
 # This file is part of SIP.
 #
@@ -598,8 +598,13 @@ class Makefile:
                     elif mod == "phonon":
                         defines.append("QT_PHONON_LIB")
 
-                    if qt_version >= 0x050000 and mod in ("QtSql", "QtTest"):
-                        defines.append("QT_WIDGETS_LIB")
+                    if qt_version >= 0x050000:
+                        if mod == "QtTest":
+                            defines.append("QT_GUI_LIB")
+
+                        if mod in ("QtSql", "QtTest"):
+                            defines.append("QT_WIDGETS_LIB")
+
             elif self._threaded:
                 defines.append("QT_THREAD_SUPPORT")
 
@@ -812,12 +817,14 @@ class Makefile:
 
         mname is the name of the module.
         """
+        qt_version = self.config.qt_version
+
         if mname == "QtAssistant":
-            if self.config.qt_version >= 0x040202 and sys.platform == "darwin":
+            if qt_version >= 0x040202 and sys.platform == "darwin":
                 lib = mname
             else:
                 lib = "QtAssistantClient"
-        elif mname == "QtWebKit" and self.config.qt_version >= 0x050000:
+        elif mname == "QtWebKit" and qt_version >= 0x050000:
             lib = "QtWebKitWidgets"
         else:
             lib = mname
@@ -830,7 +837,7 @@ class Makefile:
             elif sys.platform == "darwin":
                 if not self._is_framework(mname):
                     lib = lib + "_debug"
-            elif self.config.qt_version < 0x040200:
+            elif qt_version < 0x040200:
                 lib = lib + "_debug"
 
         if sys.platform == "win32" and "shared" in self.config.qt_winconfig.split():
@@ -839,8 +846,11 @@ class Makefile:
                           "QtScript", "QtScriptTools", "QtSql", "QtSvg",
                           "QtTest", "QtWebKit", "QtXml", "QtXmlPatterns",
                           "phonon") or
-                (self.config.qt_version >= 0x040200 and mname == "QtAssistant")):
+                (qt_version >= 0x040200 and mname == "QtAssistant")):
                 lib = lib + "4"
+
+        if sys.platform.startswith("linux") and qt_version >= 0x050000:
+            lib = "Qt5" + lib[2:]
 
         return lib
 
@@ -925,9 +935,11 @@ class Makefile:
 
         libs = self._extract_value(prl_name, "QMAKE_PRL_LIBS").split()
 
-        if self.config.qt_version >= 0x050000 and clib == "QtGui":
+        if self.config.qt_version >= 0x050000 and clib in ("QtGui", "Qt5Gui"):
             for xtra in ("QtWidgets", "QtPrintSupport"):
-                libs.extend(self.platform_lib(xtra, framework).split())
+                libs.extend(
+                        self.platform_lib(
+                                self._qt4_module_to_lib(xtra), framework).split())
 
         return libs
 
@@ -1501,8 +1513,12 @@ class ModuleMakefile(Makefile):
         self.LFLAGS.extend(self.optional_list(lflags_console))
 
         if sys.platform == "darwin":
-            # 'real_prefix' exists if virtualenv is being used.
-            dl = getattr(sys, 'real_prefix', sys.exec_prefix).split(os.sep)
+            from distutils.sysconfig import get_python_inc
+
+            # The Python include directory seems to be the only one that uses
+            # the real path even when using a virtual environment (eg. pyvenv).
+            # Note that I can't remember why we need a framework build.
+            dl = get_python_inc().split(os.sep)
 
             if "Python.framework" not in dl:
                 error("SIP requires Python to be built as a framework")
