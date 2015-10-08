@@ -280,6 +280,7 @@ static int sip_api_register_attribute_getter(const sipTypeDef *td,
 static void sip_api_clear_any_slot_reference(sipSlot *slot);
 static int sip_api_visit_slot(sipSlot *slot, visitproc visit, void *arg);
 static void sip_api_keep_reference(PyObject *self, int key, PyObject *obj);
+static PyObject *sip_api_get_reference(PyObject *self, int key);
 static void sip_api_add_exception(sipErrorState es, PyObject **parseErrp);
 static void sip_api_set_destroy_on_exit(int value);
 static int sip_api_enable_autoconversion(const sipTypeDef *td, int enable);
@@ -419,6 +420,10 @@ static const sipAPIDef sip_api = {
      * code.
      */
     sip_api_invoke_slot_ex,
+    /*
+     * The following are not part of the public API.
+     */
+    sip_api_get_reference,
 };
 
 
@@ -768,6 +773,7 @@ static sipSimpleWrapper *deref_mixin(sipSimpleWrapper *w);
 static PyObject *wrap_simple_instance(void *cpp, const sipTypeDef *td,
         sipWrapper *owner, int flags);
 static void *resolve_proxy(const sipTypeDef *td, void *proxy);
+static void clear_wrapper(sipSimpleWrapper *sw);
 
 
 /*
@@ -1210,15 +1216,7 @@ static PyObject *callDtor(PyObject *self, PyObject *args)
     if (checkPointer(addr, sw) < 0)
         return NULL;
 
-    if (PyObject_TypeCheck((PyObject *)sw, (PyTypeObject *)&sipWrapper_Type))
-    {
-        /*
-         * Transfer ownership to C++ so we don't try to release it again when
-         * the Python object is garbage collected.
-         */
-        removeFromParent((sipWrapper *)sw);
-        sipResetPyOwned(sw);
-    }
+    clear_wrapper(sw);
 
     release(addr, (const sipTypeDef *)ctd, sw->flags);
 
@@ -1300,17 +1298,7 @@ static PyObject *setDeleted(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "O!:setdeleted", &sipSimpleWrapper_Type, &sw))
         return NULL;
 
-    if (PyObject_TypeCheck((PyObject *)sw, (PyTypeObject *)&sipWrapper_Type))
-    {
-        /*
-         * Transfer ownership to C++ so we don't try to release it when the
-         * Python object is garbage collected.
-         */
-        removeFromParent((sipWrapper *)sw);
-        sipResetPyOwned(sw);
-    }
-
-    clear_access_func(sw);
+    clear_wrapper(sw);
 
     Py_INCREF(Py_None);
     return Py_None;
@@ -8495,6 +8483,33 @@ static void sip_api_keep_reference(PyObject *self, int key, PyObject *obj)
 
 
 /*
+ * Get an object that has an extra reference.
+ */
+static PyObject *sip_api_get_reference(PyObject *self, int key)
+{
+    PyObject *dict, *key_obj, *obj;
+
+    /* Get the extra references dictionary if there is one. */
+    if ((dict = ((sipSimpleWrapper *)self)->extra_refs) == NULL)
+        return NULL;
+
+#if PY_MAJOR_VERSION >= 3
+    key_obj = PyLong_FromLong(key);
+#else
+    key_obj = PyInt_FromLong(key);
+#endif
+
+    if (key_obj == NULL)
+        return NULL;
+
+    obj = PyDict_GetItem(dict, key_obj);
+    Py_XINCREF(obj);
+
+    return obj;
+}
+
+
+/*
  * Check to see if a Python object can be converted to a type.
  */
 static int sip_api_can_convert_to_type(PyObject *pyObj, const sipTypeDef *td,
@@ -12252,4 +12267,22 @@ static void *resolve_proxy(const sipTypeDef *td, void *proxy)
             proxy = pr->resolver(proxy);
 
     return proxy;
+}
+
+
+/*
+ * Clear a simple wrapper.
+ */
+static void clear_wrapper(sipSimpleWrapper *sw)
+{
+    if (PyObject_TypeCheck((PyObject *)sw, (PyTypeObject *)&sipWrapper_Type))
+        removeFromParent((sipWrapper *)sw);
+
+    /*
+     * Transfer ownership to C++ so we don't try to release it when the
+     * Python object is garbage collected.
+     */
+    sipResetPyOwned(sw);
+
+    clear_access_func(sw);
 }
