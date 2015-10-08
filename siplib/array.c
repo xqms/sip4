@@ -1,7 +1,7 @@
 /*
  * This file implements the API for the array type.
  *
- * Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2014 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -348,7 +348,11 @@ static int sipArray_getbuffer(PyObject *self, Py_buffer *view, int flags)
 
     view->format = NULL;
     if ((flags & PyBUF_FORMAT) == PyBUF_FORMAT)
+#if PY_MAJOR_VERSION >= 3
         view->format = array->format;
+#else
+        view->format = (char *)array->format;
+#endif
 
     view->ndim = 1;
 
@@ -728,11 +732,7 @@ static void *get_slice(sipArrayObject *array, PyObject *value, SIP_SSIZE_T len)
     if (other->len != len)
     {
         PyErr_Format(PyExc_TypeError,
-#if PY_VERSION_HEX >= 0x02050000
-                "the array being assigned must have length %zd",
-#else
-                "the array being assigned must have length %d",
-#endif
+                "the array being assigned must have length " SIP_SSIZE_T_FORMAT,
                 len);
 
         return NULL;
