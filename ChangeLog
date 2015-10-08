@@ -1,8 +1,86 @@
+2015-03-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.16.7 for changeset 9076f70a012c
+	[dffe9ad569c9] [tip] <4.16-maint>
+
+	* NEWS:
+	Released as v4.16.7.
+	[9076f70a012c] [4.16.7] <4.16-maint>
+
+	* sphinx/static/classic.css, sphinx/static/default.css:
+	Fixed the stylesheet.
+	[af2e27024d33] <4.16-maint>
+
+2015-03-21  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fix the declaration of sipRes in the %VirtualCallCode support.
+	[bd92aad3cf7d] <4.16-maint>
+
+2015-03-19  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/specification_files.rst:
+	Added %VirtualCallCode to the BNF.
+	[cf1ad8f7be68] <4.16-maint>
+
+	* sphinx/directives.rst:
+	Documented %VirtualCallCode.
+	[752beb1cd641] <4.16-maint>
+
+	* sipgen/gencode.c, sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y,
+	sipgen/sip.h.in:
+	Renamed %InvokeCode to %VirtualCallCode and only use it in a
+	generated virtual reimplementation.
+	[82c8303a8041] <4.16-maint>
+
+	* sipgen/gencode.c, sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y,
+	sipgen/sip.h.in:
+	Implemented the %InvokeCode directive.
+	[d85f3584b06f] <4.16-maint>
+
+	* siplib/siplib.c.in:
+	Fixed the handling of keyword argument when keywords can be used for
+	all arguments.
+	[2ae037bbfa23] <4.16-maint>
+
+	* sphinx/directives.rst:
+	Fixed a documentation typo.
+	[fb4c980c92cc] <4.16-maint>
+
+	* sipgen/gencode.c, sipgen/sip.h.in, sipgen/transform.c:
+	Backed out changeset 9e11298be101 A more correct solution is
+	required.
+	[e212465fed26] <4.16-maint>
+
+2015-03-16  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/sip.h.in, sipgen/transform.c:
+	Reverted to the pre-v4.15 behavour when generating the scope of a
+	call to a virtual implementation where the scope may be ambiguous.
+	This may not be the right call, but at least the code compiles.
+	[9e11298be101] <4.16-maint>
+
+2015-03-11  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/transform.c:
+	Fixed a bug where the original typedef of an argument of a mapped
+	template type was being corrupted.
+	[f652446e2462] <4.16-maint>
+
+	* sphinx/conf.py.in:
+	Updated for sphinx v1.3.
+	[569a9695bc2f] <4.16-maint>
+
+	* sipgen/sip.h.in:
+	Fixed a regression in the handling of module flags.
+	[3f8c05ac8e47] <4.16-maint>
+
 2015-02-25  Phil Thompson  <phil@riverbankcomputing.com>
 
 	* .hgtags:
 	Added tag 4.16.6 for changeset 1c5f5c8c7416
-	[6c73a1f41add] [tip] <4.16-maint>
+	[6c73a1f41add] <4.16-maint>
 
 	* NEWS:
 	Released v4.16.6.
