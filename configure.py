@@ -30,8 +30,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x041004
-sip_version_str = "4.16.4"
+sip_version = 0x041005
+sip_version_str = "4.16.5"
 py_version = sys.hexversion >> 8
 py_platform = sys.platform
 plat_py_site_dir = None
@@ -453,12 +453,15 @@ macx {
     else:
         sipconfig.inform("Creating sip module Makefile...")
 
-        sipconfig.ModuleMakefile(
+        build_dir = os.getcwd()
+
+        makefile = sipconfig.ModuleMakefile(
             configuration=cfg,
-            build_file=os.path.join(src_dir, "siplib", "siplib.sbf"),
+            build_file=os.path.join(build_dir, "siplib", "siplib.sbf"),
             dir="siplib",
             install_dir=cfg.sip_mod_dir,
-            installs=([os.path.join(src_dir, "siplib", "sip.h")], cfg.sip_inc_dir),
+            installs=([os.path.join(build_dir, "siplib", "sip.h")],
+                    cfg.sip_inc_dir),
             console=1,
             warnings=0,
             static=opts.static,
@@ -466,7 +469,14 @@ macx {
             universal=opts.universal,
             arch=opts.arch,
             deployment_target=opts.deployment_target
-        ).generate()
+        )
+        
+        if src_dir != build_dir:
+            src_siplib_dir = os.path.join(src_dir, "siplib")
+            makefile.extra_include_dirs.append(src_siplib_dir)
+            makefile.extra_source_dirs.append(src_siplib_dir)
+
+        makefile.generate()
 
 
 def get_sources(sources_dir, ext):
