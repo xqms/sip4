@@ -629,7 +629,26 @@ class Makefile:
                 }
 
                 # For Windows: the dependencies between Qt libraries.
-                qdepmap = {
+                qt5_depmap = {
+                    "QtDeclarative":    ("QtXmlPatterns", "QtNetwork", "QtSql", "QtScript", "QtWidgets", "QtGui", "QtCore"),
+                    "QtGui":            ("QtPrintSupport", "QtWidgets", "QtCore"),
+                    "QtHelp":           ("QtNetwork", "QtSql", "QtWidgets", "QtGui", "QtCore"),
+                    "QtMultimedia":     ("QtGui", "QtCore"),
+                    "QtNetwork":        ("QtCore", ),
+                    "QtOpenGL":         ("QtWidgets", "QtGui", "QtCore"),
+                    "QtScript":         ("QtCore", ),
+                    "QtScriptTools":    ("QtScript", "QtGui", "QtCore"),
+                    "QtSql":            ("QtCore", ),
+                    "QtSvg":            ("QtXml", "QtWidgets", "QtGui", "QtCore"),
+                    "QtTest":           ("QtGui", "QtCore"),
+                    "QtWebKit":         ("QtNetwork", "QtWebKitWidgets", "QtWidgets", "QtGui", "QtCore"),
+                    "QtXml":            ("QtCore", ),
+                    "QtXmlPatterns":    ("QtNetwork", "QtCore"),
+                    "QtDesigner":       ("QtGui", "QtCore"),
+                    "QAxContainer":     ("Qt5AxBase", "QtWidgets", "QtGui", "QtCore")
+                }
+
+                qt4_depmap = {
                     "QtAssistant":      ("QtNetwork", "QtGui", "QtCore"),
                     "QtDeclarative":    ("QtNetwork", "QtGui", "QtCore"),
                     "QtGui":            ("QtCore", ),
@@ -650,6 +669,11 @@ class Makefile:
                     "QAxContainer":     ("QtGui", "QtCore")
                 }
 
+                if qt_version >= 0x050000:
+                    qt_depmap = qt5_depmap
+                else:
+                    qt_depmap = qt4_depmap
+
                 # The QtSql .prl file doesn't include QtGui as a dependency (at
                 # least on Linux) so we explcitly set the dependency here for
                 # everything.
@@ -669,7 +693,7 @@ class Makefile:
                         self._qt.append("QtNetwork")
 
                 for mod in self._qt:
-                    lib = self._qt4_module_to_lib(mod)
+                    lib = self._qt_module_to_lib(mod)
                     libs.append(self.platform_lib(lib, self._is_framework(mod)))
 
                     if sys.platform == "win32":
@@ -682,12 +706,12 @@ class Makefile:
                         if mod in list(wdepmap.keys()):
                             deps.extend(self.optional_list(wdepmap[mod]))
 
-                        if mod in list(qdepmap.keys()):
-                            for qdep in qdepmap[mod]:
+                        if mod in list(qt_depmap.keys()):
+                            for qdep in qt_depmap[mod]:
                                 # Ignore the dependency if it is explicitly
                                 # linked.
                                 if qdep not in self._qt:
-                                    libs.append(self.platform_lib(self._qt4_module_to_lib(qdep)))
+                                    libs.append(self.platform_lib(self._qt_module_to_lib(qdep)))
 
                                     if qdep in list(wdepmap.keys()):
                                         deps.extend(self.optional_list(wdepmap[qdep]))
@@ -812,8 +836,8 @@ class Makefile:
         """
         return (self.config.qt_framework and (self.config.qt_version >= 0x040200 or mod != "QtAssistant"))
 
-    def _qt4_module_to_lib(self, mname):
-        """Return the name of the Qt4 library corresponding to a module.
+    def _qt_module_to_lib(self, mname):
+        """Return the name of the Qt library corresponding to a module.
 
         mname is the name of the module.
         """
@@ -824,8 +848,6 @@ class Makefile:
                 lib = mname
             else:
                 lib = "QtAssistantClient"
-        elif mname == "QtWebKit" and qt_version >= 0x050000:
-            lib = "QtWebKitWidgets"
         else:
             lib = mname
 
@@ -840,16 +862,27 @@ class Makefile:
             elif qt_version < 0x040200:
                 lib = lib + "_debug"
 
+        qt5_rename = False
+
         if sys.platform == "win32" and "shared" in self.config.qt_winconfig.split():
             if (mname in ("QtCore", "QtDeclarative", "QtDesigner", "QtGui",
                           "QtHelp", "QtMultimedia", "QtNetwork", "QtOpenGL",
                           "QtScript", "QtScriptTools", "QtSql", "QtSvg",
                           "QtTest", "QtWebKit", "QtXml", "QtXmlPatterns",
-                          "phonon") or
+                          "phonon", "QAxContainer", "QtPrintSupport",
+                          "QtWebKitWidgets", "QtWidgets") or
                 (qt_version >= 0x040200 and mname == "QtAssistant")):
-                lib = lib + "4"
+                if mname == "QAxContainer":
+                    if qt_version >= 0x050000:
+                        lib = "Qt5" + lib[1:]
+                elif qt_version >= 0x050000:
+                    qt5_rename = True
+                else:
+                    lib = lib + "4"
+        elif sys.platform.startswith("linux") and qt_version >= 0x050000:
+            qt5_rename = True
 
-        if sys.platform.startswith("linux") and qt_version >= 0x050000:
+        if qt5_rename:
             lib = "Qt5" + lib[2:]
 
         return lib
@@ -935,11 +968,19 @@ class Makefile:
 
         libs = self._extract_value(prl_name, "QMAKE_PRL_LIBS").split()
 
-        if self.config.qt_version >= 0x050000 and clib in ("QtGui", "Qt5Gui"):
-            for xtra in ("QtWidgets", "QtPrintSupport"):
+        if self.config.qt_version >= 0x050000:
+            xtra_libs = []
+
+            if clib in ("QtGui", "Qt5Gui"):
+                xtra_libs.append("QtWidgets")
+                xtra_libs.append("QtPrintSupport")
+            elif clib in ("QtWebKit", "Qt5WebKit"):
+                xtra_libs.append("QtWebKitWidgets")
+
+            for xtra in xtra_libs:
                 libs.extend(
                         self.platform_lib(
-                                self._qt4_module_to_lib(xtra), framework).split())
+                                self._qt_module_to_lib(xtra), framework).split())
 
         return libs
 
@@ -1989,6 +2030,10 @@ def _quote(s):
 
     s is the string.
     """
+    # On Qt5 paths often includes forward slashes so convert them.
+    if sys.platform == "win32":
+        s = s.replace("/", "\\")
+
     if s.find(" ") >= 0:
         s = '"' + s + '"'
 

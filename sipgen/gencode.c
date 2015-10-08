@@ -658,7 +658,6 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipGetComplexCppPtr         sipAPI_%s->api_get_complex_cpp_ptr\n"
 "#define sipIsPyMethod               sipAPI_%s->api_is_py_method\n"
 "#define sipCallHook                 sipAPI_%s->api_call_hook\n"
-"#define sipStartThread              sipAPI_%s->api_start_thread\n"
 "#define sipEndThread                sipAPI_%s->api_end_thread\n"
 "#define sipConnectRx                sipAPI_%s->api_connect_rx\n"
 "#define sipDisconnectRx             sipAPI_%s->api_disconnect_rx\n"
@@ -733,7 +732,6 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipConvertFromMappedType    sipConvertFromType\n"
 "#define sipConvertFromNamedEnum(v, pt)  sipConvertFromEnum((v), ((sipEnumTypeObject *)(pt))->type)\n"
 "#define sipConvertFromNewInstance(p, wt, t) sipConvertFromNewType((p), (wt)->type, (t))\n"
-        ,mname
         ,mname
         ,mname
         ,mname
@@ -1194,7 +1192,6 @@ static void generateComponentCpp(sipSpec *pt, const char *codeDir,
         );
 
     generateModInitStart(pt->module, TRUE, fp);
-    generateModDefinition(pt->module, "NULL", fp);
 
     prcode(fp,
 "    PyObject *sip_mod, *sip_result;\n"
@@ -1360,9 +1357,9 @@ static void generateCpp(sipSpec *pt, moduleDef *mod, const char *codeDir,
             prcode(fp,
 "\n"
 "\n"
-"void sipVEH_%s_%s(sipSimpleWrapper *%s)\n"
+"void sipVEH_%s_%s(sipSimpleWrapper *%s, sip_gilstate_t%s)\n"
 "{\n"
-                , mname, veh->name, (usedInCode(veh->code, "sipPySelf") ? "sipPySelf" : ""));
+                , mname, veh->name, (usedInCode(veh->code, "sipPySelf") ? "sipPySelf" : ""), (usedInCode(veh->code, "sipGILState") ? " sipGILState" : ""));
 
             generateCppCodeBlock(veh->code, fp);
 
@@ -6678,10 +6675,21 @@ static void generateVirtualCatcher(sipSpec *pt, moduleDef *mod, classDef *cd,
             );
 
         if (res == NULL)
+        {
+            /*
+             * Note that we should also generate this if the function returns a
+             * value, but we are lazy and this is all that is needed by PyQt.
+             */
+            if (isNewThread(od))
+                prcode(fp,
+"        sipEndThread();\n"
+                    );
+
             prcode(fp,
 "        return;\n"
 "    }\n"
                 );
+        }
     }
 
     /*
@@ -6793,12 +6801,6 @@ static void generateVirtHandlerCall(sipSpec *pt, moduleDef *mod, classDef *cd,
 
     veh = getVirtErrorHandler(pt, od, cd, mod);
 
-    if (isNewThread(od))
-        prcode(fp,
-"%ssipStartThread();\n"
-"\n"
-            , indent);
-
     saved = *vhd->cppsig;
     fakeProtectedArgs(vhd->cppsig);
 
@@ -6850,7 +6852,7 @@ static void generateVirtHandlerCall(sipSpec *pt, moduleDef *mod, classDef *cd,
 
     if (veh != NULL && veh->mod == mod)
         prcode(fp,
-"%sextern void sipVEH_%s_%s(sipSimpleWrapper *);\n"
+"%sextern void sipVEH_%s_%s(sipSimpleWrapper *, sip_gilstate_t);\n"
             , indent, mod->name, veh->name);
 
     prcode(fp,
@@ -6901,13 +6903,8 @@ static void generateVirtHandlerCall(sipSpec *pt, moduleDef *mod, classDef *cd,
     if (isNewThread(od))
         prcode(fp,
 "\n"
-"%sSIP_BLOCK_THREADS\n"
 "%ssipEndThread();\n"
-"%sSIP_UNBLOCK_THREADS\n"
-            , indent
-            , indent
             , indent);
-
 }
 
 
@@ -7671,16 +7668,19 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
         prcode(fp,
 "\n"
 "    Py_DECREF(sipMethod);\n"
-"\n"
-"    SIP_RELEASE_GIL(sipGILState)\n"
             );
 
         if (error_flag || old_error_flag)
             prcode(fp,
 "\n"
 "    if (%s)\n"
-"        sipCallErrorHandler(sipErrorHandler, sipPySelf);\n"
+"        sipCallErrorHandler(sipErrorHandler, sipPySelf, sipGILState);\n"
                 , (error_flag ? "sipError != sipErrorNone" : "sipIsErr"));
+
+        prcode(fp,
+"\n"
+"    SIP_RELEASE_GIL(sipGILState)\n"
+            );
 
         if (res != NULL)
             prcode(fp,
@@ -9305,7 +9305,7 @@ static void generateVariable(moduleDef *mod, ifaceFileDef *scope, argDef *ad,
         switch (atype)
         {
         case class_type:
-            if (ad->u.cd->convtocode != NULL && !isConstrained(ad))
+            if (!isArray(ad) && ad->u.cd->convtocode != NULL && !isConstrained(ad))
                 prcode(fp,
 "        int %aState = 0;\n"
                     , mod, ad, argnr);
@@ -13356,16 +13356,19 @@ static void deleteTemps(moduleDef *mod, signatureDef *sd, FILE *fp)
     {
         argDef *ad = &sd->args[a];
 
-        if (isArray(ad) && !isTransferred(ad) && (ad->atype == mapped_type || ad->atype == class_type))
+        if (isArray(ad) && (ad->atype == mapped_type || ad->atype == class_type))
         {
-            if (generating_c)
-                prcode(fp,
+            if (!isTransferred(ad))
+            {
+                if (generating_c)
+                    prcode(fp,
 "            sipFree(%a);\n"
-                    , mod, ad, a);
-            else
-                prcode(fp,
+                        , mod, ad, a);
+                else
+                    prcode(fp,
 "            delete[] %a;\n"
-                    , mod, ad, a);
+                        , mod, ad, a);
+            }
 
             continue;
         }
