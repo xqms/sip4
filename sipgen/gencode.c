@@ -961,10 +961,14 @@ static void generateCompositeCpp(sipSpec *pt, const char *codeDir,
 "\n"
 "static void sip_import_component_module(PyObject *d, const char *name)\n"
 "{\n"
+"    PyObject *mod;\n"
+"\n"
+"    PyErr_Clear();\n"
+"\n"
 "#if PY_VERSION_HEX >= 0x02050000\n"
-"    PyObject *mod = PyImport_ImportModule(name);\n"
+"    mod = PyImport_ImportModule(name);\n"
 "#else\n"
-"    PyObject *mod = PyImport_ImportModule((char *)name);\n"
+"    mod = PyImport_ImportModule((char *)name);\n"
 "#endif\n"
 "\n"
 "    /*\n"
@@ -8014,6 +8018,10 @@ static const char *getParseResultFormat(argDef *ad, int res_isref, int xfervh)
 
                 if (!res_isref)
                     f |= 0x04;
+            }
+            else if (ad->nrderefs == 1 && isOutArg(ad))
+            {
+                f |= 0x04;
             }
 
             if (xfervh)
