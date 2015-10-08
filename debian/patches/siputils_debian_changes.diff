@@ -1,10 +1,20 @@
-Description: Debian changes to siputils.py
-Author: Torsten Marek <shlomme@debian.org>
+From 10adefa453d45553e756312c033c5ffc28a8a3d2 Mon Sep 17 00:00:00 2001
+From: Torsten Marek <shlomme@debian.org>
+Date: Thu, 8 Oct 2015 13:52:11 -0700
+Subject: Debian changes to siputils.py
+
 Last-Update: 2015-03-26
 
+Patch-Name: siputils_debian_changes.diff
+---
+ siputils.py | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/siputils.py b/siputils.py
+index 28b52b2..068e114 100644
 --- a/siputils.py
 +++ b/siputils.py
-@@ -809,7 +809,8 @@
+@@ -809,7 +809,8 @@ class Makefile:
  
          libs.extend(self.optional_list("LIBS_WINDOWS"))
  
@@ -14,7 +24,7 @@ Last-Update: 2015-03-26
  
          # Save the transformed values.
          self.CFLAGS.set(cflags)
-@@ -960,6 +961,15 @@
+@@ -960,6 +961,15 @@ class Makefile:
          clib is the library name in cannonical form.
          framework is set of the library is implemented as a MacOS framework.
          """
@@ -30,7 +40,7 @@ Last-Update: 2015-03-26
          if self.generator in ("MSVC", "MSVC.NET", "MSBUILD", "BMAKE"):
              prl_name = os.path.join(self.config.qt_lib_dir, clib + ".prl")
          elif sys.platform == "darwin" and framework:
-@@ -1682,6 +1692,9 @@
+@@ -1682,6 +1692,9 @@ class ModuleMakefile(Makefile):
              root, discard = os.path.splitext(mf)
              cpp = "moc_" + root + ".cpp"
  
