@@ -894,8 +894,11 @@ static void moveGlobalSlot(sipSpec *pt, moduleDef *mod, memberDef *gmd)
 
         *odhead = od;
 
-        /* Remove the first argument of comparison operators. */
-        if (isRichCompareSlot(md))
+        /*
+         * Remove the first argument of inplace numeric operators and
+         * comparison operators.
+         */
+        if (isInplaceNumberSlot(md) || isRichCompareSlot(md))
         {
             /* Remember if the argument was a pointer. */
             if (arg0->nrderefs > 0)
@@ -1349,7 +1352,8 @@ static void transformTypedefs(sipSpec *pt, moduleDef *mod)
 
     for (td = pt->typedefs; td != NULL; td = td->next)
         if (td->module == mod)
-            getBaseType(pt, td->module, td->ecd, &td->type);
+            if (td->ecd == NULL || !isTemplateClass(td->ecd))
+                getBaseType(pt, td->module, td->ecd, &td->type);
 }
 
 
@@ -1887,7 +1891,7 @@ static void resolveFuncTypes(sipSpec *pt, moduleDef *mod, classDef *c_scope,
     {
         int a;
 
-        getBaseType(pt,mod, c_scope, &od->cppsig->result);
+        getBaseType(pt, mod, c_scope, &od->cppsig->result);
 
         for (a = 0; a < od->cppsig->nrArgs; ++a)
             getBaseType(pt, mod, c_scope, &od->cppsig->args[a]);
@@ -2617,8 +2621,16 @@ int sameBaseType(argDef *a1, argDef *a2)
                 return FALSE;
 
             for (a = 0; a < td1->types.nrArgs; ++a)
-                if (!sameBaseType(&td1->types.args[a], &td2->types.args[a]))
+            {
+                argDef *td1ad = &td1->types.args[a];
+                argDef *td2ad = &td2->types.args[a];
+
+                if (td1ad->nrderefs != td2ad->nrderefs)
                     return FALSE;
+
+                if (!sameBaseType(td1ad, td2ad))
+                    return FALSE;
+            }
 
             break;
         }
@@ -2966,9 +2978,14 @@ static mappedTypeDef *instantiateMappedTypeTemplate(sipSpec *pt, moduleDef *mod,
 
     mtd->doctype = templateString(mtt->mt->doctype, type_names, type_values);
 
-    appendCodeBlock(&mtd->iff->hdrcode, templateCode(pt, &mtd->iff->used, mtt->mt->iff->hdrcode, type_names, type_values));
-    mtd->convfromcode = templateCode(pt, &mtd->iff->used, mtt->mt->convfromcode, type_names, type_values);
-    mtd->convtocode = templateCode(pt, &mtd->iff->used, mtt->mt->convtocode, type_names, type_values);
+    appendCodeBlockList(&mtd->iff->hdrcode,
+            templateCode(pt, &mtd->iff->used, mtt->mt->iff->hdrcode,
+                    type_names, type_values));
+
+    mtd->convfromcode = templateCode(pt, &mtd->iff->used,
+            mtt->mt->convfromcode, type_names, type_values);
+    mtd->convtocode = templateCode(pt, &mtd->iff->used, mtt->mt->convtocode,
+            type_names, type_values);
 
     mtd->next = pt->mappedtypes;
     pt->mappedtypes = mtd;

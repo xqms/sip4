@@ -1,6 +1,6 @@
 # Sphinx inventory version 1
 # Project: SIP
-# Version: 4.12.1
+# Version: 4.12.3
 sipconfig mod build_system.html
 sip mod python_api.html
 sipGetState cfunction c_api.html

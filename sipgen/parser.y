@@ -85,9 +85,10 @@ static memberDef *findFunction(sipSpec *, moduleDef *, classDef *,
         mappedTypeDef *, const char *, int, int, int);
 static void checkAttributes(sipSpec *, moduleDef *, classDef *,
         mappedTypeDef *, const char *, int);
-static void newModule(FILE *fp, char *filename);
+static void newModule(FILE *fp, const char *filename);
 static moduleDef *allocModule();
-static void parseFile(FILE *fp, char *name, moduleDef *prevmod, int optional);
+static void parseFile(FILE *fp, const char *name, moduleDef *prevmod,
+        int optional);
 static void handleEOF(void);
 static void handleEOM(void);
 static qualDef *findQualifier(const char *name);
@@ -100,7 +101,7 @@ static void popScope(void);
 static classDef *currentScope(void);
 static void newQualifier(moduleDef *, int, int, const char *, qualType);
 static qualDef *allocQualifier(moduleDef *, int, int, const char *, qualType);
-static void newImport(char *filename);
+static void newImport(const char *filename);
 static int timePeriod(const char *lname, const char *uname);
 static int platOrFeature(char *,int);
 static int isNeeded(qualDef *);
@@ -132,11 +133,14 @@ static void instantiateTemplateEnums(sipSpec *pt, classTmplDef *tcd,
 static void instantiateTemplateVars(sipSpec *pt, classTmplDef *tcd,
         templateDef *td, classDef *cd, ifaceFileList **used,
         scopedNameDef *type_names, scopedNameDef *type_values);
+static void instantiateTemplateTypedefs(sipSpec *pt, classTmplDef *tcd,
+        templateDef *td, classDef *cd);
 static overDef *instantiateTemplateOverloads(sipSpec *pt, overDef *tod,
         memberDef *tmethods, memberDef *methods, classTmplDef *tcd,
         templateDef *td, classDef *cd, ifaceFileList **used,
         scopedNameDef *type_names, scopedNameDef *type_values);
 static void resolveAnyTypedef(sipSpec *pt, argDef *ad);
+static void addTypedef(sipSpec *pt, typedefDef *tdd);
 static void addVariable(sipSpec *pt, varDef *vd);
 static void applyTypeFlags(moduleDef *mod, argDef *ad, optFlags *flags);
 static argType convertEncoding(const char *encoding);
@@ -145,7 +149,8 @@ static apiVersionRangeDef *convertAPIRange(moduleDef *mod, nameDef *name,
         int from, int to);
 static char *convertFeaturedString(char *fs);
 static scopedNameDef *text2scopePart(char *text);
-static KwArgs keywordArgs(moduleDef *mod, optFlags *optflgs, signatureDef *sd);
+static KwArgs keywordArgs(moduleDef *mod, optFlags *optflgs, signatureDef *sd,
+        int need_name);
 static char *strip(char *s);
 static int isEnabledFeature(const char *name);
 static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
@@ -158,6 +163,8 @@ static void addAutoPyName(moduleDef *mod, const char *remove_leading);
 static KwArgs convertKwArgs(const char *kwargs);
 static void checkAnnos(optFlags *annos, const char *valid[]);
 static void checkNoAnnos(optFlags *annos, const char *msg);
+static void appendCodeBlock(codeBlockList **headp, codeBlock *cb);
+static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod);
 %}
 
 %union {
@@ -731,11 +738,11 @@ exception:  TK_EXCEPTION scopedname baseexception optflags exception_body {
 
                 /* Complete the definition. */
                 xd->iff->module = currentModule;
-                xd->iff->hdrcode = $5.type_header_code;
+                appendCodeBlock(&xd->iff->hdrcode, $5.type_header_code);
                 xd->pyname = pyname;
                 xd->bibase = $3.bibase;
                 xd->base = $3.base;
-                xd->raisecode = $5.raise_code;
+                appendCodeBlock(&xd->raisecode, $5.raise_code);
 
                 if (getOptFlag(&$4, "Default", bool_flag) != NULL)
                     currentModule->defexception = xd;
@@ -987,19 +994,19 @@ mtline: ifstart
     |   TK_FROMTYPE codeblock {
             if (notSkipping())
             {
-                if (currentMappedType -> convfromcode != NULL)
+                if (currentMappedType->convfromcode != NULL)
                     yyerror("%MappedType has more than one %ConvertFromTypeCode directive");
 
-                currentMappedType -> convfromcode = $2;
+                appendCodeBlock(&currentMappedType->convfromcode, $2);
             }
         }
     |   TK_TOTYPE codeblock {
             if (notSkipping())
             {
-                if (currentMappedType -> convtocode != NULL)
+                if (currentMappedType->convtocode != NULL)
                     yyerror("%MappedType has more than one %ConvertToTypeCode directive");
 
-                currentMappedType -> convtocode = $2;
+                appendCodeBlock(&currentMappedType->convtocode, $2);
             }
         }
     |   enum
@@ -1406,7 +1413,7 @@ consmodule: TK_CONSMODULE consmodule_args consmodule_body {
                     yyerror("%ConsolidatedModule must appear before any %Module or %CModule directive");
 
                 setModuleName(currentSpec, currentModule, $2.name);
-                currentModule->docstring = $3.docstring;
+                appendCodeBlock(&currentModule->docstring, $3.docstring);
 
                 setIsConsolidated(currentModule);
             }
@@ -1492,7 +1499,7 @@ compmodule: TK_COMPOMODULE compmodule_args compmodule_body {
                     yyerror("%CompositeModule must appear before any %Module directive");
 
                 setModuleName(currentSpec, currentModule, $2.name);
-                currentModule->docstring = $3.docstring;
+                appendCodeBlock(&currentModule->docstring, $3.docstring);
 
                 setIsComposite(currentModule);
             }
@@ -1790,7 +1797,7 @@ include_arg:    TK_NAME '=' TK_PATH_VALUE {
 optinclude: TK_OPTINCLUDE TK_PATH_VALUE {
             deprecated("%OptionalInclude is deprecated, use %Include and the 'optional' argument instead");
 
-            if (notSkipping)
+            if (notSkipping())
                 parseFile(NULL, $2, NULL, TRUE);
         }
     ;
@@ -2572,13 +2579,7 @@ classline:  ifstart
     |   property
     |   docstring {
             if (notSkipping())
-            {
-                classDef *scope = currentScope();
-
-                /* Make sure this is before any ctor docstrings. */
-                $1->next = scope->docstring;
-                scope->docstring = $1;
-            }
+                appendCodeBlock(&currentScope()->docstring, $1);
         }
     |   typecode {
             if (notSkipping())
@@ -2596,7 +2597,7 @@ classline:  ifstart
                 if (scope->travcode != NULL)
                     yyerror("%GCTraverseCode already given for class");
 
-                scope->travcode = $1;
+                appendCodeBlock(&scope->travcode, $1);
             }
         }
     |   clearcode {
@@ -2607,7 +2608,7 @@ classline:  ifstart
                 if (scope->clearcode != NULL)
                     yyerror("%GCClearCode already given for class");
 
-                scope->clearcode = $1;
+                appendCodeBlock(&scope->clearcode, $1);
             }
         }
     |   getbufcode {
@@ -2618,7 +2619,7 @@ classline:  ifstart
                 if (scope->getbufcode != NULL)
                     yyerror("%BIGetBufferCode already given for class");
 
-                scope->getbufcode = $1;
+                appendCodeBlock(&scope->getbufcode, $1);
             }
         }
     |   releasebufcode {
@@ -2629,7 +2630,7 @@ classline:  ifstart
                 if (scope->releasebufcode != NULL)
                     yyerror("%BIReleaseBufferCode already given for class");
 
-                scope->releasebufcode = $1;
+                appendCodeBlock(&scope->releasebufcode, $1);
             }
         }
     |   readbufcode {
@@ -2640,7 +2641,7 @@ classline:  ifstart
                 if (scope->readbufcode != NULL)
                     yyerror("%BIGetReadBufferCode already given for class");
 
-                scope->readbufcode = $1;
+                appendCodeBlock(&scope->readbufcode, $1);
             }
         }
     |   writebufcode {
@@ -2651,7 +2652,7 @@ classline:  ifstart
                 if (scope->writebufcode != NULL)
                     yyerror("%BIGetWriteBufferCode already given for class");
 
-                scope->writebufcode = $1;
+                appendCodeBlock(&scope->writebufcode, $1);
             }
         }
     |   segcountcode {
@@ -2662,7 +2663,7 @@ classline:  ifstart
                 if (scope->segcountcode != NULL)
                     yyerror("%BIGetSegCountCode already given for class");
 
-                scope->segcountcode = $1;
+                appendCodeBlock(&scope->segcountcode, $1);
             }
         }
     |   charbufcode {
@@ -2673,7 +2674,7 @@ classline:  ifstart
                 if (scope->charbufcode != NULL)
                     yyerror("%BIGetCharBufferCode already given for class");
 
-                scope->charbufcode = $1;
+                appendCodeBlock(&scope->charbufcode, $1);
             }
         }
     |   picklecode {
@@ -2684,7 +2685,7 @@ classline:  ifstart
                 if (scope->picklecode != NULL)
                     yyerror("%PickleCode already given for class");
 
-                scope->picklecode = $1;
+                appendCodeBlock(&scope->picklecode, $1);
             }
         }
     |   ctor
@@ -2698,7 +2699,7 @@ classline:  ifstart
                 if (scope->convtosubcode != NULL)
                     yyerror("Class has more than one %ConvertToSubClassCode directive");
 
-                scope->convtosubcode = $2;
+                appendCodeBlock(&scope->convtosubcode, $2);
             }
         }
     |   TK_TOTYPE codeblock {
@@ -2709,7 +2710,7 @@ classline:  ifstart
                 if (scope->convtocode != NULL)
                     yyerror("Class has more than one %ConvertToTypeCode directive");
 
-                scope->convtocode = $2;
+                appendCodeBlock(&scope->convtocode, $2);
             }
         }
     |   TK_PUBLIC optslot ':' {
@@ -2868,8 +2869,8 @@ dtor:       optvirtual '~' TK_NAME_VALUE '(' ')' optexceptions optabstract optfl
                 if (currentSpec -> genc && $10 == NULL)
                     yyerror("Destructor in C modules must include %MethodCode");
 
-                cd -> dealloccode = $10;
-                cd -> dtorcode = $11;
+                appendCodeBlock(&cd->dealloccode, $10);
+                appendCodeBlock(&cd->dtorcode, $11);
                 cd -> dtorexceptions = $6;
 
                 /*
@@ -3600,9 +3601,10 @@ variable_body_directive:    ifstart {
             {
                 $$.token = 0;
                 $$.access_code = NULL;
-                $$.get_code = NULL;
-                $$.set_code = NULL;
             }
+
+            $$.get_code = NULL;
+            $$.set_code = NULL;
         }
     |   TK_GETCODE codeblock {
             if (notSkipping())
@@ -3613,10 +3615,11 @@ variable_body_directive:    ifstart {
             else
             {
                 $$.token = 0;
-                $$.access_code = NULL;
                 $$.get_code = NULL;
-                $$.set_code = NULL;
             }
+
+            $$.access_code = NULL;
+            $$.set_code = NULL;
         }
     |   TK_SETCODE codeblock {
             if (notSkipping())
@@ -3627,10 +3630,11 @@ variable_body_directive:    ifstart {
             else
             {
                 $$.token = 0;
-                $$.access_code = NULL;
-                $$.get_code = NULL;
                 $$.set_code = NULL;
             }
+
+            $$.access_code = NULL;
+            $$.get_code = NULL;
         }
     ;
 
@@ -3682,6 +3686,8 @@ argtype:    cpptype optname optflags {
             $$ = $1;
             $$.name = cacheName(currentSpec, $2);
 
+            handleKeepReference(&$3, &$$, currentModule);
+
             if (getAllowNone(&$3))
                 $$.argflags |= ARG_ALLOW_NONE;
 
@@ -3702,18 +3708,6 @@ argtype:    cpptype optname optflags {
 
             if (getOptFlag(&$3,"TransferBack",bool_flag) != NULL)
                 $$.argflags |= ARG_XFERRED_BACK;
-
-            if ((of = getOptFlag(&$3, "KeepReference", opt_integer_flag)) != NULL)
-            {
-                $$.argflags |= ARG_KEEP_REF;
-
-                if (($$.key = of->fvalue.ival) < -1)
-                    yyerror("/KeepReference/ key cannot be negative");
-
-                /* If there was no explicit key then auto-allocate one. */
-                if ($$.key == -1)
-                    $$.key = currentModule->next_key--;
-            }
 
             if (getOptFlag(&$3,"In",bool_flag) != NULL)
                 $$.argflags |= ARG_IN;
@@ -4102,7 +4096,7 @@ void appendToClassList(classList **clp,classDef *cd)
 /*
  * Create a new module for the current specification and make it current.
  */
-static void newModule(FILE *fp, char *filename)
+static void newModule(FILE *fp, const char *filename)
 {
     moduleDef *mod;
 
@@ -4149,7 +4143,8 @@ static moduleDef *allocModule()
 /*
  * Switch to parsing a new file.
  */
-static void parseFile(FILE *fp, char *name, moduleDef *prevmod, int optional)
+static void parseFile(FILE *fp, const char *name, moduleDef *prevmod,
+        int optional)
 {
     parserContext pc;
 
@@ -4421,7 +4416,7 @@ static classDef *newClass(sipSpec *pt, ifaceFileType iftype,
 {
     int flags;
     classDef *cd, *scope;
-    codeBlock *hdrcode;
+    codeBlockList *hdrcode;
 
     if (sectionFlags & SECT_IS_PRIVATE)
         yyerror("Classes, structs and namespaces must be in the public or protected sections");
@@ -4467,7 +4462,7 @@ static classDef *newClass(sipSpec *pt, ifaceFileType iftype,
     if (currentIsTemplate)
         setIsTemplateClass(cd);
 
-    appendCodeBlock(&cd->iff->hdrcode, hdrcode);
+    appendCodeBlockList(&cd->iff->hdrcode, hdrcode);
 
     /* See if it is a namespace extender. */
     if (iftype == namespace_iface)
@@ -4995,6 +4990,17 @@ void appendTypeStrings(scopedNameDef *ename, signatureDef *patt, signatureDef *s
             else
                 val = type2string(sad);
 
+            /* We do want const. */
+            if (isConstArg(sad))
+            {
+                char *const_val = sipStrdup("const ");
+
+                append(&const_val, val);
+                free(val);
+
+                val = const_val;
+            }
+
             appendScopedName(values, text2scopePart(val));
         }
         else if (pad->atype == template_type)
@@ -5252,6 +5258,8 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
             (scope != NULL ? scope->iff->api_range : NULL), NULL);
     cd->iff->module = mod;
 
+    appendCodeBlockList(&cd->iff->hdrcode, tcd->cd->iff->hdrcode);
+
     /* Make a copy of the used list and add the enclosing scope. */
     used = &cd->iff->used;
 
@@ -5260,7 +5268,7 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
 
     /* Include any scope header code. */
     if (scope != NULL)
-        appendCodeBlock(&cd->iff->hdrcode, scope->iff->hdrcode);
+        appendCodeBlockList(&cd->iff->hdrcode, scope->iff->hdrcode);
 
     if (inMainModule())
     {
@@ -5275,6 +5283,9 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
 
     /* Handle the variables. */
     instantiateTemplateVars(pt, tcd, td, cd, used, type_names, type_values);
+
+    /* Handle the typedefs. */
+    instantiateTemplateTypedefs(pt, tcd, td, cd);
 
     /* Handle the ctors. */
     cd->ctors = NULL;
@@ -5563,6 +5574,38 @@ static void instantiateTemplateVars(sipSpec *pt, classTmplDef *tcd,
 
 
 /*
+ * Instantiate the typedefs of a template class.
+ */
+static void instantiateTemplateTypedefs(sipSpec *pt, classTmplDef *tcd,
+        templateDef *td, classDef *cd)
+{
+    typedefDef *tdd;
+
+    for (tdd = pt->typedefs; tdd != NULL; tdd = tdd->next)
+    {
+        typedefDef *new_tdd;
+
+        if (tdd->ecd != tcd->cd)
+            continue;
+
+        new_tdd = sipMalloc(sizeof (typedefDef));
+
+        /* Start with a shallow copy. */
+        *new_tdd = *tdd;
+
+        new_tdd->fqname = text2scopedName(cd->iff,
+                scopedNameTail(new_tdd->fqname));
+        new_tdd->ecd = cd;
+        new_tdd->module = cd->iff->module;
+
+        templateType(&new_tdd->type, tcd, td, cd);
+
+        addTypedef(pt, new_tdd);
+    }
+}
+
+
+/*
  * Replace any template arguments in a signature.
  */
 static void templateSignature(signatureDef *sd, int result, classTmplDef *tcd, templateDef *td, classDef *ncd)
@@ -5636,20 +5679,45 @@ static void templateType(argDef *ad, classTmplDef *tcd, templateDef *td, classDe
 /*
  * Replace any template arguments in a literal code block.
  */
-codeBlock *templateCode(sipSpec *pt, ifaceFileList **used, codeBlock *ocb,
-        scopedNameDef *names, scopedNameDef *values)
+codeBlockList *templateCode(sipSpec *pt, ifaceFileList **used,
+        codeBlockList *ocbl, scopedNameDef *names, scopedNameDef *values)
 {
-    codeBlock *ncb = NULL, **tail = &ncb;
+    codeBlockList *ncbl = NULL;
 
-    while (ocb != NULL)
+    while (ocbl != NULL)
     {
-        char *at = ocb->frag;
+        char *at = ocbl->block->frag;
+        int start_of_line = TRUE;
 
         do
         {
-            char *first = NULL;
+            char *from = at, *first = NULL;
             codeBlock *cb;
             scopedNameDef *nam, *val, *nam_first, *val_first;
+
+            /*
+             * Don't do any substitution in lines that appear to be
+             * preprocessor directives.  This prevents #include'd file names
+             * being broken.
+             */
+            if (start_of_line)
+            {
+                /* Strip leading whitespace. */
+                while (isspace(*from))
+                    ++from;
+
+                if (*from == '#')
+                {
+                    /* Skip to the end of the line. */
+                    do
+                        ++from;
+                    while (*from != '\n' && *from != '\0');
+                }
+                else
+                {
+                    start_of_line = FALSE;
+                }
+            }
 
             /*
              * Go through the rest of this fragment looking for each of the
@@ -5662,7 +5730,7 @@ codeBlock *templateCode(sipSpec *pt, ifaceFileList **used, codeBlock *ocb,
             {
                 char *cp;
 
-                if ((cp = strstr(at, nam->name)) != NULL)
+                if ((cp = strstr(from, nam->name)) != NULL)
                     if (first == NULL || first > cp)
                     {
                         nam_first = nam;
@@ -5677,17 +5745,15 @@ codeBlock *templateCode(sipSpec *pt, ifaceFileList **used, codeBlock *ocb,
             /* Create the new fragment. */
             cb = sipMalloc(sizeof (codeBlock));
 
-            if (at == ocb->frag)
+            if (at == ocbl->block->frag)
             {
-                cb->filename = ocb->filename;
-                cb->linenr = ocb->linenr;
+                cb->filename = ocbl->block->filename;
+                cb->linenr = ocbl->block->linenr;
             }
             else
                 cb->filename = NULL;
 
-            cb->next = NULL;
-            *tail = cb;
-            tail = &cb->next;
+            appendCodeBlock(&ncbl, cb);
 
             /* See if anything was found. */
             if (first == NULL)
@@ -5713,7 +5779,8 @@ codeBlock *templateCode(sipSpec *pt, ifaceFileList **used, codeBlock *ocb,
 
                 /*
                  * If the context in which the text is used is in the name of a
-                 * SIP generated object then translate any "::" scoping to "_".
+                 * SIP generated object then translate any "::" scoping to "_"
+                 * and remove any const.
                  */
                 for (gn = gen_names; *gn != NULL; ++gn)
                     if (search_back(first, at, *gn))
@@ -5735,6 +5802,9 @@ codeBlock *templateCode(sipSpec *pt, ifaceFileList **used, codeBlock *ocb,
                 {
                     char gch;
 
+                    if (strlen(sp) > 6 && strncmp(sp, "const ", 6) == 0)
+                        sp += 6;
+
                     while ((gch = *sp++) != '\0')
                         if (gch == ':' && *sp == ':')
                         {
@@ -5751,14 +5821,17 @@ codeBlock *templateCode(sipSpec *pt, ifaceFileList **used, codeBlock *ocb,
 
                 /* Move past the replaced text. */
                 at = first + strlen(nam_first->name);
+
+                if (*at == '\n')
+                    start_of_line = TRUE;
             }
         }
         while (at != NULL && *at != '\0');
 
-        ocb = ocb->next;
+        ocbl = ocbl->next;
     }
 
-    return ncb;
+    return ncbl;
 }
 
 
@@ -5870,7 +5943,7 @@ static int foundInScope(scopedNameDef *fq_name, scopedNameDef *rel_name)
 static void newTypedef(sipSpec *pt, moduleDef *mod, char *name, argDef *type,
         optFlags *optflgs)
 {
-    typedefDef *td, **tdp;
+    typedefDef *td;
     scopedNameDef *fqname;
     classDef *scope;
 
@@ -5894,24 +5967,6 @@ static void newTypedef(sipSpec *pt, moduleDef *mod, char *name, argDef *type,
             }
     }
 
-    /*
-     * Check it doesn't already exist and find the position in the sorted list
-     * where it should be put.
-     */
-    for (tdp = &pt->typedefs; *tdp != NULL; tdp = &(*tdp)->next)
-    {
-        int res = compareScopedNames((*tdp)->fqname, fqname);
-
-        if (res == 0)
-        {
-            fatalScopedName(fqname);
-            fatal(" already defined\n");
-        }
-
-        if (res > 0)
-            break;
-    }
-
     td = sipMalloc(sizeof (typedefDef));
 
     td->tdflags = 0;
@@ -5920,13 +5975,42 @@ static void newTypedef(sipSpec *pt, moduleDef *mod, char *name, argDef *type,
     td->module = mod;
     td->type = *type;
 
-    td->next = *tdp;
-    *tdp = td;
-
     if (getOptFlag(optflgs, "NoTypeName", bool_flag) != NULL)
         setNoTypeName(td);
 
-    mod->nrtypedefs++;
+    addTypedef(pt, td);
+}
+
+
+/*
+ * Add a typedef to the list so that the list remains sorted.
+ */
+static void addTypedef(sipSpec *pt, typedefDef *tdd)
+{
+    typedefDef **tdp;
+
+    /*
+     * Check it doesn't already exist and find the position in the sorted list
+     * where it should be put.
+     */
+    for (tdp = &pt->typedefs; *tdp != NULL; tdp = &(*tdp)->next)
+    {
+        int res = compareScopedNames((*tdp)->fqname, tdd->fqname);
+
+        if (res == 0)
+        {
+            fatalScopedName(tdd->fqname);
+            fatal(" already defined\n");
+        }
+
+        if (res > 0)
+            break;
+    }
+
+    tdd->next = *tdp;
+    *tdp = tdd;
+
+    tdd->module->nrtypedefs++;
 }
 
 
@@ -6057,9 +6141,9 @@ static void newVar(sipSpec *pt, moduleDef *mod, char *name, int isstatic,
     var->module = mod;
     var->varflags = 0;
     var->type = *type;
-    var->accessfunc = acode;
-    var->getcode = gcode;
-    var->setcode = scode;
+    appendCodeBlock(&var->accessfunc, acode);
+    appendCodeBlock(&var->getcode, gcode);
+    appendCodeBlock(&var->setcode, scode);
 
     if (isstatic || (escope != NULL && escope->iff->type == namespace_iface))
         setIsStaticVar(var);
@@ -6104,7 +6188,7 @@ static void newCtor(moduleDef *mod, char *name, int sectFlags,
     ct->pysig = *args;
     ct->cppsig = (cppsig != NULL ? cppsig : &ct->pysig);
     ct->exceptions = exceptions;
-    ct->methodcode = methodcode;
+    appendCodeBlock(&ct->methodcode, methodcode);
 
     if (!isPrivateCtor(ct))
         setCanCreate(cd);
@@ -6129,7 +6213,7 @@ static void newCtor(moduleDef *mod, char *name, int sectFlags,
         setIsDeprecatedCtor(ct);
 
     if (!isPrivateCtor(ct))
-        ct->kwargs = keywordArgs(mod, optflgs, &ct->pysig);
+        ct->kwargs = keywordArgs(mod, optflgs, &ct->pysig, FALSE);
 
     if (getOptFlag(optflgs, "NoDerived", bool_flag) != NULL)
     {
@@ -6178,6 +6262,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         "Factory",
         "HoldGIL",
         "KeywordArgs",
+        "KeepReference",
         "NewThread",
         "NoArgParser",
         "NoCopy",
@@ -6365,7 +6450,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         vhd->vhflags = 0;
         vhd->pysig = &od->pysig;
         vhd->cppsig = (cppsig != NULL ? cppsig : &od->pysig);
-        vhd->virtcode = vcode;
+        appendCodeBlock(&vhd->virtcode, vcode);
 
         if (factory || xferback)
             setIsTransferVH(vhd);
@@ -6394,7 +6479,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
     od->pysig = *sig;
     od->cppsig = (cppsig != NULL ? cppsig : &od->pysig);
     od->exceptions = exceptions;
-    od->methodcode = methodcode;
+    appendCodeBlock(&od->methodcode, methodcode);
     od->virthandler = vhd;
 
     no_arg_parser = (getOptFlag(optflgs, "NoArgParser", bool_flag) != NULL);
@@ -6407,6 +6492,8 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
 
     if (getOptFlag(optflgs, "NoCopy", bool_flag) != NULL)
         setNoCopy(&od->pysig.result);
+
+    handleKeepReference(optflgs, &od->pysig.result, mod);
 
     pyname = getPythonName(mod, optflgs, name);
 
@@ -6459,7 +6546,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
 
     if (!isPrivate(od) && !isSignal(od) && (od->common->slot == no_slot || od->common->slot == call_slot))
     {
-        od->kwargs = keywordArgs(mod, optflgs, &od->pysig);
+        od->kwargs = keywordArgs(mod, optflgs, &od->pysig, isProtected(od));
 
         if (od->kwargs != NoKwArgs)
             setUseKeywordArgs(od->common);
@@ -6494,9 +6581,8 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
             code->frag = buf;
             code->filename = "Auto-generated";
             code->linenr = 1;
-            code->next = NULL;
 
-            len->methodcode = code;
+            appendCodeBlock(&len->methodcode, code);
         }
 
         len->next = NULL;
@@ -6733,7 +6819,7 @@ static memberDef *findFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         yyerror("Another overload has already been defined that is annotated as /NoArgParser/");
 
     /* Global operators are a subset. */
-    if (mt_scope == NULL && c_scope == NULL && st != no_slot && st != neg_slot && st != pos_slot && !isNumberSlot(md) && !isRichCompareSlot(md))
+    if (mt_scope == NULL && c_scope == NULL && st != no_slot && st != neg_slot && st != pos_slot && !isNumberSlot(md) && !isInplaceNumberSlot(md) && !isRichCompareSlot(md))
         yyerror("Global operators must be either numeric or comparison operators");
 
     return md;
@@ -6938,15 +7024,43 @@ static void checkAttributes(sipSpec *pt, moduleDef *mod, classDef *py_c_scope,
 
 
 /*
- * Append a code block to a list of them.  Append is needed to give the
- * specifier easy control over the order of the documentation.
+ * Append a code block to a list of them.
  */
-void appendCodeBlock(codeBlock **headp, codeBlock *new)
+static void appendCodeBlock(codeBlockList **headp, codeBlock *cb)
 {
-    while (*headp != NULL)
-        headp = &(*headp)->next;
+    codeBlockList *cbl;
 
-    *headp = new;
+    /* Handle the trivial case. */
+    if (cb == NULL)
+        return;
+
+    /* Find the end of the list. */
+    while (*headp != NULL)
+    {
+        /* Ignore if the block is already in the list. */
+        if ((*headp)->block == cb)
+            return;
+
+        headp = &(*headp)->next;
+    }
+
+    cbl = sipMalloc(sizeof (codeBlockList));
+    cbl->block = cb;
+
+    *headp = cbl;
+}
+
+
+/*
+ * Append a code block list to an existing list.
+ */
+void appendCodeBlockList(codeBlockList **headp, codeBlockList *cbl)
+{
+    while (cbl != NULL)
+    {
+        appendCodeBlock(headp, cbl->block);
+        cbl = cbl->next;
+    }
 }
 
 
@@ -7409,7 +7523,7 @@ static qualDef *allocQualifier(moduleDef *mod, int line, int order,
 /*
  * Create a new imported module.
  */
-static void newImport(char *filename)
+static void newImport(const char *filename)
 {
     moduleDef *from, *mod;
     moduleListDef *mld;
@@ -7784,7 +7898,8 @@ static apiVersionRangeDef *convertAPIRange(moduleDef *mod, nameDef *name,
 /*
  * Return the style of keyword argument support for a signature.
  */
-static KwArgs keywordArgs(moduleDef *mod, optFlags *optflgs, signatureDef *sd)
+static KwArgs keywordArgs(moduleDef *mod, optFlags *optflgs, signatureDef *sd,
+        int need_name)
 {
     KwArgs kwargs;
     optFlag *ka_anno, *no_ka_anno;
@@ -7844,7 +7959,9 @@ static KwArgs keywordArgs(moduleDef *mod, optFlags *optflgs, signatureDef *sd)
 
             if (ad->name != NULL)
             {
-                setIsUsedName(ad->name);
+                if (need_name || inMainModule())
+                    setIsUsedName(ad->name);
+
                 is_name = TRUE;
             }
         }
@@ -7941,7 +8058,7 @@ static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
     pd->name = cacheName(pt, name);
     pd->get = get;
     pd->set = set;
-    pd->docstring = docstring;
+    appendCodeBlock(&pd->docstring, docstring);
     pd->next = cd->properties;
 
     cd->properties = pd;
@@ -7982,7 +8099,7 @@ static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
     setModuleName(pt, module, name);
     module->kwargs = kwargs;
     module->version = version;
-    module->docstring = docstring;
+    appendCodeBlock(&module->docstring, docstring);
 
     if (use_arg_names)
         setUseArgNames(module);
@@ -8049,4 +8166,25 @@ static void checkNoAnnos(optFlags *annos, const char *msg)
 {
     if (annos->nrFlags != 0)
         deprecated(msg);
+}
+
+
+/*
+ * Handle any /KeepReference/ annotation for a type.
+ */
+static void handleKeepReference(optFlags *optflgs, argDef *ad, moduleDef *mod)
+{
+    optFlag *of;
+
+    if ((of = getOptFlag(optflgs, "KeepReference", opt_integer_flag)) != NULL)
+    {
+        setKeepReference(ad);
+
+        if ((ad->key = of->fvalue.ival) < -1)
+            yyerror("/KeepReference/ key cannot be negative");
+
+        /* If there was no explicit key then auto-allocate one. */
+        if (ad->key == -1)
+            ad->key = mod->next_key--;
+    }
 }
