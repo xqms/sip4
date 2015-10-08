@@ -1,8 +1,59 @@
+2015-07-17  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.16.9 for changeset 87de938efba2
+	[90aaa31768c9] [tip] <4.16-maint>
+
+	* NEWS:
+	Released as v4.16.9.
+	[87de938efba2] [4.16.9] <4.16-maint>
+
+	* sipgen/export.c:
+	Added the "virtual" attribute to the exported XML.
+	[e37fcc2e29e2] <4.16-maint>
+
+2015-07-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Improved the detail of the text of the exception
+	sipBadCatcherResult() raises.
+	[4f7ad0a4e353] <4.16-maint>
+
+	* siplib/siplib.c.in:
+	Allow for an /External/ class being referenced when the module
+	containing its implementation hasn't been imported.
+	[1574043cc948] <4.16-maint>
+
+2015-07-07  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Fix a problem caused by PyQt4 wrapping the QApplication C++ instance
+	as multiple Python objects.
+	[42a056fbf006] <4.16-maint>
+
+2015-06-30  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Remove an object from the map whenever the pointer ot the C/C++
+	instance is cleared.
+	[8dd533ab6ce9] <4.16-maint>
+
+2015-06-20  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed a missing reference in the previous fix.
+	[1a2704282933] <4.16-maint>
+
+	* sipgen/gencode.c:
+	Fixed a regression in the handling of static non-pointer object
+	variables.
+	[dafbaadea76b] <4.16-maint>
+
 2015-06-11  Phil Thompson  <phil@riverbankcomputing.com>
 
 	* .hgtags:
 	Added tag 4.16.8 for changeset f87e232098eb
-	[95abaccb67d6] [tip] <4.16-maint>
+	[95abaccb67d6] <4.16-maint>
 
 	* NEWS:
 	Released as v4.16.8.

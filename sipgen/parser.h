@@ -332,7 +332,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 184 "/Users/phil/hg/sip/sip-4.16.8/sipgen/metasrc/parser.y"
+#line 184 "/Users/phil/hg/sip-4.16.9/sip-4.16.9/sipgen/metasrc/parser.y"
 {
     char            qchar;
     char            *text;
@@ -375,7 +375,7 @@ typedef union YYSTYPE
     int             token;
 }
 /* Line 1529 of yacc.c.  */
-#line 379 "/Users/phil/hg/sip/sip-4.16.8/sipgen/parser.h"
+#line 379 "/Users/phil/hg/sip-4.16.9/sip-4.16.9/sipgen/parser.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
