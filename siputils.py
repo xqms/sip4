@@ -597,6 +597,9 @@ class Makefile:
                         defines.append("QT_XMLPATTERNS_LIB")
                     elif mod == "phonon":
                         defines.append("QT_PHONON_LIB")
+
+                    if qt_version >= 0x050000 and mod in ("QtSql", "QtTest"):
+                        defines.append("QT_WIDGETS_LIB")
             elif self._threaded:
                 defines.append("QT_THREAD_SUPPORT")
 
@@ -1794,6 +1797,9 @@ class ProgramMakefile(Makefile):
             build.append("-I" + _quote(f))
 
         build.extend(self.optional_list("CXXFLAGS"))
+
+        # This is for Qt5.
+        build.extend(self.optional_list("CXXFLAGS_APP"))
 
         # Borland requires all flags to precede all file names.
         if self.generator != "BMAKE":

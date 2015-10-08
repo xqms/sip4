@@ -1,7 +1,7 @@
 /*
  * The main module for SIP.
  *
- * Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -237,7 +237,7 @@ int main(int argc, char **argv)
 
     /* Generate code. */
     generateCode(&spec, codeDir, buildFile, docFile, srcSuffix, exceptions,
-            tracing, releaseGIL, parts, xfeatures, consModule, docs,
+            tracing, releaseGIL, parts, versions, xfeatures, consModule, docs,
             timestamp);
 
     /* Generate any extracts. */

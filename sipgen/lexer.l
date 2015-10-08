@@ -1,7 +1,7 @@
 /*
  * The SIP lexer.
  *
- * Copyright (c) 2011 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -159,6 +159,7 @@ SIP_QOBJECT                 {return TK_QOBJECT;}
 <directive>type             {return TK_TYPE;}
 <directive>use_argument_names   {return TK_USEARGNAMES;}
 <directive>all_raise_py_exception   {return TK_ALLRAISEPYEXC;}
+<directive>default_VirtualErrorHandler  {return TK_DEFERRORHANDLER;}
 <directive>version          {return TK_VERSION;}
 
 <directive>True             {return TK_TRUE_VALUE;}
@@ -214,7 +215,7 @@ SIP_QOBJECT                 {return TK_QOBJECT;}
 }
 
 
--?(([0-9]+)|([0-9]*\.[0-9]*)([eE][-+]?[0-9]+)?)[fF]? {
+-?([0-9]+(\.[0-9]*)?|\.[0-9]+)([eE][-+]?[0-9]+)?[fF]? {
     /* A floating point number. */
     yylval.real = strtod(yytext,NULL);
     return TK_REAL_VALUE;
@@ -446,6 +447,12 @@ SIP_QOBJECT                 {return TK_QOBJECT;}
     return TK_CHARBUFFERCODE;
 }
 
+^[ \t]*%InstanceCode {
+    /* The start of a create instance code block. */
+    codeIdx = 0;
+    return TK_INSTANCECODE;
+}
+
 ^[ \t]*%PickleCode {
     /* The start of a pickle code block. */
     codeIdx = 0;
@@ -461,7 +468,7 @@ SIP_QOBJECT                 {return TK_QOBJECT;}
 }
 
 ^[ \t]*%RaiseCode {
-    /* The start of a raise exception code block. */
+    /* The start of a raise Python exception code block. */
     codeIdx = 0;
     return TK_RAISECODE;
 }
@@ -512,6 +519,15 @@ SIP_QOBJECT                 {return TK_QOBJECT;}
     /* The start of a set code block. */
     codeIdx = 0;
     return TK_SETCODE;
+}
+
+^[ \t]*%VirtualErrorHandler {
+    /* The start of part of a virtual error handler. */
+    codeIdx = 0;
+
+    BEGIN directive_start;
+
+    return TK_VIRTERRORHANDLER;
 }
 
 <code>^[ \t]*%End {

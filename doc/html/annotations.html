@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Annotations &mdash; SIP 4.13.3 Reference Guide</title>
+    <title>Annotations &mdash; SIP 4.14 Reference Guide</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.13.3',
+        VERSION:     '4.14',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/logo_tn.ico"/>
-    <link rel="top" title="SIP 4.13.3 Reference Guide" href="index.html" />
+    <link rel="top" title="SIP 4.14 Reference Guide" href="index.html" />
     <link rel="next" title="C API for Handwritten Code" href="c_api.html" />
     <link rel="prev" title="Directives" href="directives.html" /> 
   </head>
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="directives.html" title="Directives"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SIP 4.13.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -419,13 +419,13 @@ void <tt class="descname">sipDelayedDtors</tt><big>(</big>const <a class="refere
 <dd><p>This structure describes a particular delayed destructor.</p>
 <dl class="member">
 <dt id="sipDelayedDtor.dd_name">
-const char *<tt class="descname">dd_name</tt><a class="headerlink" href="#sipDelayedDtor.dd_name" title="Permalink to this definition">¶</a></dt>
+const char* <tt class="descname">dd_name</tt><a class="headerlink" href="#sipDelayedDtor.dd_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the name of the class excluding any package or module name.</p>
 </dd></dl>
 
 <dl class="member">
 <dt id="sipDelayedDtor.dd_ptr">
-void *<tt class="descname">dd_ptr</tt><a class="headerlink" href="#sipDelayedDtor.dd_ptr" title="Permalink to this definition">¶</a></dt>
+void* <tt class="descname">dd_ptr</tt><a class="headerlink" href="#sipDelayedDtor.dd_ptr" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the address of the C or C++ instance to be destroyed.  It&#8217;s
 exact type depends on the value of <tt class="xref c c-member docutils literal"><span class="pre">dd_isderived</span></tt>.</p>
 </dd></dl>
@@ -440,7 +440,7 @@ called.  See <a class="reference internal" href="c_api.html#ref-derived-classes"
 
 <dl class="member">
 <dt id="sipDelayedDtor.dd_next">
-<a class="reference internal" href="#sipDelayedDtor" title="sipDelayedDtor">sipDelayedDtor</a> *<tt class="descname">dd_next</tt><a class="headerlink" href="#sipDelayedDtor.dd_next" title="Permalink to this definition">¶</a></dt>
+<a class="reference internal" href="#sipDelayedDtor" title="sipDelayedDtor">sipDelayedDtor</a>* <tt class="descname">dd_next</tt><a class="headerlink" href="#sipDelayedDtor.dd_next" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the address of the next entry in the list or zero if this is
 the last one.</p>
 </dd></dl>
@@ -504,6 +504,23 @@ creating the type object for this C structure or C++ type.</p>
 <p>See the section <a class="reference internal" href="using.html#ref-types-metatypes"><em>Types and Meta-types</em></a> for more details.</p>
 </dd></dl>
 
+<dl class="class-annotation">
+<dt id="class-annotation-VirtualErrorHandler">
+<tt class="descname">VirtualErrorHandler</tt><a class="headerlink" href="#class-annotation-VirtualErrorHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.14.</span></p>
+<p>This name annotation specifies the handler (defined by the
+<a class="reference internal" href="directives.html#directive-%VirtualErrorHandler"><tt class="xref std std-directive docutils literal"><span class="pre">%VirtualErrorHandler</span></tt></a> directive) that is called when a Python
+re-implementation of any of the class&#8217;s virtual C++ functions raises a
+Python exception.  If not specified then the handler specified by the
+<tt class="docutils literal"><span class="pre">default_VirtualErrorHandler</span></tt> argument of the <a class="reference internal" href="directives.html#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a>
+directive is used.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#function-annotation-NoVirtualErrorHandler"><tt class="xref std std-fanno docutils literal"><span class="pre">NoVirtualErrorHandler</span></tt></a>, <a class="reference internal" href="#function-annotation-VirtualErrorHandler"><tt class="xref std std-fanno docutils literal"><span class="pre">VirtualErrorHandler</span></tt></a>, <a class="reference internal" href="directives.html#directive-%VirtualErrorHandler"><tt class="xref std std-directive docutils literal"><span class="pre">%VirtualErrorHandler</span></tt></a></p>
+</div>
+</dd></dl>
+
 </div>
 <div class="section" id="mapped-type-annotations">
 <span id="ref-mapped-type-annos"></span><h2>Mapped Type Annotations<a class="headerlink" href="#mapped-type-annotations" title="Permalink to this headline">¶</a></h2>
@@ -526,6 +543,7 @@ specifies that the handling of <tt class="docutils literal"><span class="pre">No
 range of version numbers that the mapped type is enabled for.</p>
 <p>If a class or mapped type has different implementations enabled for
 different ranges of version numbers then those ranges must not overlap.</p>
+<p>It should not be used with mapped type templates.</p>
 <p>See <a class="reference internal" href="using.html#ref-incompat-apis"><em>Managing Incompatible APIs</em></a> for more detail.</p>
 </dd></dl>
 
@@ -545,6 +563,20 @@ argument annotation when applied to the mapped type being defined.</p>
 support the <a class="reference internal" href="c_api.html#sipReleaseType" title="sipReleaseType"><tt class="xref c c-func docutils literal"><span class="pre">sipReleaseType()</span></tt></a> function.  Any
 <a class="reference internal" href="directives.html#directive-%ConvertToTypeCode"><tt class="xref std std-directive docutils literal"><span class="pre">%ConvertToTypeCode</span></tt></a> should not create temporary instances of
 the mapped type, i.e. it should not return <tt class="xref c c-macro docutils literal"><span class="pre">SIP_TEMPORARY</span></tt>.</p>
+</dd></dl>
+
+<dl class="mapped-type-annotation">
+<dt id="mapped-type-annotation-PyName">
+<tt class="descname">PyName</tt><a class="headerlink" href="#mapped-type-annotation-PyName" title="Permalink to this definition">¶</a></dt>
+<dd><p>This name annotation specifies an alternative name for the mapped type
+being wrapped which is used when it is referred to from Python.  The only
+time a Python type is created for a mapped type is when it is used as a
+scope for static methods or enums.</p>
+<p>It should not be used with mapped type templates.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="directives.html#directive-%AutoPyName"><tt class="xref std std-directive docutils literal"><span class="pre">%AutoPyName</span></tt></a></p>
+</div>
 </dd></dl>
 
 </div>
@@ -620,7 +652,8 @@ needs to create a class instance.  By default it uses a constructor with no
 compulsory arguments if one is specified.  (SIP will automatically generate
 a constructor with no arguments if no constructors are specified.)  This
 annotation is used to explicitly specify which constructor to use.  Zero is
-passed as the value of any arguments to the constructor.</p>
+passed as the value of any arguments to the constructor.  This annotation
+is ignored if the class defines <a class="reference internal" href="directives.html#directive-%InstanceCode"><tt class="xref std std-directive docutils literal"><span class="pre">%InstanceCode</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="function-annotation">
@@ -654,7 +687,7 @@ function.</p>
 <tt class="descname">Factory</tt><a class="headerlink" href="#function-annotation-Factory" title="Permalink to this definition">¶</a></dt>
 <dd><p>This boolean annotation specifies that the value returned by the function
 (which should be a wrapped C structure or C++ class instance) is a newly
-created instance and is owned by Python.</p>
+created instance and is owned by C/C++.</p>
 <p>See <a class="reference internal" href="using.html#ref-object-ownership"><em>Ownership of Objects</em></a> for more detail.</p>
 </dd></dl>
 
@@ -778,6 +811,24 @@ raise a Python exception to indicate that an error occurred.</p>
 </dd></dl>
 
 <dl class="function-annotation">
+<dt id="function-annotation-NoVirtualErrorHandler">
+<tt class="descname">NoVirtualErrorHandler</tt><a class="headerlink" href="#function-annotation-NoVirtualErrorHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.14.</span></p>
+<p>This boolean annotation specifies that when a Python re-implementation of a
+virtual C++ function raises a Python exception then <tt class="docutils literal"><span class="pre">PyErr_Print()</span></tt> is
+always called.  Any error handler specified by either the
+<a class="reference internal" href="#function-annotation-VirtualErrorHandler"><tt class="xref std std-fanno docutils literal"><span class="pre">VirtualErrorHandler</span></tt></a> function annotation, the
+<a class="reference internal" href="#class-annotation-VirtualErrorHandler"><tt class="xref std std-canno docutils literal"><span class="pre">VirtualErrorHandler</span></tt></a> class annotation or the
+<tt class="docutils literal"><span class="pre">default_VirtualErrorHandler</span></tt> argument of the <a class="reference internal" href="directives.html#directive-%Module"><tt class="xref std std-directive docutils literal"><span class="pre">%Module</span></tt></a>
+directive is ignored.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#function-annotation-VirtualErrorHandler"><tt class="xref std std-fanno docutils literal"><span class="pre">VirtualErrorHandler</span></tt></a>, <a class="reference internal" href="#class-annotation-VirtualErrorHandler"><tt class="xref std std-canno docutils literal"><span class="pre">VirtualErrorHandler</span></tt></a>, <a class="reference internal" href="directives.html#directive-%VirtualErrorHandler"><tt class="xref std std-directive docutils literal"><span class="pre">%VirtualErrorHandler</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="function-annotation">
 <dt id="function-annotation-Numeric">
 <tt class="descname">Numeric</tt><a class="headerlink" href="#function-annotation-Numeric" title="Permalink to this definition">¶</a></dt>
 <dd><p>This boolean annotation specifies that the operator should be interpreted
@@ -893,6 +944,22 @@ garbage collector with another instance is removed.</p>
 <dd><p>This boolean annotation specifies that ownership of <tt class="docutils literal"><span class="pre">this</span></tt> is transferred
 from Python to C++.</p>
 <p>See <a class="reference internal" href="using.html#ref-object-ownership"><em>Ownership of Objects</em></a> for more detail.</p>
+</dd></dl>
+
+<dl class="function-annotation">
+<dt id="function-annotation-VirtualErrorHandler">
+<tt class="descname">VirtualErrorHandler</tt><a class="headerlink" href="#function-annotation-VirtualErrorHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p class="versionadded">
+<span class="versionmodified">New in version 4.14.</span></p>
+<p>This name annotation specifies the handler (defined by the
+<a class="reference internal" href="directives.html#directive-%VirtualErrorHandler"><tt class="xref std std-directive docutils literal"><span class="pre">%VirtualErrorHandler</span></tt></a> directive) that is called when a Python
+re-implementation of the virtual C++ function raises a Python exception.
+If not specified then the handler specified by the class&#8217;s
+<a class="reference internal" href="#class-annotation-VirtualErrorHandler"><tt class="xref std std-canno docutils literal"><span class="pre">VirtualErrorHandler</span></tt></a> is used.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#function-annotation-NoVirtualErrorHandler"><tt class="xref std std-fanno docutils literal"><span class="pre">NoVirtualErrorHandler</span></tt></a>, <a class="reference internal" href="#class-annotation-VirtualErrorHandler"><tt class="xref std std-canno docutils literal"><span class="pre">VirtualErrorHandler</span></tt></a>, <a class="reference internal" href="directives.html#directive-%VirtualErrorHandler"><tt class="xref std std-directive docutils literal"><span class="pre">%VirtualErrorHandler</span></tt></a></p>
+</div>
 </dd></dl>
 
 </div>
@@ -1061,11 +1128,11 @@ have the same name in the same C++ scope.</p>
         <li class="right" >
           <a href="directives.html" title="Directives"
              >previous</a> |</li>
-        <li><a href="index.html">SIP 4.13.3 Reference Guide</a> &raquo;</li> 
+        <li><a href="index.html">SIP 4.14 Reference Guide</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011 Riverbank Computing Limited.
+        &copy; Copyright 2012 Riverbank Computing Limited.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
