@@ -6789,6 +6789,8 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
 {
     static const char *annos[] = {
         "__len__",
+        "__imatmul__",
+        "__matmul__",
         "AbortOnException",
         "AllowNone",
         "API",
@@ -6871,6 +6873,8 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
             "__getattr__",
             "__enter__",
             "__exit__",
+            "__aenter__",
+            "__aexit__",
             NULL
         };
 
@@ -7187,7 +7191,9 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         }
     }
 
-    /* See if we want to auto-generate a __len__() method. */
+    od->next = NULL;
+
+    /* See if we want to auto-generate some methods. */
     if (getOptFlag(optflgs, "__len__", bool_flag) != NULL)
     {
         overDef *len;
@@ -7199,9 +7205,6 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         len->pysig.result.atype = ssize_type;
         len->pysig.nrArgs = 0;
         len->cppsig = &len->pysig;
-
-        len->common = findFunction(pt, mod, c_scope, mt_scope, len->cppname,
-                TRUE, 0, FALSE);
 
         if ((len->methodcode = od->methodcode) == NULL)
         {
@@ -7220,13 +7223,53 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
             appendCodeBlock(&len->methodcode, code);
         }
 
-        len->next = NULL;
+        len->common = findFunction(pt, mod, c_scope, mt_scope, len->cppname,
+                TRUE, 0, FALSE);
 
+        len->next = od->next;
         od->next = len;
     }
-    else
+
+    if (getOptFlag(optflgs, "__matmul__", bool_flag) != NULL)
     {
-        od->next = NULL;
+        overDef *matmul;
+
+        matmul = sipMalloc(sizeof (overDef));
+
+        matmul->cppname = "__matmul__";
+        matmul->overflags = SECT_IS_PUBLIC;
+        matmul->pysig = od->pysig;
+        matmul->cppsig = (cppsig != NULL ? cppsig : &matmul->pysig);
+
+        matmul->methodcode = od->methodcode;
+
+        matmul->common = findFunction(pt, mod, c_scope, mt_scope,
+                matmul->cppname, (matmul->methodcode != NULL),
+                matmul->pysig.nrArgs, FALSE);
+
+        matmul->next = od->next;
+        od->next = matmul;
+    }
+
+    if (getOptFlag(optflgs, "__imatmul__", bool_flag) != NULL)
+    {
+        overDef *imatmul;
+
+        imatmul = sipMalloc(sizeof (overDef));
+
+        imatmul->cppname = "__imatmul__";
+        imatmul->overflags = SECT_IS_PUBLIC;
+        imatmul->pysig = od->pysig;
+        imatmul->cppsig = (cppsig != NULL ? cppsig : &imatmul->pysig);
+
+        imatmul->methodcode = od->methodcode;
+
+        imatmul->common = findFunction(pt, mod, c_scope, mt_scope,
+                imatmul->cppname, (imatmul->methodcode != NULL),
+                imatmul->pysig.nrArgs, FALSE);
+
+        imatmul->next = od->next;
+        od->next = imatmul;
     }
 
     /* Append to the list. */
@@ -7372,6 +7415,11 @@ static memberDef *findFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         {"__next__", next_slot, TRUE, 0},
         {"__setattr__", setattr_slot, TRUE, 2},
         {"__delattr__", delattr_slot, TRUE, 1},
+        {"__matmul__", matmul_slot, FALSE, 1},
+        {"__imatmul__", imatmul_slot, FALSE, 1},
+        {"__await__", await_slot, TRUE, 0},
+        {"__aiter__", aiter_slot, TRUE, 0},
+        {"__anext__", anext_slot, TRUE, 0},
         {NULL}
     };
 

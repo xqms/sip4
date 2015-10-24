@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041009
-#define SIP_VERSION_STR     "4.16.9"
+#define SIP_VERSION         0x041100
+#define SIP_VERSION_STR     "4.17"
 
 
 #ifdef TRUE
@@ -564,6 +564,11 @@ typedef enum {
     next_slot,
     setattr_slot,
     delattr_slot,       /* This is local to the parser. */
+    matmul_slot,
+    imatmul_slot,
+    await_slot,
+    aiter_slot,
+    anext_slot,
     no_slot
 } slotType;
 

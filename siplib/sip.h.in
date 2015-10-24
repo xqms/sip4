@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041009
-#define SIP_VERSION_STR     "4.16.9"
+#define SIP_VERSION         0x041100
+#define SIP_VERSION_STR     "4.17"
 
 
 /*
@@ -592,7 +592,8 @@ typedef enum {
 
 
 /*
- * The different Python slot types.
+ * The different Python slot types.  New slots must be added to the end,
+ * otherwise the major version of the internal ABI must be changed.
  */
 typedef enum {
     str_slot,           /* __str__ */
@@ -657,6 +658,11 @@ typedef enum {
     iter_slot,          /* __iter__ */
     next_slot,          /* __next__ */
     setattr_slot,       /* __setattr__, __delattr__ */
+    matmul_slot,        /* __matmul__ (for Python v3.5 and later) */
+    imatmul_slot,       /* __imatmul__ (for Python v3.5 and later) */
+    await_slot,         /* __await__ (for Python v3.5 and later) */
+    aiter_slot,         /* __aiter__ (for Python v3.5 and later) */
+    anext_slot,         /* __anext__ (for Python v3.5 and later) */
 } sipPySlotType;
 
 
