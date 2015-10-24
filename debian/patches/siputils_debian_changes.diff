@@ -1,4 +1,4 @@
-From 10adefa453d45553e756312c033c5ffc28a8a3d2 Mon Sep 17 00:00:00 2001
+From 31eca4c6c1ed9843a837d16760578b2d28be2265 Mon Sep 17 00:00:00 2001
 From: Torsten Marek <shlomme@debian.org>
 Date: Thu, 8 Oct 2015 13:52:11 -0700
 Subject: Debian changes to siputils.py

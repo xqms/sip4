@@ -1,3 +1,9 @@
+sip4 (4.17+dfsg-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- Scott Kitterman <scott@kitterman.com>  Sat, 24 Oct 2015 14:18:49 -0400
+
 sip4 (4.16.9+dfsg-2) unstable; urgency=medium
 
   [ Andreas Beckmann ]

@@ -30,8 +30,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x041009
-sip_version_str = "4.16.9"
+sip_version = 0x041100
+sip_version_str = "4.17"
 py_version = sys.hexversion >> 8
 py_platform = sys.platform
 plat_py_site_dir = None
@@ -158,7 +158,9 @@ def set_build_platform():
     build_platform = "none"
 
     if py_platform == "win32":
-        if py_version >= 0x030300:
+        if py_version >= 0x030500:
+            build_platform = "win32-msvc2015"
+        elif py_version >= 0x030300:
             build_platform = "win32-msvc2010"
         elif py_version >= 0x020600:
             build_platform = "win32-msvc2008"

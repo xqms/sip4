@@ -1,8 +1,83 @@
+2015-10-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.17 for changeset 0cbb680b4f69
+	[36d16e74cf7f] [tip]
+
+	* NEWS:
+	Released as v4.17.
+	[0cbb680b4f69] [4.17]
+
+2015-09-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/sip.h.in.in:
+	Fix extensions that use Python v3.5 slots but are being built with
+	an earlier version.
+	[9102d6c3daf0]
+
+2015-09-08  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* specs/win32-msvc2015:
+	Tweak win32-msvc2015 to suppress a warning message.
+	[74754ca3e59f]
+
+	* configure.py.in, specs/win32-msvc2010, specs/win32-msvc2015:
+	Added win32-msvc2015 to the build system.
+	[fca4f2fcbb39]
+
+2015-09-03  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/sip.h.in.in:
+	Added a comment about adding new slot types and its effect on the
+	ABI.
+	[50af972e1652]
+
+2015-09-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/metasrc/parser.y, sipgen/sip.h.in,
+	siplib/sip.h.in.in, siplib/siplib.c.in,
+	sphinx/specification_files.rst:
+	Added support for PEP 492, ie. the __await__, __aiter__ and
+	__anext__ special methods.
+	[f5d07b919355]
+
+	* sipgen/metasrc/parser.y, siplib/siplib.c.in:
+	Add __aenter__ and __aexit__ and non-lazy methods.
+	[979e23401d1d]
+
+	* sipgen/metasrc/parser.y:
+	Fixed a regression in the handling of the __len__ annotation.
+	[cad3bdaecf3e]
+
+	* sphinx/static/default.css:
+	Merged the 4.16-main branch into the trunk.
+	[b4f30681b90f]
+
+	* sipgen/gencode.c, sipgen/metasrc/parser.y, sipgen/sip.h.in,
+	siplib/sip.h.in.in, siplib/siplib.c.in, siplib/voidptr.c,
+	sphinx/annotations.rst, sphinx/specification_files.rst:
+	Implemented support for PEP465 (array infix operator) ie. the
+	__matmul__ and __imatmul__ special methods and function annotations
+	of the same name.
+	[ff867feb8f90] <4.16-maint>
+
+	* siplib/voidptr.c:
+	Tweaked an exception message to follow the style adopted in Python
+	v3.5.
+	[e98693bf17d7] <4.16-maint>
+
+2015-08-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Fixed the error handling of sipCallMethod() when a re-implementation
+	raises an exception.
+	[27c61f660fba] <4.16-maint>
+
 2015-07-17  Phil Thompson  <phil@riverbankcomputing.com>
 
 	* .hgtags:
 	Added tag 4.16.9 for changeset 87de938efba2
-	[90aaa31768c9] [tip] <4.16-maint>
+	[90aaa31768c9] <4.16-maint>
 
 	* NEWS:
 	Released as v4.16.9.
