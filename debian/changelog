@@ -1,3 +1,11 @@
+sip4 (4.17+dfsg-2) unstable; urgency=medium
+
+  * Apply debian/rules patch to make package build reproducible (Closes:
+    #815512)
+    - Thanks to Reiner Herrmann for the patch
+
+ -- Scott Kitterman <scott@kitterman.com>  Mon, 22 Feb 2016 16:28:25 -0500
+
 sip4 (4.17+dfsg-1) unstable; urgency=medium
 
   * New upstream release

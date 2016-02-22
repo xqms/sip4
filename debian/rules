@@ -174,9 +174,9 @@ ifneq (,$(findstring -a, $(DH_OPTIONS)))
 	DH_OPTIONS= dh_strip -psip-dev --dbg-package=sip-dbg
 endif
 	dh_compress -X.inv
-	dh_fixperms
 	dh_python2 --no-dbg-cleaning -N sip-dev
 	dh_python3 --no-dbg-cleaning -N sip-dev
+	dh_fixperms
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
