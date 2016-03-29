@@ -1,3 +1,9 @@
+sip4 (4.17+dfsg-3) UNRELEASED; urgency=medium
+
+  * Fixed VCS URL (https)
+
+ -- Ondřej Nový <novy@ondrej.org>  Tue, 29 Mar 2016 22:32:05 +0200
+
 sip4 (4.17+dfsg-2) unstable; urgency=medium
 
   * Apply debian/rules patch to make package build reproducible (Closes:
