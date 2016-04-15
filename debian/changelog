@@ -4,11 +4,12 @@ sip4 (4.18+dfsg-1) unstable; urgency=medium
   * New upstream release
   * Update sip provides for new sip API version 11.3
   * Bump standards version to 3.9.8 without further change
+  * Update debian/copyright for 2016
 
   [ Ondřej Novy ]
   * Fixed VCS URL (https)
 
- -- Scott Kitterman <scott@kitterman.com>  Fri, 15 Apr 2016 18:53:23 -0400
+ -- Scott Kitterman <scott@kitterman.com>  Fri, 15 Apr 2016 18:57:36 -0400
 
 sip4 (4.17+dfsg-2) unstable; urgency=medium
 

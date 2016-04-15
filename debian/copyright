@@ -3,7 +3,7 @@ Upstream-Contact: pyqt@riverbankcomputing.com
 Files-Excluded: doc/html
 
 Files: *
-Copyright: 2015, Riverbank Computing Limited
+Copyright: 2015-2016, Riverbank Computing Limited
 License: SIP or GPL-2 or GPL-3
 
 Files: sipdistutils.py
