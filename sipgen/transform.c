@@ -1,7 +1,7 @@
 /*
  * The parse tree transformation module for SIP.
  *
- * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -60,16 +60,16 @@ static void transformTypedefs(sipSpec *pt, moduleDef *mod);
 static void resolveMappedTypeTypes(sipSpec *,mappedTypeDef *);
 static void resolveCtorTypes(sipSpec *,classDef *,ctorDef *);
 static void resolveFuncTypes(sipSpec *pt, moduleDef *mod, classDef *c_scope,
-        mappedTypeDef *mt_scope, overDef *od);
+        overDef *od);
 static void resolvePySigTypes(sipSpec *,moduleDef *,classDef *,overDef *,signatureDef *,int);
 static void resolveVariableType(sipSpec *,varDef *);
-static void fatalNoDefinedType(scopedNameDef *);
+SIP_NORETURN static void fatalNoDefinedType(scopedNameDef *);
 static void resolveType(sipSpec *,moduleDef *,classDef *,argDef *,int);
 static void searchClassScope(sipSpec *,classDef *,scopedNameDef *,argDef *);
 static void searchMappedTypes(sipSpec *,moduleDef *,scopedNameDef *,argDef *);
 static void searchEnums(sipSpec *,scopedNameDef *,argDef *);
 static void searchClasses(sipSpec *,moduleDef *mod,scopedNameDef *,argDef *);
-static void appendToMRO(mroDef *,mroDef ***,classDef *);
+static mroDef *appendToMRO(mroDef *,mroDef ***,classDef *);
 static void moveMainModuleCastsSlots(sipSpec *pt, moduleDef *mod);
 static void moveClassCasts(sipSpec *pt, moduleDef *mod, classDef *cd);
 static void moveGlobalSlot(sipSpec *pt, moduleDef *mod, memberDef *gmd);
@@ -77,6 +77,7 @@ static classDef *findAltClassImplementation(sipSpec *pt, mappedTypeDef *mtd);
 static void filterMainModuleVirtualHandlers(moduleDef *mod);
 static void filterModuleVirtualHandlers(moduleDef *mod);
 static ifaceFileDef *getIfaceFile(argDef *ad);
+static ifaceFileDef *getIfaceFileForEnum(enumDef *ed);
 static mappedTypeDef *instantiateMappedTypeTemplate(sipSpec *pt, moduleDef *mod, mappedTypeTmplDef *mtt, argDef *type);
 static classDef *getProxy(moduleDef *mod, classDef *cd);
 static int generatingCodeForModule(sipSpec *pt, moduleDef *mod);
@@ -86,8 +87,6 @@ static void addComplementarySlot(sipSpec *pt, classDef *cd, memberDef *md,
         slotType cslot, const char *cslot_name);
 static void resolveInstantiatedClassTemplate(sipSpec *pt, argDef *type);
 static void setStringPoolOffsets(sipSpec *pt);
-static const char *templateString(const char *src, scopedNameDef *names,
-        scopedNameDef *values);
 static mappedTypeDef *copyTemplateType(mappedTypeDef *mtd, argDef *ad);
 static void checkProperties(classDef *cd);
 
@@ -433,6 +432,10 @@ static void addComplementarySlots(sipSpec *pt, classDef *cd)
         case ne_slot:
             addComplementarySlot(pt, cd, md, eq_slot, "__eq__");
             break;
+
+        /* Suppress a compiler warning. */
+        default:
+            ;
         }
 }
 
@@ -560,7 +563,7 @@ static void checkAssignmentHelper(sipSpec *pt, classDef *cd)
     if (pub_def_ctor && pub_copy_ctor)
     {
         setAssignmentHelper(cd);
-        addToUsedList(&cd->iff->module->used, cd->iff);
+        appendToIfaceFileList(&cd->iff->module->used, cd->iff);
     }
 }
 
@@ -683,6 +686,7 @@ static void moveClassCasts(sipSpec *pt, moduleDef *mod, classDef *cd)
         {
             ifaceFileIsUsed(&mod->used, ad);
             dcd = getProxy(mod, dcd);
+            ct->no_typehint = TRUE;
         }
 
         ifaceFileIsUsed(&dcd->iff->used, ad);
@@ -693,11 +697,12 @@ static void moveClassCasts(sipSpec *pt, moduleDef *mod, classDef *cd)
         for (ctp = &dcd->ctors; *ctp != NULL; ctp = &(*ctp)->next)
             if (sameSignature(&(*ctp)->pysig, &ct->pysig, FALSE))
             {
-                fatal("operator ");
+                fatalStart();
+                fprintf(stderr, "operator ");
                 fatalScopedName(classFQCName(dcd));
-                fatal("::");
+                fprintf(stderr, "::");
                 fatalScopedName(classFQCName(dcd));
-                fatal("(");
+                fprintf(stderr, "(");
                 fatalScopedName(classFQCName(cd));
                 fatal(") already defined\n");
             }
@@ -721,7 +726,7 @@ static void moveGlobalSlot(sipSpec *pt, moduleDef *mod, memberDef *gmd)
         memberDef *md, **mdhead;
         overDef **odhead;
         moduleDef *mod;
-        nameDef *nd;
+        enumDef *ed;
 
         if (od->common != gmd)
         {
@@ -740,7 +745,7 @@ static void moveGlobalSlot(sipSpec *pt, moduleDef *mod, memberDef *gmd)
 
         mdhead = NULL;
         second = FALSE;
-        nd = NULL;
+        ed = NULL;
 
         if (arg0->atype == class_type)
         {
@@ -764,7 +769,7 @@ static void moveGlobalSlot(sipSpec *pt, moduleDef *mod, memberDef *gmd)
             mdhead = &arg0->u.ed->slots;
             odhead = &arg0->u.ed->overs;
             mod = arg0->u.ed->module;
-            nd = arg0->u.ed->pyname;
+            ed = arg0->u.ed;
         }
         else if (arg1->atype == class_type)
         {
@@ -790,13 +795,14 @@ static void moveGlobalSlot(sipSpec *pt, moduleDef *mod, memberDef *gmd)
             mdhead = &arg1->u.ed->slots;
             odhead = &arg1->u.ed->overs;
             mod = arg1->u.ed->module;
-            nd = arg1->u.ed->pyname;
+            ed = arg1->u.ed;
             second = TRUE;
         }
 
         if (mdhead == NULL)
         {
-            fatal("%s:%d: One of the arguments of ", od->sloc.name,
+            fatalStart();
+            fprintf(stderr, "%s:%d: One of the arguments of ", od->sloc.name,
                     od->sloc.linenr);
             prOverloadName(stderr, od);
             fatal(" must be a class or enum\n");
@@ -812,7 +818,8 @@ static void moveGlobalSlot(sipSpec *pt, moduleDef *mod, memberDef *gmd)
         {
             if (second)
             {
-                fatal("%s:%d: The first argument of ", od->sloc.name,
+                fatalStart();
+                fprintf(stderr, "%s:%d: The first argument of ", od->sloc.name,
                         od->sloc.linenr);
                 prOverloadName(stderr, od);
                 fatal(" must be a class or enum\n");
@@ -820,7 +827,8 @@ static void moveGlobalSlot(sipSpec *pt, moduleDef *mod, memberDef *gmd)
 
             if (mod != gmd->module && arg0->atype == enum_type)
             {
-                fatal("%s:%d: The first argument of ", od->sloc.name,
+                fatalStart();
+                fprintf(stderr, "%s:%d: The first argument of ", od->sloc.name,
                         od->sloc.linenr);
                 prOverloadName(stderr, od);
                 fatal(" must be a class\n");
@@ -857,6 +865,7 @@ static void moveGlobalSlot(sipSpec *pt, moduleDef *mod, memberDef *gmd)
                 pod = sipMalloc(sizeof (overDef));
 
                 *pod = *od;
+                pod->no_typehint = TRUE;
                 pod->common = pmd;
                 pod->next = pcd->overs;
 
@@ -878,9 +887,16 @@ static void moveGlobalSlot(sipSpec *pt, moduleDef *mod, memberDef *gmd)
         /* Remove from the list. */
         *odp = od->next;
 
-        /* The only time we need the name of an enum is when it has slots. */
-        if (nd != NULL)
-            setIsUsedName(nd);
+        if (ed != NULL)
+        {
+            ifaceFileDef *enum_iff = getIfaceFileForEnum(ed);
+
+            /* The slot code is generated at the module level. */
+            if (enum_iff != NULL)
+                appendToIfaceFileList(&mod->used, enum_iff);
+
+            setIsUsedName(ed->pyname);
+        }
 
         /* See if there is already a member or create a new one. */
         for (md = *mdhead; md != NULL; md = md->next)
@@ -1178,8 +1194,6 @@ static void addAutoOverload(sipSpec *pt,classDef *autocd,overDef *autood)
 static void setHierarchy(sipSpec *pt, classDef *base, classDef *cd,
         classList **head)
 {
-    mroDef **tailp = &cd->mro;
-
     /* See if it has already been done. */
     if (cd->mro != NULL)
         return;
@@ -1195,6 +1209,7 @@ static void setHierarchy(sipSpec *pt, classDef *base, classDef *cd,
     if (cd->iff->type == class_iface)
     {
         classList *cl;
+        mroDef **tailp = &cd->mro;
 
         /* The first thing is itself. */
         appendToMRO(cd->mro, &tailp, cd);
@@ -1211,9 +1226,10 @@ static void setHierarchy(sipSpec *pt, classDef *base, classDef *cd,
 
             if (cl->cd->mro != NULL && hierBeingSet(cl->cd->mro))
             {
-                fatal("Recursive class hierarchy detected: ");
+                fatalStart();
+                fprintf(stderr, "Recursive class hierarchy detected: ");
                 fatalScopedName(classFQCName(cd));
-                fatal(" and ");
+                fprintf(stderr, " and ");
                 fatalScopedName(classFQCName(cl->cd));
                 fatal("\n");
             }
@@ -1221,10 +1237,23 @@ static void setHierarchy(sipSpec *pt, classDef *base, classDef *cd,
             /* Make sure the super-class's hierarchy has been done. */
             setHierarchy(pt, base, cl->cd, head);
 
+            if (needsCastFunction(cl->cd))
+                setNeedsCastFunction(cd);
+
             /* Append the super-classes hierarchy. */
             for (mro = cl->cd->mro; mro != NULL; mro = mro->next)
             {
-                appendToMRO(cd->mro, &tailp, mro->cd);
+                mroDef *new_mro = appendToMRO(cd->mro, &tailp, mro->cd);
+
+                if (cl != cd->supers || needsCast(mro))
+                {
+                    /*
+                     * It's not the class's first super-class so it will need a
+                     * cast function.
+                     */
+                    setNeedsCast(new_mro);
+                    setNeedsCastFunction(cd);
+                }
 
                 if (isDeprecatedClass(mro->cd))
                     setIsDeprecatedClass(cd);
@@ -1290,7 +1319,7 @@ static void setHierarchy(sipSpec *pt, classDef *base, classDef *cd,
      * knows about the base class.
      */
     if (cd->subbase != NULL)
-        addToUsedList(&cd->iff->module->used, cd->subbase->iff);
+        appendToIfaceFileList(&cd->iff->module->used, cd->subbase->iff);
 
     /*
      * We can't have a shadow if the specification is incomplete, there is
@@ -1330,7 +1359,7 @@ static void setHierarchy(sipSpec *pt, classDef *base, classDef *cd,
 /*
  * Append a class definition to an mro list
  */
-static void appendToMRO(mroDef *head,mroDef ***tailp,classDef *cd)
+static mroDef *appendToMRO(mroDef *head,mroDef ***tailp,classDef *cd)
 {
     mroDef *mro, *new;
 
@@ -1356,6 +1385,8 @@ static void appendToMRO(mroDef *head,mroDef ***tailp,classDef *cd)
     /* Append to the list and update the tail pointer. */
     **tailp = new;
     *tailp = &new -> next;
+
+    return new;
 }
 
 
@@ -1560,7 +1591,7 @@ static void transformScopeOverloads(sipSpec *pt, classDef *c_scope,
     {
         overDef *prev;
 
-        resolveFuncTypes(pt, od->common->module, c_scope, mt_scope, od);
+        resolveFuncTypes(pt, od->common->module, c_scope, od);
 
         /*
          * Now check that the Python signature doesn't conflict with an earlier
@@ -1585,7 +1616,8 @@ static void transformScopeOverloads(sipSpec *pt, classDef *c_scope,
                 {
                     ifaceFileDef *iff;
 
-                    fatal("%s:%d: ", od->sloc.name, od->sloc.linenr);
+                    fatalStart();
+                    fprintf(stderr, "%s:%d: ", od->sloc.name, od->sloc.linenr);
 
                     if (mt_scope != NULL)
                         iff = mt_scope->iff;
@@ -1597,7 +1629,7 @@ static void transformScopeOverloads(sipSpec *pt, classDef *c_scope,
                     if (iff != NULL)
                     {
                         fatalScopedName(iff->fqcname);
-                        fatal("::");
+                        fprintf(stderr, "::");
                     }
 
                     fatal("%s() has overloaded functions with the same Python signature\n", od->common->pyname->text);
@@ -1908,7 +1940,7 @@ static void resolveCtorTypes(sipSpec *pt,classDef *scope,ctorDef *ct)
  * Resolve the types of a function.
  */
 static void resolveFuncTypes(sipSpec *pt, moduleDef *mod, classDef *c_scope,
-        mappedTypeDef *mt_scope, overDef *od)
+        overDef *od)
 {
     argDef *res;
 
@@ -1922,12 +1954,13 @@ static void resolveFuncTypes(sipSpec *pt, moduleDef *mod, classDef *c_scope,
 
         if ((res->atype != void_type || res->nrderefs != 0) && isVirtual(od) && !supportedType(c_scope, od, &od->cppsig->result, FALSE) && od->virthandler->virtcode == NULL)
         {
-            fatal("%s:%d: ", od->sloc.name, od->sloc.linenr);
+            fatalStart();
+            fprintf(stderr, "%s:%d: ", od->sloc.name, od->sloc.linenr);
 
             if (c_scope != NULL)
             {
                 fatalScopedName(classFQCName(c_scope));
-                fatal("::");
+                fprintf(stderr, "::");
             }
 
             fatal("%s() unsupported virtual function return type - provide %%VirtualCatcherCode\n", od->cppname);
@@ -1985,12 +2018,13 @@ static void resolvePySigTypes(sipSpec *pt, moduleDef *mod, classDef *scope,
     {
         if (issignal)
         {
-            fatal("%s:%d: ", od->sloc.name, od->sloc.linenr);
+            fatalStart();
+            fprintf(stderr, "%s:%d: ", od->sloc.name, od->sloc.linenr);
 
             if (scope != NULL)
             {
                 fatalScopedName(classFQCName(scope));
-                fatal("::");
+                fprintf(stderr, "::");
             }
 
             fatal("%s() signals must return void\n", od->cppname);
@@ -2007,12 +2041,13 @@ static void resolvePySigTypes(sipSpec *pt, moduleDef *mod, classDef *scope,
 
             if (need_meth)
             {
-                fatal("%s:%d: ", od->sloc.name, od->sloc.linenr);
+                fatalStart();
+                fprintf(stderr, "%s:%d: ", od->sloc.name, od->sloc.linenr);
 
                 if (scope != NULL)
                 {
                     fatalScopedName(classFQCName(scope));
-                    fatal("::");
+                    fprintf(stderr, "::");
                 }
 
                 fatal("%s() unsupported function return type - provide %%MethodCode and a %s signature\n", od->cppname, (pt->genc ? "C" : "C++"));
@@ -2037,12 +2072,13 @@ static void resolvePySigTypes(sipSpec *pt, moduleDef *mod, classDef *scope,
         {
             if (!supportedType(scope,od,ad,FALSE))
             {
-                fatal("%s:%d: ", od->sloc.name, od->sloc.linenr);
+                fatalStart();
+                fprintf(stderr, "%s:%d: ", od->sloc.name, od->sloc.linenr);
 
                 if (scope != NULL)
                 {
                     fatalScopedName(classFQCName(scope));
-                    fatal("::");
+                    fprintf(stderr, "::");
                 }
 
                 fatal("%s() unsupported signal argument type\n", od->cppname);
@@ -2057,13 +2093,15 @@ static void resolvePySigTypes(sipSpec *pt, moduleDef *mod, classDef *scope,
 
             if (need_meth || need_virt)
             {
+                fatalStart();
+
                 if (od->sloc.name != NULL)
-                    fatal("%s:%d: ", od->sloc.name, od->sloc.linenr);
+                    fprintf(stderr, "%s:%d: ", od->sloc.name, od->sloc.linenr);
 
                 if (scope != NULL)
                 {
                     fatalScopedName(classFQCName(scope));
-                    fatal("::");
+                    fprintf(stderr, "::");
                 }
 
                 if (need_meth)
@@ -2157,12 +2195,21 @@ static void resolveVariableType(sipSpec *pt, varDef *vd)
         if (!isReference(vtype) && vtype->nrderefs == 1)
             bad = FALSE;
         break;
+
+    /* Suppress a compiler warning. */
+    default:
+        ;
     }
 
-    if (bad && (vd->getcode == NULL || vd->setcode == NULL))
+    if (bad && (vd->getcode == NULL || (!noSetter(vd) && vd->setcode == NULL)))
     {
         fatalScopedName(vd->fqcname);
-        fatal(" has an unsupported type - provide %%GetCode and %%SetCode\n");
+        fatal(" has an unsupported type - provide %%GetCode");
+
+        if (!noSetter(vd))
+            fatal(" and %%SetCode");
+
+        fatal("\n");
     }
  
     if (vtype->atype != class_type && vd->accessfunc != NULL)
@@ -2365,6 +2412,10 @@ static int supportedType(classDef *cd,overDef *od,argDef *ad,int outputs)
         }
 
         break;
+
+    /* Suppress a compiler warning. */
+    default:
+        ;
     }
 
     /* Unsupported if we got this far. */
@@ -2379,14 +2430,16 @@ static void ensureInput(classDef *cd,overDef *od,argDef *ad)
 {
     if (isOutArg(ad))
     {
+        fatalStart();
+
         if (cd != NULL)
         {
             fatalScopedName(classFQCName(cd));
-            fatal("::");
+            fprintf(stderr, "::");
         }
 
         if (od != NULL)
-            fatal("%s",od -> cppname);
+            fprintf(stderr, "%s", od->cppname);
 
         fatal("() invalid argument type for /Out/\n");
     }
@@ -2426,14 +2479,16 @@ static void defaultOutput(argDef *ad)
  */
 void fatalScopedName(scopedNameDef *snd)
 {
+    fatalStart();
+
     while (snd != NULL)
     {
-        fatal("%s",snd -> name);
+        fprintf(stderr, "%s", snd->name);
 
         snd = snd -> next;
 
         if (snd != NULL)
-            fatal("::");
+            fprintf(stderr, "::");
     }
 }
 
@@ -2741,6 +2796,10 @@ int sameBaseType(argDef *a1, argDef *a2)
             return FALSE;
 
         break;
+
+    /* Suppress a compiler warning. */
+    default:
+        ;
     }
 
     /* Must be the same if we've got this far. */
@@ -3056,7 +3115,22 @@ static mappedTypeDef *instantiateMappedTypeTemplate(sipSpec *pt, moduleDef *mod,
     mtd->iff->module = mod;
 
     mtd->mtflags = mtt->mt->mtflags;
-    mtd->doctype = templateString(mtt->mt->doctype, type_names, type_values);
+
+    if (mtt->mt->doctype != NULL)
+        mtd->doctype = templateString(mtt->mt->doctype, type_names,
+                type_values);
+
+    if (mtt->mt->typehint_in != NULL)
+        mtd->typehint_in = newTypeHint(
+                templateString(mtt->mt->typehint_in->raw_hint, type_names,
+                        type_values));
+
+    if (mtt->mt->typehint_out != NULL)
+        mtd->typehint_out = newTypeHint(
+                templateString(mtt->mt->typehint_out->raw_hint, type_names,
+                        type_values));
+
+    mtd->typehint_value = mtt->mt->typehint_value;
 
     appendCodeBlockList(&mtd->iff->hdrcode,
             templateCode(pt, &mtd->iff->used, mtt->mt->iff->hdrcode,
@@ -3086,21 +3160,20 @@ static mappedTypeDef *instantiateMappedTypeTemplate(sipSpec *pt, moduleDef *mod,
  * Return a string based on an original with names replaced by corresponding
  * values.
  */
-static const char *templateString(const char *src, scopedNameDef *names,
+char *templateString(const char *src, scopedNameDef *names,
         scopedNameDef *values)
 {
-    char *dst;
-
-    /* Handle the trivial case. */
-    if (src == NULL)
-        return NULL;
-
-    dst = sipStrdup(src);
+    char *dst = sipStrdup(src);
 
     while (names != NULL && values != NULL)
     {
         char *cp, *vname = values->name;
+        int vname_on_heap = FALSE;
         size_t name_len, value_len;
+
+        /* Skip over any leading const. */
+        if (strstr(vname, "const ") == vname)
+            vname += 6;
 
         name_len = strlen(names->name);
         value_len = strlen(vname);
@@ -3119,6 +3192,7 @@ static const char *templateString(const char *src, scopedNameDef *names,
                 free(vname);
 
             vname = new_vname;
+            vname_on_heap = TRUE;
             --value_len;
         }
 
@@ -3134,7 +3208,7 @@ static const char *templateString(const char *src, scopedNameDef *names,
             dst = new_dst;
         }
 
-        if (vname != values->name)
+        if (vname_on_heap)
             free(vname);
 
         names = names->next;
@@ -3209,6 +3283,11 @@ static void searchMappedTypes(sipSpec *pt, moduleDef *context,
         ad->u.snd = snd;
         ad->atype = defined_type;
     }
+    else
+    {
+        /* Avoid a compiler warning. */
+        oname = NULL;
+    }
 
     for (mtd = pt->mappedtypes; mtd != NULL; mtd = mtd->next)
         if (sameBaseType(ad, &mtd->type))
@@ -3236,6 +3315,19 @@ static void searchMappedTypes(sipSpec *pt, moduleDef *context,
             /* Copy the type. */
             ad->atype = mapped_type;
             ad->u.mtd = mtd;
+
+            /*
+             * Copy the type hints if nothing was specified for this particular
+             * context.
+             */
+            if (ad->typehint_in == NULL)
+                ad->typehint_in = mtd->typehint_in;
+
+            if (ad->typehint_out == NULL)
+                ad->typehint_out = mtd->typehint_out;
+
+            if (ad->typehint_value == NULL)
+                ad->typehint_value = mtd->typehint_value;
 
             return;
         }
@@ -3266,6 +3358,7 @@ static mappedTypeDef *copyTemplateType(mappedTypeDef *mtd, argDef *ad)
     /* Retain the original types if there are any. */
     mtd_copy = mtd;
     src = &ad->u.td->types;
+    dst = NULL;
 
     for (a = 0; a < src->nrArgs; ++a)
     {
@@ -3277,7 +3370,7 @@ static mappedTypeDef *copyTemplateType(mappedTypeDef *mtd, argDef *ad)
              * Create an appropriately deep copy now that we know it is needed
              * and if it hasn't already been done.
              */
-            if (mtd_copy == mtd)
+            if (dst == NULL)
             {
                 templateDef *td_copy;
 
@@ -3318,6 +3411,9 @@ void searchTypedefs(sipSpec *pt, scopedNameDef *snd, argDef *ad)
             ad->atype = td->type.atype;
             ad->argflags |= td->type.argflags;
             ad->doctype = td->type.doctype;
+            ad->typehint_in = td->type.typehint_in;
+            ad->typehint_out = td->type.typehint_out;
+            ad->typehint_value = td->type.typehint_value;
             ad->u = td->type.u;
 
             for (i = 0; i < td->type.nrderefs; ++i)
@@ -3386,6 +3482,19 @@ static void searchClasses(sipSpec *pt, moduleDef *context,
             ad->atype = class_type;
             ad->u.cd = cd;
 
+            /*
+             * Copy the type hints if nothing was specified for this particular
+             * context.
+             */
+            if (ad->typehint_in == NULL)
+                ad->typehint_in = cd->typehint_in;
+
+            if (ad->typehint_out == NULL)
+                ad->typehint_out = cd->typehint_out;
+
+            if (ad->typehint_value == NULL)
+                ad->typehint_value = cd->typehint_value;
+
             break;
         }
     }
@@ -3434,7 +3543,7 @@ static void ifaceFilesAreUsedByOverload(ifaceFileList **used, overDef *od)
         int a;
 
         for (a = 0; a < ta->nrArgs; ++a)
-            addToUsedList(used, ta->args[a]->iff);
+            appendToIfaceFileList(used, ta->args[a]->iff);
     }
 }
 
@@ -3449,7 +3558,7 @@ static void ifaceFileIsUsed(ifaceFileList **used, argDef *ad)
 
     if ((iff = getIfaceFile(ad)) != NULL)
     {
-        addToUsedList(used, iff);
+        appendToIfaceFileList(used, iff);
 
         /*
          * For mapped type templates we also need the template arguments.
@@ -3461,9 +3570,27 @@ static void ifaceFileIsUsed(ifaceFileList **used, argDef *ad)
             ifaceFileList *iffl = iff->used;
 
             for (iffl = iff->used; iffl != NULL; iffl = iffl->next)
-                addToUsedList(used, iffl->iff);
+                appendToIfaceFileList(used, iffl->iff);
         }
     }
+}
+
+
+/*
+ * Return the interface file for an enum, or NULL if it doesn't have one.
+ */
+static ifaceFileDef *getIfaceFileForEnum(enumDef *ed)
+{
+    if (ed->fqcname != NULL)
+    {
+        if (ed->ecd != NULL)
+            return ed->ecd->iff;
+
+        if (ed->emtd != NULL)
+            return ed->emtd->iff;
+    }
+
+    return NULL;
 }
 
 
@@ -3485,22 +3612,8 @@ static ifaceFileDef *getIfaceFile(argDef *ad)
         break;
 
     case enum_type:
-        if (ad->u.ed->fqcname != NULL)
-        {
-            if (ad->u.ed->ecd != NULL)
-            {
-                iff = ad->u.ed->ecd->iff;
-                break;
-            }
-
-            if (ad->u.ed->emtd != NULL)
-            {
-                iff = ad->u.ed->emtd->iff;
-                break;
-            }
-        }
-
-        /* Drop through. */
+        iff = getIfaceFileForEnum(ad->u.ed);
+        break;
 
     default:
         iff = NULL;
@@ -3632,7 +3745,12 @@ static void createSortedNumberedTypesTable(sipSpec *pt, moduleDef *mod)
 
             /* If we find a class called QObject, assume it's Qt. */
             if (strcmp(ad->name->text, "QObject") == 0)
-                mod->qobjclass = i;
+            {
+                if (pt->qobject_cd != NULL)
+                    fatal("QObject has been defined more than once\n");
+
+                pt->qobject_cd = ad->u.cd;
+            }
 
             break;
 
@@ -3643,6 +3761,10 @@ static void createSortedNumberedTypesTable(sipSpec *pt, moduleDef *mod)
         case enum_type:
             ad->u.ed->enumnr = i;
             break;
+
+        /* Suppress a compiler warning. */
+        default:
+            ;
         }
     }
 }

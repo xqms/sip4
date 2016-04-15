@@ -1,7 +1,7 @@
 /*
  * The main module for SIP.
  *
- * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -37,11 +37,12 @@ stringList *includeDirList;
 
 static char *sipPackage = PACKAGE;
 static int warnings = FALSE;
+static int warnings_are_fatal = FALSE;
 
 
-static void help(void);
-static void version(void);
-static void usage(void);
+SIP_NORETURN static void help(void);
+SIP_NORETURN static void version(void);
+SIP_NORETURN static void usage(void);
 static char parseopt(int,char **,char *,char **,int *,char **);
 static int parseInt(char *,char);
 
@@ -49,7 +50,7 @@ static int parseInt(char *,char);
 int main(int argc, char **argv)
 {
     char *filename, *docFile, *codeDir, *srcSuffix, *flagFile, *consModule;
-    char arg, *optarg, *buildFile, *apiFile, *xmlFile;
+    char arg, *optarg, *buildFile, *apiFile, *xmlFile, *pyiFile;
     int optnr, exceptions, tracing, releaseGIL, parts, protHack, docs;
     int timestamp, was_flagFile;
     KwArgs kwArgs;
@@ -71,6 +72,7 @@ int main(int argc, char **argv)
     was_flagFile = FALSE;
     apiFile = NULL;
     xmlFile = NULL;
+    pyiFile = NULL;
     consModule = NULL;
     extracts = NULL;
     exceptions = FALSE;
@@ -85,7 +87,7 @@ int main(int argc, char **argv)
     /* Parse the command line. */
     optnr = 1;
 
-    while ((arg = parseopt(argc, argv, "hVa:b:B:ec:d:gI:j:km:op:Prs:t:Twx:X:z:", &flagFile, &optnr, &optarg)) != '\0')
+    while ((arg = parseopt(argc, argv, "hVa:b:B:ec:d:fgI:j:km:op:Prs:t:Twx:X:y:z:", &flagFile, &optnr, &optarg)) != '\0')
         switch (arg)
         {
         case 'o':
@@ -111,6 +113,11 @@ int main(int argc, char **argv)
         case 'm':
             /* Where to generate the XML file. */
             xmlFile = optarg;
+            break;
+
+        case 'y':
+            /* Where to generate the .pyi file. */
+            pyiFile = optarg;
             break;
 
         case 'b':
@@ -200,6 +207,11 @@ int main(int argc, char **argv)
             warnings = TRUE;
             break;
 
+        case 'f':
+            /* Warning messages are fatal. */
+            warnings_are_fatal = TRUE;
+            break;
+
         case 'k':
             /* Allow keyword arguments in functions and methods. */
             kwArgs = AllKwArgs;
@@ -268,6 +280,10 @@ int main(int argc, char **argv)
     /* Generate the XML export. */
     if (xmlFile != NULL)
         generateXML(&spec, spec.module,  xmlFile);
+
+    /* Generate the .pyi file. */
+    if (pyiFile != NULL)
+        generateTypeHints(&spec, spec.module,  pyiFile);
 
     /* All done. */
     return 0;
@@ -492,32 +508,44 @@ void warning(Warning w, const char *fmt, ...)
     va_end(ap);
 
     if (strchr(fmt, '\n') != NULL)
+    {
+        if (warnings_are_fatal)
+            exit(1);
+
         start = TRUE;
+    }
 }
 
 
 /*
  * Display all or part of a one line error message describing a fatal error.
- * If the message is complete (it has a newline) then the program exits.
  */
-void fatal(char *fmt,...)
+void fatal(const char *fmt, ...)
 {
-    static int start = TRUE;
-
     va_list ap;
 
-    if (start)
-    {
-        fprintf(stderr,"%s: ",sipPackage);
-        start = FALSE;
-    }
+    fatalStart();
 
     va_start(ap,fmt);
     vfprintf(stderr,fmt,ap);
     va_end(ap);
 
-    if (strchr(fmt,'\n') != NULL)
-        exit(1);
+    exit(1);
+}
+
+
+/*
+ * Make sure the start of a fatal message is handled.
+ */
+void fatalStart()
+{
+    static int start = TRUE;
+
+    if (start)
+    {
+        fprintf(stderr, "%s: ", sipPackage);
+        start = FALSE;
+    }
 }
 
 
@@ -538,7 +566,7 @@ static void help(void)
 {
     printf(
 "Usage:\n"
-"    %s [-h] [-V] [-a file] [-b file] [-B tag] [-c dir] [-d file] [-e] [-g] [-I dir] [-j #] [-k] [-m file] [-o] [-p module] [-P] [-r] [-s suffix] [-t tag] [-T] [-w] [-x feature] [-X id:file] [-z file] [@file] [file]\n"
+"    %s [-h] [-V] [-a file] [-b file] [-B tag] [-c dir] [-d file] [-e] [-f] [-g] [-I dir] [-j #] [-k] [-m file] [-o] [-p module] [-P] [-r] [-s suffix] [-t tag] [-T] [-w] [-x feature] [-X id:file] [-z file] [@file] [file]\n"
 "where:\n"
 "    -h          display this help message\n"
 "    -V          display the %s version number\n"
@@ -548,6 +576,7 @@ static void help(void)
 "    -c dir      the name of the code directory [default not generated]\n"
 "    -d file     the name of the documentation file (deprecated) [default not generated]\n"
 "    -e          enable support for exceptions [default disabled]\n"
+"    -f          warnings are handled as errors\n"
 "    -g          always release and reacquire the GIL [default only when specified]\n"
 "    -I dir      look in this directory when including files\n"
 "    -j #        split the generated code into # files [default 1 per class]\n"
@@ -562,6 +591,7 @@ static void help(void)
 "    -w          enable warning messages\n"
 "    -x feature  this feature is disabled\n"
 "    -X id:file  create the extracts for an id in a file\n"
+"    -y file     the name of the .pyi stub file [default not generated]\n"
 "    -z file     the name of a file containing more command line flags\n"
 "    @file       the name of a file containing more command line flags\n"
 "    file        the name of the specification file [default stdin]\n"
@@ -576,5 +606,9 @@ static void help(void)
  */
 static void usage(void)
 {
-    fatal("Usage: %s [-h] [-V] [-a file] [-b file] [-B tag] [-c dir] [-d file] [-e] [-g] [-I dir] [-j #] [-k] [-m file] [-o] [-p module] [-P] [-r] [-s suffix] [-t tag] [-w] [-x feature] [-X id:file] [-z file] [@file] [file]\n", sipPackage);
+    fatal("Usage: %s [-h] [-V] [-a file] [-b file] [-B tag] [-c dir] "
+            "[-d file] [-e] [-f] [-g] [-I dir] [-j #] [-k] [-m file] [-o] "
+            "[-p module] [-P] [-r] [-s suffix] [-t tag] [-w] [-x feature] "
+            "[-X id:file] [-y file] [-z file] [@file] [file]\n",
+            sipPackage);
 }

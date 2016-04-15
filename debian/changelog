@@ -1,3 +1,9 @@
+sip4 (4.18+dfsg-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- Scott Kitterman <scott@kitterman.com>  Fri, 15 Apr 2016 18:37:14 -0400
+
 sip4 (4.17+dfsg-2) unstable; urgency=medium
 
   * Apply debian/rules patch to make package build reproducible (Closes:

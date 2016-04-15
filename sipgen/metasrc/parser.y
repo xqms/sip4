@@ -65,7 +65,8 @@ static classDef *findClass(sipSpec *pt, ifaceFileType iftype,
 static classDef *findClassWithInterface(sipSpec *pt, ifaceFileDef *iff);
 static classDef *newClass(sipSpec *pt, ifaceFileType iftype,
         apiVersionRangeDef *api_range, scopedNameDef *snd,
-        const char *virt_error_handler);
+        const char *virt_error_handler, typeHintDef *typehint_in,
+        typeHintDef *typehint_out, const char *typehint_value);
 static void finishClass(sipSpec *, moduleDef *, classDef *, optFlags *);
 static exceptionDef *findException(sipSpec *pt, scopedNameDef *fqname, int new);
 static mappedTypeDef *newMappedType(sipSpec *,argDef *, optFlags *);
@@ -120,9 +121,15 @@ static int getAllowNone(optFlags *optflgs);
 static int getDisallowNone(optFlags *optflgs);
 static const char *getVirtErrorHandler(optFlags *optflgs);
 static const char *getDocType(optFlags *optflgs);
-static const char *getDocValue(optFlags *optflgs);
-static void templateSignature(signatureDef *sd, int result, classTmplDef *tcd, templateDef *td, classDef *ncd);
-static void templateType(argDef *ad, classTmplDef *tcd, templateDef *td, classDef *ncd);
+static const char *getTypeHintValue(optFlags *optflgs);
+static void getTypeHints(optFlags *optflgs, typeHintDef **in,
+        typeHintDef **out);
+static int getNoTypeHint(optFlags *optflgs);
+static void templateSignature(signatureDef *sd, int result, classTmplDef *tcd,
+        templateDef *td, classDef *ncd, scopedNameDef *type_names,
+        scopedNameDef *type_values);
+static void templateType(argDef *ad, classTmplDef *tcd, templateDef *td,
+        classDef *ncd, scopedNameDef *type_names, scopedNameDef *type_values);
 static int search_back(const char *end, const char *start, const char *target);
 static char *type2string(argDef *ad);
 static char *scopedNameToString(scopedNameDef *name);
@@ -141,7 +148,8 @@ static void instantiateTemplateVars(sipSpec *pt, classTmplDef *tcd,
         templateDef *td, classDef *cd, ifaceFileList **used,
         scopedNameDef *type_names, scopedNameDef *type_values);
 static void instantiateTemplateTypedefs(sipSpec *pt, classTmplDef *tcd,
-        templateDef *td, classDef *cd);
+        templateDef *td, classDef *cd, scopedNameDef *type_names,
+        scopedNameDef *type_values);
 static overDef *instantiateTemplateOverloads(sipSpec *pt, overDef *tod,
         memberDef *tmethods, memberDef *methods, classTmplDef *tcd,
         templateDef *td, classDef *cd, ifaceFileList **used,
@@ -179,6 +187,7 @@ static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs);
 static void add_new_deref(argDef *new, argDef *orig, int isconst);
 static void add_derefs(argDef *dst, argDef *src);
 static int isBackstop(qualDef *qd);
+static void checkEllipsis(signatureDef *sd);
 %}
 
 %union {
@@ -229,6 +238,8 @@ static int isBackstop(qualDef *qd);
 %token          TK_DEFENCODING
 %token          TK_PLUGIN
 %token          TK_VIRTERRORHANDLER
+%token          TK_EXPTYPEHINTCODE
+%token          TK_TYPEHINTCODE
 %token          TK_DOCSTRING
 %token          TK_DOC
 %token          TK_EXPORTEDDOC
@@ -404,6 +415,7 @@ static int isBackstop(qualDef *qd);
 %type <codeb>           charbufcode
 %type <codeb>           picklecode
 %type <codeb>           finalcode
+%type <codeb>           classtypehintcode
 %type <codeb>           typecode
 %type <codeb>           codeblock
 %type <codeb>           codelines
@@ -580,6 +592,8 @@ modstatement:   module
     |   unitcode
     |   unitpostinccode
     |   prepycode
+    |   exptypehintcode
+    |   modtypehintcode
     |   doc
     |   exporteddoc
     |   extract
@@ -1071,6 +1085,10 @@ mappedtype: TK_MAPPEDTYPE basetype optflags {
                     "DocType",
                     "NoRelease",
                     "PyName",
+                    "TypeHint",
+                    "TypeHintIn",
+                    "TypeHintOut",
+                    "TypeHintValue",
                     NULL
                 };
 
@@ -1088,6 +1106,10 @@ mappedtypetmpl: template TK_MAPPEDTYPE basetype optflags {
                     "AllowNone",
                     "DocType",
                     "NoRelease",
+                    "TypeHint",
+                    "TypeHintIn",
+                    "TypeHintOut",
+                    "TypeHintValue",
                     NULL
                 };
 
@@ -1230,7 +1252,7 @@ namespace:  TK_NAMESPACE TK_NAME_VALUE {
                     scope = NULL;
 
                 ns = newClass(currentSpec, namespace_iface, NULL,
-                        text2scopedName(scope, $2), NULL);
+                        text2scopedName(scope, $2), NULL, NULL, NULL, NULL);
 
                 pushScope(ns);
 
@@ -2230,6 +2252,23 @@ prepycode:  TK_PREPYCODE codeblock {
         }
     ;
 
+exptypehintcode: TK_EXPTYPEHINTCODE codeblock {
+            if (notSkipping() && !inMainModule())
+                appendCodeBlock(&currentSpec->exptypehintcode, $2);
+        }
+    ;
+
+modtypehintcode: TK_TYPEHINTCODE codeblock {
+            if (notSkipping())
+                appendCodeBlock(&currentModule->typehintcode, $2);
+        }
+    ;
+
+classtypehintcode: TK_TYPEHINTCODE codeblock {
+            $$ = $2;
+        }
+    ;
+
 doc:        TK_DOC codeblock {
             if (notSkipping() && inMainModule())
                 appendCodeBlock(&currentSpec->docs, $2);
@@ -2321,7 +2360,7 @@ docstring:  TK_DOCSTRING docstring_args codeblock {
                 /*
                  * Go through the text again removing the common indentation.
                  */
-                dp = cp = $$->frag;
+                cp = dp = $$->frag;
 
                 while (*cp != '\0')
                 {
@@ -2461,6 +2500,7 @@ enum:       TK_ENUM optname optflags {
             {
                 const char *annos[] = {
                     "NoScope",
+                    "NoTypeHint",
                     "PyName",
                     NULL
                 };
@@ -2506,6 +2546,7 @@ enumline:   ifstart
             if (notSkipping())
             {
                 const char *annos[] = {
+                    "NoTypeHint",
                     "PyName",
                     NULL
                 };
@@ -2517,11 +2558,12 @@ enumline:   ifstart
                 /* Note that we don't use the assigned value. */
                 emd = sipMalloc(sizeof (enumMemberDef));
 
-                emd -> pyname = cacheName(currentSpec,
+                emd->pyname = cacheName(currentSpec,
                         getPythonName(currentModule, &$3, $1));
-                emd -> cname = $1;
-                emd -> ed = currentEnum;
-                emd -> next = NULL;
+                emd->cname = $1;
+                emd->no_typehint = getNoTypeHint(&$3);
+                emd->ed = currentEnum;
+                emd->next = NULL;
 
                 checkAttributes(currentSpec, currentModule, emd->ed->ecd,
                         emd->ed->emtd, emd->pyname->text, FALSE);
@@ -2533,7 +2575,7 @@ enumline:   ifstart
                 *tail = emd;
 
                 if (inMainModule())
-                    setIsUsedName(emd -> pyname);
+                    setIsUsedName(emd->pyname);
             }
         }
     ;
@@ -2745,6 +2787,9 @@ typedef:    TK_TYPEDEF cpptype TK_NAME_VALUE optflags ';' {
                     "NoTypeName",
                     "PyInt",
                     "PyName",
+                    "TypeHint",
+                    "TypeHintIn",
+                    "TypeHintOut",
                     NULL
                 };
 
@@ -2763,6 +2808,9 @@ typedef:    TK_TYPEDEF cpptype TK_NAME_VALUE optflags ';' {
                     "NoTypeName",
                     "PyInt",
                     "PyName",
+                    "TypeHint",
+                    "TypeHintIn",
+                    "TypeHintOut",
                     NULL
                 };
 
@@ -2811,11 +2859,16 @@ struct:     TK_STRUCT scopedname {
                     "Metatype",
                     "Mixin",
                     "NoDefaultCtors",
+                    "NoTypeHint",
                     "PyName",
                     "PyQtFlags",
                     "PyQtInterface",
                     "PyQtNoQMetaObject",
                     "Supertype",
+                    "TypeHint",
+                    "TypeHintIn",
+                    "TypeHintOut",
+                    "TypeHintValue",
                     "VirtualErrorHandler",
                     NULL
                 };
@@ -2891,6 +2944,10 @@ class:  TK_CLASS scopedname {
                     "PyQtInterface",
                     "PyQtNoQMetaObject",
                     "Supertype",
+                    "TypeHint",
+                    "TypeHintIn",
+                    "TypeHintOut",
+                    "TypeHintValue",
                     "VirtualErrorHandler",
                     NULL
                 };
@@ -3124,6 +3181,17 @@ classline:  ifstart
                     yyerror("%FinalisationCode already given for class");
 
                 appendCodeBlock(&scope->finalcode, $1);
+            }
+        }
+    |   classtypehintcode {
+            if (notSkipping())
+            {
+                classDef *scope = currentScope();
+
+                if (scope->typehintcode != NULL)
+                    yyerror("%TypeHintCode already given for class");
+
+                appendCodeBlock(&scope->typehintcode, $1);
             }
         }
     |   ctor
@@ -3377,6 +3445,7 @@ simplector: TK_NAME_VALUE '(' arglist ')' optexceptions optflags optctorsig ';' 
                     "KeywordArgs",
                     "NoDerived",
                     "NoRaisesPyException",
+                    "NoTypeHint",
                     "PostHook",
                     "PreHook",
                     "RaisesPyException",
@@ -3773,6 +3842,10 @@ arglist:    rawarglist {
                 case slotdis_type:
                     ++nrslotdis;
                     break;
+
+                /* Suppress a compiler warning. */
+                default:
+                    ;
                 }
 
                 if (isArray(ad))
@@ -3811,10 +3884,6 @@ rawarglist: {
             if ($1.nrArgs == 0)
                 yyerror("First argument of the list is missing");
 
-            /* Check there is nothing after an ellipsis. */
-            if ($1.args[$1.nrArgs - 1].atype == ellipsis_type)
-                yyerror("An ellipsis must be at the end of the argument list");
-
             /*
              * If this argument has no default value, then the
              * previous one mustn't either.
@@ -3834,6 +3903,7 @@ rawarglist: {
     ;
 
 argvalue:   TK_SIPSIGNAL optname optflags optassign {
+            deprecated("SIP_SIGNAL is deprecated\n");
             checkNoAnnos(&$3, "SIP_SIGNAL has no annotations");
 
             $$.atype = signal_type;
@@ -3845,6 +3915,7 @@ argvalue:   TK_SIPSIGNAL optname optflags optassign {
             currentSpec -> sigslots = TRUE;
         }
     |   TK_SIPSLOT optname optflags optassign {
+            deprecated("SIP_SLOT is deprecated\n");
             checkNoAnnos(&$3, "SIP_SLOT has no annotations");
 
             $$.atype = slot_type;
@@ -3856,6 +3927,7 @@ argvalue:   TK_SIPSIGNAL optname optflags optassign {
             currentSpec -> sigslots = TRUE;
         }
     |   TK_SIPANYSLOT optname optflags optassign {
+            deprecated("SIP_ANYSLOT is deprecated\n");
             checkNoAnnos(&$3, "SIP_ANYSLOT has no annotations");
 
             $$.atype = anyslot_type;
@@ -3872,6 +3944,7 @@ argvalue:   TK_SIPSIGNAL optname optflags optassign {
                 NULL
             };
 
+            deprecated("SIP_RXOBJ_CON is deprecated\n");
             checkAnnos(&$3, annos);
 
             $$.atype = rxcon_type;
@@ -3885,6 +3958,7 @@ argvalue:   TK_SIPSIGNAL optname optflags optassign {
             currentSpec -> sigslots = TRUE;
         }
     |   TK_SIPRXDIS optname optflags {
+            deprecated("SIP_RXOBJ_DIS is deprecated\n");
             checkNoAnnos(&$3, "SIP_RXOBJ_DIS has no annotations");
 
             $$.atype = rxdis_type;
@@ -3895,6 +3969,7 @@ argvalue:   TK_SIPSIGNAL optname optflags optassign {
             currentSpec -> sigslots = TRUE;
         }
     |   TK_SIPSLOTCON '(' arglist ')' optname optflags {
+            deprecated("SIP_SLOT_CON is deprecated\n");
             checkNoAnnos(&$6, "SIP_SLOT_CON has no annotations");
 
             $$.atype = slotcon_type;
@@ -3911,6 +3986,7 @@ argvalue:   TK_SIPSIGNAL optname optflags optassign {
             currentSpec -> sigslots = TRUE;
         }
     |   TK_SIPSLOTDIS '(' arglist ')' optname optflags {
+            deprecated("SIP_SLOT_DIS is deprecated\n");
             checkNoAnnos(&$6, "SIP_SLOT_DIS has no annotations");
 
             $$.atype = slotdis_type;
@@ -3927,6 +4003,7 @@ argvalue:   TK_SIPSIGNAL optname optflags optassign {
             currentSpec -> sigslots = TRUE;
         }
     |   TK_QOBJECT optname optflags {
+            deprecated("SIP_QOBJECT is deprecated\n");
             checkNoAnnos(&$3, "SIP_QOBJECT has no annotations");
 
             $$.atype = qobject_type;
@@ -3968,8 +4045,10 @@ variable:   cpptype TK_NAME_VALUE optflags variable_body ';' optaccesscode optge
                     "DocType",
                     "Encoding",
                     "NoSetter",
+                    "NoTypeHint",
                     "PyInt",
                     "PyName",
+                    "TypeHint",
                     NULL
                 };
 
@@ -3982,7 +4061,7 @@ variable:   cpptype TK_NAME_VALUE optflags variable_body ';' optaccesscode optge
 
                     $4.access_code = $6;
 
-                    deprecated("%AccessCode should be used a sub-directive");
+                    deprecated("%AccessCode should be used as a sub-directive");
                 }
 
                 if ($7 != NULL)
@@ -3992,7 +4071,7 @@ variable:   cpptype TK_NAME_VALUE optflags variable_body ';' optaccesscode optge
 
                     $4.get_code = $7;
 
-                    deprecated("%GetCode should be used a sub-directive");
+                    deprecated("%GetCode should be used as a sub-directive");
                 }
 
                 if ($8 != NULL)
@@ -4002,7 +4081,7 @@ variable:   cpptype TK_NAME_VALUE optflags variable_body ';' optaccesscode optge
 
                     $4.set_code = $8;
 
-                    deprecated("%SetCode should be used a sub-directive");
+                    deprecated("%SetCode should be used as a sub-directive");
                 }
 
                 newVar(currentSpec, currentModule, $2, currentIsStatic, &$1,
@@ -4092,8 +4171,6 @@ variable_body_directive:    ifstart {
     ;
 
 cpptype:    TK_CONST basetype deref optref {
-            int i;
-
             $$ = $2;
             add_derefs(&$$, &$3);
             $$.argflags |= ARG_IS_CONST | $4;
@@ -4132,6 +4209,10 @@ argtype:    cpptype optname optflags {
                 "Transfer",
                 "TransferBack",
                 "TransferThis",
+                "TypeHint",
+                "TypeHintIn",
+                "TypeHintOut",
+                "TypeHintValue",
                 NULL
             };
 
@@ -4199,11 +4280,15 @@ argtype:    cpptype optname optflags {
                 case double_type:
                     $$.atype = cdouble_type;
                     break;
+
+                /* Suppress a compiler warning. */
+                default:
+                    ;
                 }
             }
 
             applyTypeFlags(currentModule, &$$, &$3);
-            $$.docval = getDocValue(&$3);
+            $$.typehint_value = getTypeHintValue(&$3);
         }
     ;
 
@@ -4574,7 +4659,6 @@ static moduleDef *allocModule()
     newmod->version = -1;
     newmod->defdocstring = raw;
     newmod->encoding = no_type;
-    newmod->qobjclass = -1;
     newmod->nrvirthandlers = -1;
     newmod->next_key = -1;
 
@@ -4774,7 +4858,7 @@ static classDef *findClassWithInterface(sipSpec *pt, ifaceFileDef *iff)
 /*
  * Add an interface file to an interface file list if it isn't already there.
  */
-void addToUsedList(ifaceFileList **ifflp, ifaceFileDef *iff)
+void appendToIfaceFileList(ifaceFileList **ifflp, ifaceFileDef *iff)
 {
     /* Make sure we don't try to add an interface file to its own list. */
     if (&iff->used != ifflp)
@@ -4865,7 +4949,8 @@ static exceptionDef *findException(sipSpec *pt, scopedNameDef *fqname, int new)
  */
 static classDef *newClass(sipSpec *pt, ifaceFileType iftype,
         apiVersionRangeDef *api_range, scopedNameDef *fqname,
-        const char *virt_error_handler)
+        const char *virt_error_handler, typeHintDef *typehint_in,
+        typeHintDef *typehint_out, const char *typehint_value)
 {
     int flags;
     classDef *cd, *scope;
@@ -4912,6 +4997,9 @@ static classDef *newClass(sipSpec *pt, ifaceFileType iftype,
     cd->ecd = scope;
     cd->iff->module = currentModule;
     cd->virt_error_handler = virt_error_handler;
+    cd->typehint_in = typehint_in;
+    cd->typehint_out = typehint_out;
+    cd->typehint_value = typehint_value;
 
     if (currentIsTemplate)
         setIsTemplateClass(cd);
@@ -4958,6 +5046,7 @@ static void finishClass(sipSpec *pt, moduleDef *mod, classDef *cd,
     cd->pyname = NULL;
     checkAttributes(pt, mod, cd->ecd, NULL, pyname, FALSE);
     cd->pyname = cacheName(pt, pyname);
+    cd->no_typehint = getNoTypeHint(of);
 
     if ((flg = getOptFlag(of, "Metatype", dotted_name_flag)) != NULL)
         cd->metatype = cacheName(pt, flg->fvalue.sval);
@@ -5096,6 +5185,10 @@ static void finishClass(sipSpec *pt, moduleDef *mod, classDef *cd,
                 /* This is definately not a sequence. */
                 seq_not = TRUE;
                 break;
+
+            /* Suppress a compiler warning. */
+            default:
+                ;
             }
 
         default_to_sequence = (!seq_not && seq_might);
@@ -5124,6 +5217,10 @@ static void finishClass(sipSpec *pt, moduleDef *mod, classDef *cd,
                 case imul_slot:
                     md->slot = irepeat_slot;
                     break;
+
+                /* Suppress a compiler warning. */
+                default:
+                    ;
                 }
         }
     }
@@ -5378,6 +5475,7 @@ static enumDef *newEnum(sipSpec *pt, moduleDef *mod, mappedTypeDef *mt_scope,
     }
 
     ed->enumflags = flags;
+    ed->no_typehint = getNoTypeHint(of);
     ed->enumnr = -1;
     ed->ecd = c_scope;
     ed->emtd = mt_scope;
@@ -5739,7 +5837,7 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
     used = &cd->iff->used;
 
     for (iffl = tcd->cd->iff->used; iffl != NULL; iffl = iffl->next)
-        addToUsedList(used, iffl->iff);
+        appendToIfaceFileList(used, iffl->iff);
 
     /* Include any scope header code. */
     if (scope != NULL)
@@ -5752,6 +5850,17 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
     }
 
     cd->ecd = currentScope();
+
+    /* Handle any type hints. */
+    if (cd->typehint_in != NULL)
+        cd->typehint_in = newTypeHint(
+                templateString(cd->typehint_in->raw_hint, type_names,
+                        type_values));
+
+    if (cd->typehint_out != NULL)
+        cd->typehint_out = newTypeHint(
+                templateString(cd->typehint_out->raw_hint, type_names,
+                        type_values));
 
     /* Handle the super-classes. */
     for (cl = cd->supers; cl != NULL; cl = cl->next)
@@ -5794,7 +5903,7 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
     instantiateTemplateVars(pt, tcd, td, cd, used, type_names, type_values);
 
     /* Handle the typedefs. */
-    instantiateTemplateTypedefs(pt, tcd, td, cd);
+    instantiateTemplateTypedefs(pt, tcd, td, cd, type_names, type_values);
 
     /* Handle the ctors. */
     cd->ctors = NULL;
@@ -5807,7 +5916,8 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
         /* Start with a shallow copy. */
         *nct = *oct;
 
-        templateSignature(&nct->pysig, FALSE, tcd, td, cd);
+        templateSignature(&nct->pysig, FALSE, tcd, td, cd, type_names,
+                type_values);
 
         if (oct->cppsig == NULL)
             nct->cppsig = NULL;
@@ -5819,7 +5929,8 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
 
             *nct->cppsig = *oct->cppsig;
 
-            templateSignature(nct->cppsig, FALSE, tcd, td, cd);
+            templateSignature(nct->cppsig, FALSE, tcd, td, cd, type_names,
+                    type_values);
         }
 
         nct->methodcode = templateCode(pt, used, nct->methodcode, type_names, type_values);
@@ -5857,6 +5968,7 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
     cd->instancecode = templateCode(pt, used, cd->instancecode, type_names, type_values);
     cd->picklecode = templateCode(pt, used, cd->picklecode, type_names, type_values);
     cd->finalcode = templateCode(pt, used, cd->finalcode, type_names, type_values);
+    cd->typehintcode = templateCode(pt, used, cd->typehintcode, type_names, type_values);
     cd->next = pt->classes;
 
     pt->classes = cd;
@@ -5927,7 +6039,8 @@ static overDef *instantiateTemplateOverloads(sipSpec *pt, overDef *tod,
                 break;
             }
 
-        templateSignature(&nod->pysig, TRUE, tcd, td, cd);
+        templateSignature(&nod->pysig, TRUE, tcd, td, cd, type_names,
+                type_values);
 
         if (od->cppsig == &od->pysig)
             nod->cppsig = &nod->pysig;
@@ -5937,7 +6050,8 @@ static overDef *instantiateTemplateOverloads(sipSpec *pt, overDef *tod,
 
             *nod->cppsig = *od->cppsig;
 
-            templateSignature(nod->cppsig, TRUE, tcd, td, cd);
+            templateSignature(nod->cppsig, TRUE, tcd, td, cd, type_names,
+                    type_values);
         }
 
         nod->methodcode = templateCode(pt, used, nod->methodcode, type_names, type_values);
@@ -6066,7 +6180,7 @@ static void instantiateTemplateVars(sipSpec *pt, classTmplDef *tcd,
             vd->ecd = cd;
             vd->module = cd->iff->module;
 
-            templateType(&vd->type, tcd, td, cd);
+            templateType(&vd->type, tcd, td, cd, type_names, type_values);
 
             vd->accessfunc = templateCode(pt, used, vd->accessfunc, type_names, type_values);
             vd->getcode = templateCode(pt, used, vd->getcode, type_names, type_values);
@@ -6081,7 +6195,8 @@ static void instantiateTemplateVars(sipSpec *pt, classTmplDef *tcd,
  * Instantiate the typedefs of a template class.
  */
 static void instantiateTemplateTypedefs(sipSpec *pt, classTmplDef *tcd,
-        templateDef *td, classDef *cd)
+        templateDef *td, classDef *cd, scopedNameDef *type_names,
+        scopedNameDef *type_values)
 {
     typedefDef *tdd;
 
@@ -6102,7 +6217,7 @@ static void instantiateTemplateTypedefs(sipSpec *pt, classTmplDef *tcd,
         new_tdd->ecd = cd;
         new_tdd->module = cd->iff->module;
 
-        templateType(&new_tdd->type, tcd, td, cd);
+        templateType(&new_tdd->type, tcd, td, cd, type_names, type_values);
 
         addTypedef(pt, new_tdd);
     }
@@ -6112,22 +6227,25 @@ static void instantiateTemplateTypedefs(sipSpec *pt, classTmplDef *tcd,
 /*
  * Replace any template arguments in a signature.
  */
-static void templateSignature(signatureDef *sd, int result, classTmplDef *tcd, templateDef *td, classDef *ncd)
+static void templateSignature(signatureDef *sd, int result, classTmplDef *tcd,
+        templateDef *td, classDef *ncd, scopedNameDef *type_names,
+        scopedNameDef *type_values)
 {
     int a;
 
     if (result)
-        templateType(&sd->result, tcd, td, ncd);
+        templateType(&sd->result, tcd, td, ncd, type_names, type_values);
 
     for (a = 0; a < sd->nrArgs; ++a)
-        templateType(&sd->args[a], tcd, td, ncd);
+        templateType(&sd->args[a], tcd, td, ncd, type_names, type_values);
 }
 
 
 /*
  * Replace any template arguments in a type.
  */
-static void templateType(argDef *ad, classTmplDef *tcd, templateDef *td, classDef *ncd)
+static void templateType(argDef *ad, classTmplDef *tcd, templateDef *td,
+        classDef *ncd, scopedNameDef *type_names, scopedNameDef *type_values)
 {
     int a;
     char *name;
@@ -6141,10 +6259,22 @@ static void templateType(argDef *ad, classTmplDef *tcd, templateDef *td, classDe
         *new_td = *ad->u.td;
         ad->u.td = new_td;
 
-        templateSignature(&ad->u.td->types, FALSE, tcd, td, ncd);
+        templateSignature(&ad->u.td->types, FALSE, tcd, td, ncd, type_names,
+                type_values);
 
         return;
     }
+
+    /* Handle any type hints. */
+    if (ad->typehint_in != NULL)
+        ad->typehint_in = newTypeHint(
+                templateString(ad->typehint_in->raw_hint, type_names,
+                        type_values));
+
+    if (ad->typehint_out != NULL)
+        ad->typehint_out = newTypeHint(
+                templateString(ad->typehint_out->raw_hint, type_names,
+                        type_values));
 
     /* Ignore if it isn't an unscoped name. */
     if (ad->atype != defined_type || ad->u.snd->next != NULL)
@@ -6198,6 +6328,9 @@ codeBlockList *templateCode(sipSpec *pt, ifaceFileList **used,
             char *from = at, *first = NULL;
             codeBlock *cb;
             scopedNameDef *nam, *val, *nam_first, *val_first;
+
+            /* Suppress a compiler warning. */
+            val_first = NULL;
 
             /*
              * Don't do any substitution in lines that appear to be
@@ -6368,7 +6501,7 @@ static void addUsedFromCode(sipSpec *pt, ifaceFileList **used, const char *sname
 
         if (sameName(iff->fqcname, sname))
         {
-            addToUsedList(used, iff);
+            appendToIfaceFileList(used, iff);
             return;
         }
     }
@@ -6380,7 +6513,7 @@ static void addUsedFromCode(sipSpec *pt, ifaceFileList **used, const char *sname
 
         if (sameName(ed->fqcname, sname))
         {
-            addToUsedList(used, ed->ecd->iff);
+            appendToIfaceFileList(used, ed->ecd->iff);
             return;
         }
     }
@@ -6666,6 +6799,7 @@ static void newVar(sipSpec *pt, moduleDef *mod, char *name, int isstatic,
     var->ecd = escope;
     var->module = mod;
     var->varflags = 0;
+    var->no_typehint = getNoTypeHint(of);
     var->type = *type;
     appendCodeBlock(&var->accessfunc, acode);
     appendCodeBlock(&var->getcode, gcode);
@@ -6713,6 +6847,7 @@ static void newCtor(moduleDef *mod, char *name, int sectFlags,
     args->result.atype = void_type;
 
     ct->ctorflags = sectFlags;
+    ct->no_typehint = getNoTypeHint(optflgs);
     ct->api_range = getAPIRange(optflgs);
     ct->pysig = *args;
     ct->cppsig = (cppsig != NULL ? cppsig : &ct->pysig);
@@ -6807,6 +6942,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         "NoArgParser",
         "NoCopy",
         "NoRaisesPyException",
+        "NoTypeHint",
         "NoVirtualErrorHandler",
         "Numeric",
         "PostHook",
@@ -6821,6 +6957,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         "Transfer",
         "TransferBack",
         "TransferThis",
+        "TypeHint",
         NULL
     };
 
@@ -6937,6 +7074,8 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         setIsSlot(od);
     }
 
+    od->no_typehint = getNoTypeHint(optflgs);
+
     if (isSignal(od))
         if ((of = getOptFlag(optflgs, "PyQtSignalHack", integer_flag)) != NULL)
             od->pyqt_signal_hack = of->fvalue.ival;
@@ -6970,7 +7109,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         pt->sigslots = TRUE;
     }
 
-    if (isSignal(od) && (methodcode != NULL || vcode != NULL || virtcallcode))
+    if (isSignal(od) && (methodcode != NULL || vcode != NULL || virtcallcode != NULL))
         yyerror("Cannot provide code for signals");
 
     if (isstatic)
@@ -7079,6 +7218,17 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         if (methodcode == NULL)
             yyerror("%MethodCode must be supplied if /NoArgParser/ is specified");
     }
+    else
+    {
+        /*
+         * The argument parser requires that there is nothing after an
+         * ellipsis.
+         */
+        checkEllipsis(sig);
+    }
+
+    if (cppsig != NULL)
+        checkEllipsis(cppsig);
 
     if (getOptFlag(optflgs, "NoCopy", bool_flag) != NULL)
         setNoCopy(&od->pysig.result);
@@ -7420,7 +7570,7 @@ static memberDef *findFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         {"__await__", await_slot, TRUE, 0},
         {"__aiter__", aiter_slot, TRUE, 0},
         {"__anext__", anext_slot, TRUE, 0},
-        {NULL}
+        {NULL, no_slot, FALSE, 0}
     };
 
     memberDef *md, **flist;
@@ -7784,10 +7934,12 @@ static void handleEOM()
             from->encoding = currentModule->encoding;
 
         if (isCallSuperInitUndefined(from))
+        {
             if (isCallSuperInitYes(currentModule))
                 setCallSuperInitYes(from);
             else
                 setCallSuperInitNo(from);
+        }
     }
 
     /* The previous module is now current. */
@@ -8370,21 +8522,79 @@ static const char *getDocType(optFlags *optflgs)
     if (of == NULL)
         return NULL;
 
+    deprecated("/DocType/ is deprecated\n");
+
     return of->fvalue.sval;
 }
 
 
 /*
- * Get the /DocValue/ option flag.
+ * Get the /TypeHintValue/ option flag.
  */
-static const char *getDocValue(optFlags *optflgs)
+static const char *getTypeHintValue(optFlags *optflgs)
 {
-    optFlag *of = getOptFlag(optflgs, "DocValue", string_flag);
+    optFlag *of = getOptFlag(optflgs, "TypeHintValue", string_flag);
 
-    if (of == NULL)
-        return NULL;
+    if (of != NULL)
+        return of->fvalue.sval;
 
-    return of->fvalue.sval;
+    if ((of = getOptFlag(optflgs, "DocValue", string_flag)) != NULL)
+    {
+        deprecated("/DocValue/ is deprecated\n");
+
+        return of->fvalue.sval;
+    }
+
+    return NULL;
+}
+
+
+/*
+ * Get the /TypeHint/, /TypeHintIn/ and /TypeHintOut/ option flags.
+ */
+static void getTypeHints(optFlags *optflgs, typeHintDef **in,
+        typeHintDef **out)
+{
+    optFlag *of;
+    typeHintDef *thd;
+
+    if ((of = getOptFlag(optflgs, "TypeHint", string_flag)) != NULL)
+        thd = newTypeHint(of->fvalue.sval);
+    else
+        thd = NULL;
+
+    if ((of = getOptFlag(optflgs, "TypeHintIn", string_flag)) != NULL)
+    {
+        if (thd != NULL)
+            yywarning("/TypeHintIn/ overrides /TypeHint/");
+
+        *in = newTypeHint(of->fvalue.sval);
+    }
+    else
+    {
+        *in = thd;
+    }
+
+    if ((of = getOptFlag(optflgs, "TypeHintOut", string_flag)) != NULL)
+    {
+        if (thd != NULL)
+            yywarning("/TypeHintOut/ overrides /TypeHint/");
+
+        *out = newTypeHint(of->fvalue.sval);
+    }
+    else
+    {
+        *out = thd;
+    }
+}
+
+
+/*
+ * Get the /NoTypeHint/ option flag.
+ */
+static int getNoTypeHint(optFlags *optflgs)
+{
+    return (getOptFlag(optflgs, "NoTypeHint", bool_flag) != NULL);
 }
 
 
@@ -8455,10 +8665,13 @@ static void setModuleName(sipSpec *pt, moduleDef *mod, const char *fullname)
 static void defineClass(scopedNameDef *snd, classList *supers, optFlags *of)
 {
     classDef *cd, *c_scope = currentScope();
+    typeHintDef *in, *out;
+
+    getTypeHints(of, &in, &out);
 
     cd = newClass(currentSpec, class_iface, getAPIRange(of),
             scopeScopedName((c_scope != NULL ? c_scope->iff : NULL), snd),
-            getVirtErrorHandler(of));
+            getVirtErrorHandler(of), in, out, getTypeHintValue(of));
     cd->supers = supers;
 
     pushScope(cd);
@@ -8523,6 +8736,7 @@ static void addVariable(sipSpec *pt, varDef *vd)
 static void applyTypeFlags(moduleDef *mod, argDef *ad, optFlags *flags)
 {
     ad->doctype = getDocType(flags);
+    getTypeHints(flags, &ad->typehint_in, &ad->typehint_out);
 
     if (getOptFlag(flags, "PyInt", bool_flag) != NULL)
     {
@@ -8926,7 +9140,7 @@ static void checkAnnos(optFlags *annos, const char *valid[])
                     break;
 
             if (*name == NULL)
-                deprecated("Annotation is invalid");
+                yywarning("Annotation is unknown");
         }
     }
 }
@@ -8976,6 +9190,8 @@ static void mappedTypeAnnos(mappedTypeDef *mtd, optFlags *optflgs)
         setHandlesNone(mtd);
 
     mtd->doctype = getDocType(optflgs);
+    getTypeHints(optflgs, &mtd->typehint_in, &mtd->typehint_out);
+    mtd->typehint_value = getTypeHintValue(optflgs);
 }
 
 
@@ -9006,4 +9222,43 @@ static void add_derefs(argDef *dst, argDef *src)
 
         dst->derefs[dst->nrderefs++] = src->derefs[i];
     }
+}
+
+
+/*
+ * Check if a word is a Python keyword (or has been at any time).
+ */
+int isPyKeyword(const char *word)
+{
+    static const char *kwds[] = {
+        "False", "None", "True", "and", "as", "assert", "break", "class",
+        "continue", "def", "del", "elif", "else", "except", "finally", "for",
+        "from", "global", "if", "import", "in", "is", "lambda", "nonlocal",
+        "not", "or", "pass", "raise", "return", "try", "while", "with'"
+        "yield",
+        /* Historical keywords. */
+        "exec", "print",
+        NULL
+    };
+
+    const char **kwd;
+
+    for (kwd = kwds; *kwd != NULL; ++kwd)
+        if (strcmp(*kwd, word) == 0)
+            return TRUE;
+
+    return FALSE;
+}
+
+
+/*
+ * Check there is nothing after an ellipsis.
+ */
+static void checkEllipsis(signatureDef *sd)
+{
+    int a;
+
+    for (a = 0; a < sd->nrArgs; ++a)
+        if (sd->args[a].atype == ellipsis_type && a < sd->nrArgs - 1)
+            yyerror("An ellipsis must be at the end of the argument list if /NoArgParser/ is not specified");
 }
