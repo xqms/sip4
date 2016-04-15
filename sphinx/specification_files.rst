@@ -64,6 +64,7 @@ file.
             :directive:`%DefaultMetatype` |
             :directive:`%DefaultSupertype` |
             :directive:`%ExportedHeaderCode` |
+            :directive:`%ExportedTypeHintCode` |
             :directive:`%Extract` |
             :directive:`%Feature` |
             :directive:`%Import` |
@@ -79,6 +80,7 @@ file.
             :directive:`%PreInitialisationCode` |
             :directive:`%PostInitialisationCode` |
             :directive:`%Timeline` |
+            :directive:`%TypeHintCode` |
             :directive:`%UnitCode` |
             *mapped-type-template*]
 
@@ -164,7 +166,7 @@ file.
             **(** [*argument-list*] **)** [**const**] [*exceptions*] [**= 0**]
             [*function-annotations*] [*c++-signature*] **;**
             [:directive:`%MethodCode`] [:directive:`%VirtualCatcherCode`]
-            [:directive:`VirtualCallCode`]
+            [:directive:`%VirtualCallCode`]
 
     *special-method* ::= *type* *special-method-name*
             **(** [*argument-list*] **)** [*function-annotations*] **;**
@@ -195,7 +197,7 @@ file.
     *virtual-operator* ::= **virtual** *operator-type*
             **(** [*argument-list*] **)** [**const**] [*exceptions*] [**= 0**]
             [*function-annotations*] **;** [:directive:`%MethodCode`]
-            [:directive:`%VirtualCatcherCode`] [:directive:`VirtualCallCode`]
+            [:directive:`%VirtualCatcherCode`] [:directive:`%VirtualCallCode`]
 
     *operatator-type* ::= [ *operator-function* | *operator-cast* ]
 
@@ -402,6 +404,8 @@ signatures.
 
 .. sip-type:: SIP_ANYSLOT
 
+.. deprecated:: 4.18
+
 This is both a ``const char *`` and a ``PyObject *`` that is used as the type
 of the member instead of ``const char *`` in functions that implement the
 connection or disconnection of an explicitly generated signal to a slot.
@@ -451,11 +455,15 @@ This is a ``PyObject *`` that is a Python type object.
 
 .. sip-type:: SIP_QOBJECT
 
+.. deprecated:: 4.18
+
 This is a ``QObject *`` that is a C++ instance of a class derived from Qt's
 ``QObject`` class.
 
 
 .. sip-type:: SIP_RXOBJ_CON
+
+.. deprecated:: 4.18
 
 This is a ``QObject *`` that is a C++ instance of a class derived from Qt's
 ``QObject`` class.  It is used as the type of the receiver instead of ``const
@@ -464,12 +472,16 @@ QObject *`` in functions that implement a connection to a slot.
 
 .. sip-type:: SIP_RXOBJ_DIS
 
+.. deprecated:: 4.18
+
 This is a ``QObject *`` that is a C++ instance of a class derived from Qt's
 ``QObject`` class.  It is used as the type of the receiver instead of ``const
 QObject *`` in functions that implement a disconnection from a slot.
 
 
 .. sip-type:: SIP_SIGNAL
+
+.. deprecated:: 4.18
 
 This is a ``const char *`` that is used as the type of the signal instead of
 ``const char *`` in functions that implement the connection or disconnection
@@ -478,12 +490,16 @@ of an explicitly generated signal to a slot.
 
 .. sip-type:: SIP_SLOT
 
+.. deprecated:: 4.18
+
 This is a ``const char *`` that is used as the type of the member instead of
 ``const char *`` in functions that implement the connection or disconnection
 of an explicitly generated signal to a slot.
 
 
 .. sip-type:: SIP_SLOT_CON
+
+.. deprecated:: 4.18
 
 This is a ``const char *`` that is used as the type of the member instead of
 ``const char *`` in functions that implement the connection of an internally
@@ -503,6 +519,8 @@ The corresponding SIP specification is::
 
 
 .. sip-type:: SIP_SLOT_DIS
+
+.. deprecated:: 4.18
 
 This is a ``const char *`` that is used as the type of the member instead of
 ``const char *`` in functions that implement the disconnection of an

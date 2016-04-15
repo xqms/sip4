@@ -1,7 +1,7 @@
 Introduction
 ============
 
-This is the reference guide for SIP 4.17.  SIP is a tool for
+This is the reference guide for SIP 4.18.  SIP is a tool for
 automatically generating `Python <http://www.python.org>`__ bindings for C and
 C++ libraries.  SIP was originally developed in 1998 for
 `PyQt <http://www.riverbankcomputing.com/software/pyqt>`__ - the Python
@@ -108,6 +108,8 @@ SIP, and the bindings it produces, have the following features:
   class library, including any platform specific or optional features, to be
   described in a single set of specification files 
 
+- support for the automatic generation of PEP 484 type hint stub files
+
 - the ability to include documentation in the specification files which can be
   extracted and subsequently processed by external tools
 
@@ -120,8 +122,8 @@ SIP, and the bindings it produces, have the following features:
 
 - support for building your extensions using distutils
 
-- SIP, and the bindings it produces, runs under UNIX, Linux, Windows and
-  MacOS/X
+- SIP, and the bindings it produces, runs under UNIX, Linux, Windows, MacOS/X,
+  Android and iOS.
 
 
 SIP Components

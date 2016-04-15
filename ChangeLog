@@ -1,8 +1,803 @@
+2016-04-13  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.18 for changeset b51768a1749e
+	[1da474e6ccc1] [tip]
+
+	* NEWS, sphinx/specification_files.rst:
+	Released as v4.18.
+	[b51768a1749e] [4.18]
+
+	* METADATA.in, sipgen/export.c, sipgen/type_hints.c:
+	Fixed the type hints for arrays.
+	[02a712634ce1]
+
+2016-04-09  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* METADATA.in:
+	Updated the description in the meta-data.
+	[d9eb656132f3]
+
+2016-04-08  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* METADATA.in:
+	Further tweak to METADATA.in.
+	[9acfb4baa44c]
+
+	* METADATA.in:
+	Use v1.1 meta-data rather than v2.0.
+	[8d9645471343]
+
+	* METADATA.in:
+	Fixed a typo.
+	[4a9ee34e65c3]
+
+	* METADATA.in, rbproduct.py:
+	Added the METADATA.in file.
+	[39106871989b]
+
+2016-04-05  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rbproduct.py:
+	Updated the product plugin.
+	[e42e999389f9]
+
+	* rbproduct.py:
+	Added the rbtools product plugin.
+	[b9ba57967915]
+
+2016-03-30  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/incompatibilities.rst:
+	Fixed a Sphinx warning message.
+	[ae966103325c]
+
+	* sipgen/main.c, sipgen/sip.h.in, sipgen/transform.c:
+	Fixed the use of SIP_NORETURN.
+	[b3a916e0bc78]
+
+2016-03-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c:
+	Fixed a regression in the exporting of the XML API files.
+	[c7714bbbdae7]
+
+	* build.py, sphinx/build_system.rst, sphinx/c_api.rst,
+	sphinx/python_api.rst:
+	Adopt the new standards for naming development versions.
+	[72140f544ef1]
+
+	* sphinx/annotations.rst:
+	Fixed a bug in the documentation.
+	[9e4ee12928cd]
+
+	* .hgignore:
+	Added the .hgignore file.
+	[e1d2556ce4a2]
+
+2016-03-04  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	__long__ gets translated to __int__ for Python v3.
+	[a4f8a7810cc3]
+
+2016-03-01  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/type_hints.c, sphinx/annotations.rst:
+	Type hints are ignored if an argument is constrained.
+	[f041cf891a29]
+
+	* sipgen/type_hints.c:
+	Implement the flattening of Unions in type hints.
+	[ff5f0d0251e0]
+
+2016-02-29  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/sip.h.in, sipgen/type_hints.c:
+	Reimplemented the type hint parser so it can handle recursive
+	definitions properly.
+	[506e30d92b51]
+
+2016-02-27  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/type_hints.c:
+	Fixed type hints for enums in mapped types.
+	[efb04ab24462]
+
+	* sipgen/type_hints.c:
+	Fixed type hints for the return values of functions.
+	[b5c392c71f78]
+
+	* sipgen/type_hints.c:
+	Added Iterable to the list of known typing module objects.
+	[a1d1a573a304]
+
+2016-02-26  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/sip.h.in, sipgen/type_hints.c:
+	Fixed the handling of recursively defined type hints.
+	[b5abe12b4968]
+
+2016-02-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/sip.h.in, sipgen/type_hints.c:
+	The typing module is now imported as a whole rather than individual
+	objects.
+	[ac67b3f0bd95]
+
+2016-02-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sip.pyi:
+	Fixed the Buffer type hint.
+	[78a799aec114]
+
+	* sipgen/type_hints.c:
+	Don't generate type hints for the sequence concat and repeat slots
+	(and the inplace versions).
+	[a5ae3982ff5f]
+
+	* sipgen/metasrc/parser.y, sphinx/directives.rst:
+	Exported type hint code is no longer included in the module that
+	defines it.
+	[442b3ed07ae6]
+
+	* sipgen/type_hints.c:
+	Exclude external classes when looking up a class.
+	[61fe4c76a394]
+
+	* sipgen/transform.c, sipgen/type_hints.c:
+	Fixed type hints and docstrings for const template arguments.
+	[679c13adda6a]
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in, sipgen/type_hints.c,
+	sphinx/directives.rst:
+	%TypeHintCode can now be used in a class.
+	[053c7351dba2]
+
+2016-02-19  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/type_hints.c:
+	Don't generate type hints for slots that can return
+	Py_NotImplemented. Make sure callables generate a valid (but vague)
+	type hint.
+	[883918a8dc36]
+
+2016-02-18  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sip.pyi, sipgen/type_hints.c:
+	Tweaks to the type hint support.
+	[785978d8f7e3]
+
+2016-02-16  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in, sipgen/transform.c,
+	sipgen/type_hints.c, sphinx/annotations.rst:
+	Added the /TypeHint/, /TypeHintOut/ and /TypeHintValue/ class
+	annotations.
+	[4f5dc2c51d06]
+
+	* sipgen/type_hints.c:
+	Moved the old-style signal/slot type hints to PyQt4.
+	[4689a40f7e7d]
+
+2016-02-15  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in, sipgen/transform.c,
+	sphinx/annotations.rst:
+	Implemented /TypeHintValue/ as a mapped type annotation.
+	[2418e7f7760d]
+
+	* build.py:
+	Make sure sip.pyi is included in the source package.
+	[1eabde271e53]
+
+2016-02-11  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y,
+	sipgen/transform.c, siplib/siplib.c.in:
+	Eliminate a few compiler warnings.
+	[e864a0451a4a]
+
+2016-02-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/type_hints.c:
+	More fixes for Optional handling.
+	[365d31de81fd]
+
+	* sipgen/type_hints.c:
+	Use Optional properly.
+	[ab7d66d1ea0d]
+
+2016-02-09  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/type_hints.c:
+	PY_TYPE and PY_SLICE aren't actually needed.
+	[9778770c65a5]
+
+2016-02-08  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/type_hints.c:
+	Fixed the translation of Any to object in docstrings.
+	[7571d96c1f79]
+
+	* sipgen/export.c, sipgen/gencode.c, sipgen/sip.h.in,
+	sipgen/type_hints.c:
+	Docstrings now use a format based on type hints.
+	[9de9b0470aa6]
+
+2016-02-05  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/transform.c:
+	Don't complain about a lack of %SetCode when /NoSetter/ is
+	specified.
+	[cf4db5eb171a]
+
+	* sipgen/metasrc/parser.y:
+	Fixed some typos in error messages.
+	[82a34911686f]
+
+	* sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y,
+	sphinx/directives.rst:
+	Renamed %ModuleTypeHintCode to %TypeHintCode.
+	[73b214c14dde]
+
+	* sipgen/type_hints.c, sphinx/annotations.rst:
+	Documented the /NoTypeHint/ annotations.
+	[26e59a86ca45]
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in, sipgen/transform.c,
+	sipgen/type_hints.c:
+	Implemented the /NoTypeHint/ annotation. Fixed a bug to make sure
+	type header code is included before enum slot code needs it.
+	[1943d4866c73]
+
+	* sipgen/metasrc/parser.y, sipgen/type_hints.c:
+	More flexible handling of ellipsis when /NoArgParser/ is specified.
+	[7097a0008042]
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in, sipgen/type_hints.c:
+	Protect against (possible) recursion when handling type hints for
+	mapped types.
+	[9402857f5eb6]
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in, sipgen/transform.c,
+	sipgen/type_hints.c:
+	Fixed class /TypeHintIn/ when used with a template.
+	[3a914d9789e0]
+
+2016-02-04  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in, sipgen/type_hints.c,
+	sphinx/annotations.rst:
+	Added /TypeHintIn/ as a class annotation.
+	[92d3d32ebf64]
+
+2016-02-03  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c, sipgen/metasrc/parser.y, sipgen/sip.h.in,
+	sipgen/transform.c, sipgen/type_hints.c:
+	Completed the implementation of /TypeHintIn/ and /TypeHintOut/.
+	[70e9172c61b7]
+
+	* sipgen/export.c, sipgen/metasrc/parser.y, sipgen/sip.h.in:
+	Implement /TypeHintValue/ as a synonym for /DocValue/ for the
+	moment.
+	[df8230d91f9f]
+
+	* sipgen/metasrc/parser.y, sphinx/annotations.rst:
+	Adde the stubs of the /TypeHintIn/, /TypeHintOut/ and
+	/TypeHintValue/ annotations.
+	[aeb5d848b98a]
+
+	* sipgen/metasrc/parser.y, sphinx/annotations.rst:
+	Deprecated /DocType/ and /DocValue/.
+	[ec369060cd94]
+
+	* sipgen/main.c, sipgen/metasrc/parser.y, sipgen/type_hints.c,
+	sphinx/command_line.rst:
+	Added the -f command line option to treat warnings as errors.
+	[fc945a2d732f]
+
+2016-02-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/type_hints.c:
+	Added Iterator and Mapping to the objecys imported from typing.
+	[6d439bc77538]
+
+	* sipgen/type_hints.c:
+	Fixed references to mapped types imported from other modules.
+	[b579781f2a2a]
+
+	* sipgen/type_hints.c:
+	Don't try and create type hints for global slots.
+	[11562a825b7c]
+
+	* sipgen/type_hints.c:
+	Bug fix when looking up enums.
+	[a4b89fac02d3]
+
+	* sipgen/type_hints.c:
+	Added PEP 484 support for composite modules.
+	[99e626f4fd23]
+
+	* sipgen/type_hints.c:
+	Fixed PEP 484 support for all callables with a non-default API
+	version.
+	[b2f8e2fed83d]
+
+	* sipgen/type_hints.c:
+	Completed the PEP 484 support for mapped types.
+	[b06408ae2397]
+
+	* sipgen/export.c, sipgen/sip.h.in, sipgen/type_hints.c:
+	More PEP 484 bug fixes.
+	[3e4df4d97ba5]
+
+2016-01-31  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS, sphinx/directives.rst, sphinx/specification_files.rst:
+	Documented the %ExportedTypeHintCode and %ModuleTypeHintCode
+	directives.
+	[cc7f789360b8]
+
+	* NEWS, sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y,
+	sipgen/sip.h.in, sipgen/type_hints.c, sphinx/directives.rst:
+	Added the %ExportedTypeHintCode and %ModuleTypeHintCode directives.
+	[aef93197b065]
+
+	* sipgen/metasrc/parser.y, sipgen/type_hints.c,
+	sphinx/annotations.rst:
+	Renamed /HintType/ to /TypeHint/.
+	[70c8915f680a]
+
+2016-01-30  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in, sipgen/type_hints.c:
+	More PEP 484 support.
+	[ea6e7a7ae51f]
+
+2016-01-29  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in, sipgen/transform.c,
+	sipgen/type_hints.c:
+	More PEP 484 support.
+	[aa1228396424]
+
+2016-01-28  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in, sipgen/transform.c,
+	sipgen/type_hints.c:
+	Added the stubs for parsing /HintType/ annotations.
+	[7c0fac66f27c]
+
+	* sipgen/gencode.c, sipgen/metasrc/parser.y, sipgen/sip.h.in,
+	sipgen/transform.c, sipgen/type_hints.c:
+	Improved the lookup of QObject.
+	[a2d8330df89d]
+
+2016-01-27  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/type_hints.c:
+	More PEP 484 support.
+	[336749ea71c5]
+
+	* sipgen/type_hints.c, sphinx/annotations.rst:
+	HintType will now fallback to DocType if the latter is specified.
+	[4423da336fbb]
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in, sipgen/transform.c,
+	sipgen/type_hints.c, sphinx/annotations.rst:
+	Added the /HintType/ annotation.
+	[2985d2d641d4]
+
+	* sipgen/type_hints.c:
+	More PEP 484 support.
+	[21e70ef4b15f]
+
+2016-01-26  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/sip.h.in, sipgen/type_hints.c:
+	More PEP 484 support.
+	[dd04be5e4e4f]
+
+	* sipgen/export.c, sipgen/gencode.c, sipgen/sip.h.in,
+	sipgen/type_hints.c:
+	More support for PEP 484.
+	[353fe29217fb]
+
+	* siplib/siplib.c:
+	Reverted the use of simplewrapper for mapped types.
+	[6e519bebe607] <5-devel>
+
+	* siplib/siplib.c.in:
+	Reverted the use of simplewrapper for mapped types.
+	[14ba1e5b1e5b]
+
+	* siplib/siplib.c:
+	Namespaces and mapped types now default to simplewrapper as their
+	super-type.
+	[e087fb949cb7] <5-devel>
+
+	* siplib/siplib.c.in:
+	Namespaces and mapped types now default to simplewrapper as their
+	super-type.
+	[f7fd77d1cd4e]
+
+2016-01-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c, sipgen/gencode.c, sipgen/main.c, sipgen/sip.h.in,
+	sipgen/sipgen.sbf, sipgen/type_hints.c, sphinx/command_line.rst,
+	sphinx/introduction.rst.in:
+	Initial support for generating PEP484 type hints.
+	[4191467f125a]
+
+	* sip.pyi:
+	Added None return types to the stub file.
+	[314ef3cd76ed]
+
+	* sip.pyi:
+	Added None return types to the stub file.
+	[a2e3434805e5] <5-devel>
+
+2016-01-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* setup.py.in, sip.pyi:
+	Added the sip.pyi type hints stub file.
+	[e9d2178af3a6] <5-devel>
+
+	* specs/win32-msvc2015:
+	Removed a spec file that slipped in.
+	[c036fcb8d400] <5-devel>
+
+	* configure.py.in:
+	Hard-code the name of the stub file (rather than handle bespoke
+	module names).
+	[e1e4b29eb1a6]
+
+	* configure.py.in, sip.pyi, sphinx/installation.rst:
+	Added the sip.pyi type hints stub file.
+	[30e58feee19f]
+
+2016-01-22  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/c_api.rst:
+	Minor docs change.
+	[dd03f114259c]
+
+	* sipgen/gencode.c, siplib/sip.h.in:
+	Fixes for regressions.
+	[875625613418] <5-devel>
+
+	* sipgen/gencode.c, sipgen/metasrc/parser.y, sipgen/sip.h,
+	sipgen/transform.c, siplib/sip.h.in:
+	Removed the rest of the (non-plugin based) Qt support.
+	[ca399deb778f] <5-devel>
+
+	* sipgen/gencode.c, sipgen/metasrc/parser.y, sipgen/sip.h,
+	sipgen/transform.c, siplib/sip.h.in, siplib/siplib.c,
+	sphinx/using.rst:
+	Removed all the explicit PyQt3 support.
+	[d6af4f3f1c06] <5-devel>
+
+	* sipgen/gencode.c, siplib/qtlib.c, siplib/sip.h.in, siplib/sipint.h,
+	siplib/siplib.c:
+	Stripped out most of the legacy Qt support.
+	[0eaa95f999cc] <5-devel>
+
+2016-01-21  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c:
+	Removed the deprecated keyword handler support.
+	[a3e5155bff03] <5-devel>
+
+2016-01-17  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c, sipgen/gencode.c, sipgen/metasrc/lexer.l,
+	sipgen/metasrc/parser.y, sipgen/sip.h, sipgen/transform.c,
+	sphinx/specification_files.rst:
+	Removed support for SIP_SLOT.
+	[f04b3e8b16c5] <5-devel>
+
+	* sipgen/metasrc/parser.y, sphinx/specification_files.rst:
+	Deprecated SIP_SLOT.
+	[2b821ae5e9f1]
+
+	* sipgen/export.c, sipgen/gencode.c, sipgen/metasrc/lexer.l,
+	sipgen/metasrc/parser.y, sipgen/sip.h, sipgen/transform.c,
+	siplib/siplib.c, sphinx/annotations.rst,
+	sphinx/specification_files.rst:
+	Removed support for SIP_RXOBJ_CON and SIP_SLOT_CON.
+	[460c68189eaf] <5-devel>
+
+	* Roadmap.rst:
+	Updated the roadmap.
+	[b5a4b1e18b98] <5-devel>
+
+	* Roadmap.rst:
+	Updated the roadmap.
+	[495ebc034f99]
+
+	* sphinx/annotations.rst:
+	Deprecated the SingleShot annotation.
+	[aa46307e00b4]
+
+	* sipgen/metasrc/parser.y:
+	Deprecated SIP_RXOBJ_CON and SIP_SLOT_CON.
+	[affb0c5b465c]
+
+2016-01-16  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c, sipgen/gencode.c, sipgen/metasrc/lexer.l,
+	sipgen/metasrc/parser.y, sipgen/sip.h, sipgen/transform.c,
+	siplib/siplib.c, sphinx/specification_files.rst:
+	Removed support for SIP_SIGNAL.
+	[f598de53a146] <5-devel>
+
+	* sipgen/metasrc/parser.y, sphinx/specification_files.rst:
+	Deprecated SIP_SIGNAL.
+	[865e00b6ffa0]
+
+2016-01-15  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c, sipgen/gencode.c, sipgen/metasrc/lexer.l,
+	sipgen/metasrc/parser.y, sipgen/sip.h, sipgen/transform.c,
+	siplib/siplib.c, sphinx/specification_files.rst:
+	Removed support for SIP_ANYSLOT.
+	[cfc9a69ad311] <5-devel>
+
+	* sipgen/export.c, sipgen/gencode.c, sipgen/metasrc/lexer.l,
+	sipgen/metasrc/parser.y, sipgen/sip.h, sipgen/transform.c,
+	siplib/siplib.c, sphinx/specification_files.rst:
+	Removed support for SIP_QOBJECT.
+	[9b1d137841b9] <5-devel>
+
+	* sipgen/export.c, sipgen/gencode.c, sipgen/metasrc/lexer.l,
+	sipgen/metasrc/parser.y, sipgen/sip.h, sipgen/transform.c,
+	siplib/siplib.c, sphinx/specification_files.rst:
+	Removed support for SIP_RXOBJ_DIS and SIP_SLOT_DIS.
+	[4a11331b9a07] <5-devel>
+
+	* sphinx/specification_files.rst:
+	Update the docs regarding the status of the SIP_SSIZE_T pseudo-type.
+	[29e92dd97397] <5-devel>
+
+	* sipgen/gencode.c:
+	Fixes to the generated of type structures.
+	[e8e44bce2953] <5-devel>
+
+	* sipgen/metasrc/parser.y, sphinx/specification_files.rst:
+	Deprecated SIP_ANYSLOT.
+	[8199aa8980e8]
+
+	* sipgen/metasrc/parser.y, sphinx/specification_files.rst:
+	Deprecated SIP_QOBJECT.
+	[fb9c94746255]
+
+	* sipgen/metasrc/parser.y, sphinx/specification_files.rst:
+	Deprecated SIP_RXOBJ_DIS.
+	[0f26db165557]
+
+	* sipgen/metasrc/parser.y, sphinx/specification_files.rst:
+	Deprecated SIP_SLOT_DIS.
+	[051775601278]
+
+2016-01-11  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/metasrc/parser.y, siplib/sip.h.in,
+	siplib/siplib.c, sphinx/c_api.rst, sphinx/embedding.rst:
+	Removed the generated class and enum structures.
+	[44119ea5d2eb] <5-devel>
+
+	* sipgen/gencode.c, siplib/sip.h.in, siplib/siplib.c,
+	sphinx/c_api.rst:
+	Removed the deprecated parts of the C API.
+	[928e177b8706] <5-devel>
+
+	* sipgen/metasrc/parser.y, sphinx/annotations.rst:
+	Removed the NoKeywordArgs annotation and the deprecated form of the
+	KeywordArgs annotation.
+	[62c9d89b17a0] <5-devel>
+
+	* siplib/siplib.c.in:
+	Fixed capsule handling in sipParseResult().
+	[e81b379b1518] <4.17-maint>
+
+	* sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y,
+	sphinx/directives.rst:
+	Removed the %OptionalInclude directive.
+	[98036a57ca08] <5-devel>
+
+	* sip5/main.py, sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y,
+	sipgen/sip.h, sphinx/directives.rst:
+	Removed the %Doc and %ExportedDoc directives.
+	[547fb98a64a4] <5-devel>
+
+	* sipgen/gencode.c, sphinx/directives.rst:
+	Removed the use of sipClass in %ConvertToSubClassCode.
+	[b98222f97df4] <5-devel>
+
+	* sip5/main.py, sipgen/gencode.c, sipgen/metasrc/lexer.l,
+	sipgen/metasrc/parser.y, sipgen/pybinding.c, sipgen/sip.h,
+	sipgen/transform.c, sphinx/command_line.rst, sphinx/directives.rst,
+	sphinx/introduction.rst.in:
+	Removed the %ConsolidatedModule directive.
+	[2c7e940b9d8c] <5-devel>
+
+	* setup.py.in:
+	Fixed the building of the _sip extension module.
+	[fa546e6c8a23] <5-devel>
+
+	* sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y,
+	sphinx/directives.rst:
+	Removed the %CModule directive.
+	[47d8a64d30b4] <5-devel>
+
+	* sphinx/annotations.rst, sphinx/c_api.rst, sphinx/directives.rst,
+	sphinx/using.rst:
+	Tidied up the remaining docs regarding when features were added.
+	[4b8b941e3630] <5-devel>
+
+	* sphinx/python_api.rst:
+	Tidied up the docs covering the API implemented by the sip module.
+	[a340d1674c9e] <5-devel>
+
+	* setup.py.in, sphinx/installation.rst, sphinx/introduction.rst.in:
+	Updated setup.py to install the sip module only for Python v2.7.
+	[b6f782eadc36] <5-devel>
+
+2016-01-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y,
+	sipgen/pybinding.c, sipgen/transform.c, siplib/apiversions.c,
+	siplib/array.c, siplib/array.h, siplib/sip.h.in, siplib/sipint.h,
+	siplib/siplib.c, siplib/voidptr.c, sphinx/c_api.rst,
+	sphinx/directives.rst, sphinx/specification_files.rst:
+	Bumped the API major version. Removed the internal use of deprecated
+	macros and functions.
+	[fa78a7e77fef] <5-devel>
+
+	* sipgen/gencode.c, siplib/array.c, siplib/descriptors.c,
+	siplib/sip.h.in, siplib/sipint.h, siplib/siplib.c, siplib/voidptr.c,
+	sphinx/c_api.rst:
+	Removed all code for unsupported Python versions.
+	[765811f6e377] <5-devel>
+
+	* sipgen/gencode.c, siplib/apiversions.c, siplib/sip.h.in,
+	siplib/voidptr.c, sphinx/c_api.rst, sphinx/python_api.rst:
+	Tidied up the portability macros now that some versions aren't
+	supported.
+	[64f043cf7815] <5-devel>
+
+	* sphinx/c_api.rst:
+	Updated the docs for SIP_USE_PYCAPSULE.
+	[58da07b356c0] <5-devel>
+
+	* sipgen/gencode.c:
+	Removed support for unsupported Python versions from the code
+	generator.
+	[fba47bda42d2] <5-devel>
+
+	* setup.py.in, sphinx/build_system.rst, sphinx/c_api.rst,
+	sphinx/conf.py.in, sphinx/distutils.rst, sphinx/embedding.rst,
+	sphinx/incompatibilities.rst, sphinx/index.rst,
+	sphinx/installation.rst, sphinx/introduction.rst.in,
+	sphinx/using.rst:
+	Updated the docs to broadly reflect the changes so far.
+	[b36f8ddbdaa6] <5-devel>
+
+	* sipgen/metasrc/parser.y, sipgen/pybinding.c:
+	Fixed a build error and warnings.
+	[3d1ee988149e] <5-devel>
+
+	* sipgen/gencode.c:
+	Merged the current default branch.
+	[371835c04a0b] <5-devel>
+
+	* sipgen/metasrc/parser.y:
+	Fixed a couple of sign-compare warnings.
+	[7d7c823fdf86] <4.17-maint>
+
+	* Merged the current maintenance branch.
+	[b7bd085548b6]
+
+	* sipgen/gencode.c, sipgen/transform.c:
+	Fixes to the handling of fatal errors.
+	[f35ebfa4c27f] <4.17-maint>
+
+	* sip5/main.py, sipgen/gencode.c, sipgen/metasrc/lexer.l,
+	sipgen/metasrc/parser.y, sipgen/sip.h, siplib/siplib.c,
+	sphinx/specification_files.rst:
+	Merged the current default branch.
+	[e2f689f4ffa6] <5-devel>
+
+	* Merged the current maintenance branch with the default.
+	[d244ec3a2dec]
+
+2016-01-09  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* configure.py.in, sipgen/export.c, sipgen/gencode.c, sipgen/main.c,
+	sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y, sipgen/sip.h.in,
+	sipgen/transform.c, siplib/siplib.c.in:
+	Fixed all compiler warnings.
+	[9dbdf30558aa] <4.17-maint>
+
+	* build.py:
+	Use the current distutils standards for naming development versions.
+	[45a0bb02971f] <5-devel>
+
+	* sip5/main.py, sipgen/gencode.c, sipgen/metasrc/lexer.l,
+	sipgen/metasrc/parser.y, sipgen/sip.h, siplib/sip.h.in,
+	siplib/siplib.c, sphinx/command_line.rst, sphinx/directives.rst,
+	sphinx/specification_files.rst:
+	Merge the current default branch.
+	[9d57db8a1d68] <5-devel>
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in, siplib/siplib.c.in,
+	sphinx/specification_files.rst:
+	Some minor tidy-ups.
+	[b4edb1990e23] <4.17-maint>
+
+	* Merged the current maintenance branch with the default.
+	[782cf5e8441e]
+
+2015-12-20  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Another attempt and preventing accesses to SIP data structures after
+	the interpreter has gone.
+	[138eb1eded99] <4.17-maint>
+
+2015-12-18  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, siplib/sip.h.in.in, siplib/siplib.c.in,
+	sphinx/c_api.rst:
+	Added sipGetInterpreter() to the public API. Avoid the Python
+	interpreter if it has gone when getting a QMetaObject.
+	[61d8f0f6f5c0] <4.17-maint>
+
+2015-12-12  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Cleared a benign exception in the handling of mixins.
+	[602884540b54] <4.17-maint>
+
+2015-12-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Fixed the previous fix.
+	[17876e15c41d] <4.17-maint>
+
+2015-11-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Restrict the invocation of sub-class convertors to those that handle
+	direct sub-classes.
+	[57cbe5142d57] <4.17-maint>
+
+2015-10-28  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Invoking sub-class convertor code turns out to be quite expensive so
+	check the object map first. Check the object map again if the
+	convertor code needed to be invoked. This change is absolutely
+	fundamental to the inner workings so may have some unexpected
+	consequences.
+	[77fde6c0ee2d] <4.17-maint>
+
+2015-10-27  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/sip.h.in, sipgen/transform.c,
+	siplib/siplib.c.in:
+	Refactored the handling of casts so that cast functions are only
+	generated for classes that multiply inherit somewhere in their class
+	hierarchy.
+	[14bfbaf7431a] <4.17-maint>
+
 2015-10-24  Phil Thompson  <phil@riverbankcomputing.com>
 
 	* .hgtags:
 	Added tag 4.17 for changeset 0cbb680b4f69
-	[36d16e74cf7f] [tip]
+	[36d16e74cf7f]
 
 	* NEWS:
 	Released as v4.17.

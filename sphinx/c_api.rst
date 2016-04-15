@@ -116,15 +116,15 @@ specification files.
 .. c:macro:: SIP_VERSION
 
     This is a C preprocessor symbol that defines the SIP version number
-    represented as a 3 part hexadecimal number (e.g. v4.0.0 is represented as
-    ``0x040000``).
+    represented as a 3 part hexadecimal number (e.g. v5.0.0 is represented as
+    ``0x050000``).
 
 
 .. c:macro:: SIP_VERSION_STR
 
     This is a C preprocessor symbol that defines the SIP version number
-    represented as a string.  For development previews it will contain either
-    ``-preview-`` or ``-snapshot-``.
+    represented as a string.  For development versions it will contain either
+    ``.dev`` or ``-snapshot-``.
 
 
 .. c:function:: sipErrorState sipBadCallableArg(int arg_nr, PyObject *arg)
@@ -1107,6 +1107,17 @@ specification files.
         the Python object.
     :return:
         the address of the C/C++ instance
+
+
+.. c:function:: PyInterpreterState *sipGetInterpreter()
+
+    .. versionadded:: 4.17.1
+
+    This returns the address of the Python interpreter.  If it is ``NULL`` then
+    calls to the Python interpreter library must not be made.
+
+    :return:
+        the address of the Python interpreter
 
 
 .. c:function:: void *sipGetMixinAddress(sipSimpleWrapper *obj, const sipTypeDef *td)

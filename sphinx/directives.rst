@@ -1058,6 +1058,24 @@ Python modules should not explicitly call functions in another Python module.
 .. seealso:: :directive:`%ModuleCode`, :directive:`%ModuleHeaderCode`
 
 
+.. directive:: %ExportedTypeHintCode
+
+.. versionadded:: 4.18
+
+.. parsed-literal::
+
+    %ExportedTypeHintCode
+        *code*
+    %End
+
+This directive is used to specify handwritten code, typically the declarations
+of types, that is placed in the PEP 484 type hint stub file for any module that
+imports it.  Note that it is not included in the stub file for the module
+itself.
+
+.. seealso:: :directive:`%TypeHintCode`
+
+
 .. directive:: %Extract
 
 .. versionadded:: 4.12
@@ -1108,7 +1126,7 @@ This directive is used to declare a feature.  Features (along with
 are processed or ignored.
 
 Features are mutually independent of each other - any combination of features
-may be enabled or disable.  By default all features are enabled.  The
+may be enabled or disabled.  By default all features are enabled.  The
 :option:`-x <sip -x>` command line option is used to disable a feature.
 
 If a feature is enabled then SIP will automatically generate a corresponding C
@@ -2367,6 +2385,23 @@ For example::
 
         // The rest of the class specification.
     };
+
+
+.. directive:: %TypeHintCode
+
+.. versionadded:: 4.18
+
+.. parsed-literal::
+
+    %TypeHintCode
+        *code*
+    %End
+
+This directive is used, in the context of a module or an individual class, to
+specify handwritten code, typically the import of additional modules, that is
+placed in the PEP 484 type hint stub file for the module or class.
+
+.. seealso:: :directive:`%ExportedTypeHintCode`
 
 
 .. directive:: %UnitCode

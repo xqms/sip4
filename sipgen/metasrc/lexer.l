@@ -1,7 +1,7 @@
 /*
  * The SIP lexer.
  *
- * Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -30,6 +30,16 @@
 #error "Only flex is supported at the moment"
 #endif
 
+
+/* Windows doesn't have unistd.h so declare it here. */
+extern int isatty(int);
+
+
+/* These are unused. */
+static int input(void) SIP_UNUSED;
+static void yy_fatal_error(yyconst char *) SIP_UNUSED;
+static int yy_top_state(void) SIP_UNUSED;
+static void yyunput(int, char *) SIP_UNUSED;
 
 #define YY_NO_UNISTD_H
 #define YY_FATAL_ERROR(s)       fatallex(s)
@@ -485,6 +495,18 @@ SIP_QOBJECT                 {return TK_QOBJECT;}
     /* The start of a raise Python exception code block. */
     codeIdx = 0;
     return TK_RAISECODE;
+}
+
+^[ \t]*%ExportedTypeHintCode {
+    /* The start of an exported type hint code block. */
+    codeIdx = 0;
+    return TK_EXPTYPEHINTCODE;
+}
+
+^[ \t]*%TypeHintCode {
+    /* The start of a type hint code block. */
+    codeIdx = 0;
+    return TK_TYPEHINTCODE;
 }
 
 ^[ \t]*%Docstring {

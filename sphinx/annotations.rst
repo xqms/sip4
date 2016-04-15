@@ -130,6 +130,8 @@ Argument Annotations
         // can convert to an integer, except for floating point numbers.
         void foo(int);
 
+    Any type hint for the argument will be ignored.
+
 
 .. argument-annotation:: DisallowNone
 
@@ -144,6 +146,9 @@ Argument Annotations
 
     .. versionadded:: 4.10
 
+    .. deprecated:: 4.18
+        Use the :aanno:`TypeHint` annotation instead.
+
     This string annotation specifies the type of the argument as it will appear
     in any generated docstrings.  It is usually used with arguments of type
     :stype:`SIP_PYOBJECT` to provide a more specific type.
@@ -152,6 +157,9 @@ Argument Annotations
 .. argument-annotation:: DocValue
 
     .. versionadded:: 4.10
+
+    .. deprecated:: 4.18
+        Use the :aanno:`TypeHintValue` annotation instead.
 
     This string annotation specifies the default value of the argument as it
     will appear in any generated docstrings.
@@ -278,6 +286,8 @@ Argument Annotations
 
 .. argument-annotation:: SingleShot
 
+    .. deprecated:: 4.18
+
     This boolean annotation is used only with arguments of type
     :stype:`SIP_RXOBJ_CON` to specify that the signal connected to the slot
     will only ever be emitted once.  This prevents a certain class of memory
@@ -327,6 +337,47 @@ Argument Annotations
     transferred to last instance that is not ``None``.
 
     See :ref:`ref-object-ownership` for more detail.
+
+
+.. argument-annotation:: TypeHint
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type of the argument as it will appear
+    in any generated docstrings and PEP 484 type hints.  It is the equivalent
+    of specifying :aanno:`TypeHintIn` and :aanno:`TypeHintOut` with the same
+    value.  It is usually used with arguments of type :stype:`SIP_PYOBJECT` to
+    provide a more specific type.
+
+
+.. argument-annotation:: TypeHintIn
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type of the argument as it will appear
+    in any generated docstrings and PEP 484 type hints when the argument is
+    used to pass a value to a function (rather than being used to return a
+    value from a function).  It is usually used with arguments of type
+    :stype:`SIP_PYOBJECT` to provide a more specific type.
+
+
+.. argument-annotation:: TypeHintOut
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type of the argument as it will appear
+    in any generated docstrings and PEP 484 type hints when the argument is
+    used to return a value from a function (rather than being used to pass a
+    value to a function).  It is usually used with arguments of type
+    :stype:`SIP_PYOBJECT` to provide a more specific type.
+
+
+.. argument-annotation:: TypeHintValue
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the default value of the argument as it
+    will appear in any generated docstrings.
 
 
 .. _ref-class-annos:
@@ -494,6 +545,14 @@ Class Annotations
     default constructors for the class.
 
 
+.. class-annotation:: NoTypeHint
+
+    .. versionadded:: 4.18
+
+    This boolean annotation is used to suppress the generation of the PEP 484
+    type hint for the class and its contents.
+
+
 .. class-annotation:: PyName
 
     This name annotation specifies an alternative name for the class being
@@ -512,6 +571,46 @@ Class Annotations
     creating the type object for this C structure or C++ type.
 
     See the section :ref:`ref-types-metatypes` for more details.
+
+
+.. class-annotation:: TypeHint
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type of the class as it will appear
+    in any generated docstrings and PEP 484 type hints.  It is the equivalent
+    of specifying :canno:`TypeHintIn` and :canno:`TypeHintOut` with the same
+    value.
+
+
+.. class-annotation:: TypeHintIn
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type of the class as it will appear
+    in any generated docstrings and PEP 484 type hints when an instance of the
+    class is passed as an argument to a function (rather than being returned
+    from a function).  It is usually used with classes that implement
+    :directive:`%ConvertToTypeCode` to allow additional types to be used
+    whenever an instance of the class is expected.
+
+
+.. class-annotation:: TypeHintOut
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type of the class as it will appear
+    in any generated docstrings and PEP 484 type hints when an instance of the
+    class is returned from a function (rather than being used to pass a
+    value to a function).
+
+
+.. class-annotation:: TypeHintValue
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the default value of the class as it will
+    appear in any generated docstrings.
 
 
 .. class-annotation:: VirtualErrorHandler
@@ -561,6 +660,9 @@ Mapped Type Annotations
 
     .. versionadded:: 4.10
 
+    .. deprecated:: 4.18
+        Use the :manno:`TypeHint` annotation instead.
+
     This string annotation serves the same purpose as the :aanno:`DocType`
     argument annotation when applied to the mapped type being defined.
 
@@ -585,6 +687,41 @@ Mapped Type Annotations
     .. seealso:: :directive:`%AutoPyName`
 
 
+.. mapped-type-annotation:: TypeHint
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type of the mapped type as it will
+    appear in any generated docstrings and PEP 484 type hints.  It is the
+    equivalent of specifying :manno:`TypeHintIn` and :manno:`TypeHintOut` with
+    the same value.
+
+
+.. mapped-type-annotation:: TypeHintIn
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type of the mapped type as it will
+    appear in any generated docstrings and PEP 484 type hints when it is passed
+    to a function (rather than being returned from a function).
+
+
+.. mapped-type-annotation:: TypeHintOut
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type of the mapped type as it will
+    appear in any generated docstrings and PEP 484 type hints when it is
+    returned from a function (rather than being passed to a function).
+
+.. mapped-type-annotation:: TypeHintValue
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the default value of the mapped type as it
+    will appear in any generated docstrings.
+
+
 .. _ref-enum-annos:
 
 Enum Annotations
@@ -599,6 +736,14 @@ Enum Annotations
     generated code will not compile.  However it is useful when defining
     pseudo-enums, for example, to wrap global values so that they are defined
     (in Python) within the scope of a class.
+
+
+.. enum-annotation:: NoTypeHint
+
+    .. versionadded:: 4.18
+
+    This boolean annotation is used to suppress the generation of the PEP 484
+    type hint for the enum or enum member.
 
 
 .. enum-annotation:: PyName
@@ -708,6 +853,9 @@ Function Annotations
 .. function-annotation:: DocType
 
     .. versionadded:: 4.10
+
+    .. deprecated:: 4.18
+        Use the :fanno:`TypeHint` annotation instead.
 
     This string annotation serves the same purpose as the :aanno:`DocType`
     argument annotation when applied to the type of the value returned by the
@@ -864,6 +1012,14 @@ Function Annotations
     .. seealso:: :fanno:`RaisesPyException`
 
 
+.. function-annotation:: NoTypeHint
+
+    .. versionadded:: 4.18
+
+    This boolean annotation is used to suppress the generation of the PEP 484
+    type hint for the function or constructor.
+
+
 .. function-annotation:: NoVirtualErrorHandler
 
     .. versionadded:: 4.14
@@ -1006,6 +1162,16 @@ Function Annotations
     See :ref:`ref-object-ownership` for more detail.
 
 
+.. function-annotation:: TypeHint
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type of the value returned by the
+    function as it will appear in any generated docstrings and PEP 484 type
+    hints.  It is usually used with results of type :stype:`SIP_PYOBJECT` to
+    provide a more specific type.
+
+
 .. function-annotation:: VirtualErrorHandler
 
     .. versionadded:: 4.14
@@ -1040,6 +1206,9 @@ Typedef Annotations
 .. typedef-annotation:: DocType
 
     .. versionadded:: 4.10
+
+    .. deprecated:: 4.18
+        Use the :tanno:`TypeHint` annotation instead.
 
     This string annotation serves the same purpose as the :aanno:`DocType`
     argument annotation when applied to the mapped type being defined.
@@ -1089,6 +1258,36 @@ Typedef Annotations
     .. seealso:: :directive:`%AutoPyName`
 
 
+.. typedef-annotation:: TypeHint
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type as it will appear in any
+    generated docstrings and PEP 484 type hints.  It is the equivalent of
+    specifying :tanno:`TypeHintIn` and :tanno:`TypeHintOut` with the same
+    value.
+
+
+.. typedef-annotation:: TypeHintIn
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type as it will appear in any
+    generated docstrings and PEP 484 type hints when it is passed to a function
+    (rather than being returned from a function).  It is usually used with
+    arguments of type :stype:`SIP_PYOBJECT` to provide a more specific type.
+
+
+.. typedef-annotation:: TypeHintOut
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type as it will appear in any
+    generated docstrings and PEP 484 type hints when it is returned from a
+    function (rather than being passed to a function).  It is usually used with
+    arguments of type :stype:`SIP_PYOBJECT` to provide a more specific type.
+
+
 .. _ref-variable-annos:
 
 Variable Annotations
@@ -1097,6 +1296,9 @@ Variable Annotations
 .. variable-annotation:: DocType
 
     .. versionadded:: 4.10
+
+    .. deprecated:: 4.18
+        Use the :vanno:`TypeHint` annotation instead.
 
     This string annotation serves the same purpose as the :aanno:`DocType`
     argument annotation when applied to the type of the variable being defined.
@@ -1118,6 +1320,14 @@ Variable Annotations
     annotate a variable as being read-only.
 
 
+.. variable-annotation:: NoTypeHint
+
+    .. versionadded:: 4.18
+
+    This boolean annotation is used to suppress the generation of the PEP 484
+    type hint for the variable.
+
+
 .. variable-annotation:: PyInt
 
     .. versionadded:: 4.12
@@ -1135,3 +1345,13 @@ Variable Annotations
     have the same name in the same C++ scope.
 
     .. seealso:: :directive:`%AutoPyName`
+
+
+.. variable-annotation:: TypeHint
+
+    .. versionadded:: 4.18
+
+    This string annotation specifies the type of the variable as it will appear
+    in any generated docstrings and PEP 484 type hints.  It is usually used
+    with arguments of type :stype:`SIP_PYOBJECT` to provide a more specific
+    type.
