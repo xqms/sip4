@@ -2,14 +2,14 @@
 .\" Created by Ricardo Cardenes Medina <ricardo@conysis.com>
 .\" for the Debian 'sip' package
 .\"
-.TH SIP 1 "2015/05/06"
+.TH SIP 1 "2016/04/26"
 .SH NAME
 sip \- generates C++/Python bindings
 .SH SYNOPSIS
 .B sip
-[\-h] [\-V] [\-a\~file] [\-b\~file] [\-B\~tag] [\-c\~dir] [\-d\~file] [\-e] [\-g]
+[\-h] [\-V] [\-a\~file] [\-b\~file] [\-B\~tag] [\-c\~dir] [\-d\~file] [\-e] [\-f] [\-g]
 [\-I\~dir] [\-j\~number] [\-k] [\-m\~file] [\-o] [\-p\~module] [\-P] [\-r] [\-s\~suffix]
-[\-t\~tag] [\-w] [\-x\~feature] [\-X\~id:file] [\-z\~file] [@file] [file]
+[\-t\~tag] [\-w] [\-x\~feature] [\-X\~id:file] [\-y\~file] [\-z\~file] [@file] [file]
 .SH DESCRIPTION
 .B sip
 takes a set of specification files and generates C++ code, documentation and build files.
@@ -44,6 +44,9 @@ If not indicated, no documentation will be generated.
 .TP
 .B \-e
 Enable support for exceptions. Disabled by default.
+.TP
+.B \-f
+Handle warnings as errors.
 .TP
 .B \-g
 Always release and reacquire the GIL.
@@ -87,6 +90,9 @@ Disable a feature.
 .TP
 .B \-X id:file
 Create the extracts for an \fIid\fR in a \fIfile\fR.
+.TP
+.B \-y file
+The name of the .pyi stub file to generate. If not indicated, it will not be generated.
 .TP
 .B \-z file
 The name of a file containing additional command line flags.
