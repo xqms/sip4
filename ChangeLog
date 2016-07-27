@@ -1,8 +1,118 @@
+2016-07-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.18.1 for changeset 81021a5690ce
+	[8f5b6c8fe5f1] [tip] <4.18-maint>
+
+	* NEWS:
+	Released as v4.18.1.
+	[81021a5690ce] [4.18.1] <4.18-maint>
+
+2016-07-22  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Roadmap.rst:
+	Updated the Roadmap.
+	[1226013f2516] <4.18-maint>
+
+	* NEWS:
+	Updated the NEWS file.
+	[26a4fd92bf59] <4.18-maint>
+
+2016-07-03  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/objmap.c:
+	Fixed a problem with stale aliases for objects created by C/C++.
+	[b493c6f3e015] <4.18-maint>
+
+2016-06-21  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rb-product, rbproduct.py:
+	Replaced the product plugin with a product file.
+	[a10b0caa91a8] <4.18-maint>
+
+2016-06-20  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rbproduct.py:
+	Product plugin changes for rb-tools API changes.
+	[86f51ad3ac30] <4.18-maint>
+
+	* rbproduct.py:
+	Debugged the product plugin.
+	[67a81861273c] <4.18-maint>
+
+	* rbproduct.py:
+	Added support for a minimal build and release build types.
+	[8cc794662db5] <4.18-maint>
+
+2016-06-18  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rbproduct.py:
+	Tewaks to the product plugin.
+	[b2fd658f11cf] <4.18-maint>
+
+2016-06-15  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rbproduct.py:
+	Debugged the support for rb-release.
+	[38cdb78872f4] <4.18-maint>
+
+2016-06-13  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rbproduct.py:
+	Updated the product plugin to support rb-release.
+	[ecb166af3ad3] <4.18-maint>
+
+2016-06-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed a regression in the handling of a cast with a diamond
+	hierachy.
+	[91206af66161] <4.18-maint>
+
+2016-06-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rbproduct.py:
+	Implemented the different build types.
+	[15184d86e394] <4.18-maint>
+
+	* rbproduct.py:
+	Updates to the product plugin.
+	[23ca59449373] <4.18-maint>
+
+2016-06-01  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rbproduct.py:
+	Updated the product plugin to simplify the class hierachy.
+	[a977c7f870f7] <4.18-maint>
+
+	* .hgignore, rbproduct.py:
+	The product plugin will now do a default build.
+	[8c433398f573] <4.18-maint>
+
+2016-05-09  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* rbproduct.py:
+	Updated the product plugin for the latest rbtools changes.
+	[a4a0a84984dc] <4.18-maint>
+
+2016-05-05  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* configure.py.in:
+	Fixed a bug in out-of-source builds.
+	[f9602fd24f17] <4.18-maint>
+
+2016-04-22  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* METADATA.in:
+	Updated the meta-data to say that 64-bit Linux wheels are available
+	at PyPI.
+	[5602445cb458] <4.18-maint>
+
 2016-04-13  Phil Thompson  <phil@riverbankcomputing.com>
 
 	* .hgtags:
 	Added tag 4.18 for changeset b51768a1749e
-	[1da474e6ccc1] [tip]
+	[1da474e6ccc1]
 
 	* NEWS, sphinx/specification_files.rst:
 	Released as v4.18.
@@ -9708,4 +9818,3 @@
 	specs/win32-msvc.net, specs/win32-msvc2005, specs/win32-watcom:
 	Initial import of sip from CVS
 	[1fd77e66a56d]
-
