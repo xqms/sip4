@@ -30,8 +30,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x041200
-sip_version_str = "4.18"
+sip_version = 0x041201
+sip_version_str = "4.18.1"
 py_version = sys.hexversion >> 8
 py_platform = sys.platform
 plat_py_site_dir = None
@@ -474,7 +474,7 @@ macx {
                         cfg.sip_inc_dir)]
 
         if opts.pyi:
-            installs.append(([os.path.join(build_dir, 'sip.pyi')], pyi_dir))
+            installs.append(([os.path.join(src_dir, 'sip.pyi')], pyi_dir))
 
         makefile = sipconfig.ModuleMakefile(
             configuration=cfg,
