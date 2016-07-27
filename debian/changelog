@@ -4,6 +4,7 @@ sip4 (4.18.1+dfsg-1) UNRELEASED; urgency=medium
   * Document two new options in sip.1 manpage.
   * Regenerate lexer and parser source files during build, using flex
     and bison.
+  * Add repacksuffix=+dfsg option to debian/watch.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Tue, 26 Apr 2016 15:58:52 +0300
 
