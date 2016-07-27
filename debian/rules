@@ -27,7 +27,13 @@ PYTHON3S := $(shell py3versions -vr)
 
 configure: $(PYTHONS:%=build-%/configure-stamp) $(PYTHONS:%=dbg-build-%/configure-stamp)
 
-build-%/configure-stamp: $(PYTHON3S:%=sipconfig-%)
+sipgen/lexer.c: sipgen/metasrc/lexer.l
+	flex --outfile=sipgen/lexer.c sipgen/metasrc/lexer.l
+
+sipgen/parser.c: sipgen/metasrc/parser.y
+	bison --yacc --defines=sipgen/parser.h --output=sipgen/parser.c sipgen/metasrc/parser.y
+
+build-%/configure-stamp: $(PYTHON3S:%=sipconfig-%) sipgen/lexer.c sipgen/parser.c
 	dh_testdir
 	mkdir -p build-$*
 	cp $(CURDIR)/sip.pyi $(CURDIR)/build-$*
@@ -39,7 +45,7 @@ build-%/configure-stamp: $(PYTHON3S:%=sipconfig-%)
 			LFLAGS="${LDFLAGS}" LFLAGS_RELEASE=""
 	touch $@
 
-dbg-build-%/configure-stamp:
+dbg-build-%/configure-stamp: sipgen/lexer.c sipgen/parser.c
 	dh_testdir
 	mkdir -p dbg-build-$*
 	cp $(CURDIR)/sip.pyi $(CURDIR)/dbg-build-$*
@@ -81,6 +87,7 @@ clean:
 	cp $(CURDIR)/debian/sipconfig_py3.header $(CURDIR)/debian/sipconfig_py3.py
 	rm -rf $(CURDIR)/debian/sipconfig_py3.py.tmp
 	rm -rf $(CURDIR)/sipconfig-3.*
+	rm -f sipgen/lexer.c sipgen/parser.h sipgen/parser.c sipgen/parser.output
 	dh_clean debian/python3-sip.pydist
 
 install-arch: build
