@@ -3,7 +3,6 @@ Section: devel
 Priority: optional
 Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
 Uploaders: Torsten Marek <shlomme@debian.org>,
-           Michael Casadevall <mcasadevall@debian.org>,
            Scott Kitterman <scott@kitterman.com>,
            Dmitry Shachnev <mitya57@debian.org>
 Build-Depends: bison,

@@ -1,3 +1,11 @@
+sip4 (4.18.1+dfsg-2) UNRELEASED; urgency=medium
+
+  * Remove Michael Casadevall from uploaders due to retirement from Debian
+    (Closes: #841465)
+    - Thanks Michael for all your work on sip4
+
+ -- Scott Kitterman <scott@kitterman.com>  Thu, 20 Oct 2016 22:35:18 -0400
+
 sip4 (4.18.1+dfsg-1) unstable; urgency=medium
 
   * New upstream release.
