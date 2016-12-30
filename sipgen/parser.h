@@ -160,29 +160,32 @@
      TK_VIRTERRORCODE = 376,
      TK_EXPLICIT = 377,
      TK_TEMPLATE = 378,
-     TK_ELLIPSIS = 379,
-     TK_DEFMETATYPE = 380,
-     TK_DEFSUPERTYPE = 381,
-     TK_PROPERTY = 382,
-     TK_FORMAT = 383,
-     TK_GET = 384,
-     TK_ID = 385,
-     TK_KWARGS = 386,
-     TK_LANGUAGE = 387,
-     TK_LICENSEE = 388,
-     TK_NAME = 389,
-     TK_OPTIONAL = 390,
-     TK_ORDER = 391,
-     TK_REMOVELEADING = 392,
-     TK_SET = 393,
-     TK_SIGNATURE = 394,
-     TK_TIMESTAMP = 395,
-     TK_TYPE = 396,
-     TK_USEARGNAMES = 397,
-     TK_ALLRAISEPYEXC = 398,
-     TK_CALLSUPERINIT = 399,
-     TK_DEFERRORHANDLER = 400,
-     TK_VERSION = 401
+     TK_FINAL = 379,
+     TK_ELLIPSIS = 380,
+     TK_DEFMETATYPE = 381,
+     TK_DEFSUPERTYPE = 382,
+     TK_PROPERTY = 383,
+     TK_HIDE_NS = 384,
+     TK_FORMAT = 385,
+     TK_GET = 386,
+     TK_ID = 387,
+     TK_KWARGS = 388,
+     TK_LANGUAGE = 389,
+     TK_LICENSEE = 390,
+     TK_NAME = 391,
+     TK_OPTIONAL = 392,
+     TK_ORDER = 393,
+     TK_REMOVELEADING = 394,
+     TK_SET = 395,
+     TK_SIGNATURE = 396,
+     TK_TIMESTAMP = 397,
+     TK_TYPE = 398,
+     TK_USEARGNAMES = 399,
+     TK_USELIMITEDAPI = 400,
+     TK_ALLRAISEPYEXC = 401,
+     TK_CALLSUPERINIT = 402,
+     TK_DEFERRORHANDLER = 403,
+     TK_VERSION = 404
    };
 #endif
 /* Tokens.  */
@@ -307,36 +310,39 @@
 #define TK_VIRTERRORCODE 376
 #define TK_EXPLICIT 377
 #define TK_TEMPLATE 378
-#define TK_ELLIPSIS 379
-#define TK_DEFMETATYPE 380
-#define TK_DEFSUPERTYPE 381
-#define TK_PROPERTY 382
-#define TK_FORMAT 383
-#define TK_GET 384
-#define TK_ID 385
-#define TK_KWARGS 386
-#define TK_LANGUAGE 387
-#define TK_LICENSEE 388
-#define TK_NAME 389
-#define TK_OPTIONAL 390
-#define TK_ORDER 391
-#define TK_REMOVELEADING 392
-#define TK_SET 393
-#define TK_SIGNATURE 394
-#define TK_TIMESTAMP 395
-#define TK_TYPE 396
-#define TK_USEARGNAMES 397
-#define TK_ALLRAISEPYEXC 398
-#define TK_CALLSUPERINIT 399
-#define TK_DEFERRORHANDLER 400
-#define TK_VERSION 401
+#define TK_FINAL 379
+#define TK_ELLIPSIS 380
+#define TK_DEFMETATYPE 381
+#define TK_DEFSUPERTYPE 382
+#define TK_PROPERTY 383
+#define TK_HIDE_NS 384
+#define TK_FORMAT 385
+#define TK_GET 386
+#define TK_ID 387
+#define TK_KWARGS 388
+#define TK_LANGUAGE 389
+#define TK_LICENSEE 390
+#define TK_NAME 391
+#define TK_OPTIONAL 392
+#define TK_ORDER 393
+#define TK_REMOVELEADING 394
+#define TK_SET 395
+#define TK_SIGNATURE 396
+#define TK_TIMESTAMP 397
+#define TK_TYPE 398
+#define TK_USEARGNAMES 399
+#define TK_USELIMITEDAPI 400
+#define TK_ALLRAISEPYEXC 401
+#define TK_CALLSUPERINIT 402
+#define TK_DEFERRORHANDLER 403
+#define TK_VERSION 404
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 193 "sip-4.18.1/sipgen/metasrc/parser.y"
+#line 194 "sip-4.19/sipgen/metasrc/parser.y"
 {
     char            qchar;
     char            *text;
@@ -364,6 +370,7 @@ typedef union YYSTYPE
     defEncodingCfg  defencoding;
     defMetatypeCfg  defmetatype;
     defSupertypeCfg defsupertype;
+    hiddenNsCfg     hiddenns;
     exceptionCfg    exception;
     docstringCfg    docstring;
     extractCfg      extract;
@@ -379,7 +386,7 @@ typedef union YYSTYPE
     int             token;
 }
 /* Line 1529 of yacc.c.  */
-#line 383 "sip-4.18.1/sipgen/parser.h"
+#line 390 "sip-4.19/sipgen/parser.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

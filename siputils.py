@@ -809,8 +809,7 @@ class Makefile:
 
         libs.extend(self.optional_list("LIBS_WINDOWS"))
 
-        # Don't append any rpaths
-        #lflags.extend(self._platform_rpaths(rpaths.as_list()))
+        lflags.extend(self._platform_rpaths(rpaths.as_list()))
 
         # Save the transformed values.
         self.CFLAGS.set(cflags)
@@ -961,15 +960,6 @@ class Makefile:
         clib is the library name in cannonical form.
         framework is set of the library is implemented as a MacOS framework.
         """
-        ##################################################################
-        # Generally, the linker is intelligent enough not to need this   #
-        # additional information!                                        #
-        # And Qt4's pkg-config and prl files are broken                  #
-        # Changed for Debian packaging, Torsten Marek <shlomme@gmx.net>  #
-        ##################################################################
-
-        return []
-
         if self.generator in ("MSVC", "MSVC.NET", "MSBUILD", "BMAKE"):
             prl_name = os.path.join(self.config.qt_lib_dir, clib + ".prl")
         elif sys.platform == "darwin" and framework:
@@ -1691,9 +1681,6 @@ class ModuleMakefile(Makefile):
         for mf in self._build["moc_headers"].split():
             root, discard = os.path.splitext(mf)
             cpp = "moc_" + root + ".cpp"
-
-            if self._src_dir != self.dir:
-                mf = os.path.join(self._src_dir, mf)
 
             mfile.write("\n%s: %s\n" % (cpp, mf))
             mfile.write("\t$(MOC) -o %s $<\n" % cpp)

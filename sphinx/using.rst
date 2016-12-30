@@ -513,6 +513,10 @@ uses :directive:`%DefaultSupertype` to specify that the smaller
 default and use :class:`sip.wrapper` as the super-type so that the parent/child
 relationships of ``QObject`` instances are properly maintained.
 
+.. note::
+
+    It is not possible to define new super-types or meta-types if the limited
+    Python API is enabled.
 
 .. _ref-lazy-type-attributes:
 
@@ -664,7 +668,7 @@ Building a Private Copy of the ``sip`` Module
 .. versionadded:: 4.12
 
 The ``sip`` module is intended to be be used by all the SIP generated modules
-of a particular Python installation.  For example PyQt3 and PyQt4 are
+of a particular Python installation.  For example PyQt4 and PyQt5 are
 completely independent of each other but will use the same ``sip`` module.
 However, this means that all the generated modules must be built against a
 compatible version of SIP.  If you do not have complete control over the

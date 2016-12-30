@@ -30,8 +30,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x041201
-sip_version_str = "4.18.1"
+sip_version = 0x041300
+sip_version_str = "4.19"
 py_version = sys.hexversion >> 8
 py_platform = sys.platform
 plat_py_site_dir = None
@@ -729,10 +729,11 @@ def create_optparser(sdk_dir):
             metavar="DIR", dest="sipsipdir", callback=store_abspath,
             help="where .sip files are normally installed [default: "
                     "%s]" % plat_sip_dir)
-    g.add_option("--no-pyi", action="store_false", default=True, dest="pyi",
+    g.add_option("--no-stubs", "--no-pyi", action="store_false", default=True,
+            dest="pyi",
             help="do not install the sip.pyi stub file")
-    g.add_option("--pyidir", action="callback", type="string", metavar="DIR",
-            dest="pyidir", callback=store_abspath,
+    g.add_option("--stubsdir", "--pyidir", action="callback", type="string",
+            metavar="DIR", dest="pyidir", callback=store_abspath,
             help="where the sip.pyi stub file will be installed [default: "
                     "%s]" % plat_py_site_dir)
     p.add_option_group(g)
