@@ -81,14 +81,14 @@ static void newVar(sipSpec *pt, moduleDef *mod, char *name, int isstatic,
         codeBlock *scode, int section);
 static void newCtor(moduleDef *, char *, int, signatureDef *, optFlags *,
         codeBlock *, throwArgs *, signatureDef *, int, codeBlock *);
-static void newFunction(sipSpec *, moduleDef *, classDef *, mappedTypeDef *,
-        int, int, int, int, int, char *, signatureDef *, int, int, optFlags *,
-        codeBlock *, codeBlock *, codeBlock *, throwArgs *, signatureDef *,
-        codeBlock *);
+static void newFunction(sipSpec *, moduleDef *, classDef *, ifaceFileDef *,
+        mappedTypeDef *, int, int, int, int, int, char *, signatureDef *, int,
+        int, optFlags *, codeBlock *, codeBlock *, codeBlock *, throwArgs *,
+        signatureDef *, codeBlock *, int);
 static optFlag *findOptFlag(optFlags *flgs, const char *name);
 static optFlag *getOptFlag(optFlags *flgs, const char *name, flagType ft);
 static memberDef *findFunction(sipSpec *, moduleDef *, classDef *,
-        mappedTypeDef *, const char *, int, int, int);
+        ifaceFileDef *, mappedTypeDef *, const char *, int, int, int);
 static void checkAttributes(sipSpec *, moduleDef *, classDef *,
         mappedTypeDef *, const char *, int);
 static void newModule(FILE *fp, const char *filename);
@@ -173,8 +173,8 @@ static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
         const char *name, const char *get, const char *set,
         codeBlock *docstring);
 static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
-        const char *filename, const char *name, int version, int c_module,
-        KwArgs kwargs, int use_arg_names, int call_super_init,
+        const char *filename, const char *name, int c_module, KwArgs kwargs,
+        int use_arg_names, int use_limited_api, int call_super_init,
         int all_raise_py_exc, const char *def_error_handler,
         codeBlock *docstring);
 static void addAutoPyName(moduleDef *mod, const char *remove_leading);
@@ -188,6 +188,7 @@ static void add_new_deref(argDef *new, argDef *orig, int isconst);
 static void add_derefs(argDef *dst, argDef *src);
 static int isBackstop(qualDef *qd);
 static void checkEllipsis(signatureDef *sd);
+static scopedNameDef *fullyQualifiedName(scopedNameDef *snd);
 %}
 
 %union {
@@ -217,6 +218,7 @@ static void checkEllipsis(signatureDef *sd);
     defEncodingCfg  defencoding;
     defMetatypeCfg  defmetatype;
     defSupertypeCfg defsupertype;
+    hiddenNsCfg     hiddenns;
     exceptionCfg    exception;
     docstringCfg    docstring;
     extractCfg      extract;
@@ -353,10 +355,12 @@ static void checkEllipsis(signatureDef *sd);
 %token          TK_VIRTERRORCODE
 %token          TK_EXPLICIT
 %token          TK_TEMPLATE
+%token          TK_FINAL
 %token          TK_ELLIPSIS
 %token          TK_DEFMETATYPE
 %token          TK_DEFSUPERTYPE
 %token          TK_PROPERTY
+%token          TK_HIDE_NS
 
 %token          TK_FORMAT
 %token          TK_GET
@@ -373,6 +377,7 @@ static void checkEllipsis(signatureDef *sd);
 %token          TK_TIMESTAMP
 %token          TK_TYPE
 %token          TK_USEARGNAMES
+%token          TK_USELIMITEDAPI
 %token          TK_ALLRAISEPYEXC
 %token          TK_CALLSUPERINIT
 %token          TK_DEFERRORHANDLER
@@ -394,6 +399,7 @@ static void checkEllipsis(signatureDef *sd);
 %type <number>          optslot
 %type <number>          optref
 %type <number>          optconst
+%type <number>          optfinal
 %type <number>          optvirtual
 %type <number>          optabstract
 %type <number>          optnumber
@@ -439,6 +445,7 @@ static void checkEllipsis(signatureDef *sd);
 %type <qchar>           binop
 %type <scpvalp>         scopepart
 %type <scpvalp>         scopedname
+%type <scpvalp>         scopednamehead
 %type <scpvalp>         optcast
 %type <fcall>           exprlist
 %type <boolean>         qualifiers
@@ -486,6 +493,10 @@ static void checkEllipsis(signatureDef *sd);
 %type <defsupertype>    defsupertype_args
 %type <defsupertype>    defsupertype_arg_list
 %type <defsupertype>    defsupertype_arg
+
+%type <hiddenns>        hiddenns_args
+%type <hiddenns>        hiddenns_arg_list
+%type <hiddenns>        hiddenns_arg
 
 %type <exception>       exception_body
 %type <exception>       exception_body_directives
@@ -583,6 +594,7 @@ modstatement:   module
     |   defencoding
     |   defmetatype
     |   defsupertype
+    |   hiddenns
     |   exphdrcode
     |   modhdrcode
     |   modcode
@@ -700,7 +712,10 @@ defencoding_arg:    TK_NAME '=' TK_STRING_VALUE {
     ;
 
 plugin:     TK_PLUGIN plugin_args {
-            /* Note that %Plugin is internal in SIP v4. */
+            /*
+             * Note that %Plugin is internal in SIP v4.  The current thinking
+             * is that it won't be needed for SIP v5.
+             */
 
             if (notSkipping())
                 appendString(&currentSpec->plugins, $2.name);
@@ -756,7 +771,7 @@ virterrorhandler:   TK_VIRTERRORHANDLER veh_args codeblock {
                 veh->name = $2.name;
                 appendCodeBlock(&veh->code, $3);
                 veh->mod = currentModule;
-                veh->index = currentModule->nrvirterrorhandlers++;
+                veh->index = -1;
                 veh->next = NULL;
 
                 *tailp = veh;
@@ -900,9 +915,6 @@ exception:  TK_EXCEPTION scopedname baseexception optflags exception_body {
 
                 if (getOptFlag(&$4, "Default", bool_flag) != NULL)
                     currentModule->defexception = xd;
-
-                if (xd->bibase != NULL || xd->base != NULL)
-                    xd->exceptionnr = currentModule->nrexceptions++;
             }
         }
     ;
@@ -1137,9 +1149,11 @@ mappedtypetmpl: template TK_MAPPEDTYPE basetype optflags {
                 if ($3.atype != template_type)
                     yyerror("%MappedType template must map a template type");
 
+                $3.u.td->fqname  = fullyQualifiedName($3.u.td->fqname);
+
                 /* Check a template hasn't already been provided. */
                 for (mtt = currentSpec->mappedtypetemplates; mtt != NULL; mtt = mtt->next)
-                    if (compareScopedNames(mtt->mt->type.u.td->fqname, $3.u.td->fqname) == 0 && sameTemplateSignature(&mtt->mt->type.u.td->types, &$3.u.td->types, TRUE))
+                    if (compareScopedNames(mtt->mt->type.u.td->fqname, $3.u.td->fqname ) == 0 && sameTemplateSignature(&mtt->mt->type.u.td->types, &$3.u.td->types, TRUE))
                         yyerror("%MappedType template for this type has already been defined");
 
                 $3.nrderefs = 0;
@@ -1230,9 +1244,10 @@ mtfunction: TK_STATIC cpptype TK_NAME_VALUE '(' arglist ')' optconst optexceptio
 
                 $5.result = $2;
 
-                newFunction(currentSpec, currentModule, NULL,
+                newFunction(currentSpec, currentModule, NULL, NULL,
                         currentMappedType, 0, TRUE, FALSE, FALSE, FALSE, $3,
-                        &$5, $7, FALSE, &$9, $13, NULL, NULL, $8, $10, $12);
+                        &$5, $7, FALSE, &$9, $13, NULL, NULL, $8, $10, $12,
+                        FALSE);
             }
         }
     ;
@@ -1612,6 +1627,46 @@ defsupertype_arg:   TK_NAME '=' dottedname {
         }
     ;
 
+hiddenns:   TK_HIDE_NS hiddenns_args {
+            if (notSkipping())
+            {
+                classDef *ns;
+
+                ns = newClass(currentSpec, namespace_iface, NULL,
+                        fullyQualifiedName($2.name), NULL, NULL, NULL, NULL);
+                setHiddenNamespace(ns);
+            }
+        }
+    ;
+
+hiddenns_args:  scopedname {
+            resetLexerState();
+
+            $$.name = $1;
+        }
+    |   '(' hiddenns_arg_list ')' {
+            $$ = $2;
+        }
+    ;
+
+hiddenns_arg_list:  hiddenns_arg
+    |   hiddenns_arg_list ',' hiddenns_arg {
+            $$ = $1;
+
+            switch ($3.token)
+            {
+            case TK_NAME: $$.name = $3.name; break;
+            }
+        }
+    ;
+
+hiddenns_arg:   TK_NAME '=' scopedname {
+            $$.token = TK_NAME;
+
+            $$.name = $3;
+        }
+    ;
+
 consmodule: TK_CONSMODULE consmodule_args consmodule_body {
             deprecated("%ConsolidatedModule is deprecated and will not be supported by SIP v5");
 
@@ -1792,8 +1847,8 @@ module: TK_MODULE module_args module_body {
 
             if (notSkipping())
                 currentModule = configureModule(currentSpec, currentModule,
-                        currentContext.filename, $2.name, $2.version,
-                        $2.c_module, $2.kwargs, $2.use_arg_names,
+                        currentContext.filename, $2.name, $2.c_module,
+                        $2.kwargs, $2.use_arg_names, $2.use_limited_api,
                         $2.call_super_init, $2.all_raise_py_exc,
                         $2.def_error_handler, $3.docstring);
         }
@@ -1802,8 +1857,8 @@ module: TK_MODULE module_args module_body {
 
             if (notSkipping())
                 currentModule = configureModule(currentSpec, currentModule,
-                        currentContext.filename, $2, $3, TRUE, defaultKwArgs,
-                        FALSE, -1, FALSE, NULL, NULL);
+                        currentContext.filename, $2, TRUE, defaultKwArgs,
+                        FALSE, FALSE, -1, FALSE, NULL, NULL);
         }
     ;
 
@@ -1815,10 +1870,10 @@ module_args:    dottedname {resetLexerState();} optnumber {
             $$.kwargs = defaultKwArgs;
             $$.name = $1;
             $$.use_arg_names = FALSE;
+            $$.use_limited_api = FALSE;
             $$.all_raise_py_exc = FALSE;
             $$.call_super_init = -1;
             $$.def_error_handler = NULL;
-            $$.version = $3;
         }
     |   '(' module_arg_list ')' {
             $$ = $2;
@@ -1835,10 +1890,10 @@ module_arg_list:    module_arg
             case TK_LANGUAGE: $$.c_module = $3.c_module; break;
             case TK_NAME: $$.name = $3.name; break;
             case TK_USEARGNAMES: $$.use_arg_names = $3.use_arg_names; break;
+            case TK_USELIMITEDAPI: $$.use_limited_api = $3.use_limited_api; break;
             case TK_ALLRAISEPYEXC: $$.all_raise_py_exc = $3.all_raise_py_exc; break;
             case TK_CALLSUPERINIT: $$.call_super_init = $3.call_super_init; break;
             case TK_DEFERRORHANDLER: $$.def_error_handler = $3.def_error_handler; break;
-            case TK_VERSION: $$.version = $3.version; break;
             }
         }
     ;
@@ -1850,10 +1905,10 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = convertKwArgs($3);
             $$.name = NULL;
             $$.use_arg_names = FALSE;
+            $$.use_limited_api = FALSE;
             $$.all_raise_py_exc = FALSE;
             $$.call_super_init = -1;
             $$.def_error_handler = NULL;
-            $$.version = -1;
         }
     |   TK_LANGUAGE '=' TK_STRING_VALUE {
             $$.token = TK_LANGUAGE;
@@ -1868,10 +1923,10 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = defaultKwArgs;
             $$.name = NULL;
             $$.use_arg_names = FALSE;
+            $$.use_limited_api = FALSE;
             $$.all_raise_py_exc = FALSE;
             $$.call_super_init = -1;
             $$.def_error_handler = NULL;
-            $$.version = -1;
         }
     |   TK_NAME '=' dottedname {
             $$.token = TK_NAME;
@@ -1880,10 +1935,10 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = defaultKwArgs;
             $$.name = $3;
             $$.use_arg_names = FALSE;
+            $$.use_limited_api = FALSE;
             $$.all_raise_py_exc = FALSE;
             $$.call_super_init = -1;
             $$.def_error_handler = NULL;
-            $$.version = -1;
         }
     |   TK_USEARGNAMES '=' bool_value {
             $$.token = TK_USEARGNAMES;
@@ -1892,10 +1947,22 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = defaultKwArgs;
             $$.name = NULL;
             $$.use_arg_names = $3;
+            $$.use_limited_api = FALSE;
             $$.all_raise_py_exc = FALSE;
             $$.call_super_init = -1;
             $$.def_error_handler = NULL;
-            $$.version = -1;
+        }
+    |   TK_USELIMITEDAPI '=' bool_value {
+            $$.token = TK_USELIMITEDAPI;
+
+            $$.c_module = FALSE;
+            $$.kwargs = defaultKwArgs;
+            $$.name = NULL;
+            $$.use_arg_names = FALSE;
+            $$.use_limited_api = $3;
+            $$.all_raise_py_exc = FALSE;
+            $$.call_super_init = -1;
+            $$.def_error_handler = NULL;
         }
     |   TK_ALLRAISEPYEXC '=' bool_value {
             $$.token = TK_ALLRAISEPYEXC;
@@ -1904,10 +1971,10 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = defaultKwArgs;
             $$.name = NULL;
             $$.use_arg_names = FALSE;
+            $$.use_limited_api = FALSE;
             $$.all_raise_py_exc = $3;
             $$.call_super_init = -1;
             $$.def_error_handler = NULL;
-            $$.version = -1;
         }
     |   TK_CALLSUPERINIT '=' bool_value {
             $$.token = TK_CALLSUPERINIT;
@@ -1916,10 +1983,10 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = defaultKwArgs;
             $$.name = NULL;
             $$.use_arg_names = FALSE;
+            $$.use_limited_api = FALSE;
             $$.all_raise_py_exc = FALSE;
             $$.call_super_init = $3;
             $$.def_error_handler = NULL;
-            $$.version = -1;
         }
     |   TK_DEFERRORHANDLER '=' TK_NAME_VALUE {
             $$.token = TK_DEFERRORHANDLER;
@@ -1928,12 +1995,14 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = defaultKwArgs;
             $$.name = NULL;
             $$.use_arg_names = FALSE;
+            $$.use_limited_api = FALSE;
             $$.all_raise_py_exc = FALSE;
             $$.call_super_init = -1;
             $$.def_error_handler = $3;
-            $$.version = -1;
         }
     |   TK_VERSION '=' TK_NUMBER_VALUE {
+            deprecated("%Module version numbers are deprecated and ignored");
+
             if ($3 < 0)
                 yyerror("%Module 'version' argument cannot be negative");
 
@@ -1943,10 +2012,10 @@ module_arg: TK_KWARGS '=' TK_STRING_VALUE {
             $$.kwargs = defaultKwArgs;
             $$.name = NULL;
             $$.use_arg_names = FALSE;
+            $$.use_limited_api = FALSE;
             $$.all_raise_py_exc = FALSE;
             $$.call_super_init = -1;
             $$.def_error_handler = NULL;
-            $$.version = $3;
         }
     ;
 
@@ -2681,12 +2750,21 @@ optcast:    {
         }
     ;
 
-scopedname: scopepart
-    |   scopedname TK_SCOPE scopepart {
-            if (currentSpec -> genc)
+scopedname: TK_SCOPE scopednamehead {
+            if (currentSpec->genc)
                 yyerror("Scoped names are not allowed in a C module");
 
-            appendScopedName(&$1,$3);
+            $$ = scopeScopedName(NULL, $2);
+        }
+    |       scopednamehead
+    ;
+
+scopednamehead: scopepart
+    |   scopednamehead TK_SCOPE scopepart {
+            if (currentSpec->genc)
+                yyerror("Scoped names are not allowed in a C module");
+
+            appendScopedName(&$1, $3);
         }
     ;
 
@@ -3003,6 +3081,13 @@ superclass: class_access scopedname {
 
                 if (ad.atype != no_type)
                     yyerror("Super-class list contains an invalid type");
+
+                /*
+                 * This is a bug because we should look in the local scope
+                 * rather than assume it is in the global scope.
+                 */
+                if (snd->name[0] != '\0')
+                    snd = scopeScopedName(NULL, snd);
 
                 /*
                  * Note that passing NULL as the API is a bug.  Instead we
@@ -3515,17 +3600,17 @@ optvirtual: {
         }
     ;
 
-function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optexceptions optabstract optflags optsig ';' optdocstring methodcode virtualcatchercode virtualcallcode {
+function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optfinal optexceptions optabstract optflags optsig ';' optdocstring methodcode virtualcatchercode virtualcallcode {
             if (notSkipping())
             {
-                applyTypeFlags(currentModule, &$1, &$9);
+                applyTypeFlags(currentModule, &$1, &$10);
 
                 $4.result = $1;
 
                 newFunction(currentSpec, currentModule, currentScope(), NULL,
-                        sectionFlags, currentIsStatic, currentIsSignal,
-                        currentIsSlot, currentOverIsVirt, $2, &$4, $6, $8, &$9,
-                        $13, $14, $15, $7, $10, $12);
+                        NULL, sectionFlags, currentIsStatic, currentIsSignal,
+                        currentIsSlot, currentOverIsVirt, $2, &$4, $6, $9,
+                        &$10, $14, $15, $16, $8, $11, $13, $7);
             }
 
             currentIsStatic = FALSE;
@@ -3553,19 +3638,27 @@ function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optexceptions optabst
             currentIsSlot = FALSE;
             currentOverIsVirt = FALSE;
         }
-    |   cpptype TK_OPERATOR operatorname '(' arglist ')' optconst optexceptions optabstract optflags optsig ';' methodcode virtualcatchercode virtualcallcode {
+    |   cpptype TK_OPERATOR operatorname '(' arglist ')' optconst optfinal optexceptions optabstract optflags optsig ';' methodcode virtualcatchercode virtualcallcode {
             if (notSkipping())
             {
                 classDef *cd = currentScope();
+                ifaceFileDef *ns_scope;
 
                 /*
                  * If the scope is a namespace then make sure the operator is
-                 * handled as a global.
+                 * handled as a global, but remember it's C++ scope..
                  */
                 if (cd != NULL && cd->iff->type == namespace_iface)
+                {
+                    ns_scope = cd->iff;
                     cd = NULL;
+                }
+                else
+                {
+                    ns_scope = NULL;
+                }
 
-                applyTypeFlags(currentModule, &$1, &$10);
+                applyTypeFlags(currentModule, &$1, &$11);
 
                 /* Handle the unary '+' and '-' operators. */
                 if ((cd != NULL && $5.nrArgs == 0) || (cd == NULL && $5.nrArgs == 1))
@@ -3578,10 +3671,10 @@ function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optexceptions optabst
 
                 $5.result = $1;
 
-                newFunction(currentSpec, currentModule, cd, NULL,
+                newFunction(currentSpec, currentModule, cd, ns_scope, NULL,
                         sectionFlags, currentIsStatic, currentIsSignal,
-                        currentIsSlot, currentOverIsVirt, $3, &$5, $7, $9,
-                        &$10, $13, $14, $15, $8, $11, NULL);
+                        currentIsSlot, currentOverIsVirt, $3, &$5, $7, $10,
+                        &$11, $14, $15, $16, $9, $12, NULL, $8);
             }
 
             currentIsStatic = FALSE;
@@ -3589,7 +3682,7 @@ function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optexceptions optabst
             currentIsSlot = FALSE;
             currentOverIsVirt = FALSE;
         }
-    |   TK_OPERATOR cpptype '(' arglist ')' optconst optexceptions optabstract optflags optsig ';' methodcode virtualcatchercode virtualcallcode {
+    |   TK_OPERATOR cpptype '(' arglist ')' optconst optfinal optexceptions optabstract optflags optsig ';' methodcode virtualcatchercode virtualcallcode {
             if (notSkipping())
             {
                 char *sname;
@@ -3598,7 +3691,7 @@ function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optexceptions optabst
                 if (scope == NULL || $4.nrArgs != 0)
                     yyerror("Operator casts must be specified in a class and have no arguments");
 
-                applyTypeFlags(currentModule, &$2, &$9);
+                applyTypeFlags(currentModule, &$2, &$10);
 
                 switch ($2.atype)
                 {
@@ -3641,10 +3734,10 @@ function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optexceptions optabst
                 {
                     $4.result = $2;
 
-                    newFunction(currentSpec, currentModule, scope, NULL,
+                    newFunction(currentSpec, currentModule, scope, NULL, NULL,
                             sectionFlags, currentIsStatic, currentIsSignal,
                             currentIsSlot, currentOverIsVirt, sname, &$4, $6,
-                            $8, &$9, $12, $13, $14, $7, $10, NULL);
+                            $9, &$10, $13, $14, $15, $8, $11, NULL, $7);
                 }
                 else
                 {
@@ -3705,6 +3798,14 @@ optconst:   {
             $$ = FALSE;
         }
     |   TK_CONST {
+            $$ = TRUE;
+        }
+    ;
+
+optfinal:   {
+            $$ = FALSE;
+        }
+    |   TK_FINAL {
             $$ = TRUE;
         }
     ;
@@ -4656,10 +4757,8 @@ static moduleDef *allocModule()
 
     newmod = sipMalloc(sizeof (moduleDef));
 
-    newmod->version = -1;
     newmod->defdocstring = raw;
     newmod->encoding = no_type;
-    newmod->nrvirthandlers = -1;
     newmod->next_key = -1;
 
     /*
@@ -4926,6 +5025,7 @@ static exceptionDef *findException(sipSpec *pt, scopedNameDef *fqname, int new)
     xd = sipMalloc(sizeof (exceptionDef));
 
     xd->exceptionnr = -1;
+    xd->needed = FALSE;
     xd->iff = iff;
     xd->pyname = NULL;
     xd->cd = cd;
@@ -5023,6 +5123,10 @@ static classDef *newClass(sipSpec *pt, ifaceFileType iftype,
                 continue;
 
             cd->real = ns;
+
+            if (inMainModule())
+                ns->iff->first_alt->needed = TRUE;
+
             break;
         }
     }
@@ -5310,17 +5414,18 @@ static mappedTypeDef *newMappedType(sipSpec *pt, argDef *ad, optFlags *of)
     switch (ad->atype)
     {
     case defined_type:
-        snd = ad->u.snd;
+        snd = ad->u.snd = fullyQualifiedName(ad->u.snd);
         cname = scopedNameTail(snd);
         break;
 
     case template_type:
+        ad->u.td->fqname = fullyQualifiedName(ad->u.td->fqname);
         snd = encodedTemplateName(ad->u.td);
         cname = NULL;
         break;
 
     case struct_type:
-        snd = ad->u.sname;
+        snd = ad->u.sname = fullyQualifiedName(ad->u.sname);
         cname = scopedNameTail(snd);
         break;
 
@@ -5385,6 +5490,9 @@ mappedTypeDef *allocMappedType(sipSpec *pt, argDef *type)
     mtd->type.nrderefs = 0;
 
     mtd->cname = cacheName(pt, type2string(&mtd->type));
+
+    /* Keep track of the original definition as it gets copied. */
+    mtd->real = mtd;
 
     return mtd;
 }
@@ -5738,6 +5846,15 @@ static char *type2string(argDef *ad)
 
 
 /*
+ * Remove any explicit global scope.
+ */
+scopedNameDef *removeGlobalScope(scopedNameDef *snd)
+{
+    return ((snd != NULL && snd->name[0] == '\0') ? snd->next : snd);
+}
+
+
+/*
  * Convert a scoped name to a string on the heap.
  */
 static char *scopedNameToString(scopedNameDef *name)
@@ -5746,6 +5863,12 @@ static char *scopedNameToString(scopedNameDef *name)
     size_t len;
     scopedNameDef *snd;
     char *s, *dp;
+
+    /*
+     * We don't want the global scope (which probably should always be there,
+     * but we check anyway).
+     */
+    name = removeGlobalScope(name);
 
     /* Work out the length of buffer needed. */
     len = 0;
@@ -6056,26 +6179,7 @@ static overDef *instantiateTemplateOverloads(sipSpec *pt, overDef *tod,
 
         nod->methodcode = templateCode(pt, used, nod->methodcode, type_names, type_values);
         nod->virtcallcode = templateCode(pt, used, nod->virtcallcode, type_names, type_values);
-
-        /* Handle any virtual handler. */
-        if (od->virthandler != NULL)
-        {
-            moduleDef *mod = cd->iff->module;
-
-            nod->virthandler = sipMalloc(sizeof (virtHandlerDef));
-
-            /* Start with a shallow copy. */
-            *nod->virthandler = *od->virthandler;
-
-            nod->virthandler->pysig = &nod->pysig;
-            nod->virthandler->cppsig = nod->cppsig;
-
-            nod->virthandler->module = mod;
-            nod->virthandler->virtcode = templateCode(pt, used, nod->virthandler->virtcode, type_names, type_values);
-            nod->virthandler->next = mod->virthandlers;
-
-            mod->virthandlers = nod->virthandler;
-        }
+        nod->virtcode = templateCode(pt, used, nod->virtcode, type_names, type_values);
 
         nod->next = NULL;
         *odtail = nod;
@@ -6525,6 +6629,17 @@ static void addUsedFromCode(sipSpec *pt, ifaceFileList **used, const char *sname
  */
 static int sameName(scopedNameDef *snd, const char *sname)
 {
+    /* Handle any explicit scopes. */
+    if (sname[0] == ':' && sname[1] == ':')
+    {
+        if (snd->name[0] != '\0')
+            return FALSE;
+
+        sname += 2;
+    }
+
+    snd = removeGlobalScope(snd);
+
     while (snd != NULL && *sname != '\0')
     {
         const char *sp = snd->name;
@@ -6916,11 +7031,12 @@ static void newCtor(moduleDef *mod, char *name, int sectFlags,
  * Create a new function.
  */
 static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
-        mappedTypeDef *mt_scope, int sflags, int isstatic, int issignal,
-        int isslot, int isvirt, char *name, signatureDef *sig, int isconst,
-        int isabstract, optFlags *optflgs, codeBlock *methodcode,
-        codeBlock *vcode, codeBlock *virtcallcode, throwArgs *exceptions,
-        signatureDef *cppsig, codeBlock *docstring)
+        ifaceFileDef *ns_scope, mappedTypeDef *mt_scope, int sflags,
+        int isstatic, int issignal, int isslot, int isvirt, char *name,
+        signatureDef *sig, int isconst, int isabstract, optFlags *optflgs,
+        codeBlock *methodcode, codeBlock *vcode, codeBlock *virtcallcode,
+        throwArgs *exceptions, signatureDef *cppsig, codeBlock *docstring,
+        int isfinal)
 {
     static const char *annos[] = {
         "__len__",
@@ -6965,7 +7081,6 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
     int factory, xferback, no_arg_parser, no_virt_error_handler;
     overDef *od, **odp, **headp;
     optFlag *of;
-    virtHandlerDef *vhd;
 
     checkAnnos(optflgs, annos);
 
@@ -7126,6 +7241,9 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
     if (isconst)
         setIsConst(od);
 
+    if (isfinal)
+        setIsFinal(od);
+
     if (isabstract)
     {
         if (sflags == 0)
@@ -7145,25 +7263,14 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
 
     if (isvirt)
     {
-        if (isSignal(od) && pluginPyQt3(pt))
-            yyerror("Virtual signals aren't supported");
-
-        setIsVirtual(od);
-        setHasShadow(c_scope);
-
-        vhd = sipMalloc(sizeof (virtHandlerDef));
-
-        vhd->virthandlernr = -1;
-        vhd->vhflags = 0;
-        vhd->pysig = &od->pysig;
-        vhd->cppsig = (cppsig != NULL ? cppsig : &od->pysig);
-        appendCodeBlock(&vhd->virtcode, vcode);
-
-        if (factory || xferback)
-            setIsTransferVH(vhd);
+        if (!isfinal)
+        {
+            setIsVirtual(od);
+            setHasShadow(c_scope);
+        }
 
         if (getOptFlag(optflgs, "AbortOnException", bool_flag) != NULL)
-            setAbortOnException(vhd);
+            setAbortOnException(od);
 
         if (no_virt_error_handler)
         {
@@ -7176,18 +7283,6 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         {
             od->virt_error_handler = virt_error_handler;
         }
-
-        /*
-         * Only add it to the module's virtual handlers if we are not in a
-         * class template.
-         */
-        if (!currentIsTemplate)
-        {
-            vhd->module = mod;
-
-            vhd->next = mod->virthandlers;
-            mod->virthandlers = vhd;
-        }
     }
     else
     {
@@ -7199,8 +7294,6 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
 
         if (no_virt_error_handler)
             yyerror("/NoVirtualErrorHandler/ provided for non-virtual function");
-
-        vhd = NULL;
     }
 
     od->cppname = name;
@@ -7209,7 +7302,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
     od->exceptions = exceptions;
     appendCodeBlock(&od->methodcode, methodcode);
     appendCodeBlock(&od->virtcallcode, virtcallcode);
-    od->virthandler = vhd;
+    appendCodeBlock(&od->virtcode, vcode);
 
     no_arg_parser = (getOptFlag(optflgs, "NoArgParser", bool_flag) != NULL);
 
@@ -7243,7 +7336,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
 
     pyname = getPythonName(mod, optflgs, name);
 
-    od->common = findFunction(pt, mod, c_scope, mt_scope, pyname,
+    od->common = findFunction(pt, mod, c_scope, ns_scope, mt_scope, pyname,
             (methodcode != NULL), sig->nrArgs, no_arg_parser);
 
     if (isProtected(od))
@@ -7373,8 +7466,8 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
             appendCodeBlock(&len->methodcode, code);
         }
 
-        len->common = findFunction(pt, mod, c_scope, mt_scope, len->cppname,
-                TRUE, 0, FALSE);
+        len->common = findFunction(pt, mod, c_scope, ns_scope, mt_scope,
+                len->cppname, TRUE, 0, FALSE);
 
         len->next = od->next;
         od->next = len;
@@ -7393,7 +7486,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
 
         matmul->methodcode = od->methodcode;
 
-        matmul->common = findFunction(pt, mod, c_scope, mt_scope,
+        matmul->common = findFunction(pt, mod, c_scope, ns_scope, mt_scope,
                 matmul->cppname, (matmul->methodcode != NULL),
                 matmul->pysig.nrArgs, FALSE);
 
@@ -7414,7 +7507,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
 
         imatmul->methodcode = od->methodcode;
 
-        imatmul->common = findFunction(pt, mod, c_scope, mt_scope,
+        imatmul->common = findFunction(pt, mod, c_scope, ns_scope, mt_scope,
                 imatmul->cppname, (imatmul->methodcode != NULL),
                 imatmul->pysig.nrArgs, FALSE);
 
@@ -7502,8 +7595,8 @@ nameDef *cacheName(sipSpec *pt, const char *name)
  * Find (or create) an overloaded function name.
  */
 static memberDef *findFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
-        mappedTypeDef *mt_scope, const char *pname, int hwcode, int nrargs,
-        int no_arg_parser)
+        ifaceFileDef *ns_scope, mappedTypeDef *mt_scope, const char *pname,
+        int hwcode, int nrargs, int no_arg_parser)
 {
     static struct slot_map {
         const char *name;   /* The slot name. */
@@ -7637,6 +7730,7 @@ static memberDef *findFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         md->memberflags = 0;
         md->slot = st;
         md->module = mod;
+        md->ns_scope = ns_scope;
         md->next = *flist;
 
         *flist = md;
@@ -8110,7 +8204,7 @@ static scopedNameDef *scopeScopedName(ifaceFileDef *scope, scopedNameDef *name)
 {
     scopedNameDef *snd;
 
-    snd = (scope != NULL ? copyScopedName(scope->fqcname) : NULL);
+    snd = (scope != NULL ? copyScopedName(scope->fqcname) : text2scopePart(""));
 
     appendScopedName(&snd, name);
 
@@ -8126,10 +8220,10 @@ char *scopedNameTail(scopedNameDef *snd)
     if (snd == NULL)
         return NULL;
 
-    while (snd -> next != NULL)
-        snd = snd -> next;
+    while (snd->next != NULL)
+        snd = snd->next;
 
-    return snd -> name;
+    return snd->name;
 }
 
 
@@ -8599,15 +8693,6 @@ static int getNoTypeHint(optFlags *optflgs)
 
 
 /*
- * Return TRUE if the PyQt3 plugin was specified.
- */
-int pluginPyQt3(sipSpec *pt)
-{
-    return stringFind(pt->plugins, "PyQt3");
-}
-
-
-/*
  * Return TRUE if the PyQt4 plugin was specified.
  */
 int pluginPyQt4(sipSpec *pt)
@@ -8664,17 +8749,28 @@ static void setModuleName(sipSpec *pt, moduleDef *mod, const char *fullname)
  */
 static void defineClass(scopedNameDef *snd, classList *supers, optFlags *of)
 {
-    classDef *cd, *c_scope = currentScope();
+    classDef *cd;
     typeHintDef *in, *out;
 
     getTypeHints(of, &in, &out);
 
     cd = newClass(currentSpec, class_iface, getAPIRange(of),
-            scopeScopedName((c_scope != NULL ? c_scope->iff : NULL), snd),
-            getVirtErrorHandler(of), in, out, getTypeHintValue(of));
+            fullyQualifiedName(snd), getVirtErrorHandler(of), in, out,
+            getTypeHintValue(of));
     cd->supers = supers;
 
     pushScope(cd);
+}
+
+
+/*
+ * Return a fully qualified scoped name.
+ */
+static scopedNameDef *fullyQualifiedName(scopedNameDef *snd)
+{
+    classDef *scope = currentScope();
+
+    return scopeScopedName((scope != NULL ? scope->iff : NULL), snd);
 }
 
 
@@ -9048,8 +9144,8 @@ static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
  * Configure a module and return the (possibly new) current module.
  */
 static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
-        const char *filename, const char *name, int version, int c_module,
-        KwArgs kwargs, int use_arg_names, int call_super_init,
+        const char *filename, const char *name, int c_module, KwArgs kwargs,
+        int use_arg_names, int use_limited_api, int call_super_init,
         int all_raise_py_exc, const char *def_error_handler,
         codeBlock *docstring)
 {
@@ -9077,7 +9173,6 @@ static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
     setModuleName(pt, module, name);
     module->kwargs = kwargs;
     module->virt_error_handler = def_error_handler;
-    module->version = version;
     appendCodeBlock(&module->docstring, docstring);
 
     if (all_raise_py_exc)
@@ -9085,6 +9180,9 @@ static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
 
     if (use_arg_names)
         setUseArgNames(module);
+
+    if (use_limited_api)
+        setUseLimitedAPI(module);
 
     if (call_super_init == 0)
         setCallSuperInitNo(module);

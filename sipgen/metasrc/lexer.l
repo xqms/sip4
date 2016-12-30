@@ -86,6 +86,7 @@ static void fatallex(char *);
 <directive_start>^[ \t]*%End    {BEGIN INITIAL; return TK_END;}
 ^[ \t]*%Exception           {return TK_EXCEPTION;}
 ^[ \t]*%Feature             {BEGIN directive_start; return TK_FEATURE;}
+^[ \t]*%HideNamespace       {BEGIN directive_start; return TK_HIDE_NS;}
 ^[ \t]*%If                  {return TK_IF;}
 ^[ \t]*%Import              {BEGIN directive_start; return TK_IMPORT;}
 ^[ \t]*%Include             {BEGIN directive_start; return TK_INCLUDE;}
@@ -133,6 +134,7 @@ operator                    {return TK_OPERATOR;}
 throw                       {return TK_THROW;}
 explicit                    {return TK_EXPLICIT;}
 template                    {return TK_TEMPLATE;}
+final                       {return TK_FINAL;}
 ::                          {return TK_SCOPE;}
 \|\|                        {return TK_LOGICAL_OR;}
 SIP_PYOBJECT                {return TK_PYOBJECT;}
@@ -169,6 +171,7 @@ SIP_QOBJECT                 {return TK_QOBJECT;}
 <directive>timestamp        {return TK_TIMESTAMP;}
 <directive>type             {return TK_TYPE;}
 <directive>use_argument_names   {return TK_USEARGNAMES;}
+<directive>use_limited_api  {return TK_USELIMITEDAPI;}
 <directive>all_raise_py_exception   {return TK_ALLRAISEPYEXC;}
 <directive>call_super_init  {return TK_CALLSUPERINIT;}
 <directive>default_VirtualErrorHandler  {return TK_DEFERRORHANDLER;}

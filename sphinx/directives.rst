@@ -160,19 +160,29 @@ This directive (along with :directive:`%BIReleaseBufferCode`) is used to
 specify code that implements the buffer interface of Python v3.  If Python v2
 is being used then this is ignored.
 
-The following variables are made available to the handwritten code:
+The variables that are made available to the handwritten code depend on
+whether or not the limited Python API is enabled or not.  The following
+variables are made available:
+
+sipBufferDef \*sipBuffer
+    When the use of the limited API is enabled, this is a pointer to a
+    structure that should be populated by the code.  The ``bd_buffer`` field
+    should be set to the address of the buffer.  The ``bd_length`` field should
+    be set to the length of the buffer.  The ``bd_readonly`` field should be
+    set to a non-zero value if the buffer is read-only.
 
 Py_buffer \*sipBuffer
-    This is a pointer to the Python buffer structure that the handwritten code
-    must populate.
+    When the use of the limited Python API is disabled, this is a pointer to
+    the Python buffer structure that should be populated by the code.
 
 *type* \*sipCpp
     This is a pointer to the structure or class instance.  Its *type* is a
     pointer to the structure or class.
 
 int sipFlags
-    These are the flags that specify what elements of the ``sipBuffer``
-    structure must be populated.
+    When the use of the limited Python API is disabled, these are the flags
+    that specify what elements of the ``sipBuffer`` structure must be
+    populated.
 
 int sipRes
     The handwritten code should set this to 0 if there was no error or -1 if
@@ -329,10 +339,13 @@ This directive (along with :directive:`%BIGetBufferCode`) is used to specify
 code that implements the buffer interface of Python v3.  If Python v2 is being
 used then this is ignored.
 
-The following variables are made available to the handwritten code:
+The variables that are made available to the handwritten code depend on
+whether or not the limited Python API is enabled or not.  The following
+variables are made available:
 
 Py_buffer \*sipBuffer
-    This is a pointer to the Python buffer structure.
+    When the use of the limited Python API is disabled, this is a pointer to
+    the Python buffer structure.
 
 *type* \*sipCpp
     This is a pointer to the structure or class instance.  Its *type* is a
@@ -1357,6 +1370,23 @@ For example::
 .. seealso:: :directive:`%AccessCode`, :directive:`%SetCode`
 
 
+.. directive:: %HideNamespace
+
+.. versionadded:: 4.19
+
+.. parsed-literal::
+
+    %HideNamespace(name = *name*)
+
+This directive is used to specify that a C++ namespace, which would normally be
+wrapped as a Python class, is not wrapped.  The contents of the namespace are
+still wrapped but are placed in the module dictionary.  This is usually used
+when a library being wrapped uses a single namespace that includes everything
+in the library.  In Python the module itself performs the same function as the
+namespace and so the namespace would just add an unneccessary extra level of
+indirection.
+
+
 .. directive:: %If
 
 .. parsed-literal::
@@ -1913,6 +1943,7 @@ then the pattern should instead be::
             [, keyword_arguments = ["None" | "All" | "Optional"]]
             [, language = *string*]
             [, use_argument_names = [True | False]]
+            [, use_limited_api = [True | False]]
             [, version = *integer*])
     {
         [:directive:`%AutoPyName`]
@@ -1957,6 +1988,12 @@ is set to specify that the real name of the argument, if any, should be used
 instead.  It also affects the name of the variable created when the
 :aanno:`GetWrapper` argument annotation is used.
 
+``use_limited_api`` specifies that the generated code will only use the
+limited Python API defined in PEP 384.  It also ensures that the C preprocessor
+symbol ``Py_LIMITED_API`` is defined before the ``Python.h`` header file is
+included.  Python extensions built in this way are independent of the version
+of Python being used.  It is ignored for Python v2.
+
 ``version`` is an optional version number that is useful if you (or others)
 might create other modules that build on this module, i.e. if another module
 might :directive:`%Import` this module.  Under the covers, a module exports an
@@ -1965,7 +2002,7 @@ version number.  A module built on that module knows the version number of the
 API that it is expecting.  If, when the modules are imported at run-time, the
 version numbers do not match then a Python exception is raised.  The dependent
 module must then be re-built using the correct specification files for the base
-module.
+module.  This is deprecated and ignored in SIP v4.19.
 
 The optional :directive:`%AutoPyName` sub-directive is used to specify a rule
 for automatically providing Python names.

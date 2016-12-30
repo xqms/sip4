@@ -169,6 +169,32 @@ specification files.
         the length of the slice.
 
 
+.. c:type:: sipBufferInfoDef
+
+    .. versionadded:: 4.19
+
+    This C structure is used with :c:func:`sipGetBufferInfo()` and
+    :c:func:`sipReleaseBufferInfo()` and encapsulates information provided by a
+    Python object that implements the buffer protocol.  The structure elements
+    are as follows.
+
+    .. c:member:: void \*bi_buf
+
+        The address of the buffer.
+
+    .. c:member:: PyObject \*bi_obj
+
+        A reference to the object that implements the buffer protocol.
+
+    .. c:member:: SIP_SSIZE_T bi_len
+
+        The length of the buffer in bytes.
+
+    .. c:member:: char \*bi_format
+
+        The format of each element of the buffer.
+
+
 .. c:function:: PyObject *sipBuildResult(int *iserr, const char *format, ...)
 
     This creates a Python object based on a format string and associated
@@ -446,6 +472,23 @@ specification files.
         :c:macro:`SIP_NO_CONVERTORS` flags.
     :return:
         a non-zero value if the object can be converted.
+
+
+.. c:type:: sipCFunctionDef
+
+    .. versionadded:: 4.19
+
+    This C structure is used with :c:func:`sipGetCFunction()` and encapsulates
+    the components parts of a Python C function.  The structure elements are as
+    follows.
+
+    .. c:member:: PyMethodDef \*cf_function
+
+        The C function.
+
+    .. c:member:: PyObject \*cf_self
+
+        The optional bound object.
 
 
 .. c:function:: PyObject *sipClassName(PyObject *obj)
@@ -956,6 +999,28 @@ specification files.
         the memory address.
 
 
+.. c:type:: sipDateDef
+
+    .. versionadded:: 4.19
+
+    This C structure is used with :c:func:`sipGetDate()`,
+    :c:func:`sipFromDate(), :c:func:`sipGetDateTime()` and
+    :c:func:`sipFromDateTime()` and encapsulates the components parts of a
+    Python date.  The structure elements are as follows.
+
+    .. c:member:: int pd_year
+
+        The year.
+
+    .. c:member:: int pd_month
+
+        The month (1-12).
+
+    .. c:member:: int pd_day
+
+        The day (1-31).
+
+
 .. c:function:: int sipEnableAutoconversion(const sipTypeDef *td, int enable)
 
     .. versionadded:: 4.14.7
@@ -1096,6 +1161,56 @@ specification files.
         the memory address.
 
 
+.. c:function:: PyObject *sipFromDate(const sipDateDef *date)
+
+    .. versionadded:: 4.19
+
+    This creates a Python date object from its component parts.
+
+    :param date:
+        the component parts of the date.
+    :return:
+        the Python date object.
+
+
+.. c:function:: PyObject *sipFromDateTime(const sipDateDef *date, const sipTimeDef *time)
+
+    .. versionadded:: 4.19
+
+    This creates a Python datetime object from its component parts.
+
+    :param date:
+        the date related component parts of the datetime.
+    :param time:
+        the time related component parts of the datetime.
+    :return:
+        the Python datetime object.
+
+
+.. c:function:: PyObject *sipFromMethod(const sipMethodDef *method)
+
+    .. versionadded:: 4.19
+
+    This creates a Python method object from its component parts.
+
+    :param method:
+        the component parts of the method.
+    :return:
+        the Python method object.
+
+
+.. c:function:: PyObject *sipFromTime(const sipTimeDef *time)
+
+    .. versionadded:: 4.19
+
+    This creates a Python time object from its component parts.
+
+    :param time:
+        the component parts of the time.
+    :return:
+        the Python time object.
+
+
 .. c:function:: void *sipGetAddress(sipSimpleWrapper *obj)
 
     .. versionadded:: 4.12
@@ -1109,6 +1224,94 @@ specification files.
         the address of the C/C++ instance
 
 
+.. c:function:: int sipGetBufferInfo(PyObject *obj, sipBufferInfoDef *buffer_info)
+
+    .. versionadded:: 4.19
+
+    This checks to see if an object implements the Python buffer protocol and,
+    if so, optionally returns the buffer information.  It is similar to
+    :c:func:`PyObject_GetBuffer` and should be used instead of that when the
+    limited Python API is enabled.  Note that, at the moment, only
+    1-dimensional buffers are supported.
+
+    :param obj:
+        the Python object.
+    :param buffer_info:
+        if this is not ``NULL``, and the object implements the buffer protocol,
+        then the buffer information is returned in this structure.  There
+        should be a corresponding call to :c:func:`sipReleaseBuffer`. 
+    :return:
+        > 0 if the object supports the buffer protocol and the buffer
+        information was returned (if requested).  0 if the object does not
+        support the buffer protocol.  < 0 (and a Python exception is raised) if
+        the object supports the buffer protocol but there was an error
+        returning the requested buffer information.
+
+
+.. c:function:: int sipGetCFunction(PyObject *obj, sipCFunctionDef *c_function)
+
+    .. versionadded:: 4.19
+
+    This checks to see if an object is a Python C function object and, if so,
+    optionally returns its component parts.
+
+    :param obj:
+        the Python object.
+    :param c_function:
+        if this is not ``NULL``, and the object is a C function object, then
+        the component parts are returned in this structure.
+    :return:
+        a non-zero value if the object is a Python C function object.
+
+
+.. c:function:: int sipGetDate(PyObject *obj, sipDateDef *date)
+
+    .. versionadded:: 4.19
+
+    This checks to see if an object is a Python date object and, if so,
+    optionally returns its component parts.
+
+    :param obj:
+        the Python object.
+    :param date:
+        if this is not ``NULL``, and the object is a date object, then the
+        component parts are returned in this structure.
+    :return:
+        a non-zero value if the object is a Python date object.
+
+
+.. c:function:: int sipGetDateTime(PyObject *obj, sipDateDef *date, sipTimeDef *time)
+
+    .. versionadded:: 4.19
+
+    This checks to see if an object is a Python datetime object and, if so,
+    optionally returns its component parts.
+
+    :param obj:
+        the Python object.
+    :param date:
+        if this is not ``NULL``, and the object is a datetime object, then the
+        date related component parts are returned in this structure.
+    :param time:
+        if this is not ``NULL``, and the object is a datetime object, then the
+        time related component parts are returned in this structure.
+    :return:
+        a non-zero value if the object is a Python datetime object.
+
+
+.. c:function:: struct _frame sipGetFrame(int depth)
+
+    .. versionadded:: 4.19
+
+    This retrieves a frame object from the current execution stack.
+
+    :param depth:
+        the depth of frame to retrieve where 0 is the current frame, 1 is the
+        previous frame etc.
+    :return:
+        the opaque frame or NULL if there wasn't one at the given depth.
+
+
 .. c:function:: PyInterpreterState *sipGetInterpreter()
 
     .. versionadded:: 4.17.1
@@ -1118,6 +1321,22 @@ specification files.
 
     :return:
         the address of the Python interpreter
+
+
+.. c:function:: int sipGetMethod(PyObject *obj, sipMethodDef *method)
+
+    .. versionadded:: 4.19
+
+    This checks to see if an object is a Python method object and, if so,
+    optionally returns its component parts.
+
+    :param obj:
+        the Python object.
+    :param method:
+        if this is not ``NULL``, and the object is a method object, then the
+        component parts are returned in this structure.
+    :return:
+        a non-zero value if the object is a Python method object.
 
 
 .. c:function:: void *sipGetMixinAddress(sipSimpleWrapper *obj, const sipTypeDef *td)
@@ -1163,6 +1382,50 @@ specification files.
         the object that describes the requested transfer of ownership.
     :return:
         the state of the converted value.
+
+
+.. c:function:: int sipGetTime(PyObject *obj, sipTimeDef *time)
+
+    .. versionadded:: 4.19
+
+    This checks to see if an object is a Python time object and, if so,
+    optionally returns its component parts.
+
+    :param obj:
+        the Python object.
+    :param time:
+        if this is not ``NULL``, and the object is a time object, then the
+        component parts are returned in this structure.
+    :return:
+        a non-zero value if the object is a Python time object.
+
+
+.. c:function:: void *sipGetTypeUserData(const sipWrapperType *type)
+
+    .. versionadded:: 4.19
+
+    Each generated type corresponding to a wrapped C/C++ type, or a user
+    sub-class of such a type, contains a pointer for the use of handwritten
+    code.  This returns the value of that pointer.
+
+    :param type:
+        the type object.
+    :return:
+        the type-specific pointer.
+
+
+.. c:function:: PyObject *sipGetUserObject(const sipSimpleWrapper *obj)
+
+    .. versionadded:: 4.19
+
+    Each wrapped object can contain a reference to a single Python object that
+    can be used for any purpose by handwritten code and will automatically be
+    garbage collected at the appropriate time.  This returns that object.
+
+    :param obj:
+        the wrapped object.
+    :return:
+        the user object.
 
 
 .. c:function:: PyObject *sipGetWrapper(void *cppptr, sipWrapperType *type)
@@ -1235,6 +1498,19 @@ specification files.
         a non-zero value if the API is enabled.
 
 
+.. c:function:: int sipIsUserType(const sipWrapperType *type)
+
+    .. versionadded:: 4.19
+
+    This checks if a type corresponds to a wrapped C/C++ type or a user
+    sub-class of such a type.
+
+    :param type:
+        the type object.
+    :return:
+        a non-zero value if the type is a user defined type.
+
+
 .. c:function:: unsigned long sipLong_AsUnsignedLong(PyObject *obj)
 
     This function is a thin wrapper around :c:func:`PyLong_AsUnsignedLong()`
@@ -1293,6 +1569,50 @@ specification files.
         the number of entries in the table.
     :return:
         the corresponding type object, or ``NULL`` if *type* wasn't in *map*.
+
+
+.. c:type:: sipMethodDef
+
+    .. versionadded:: 4.19
+
+    This C structure is used with :c:func:`sipGetMethod()` and
+    :c:func:`sipFromMethod()` and encapsulates the components parts of a Python
+    method.  The structure elements are as follows.
+
+    .. c:member:: PyObject *pm_function
+
+        The function that implements the method.
+
+    .. c:member:: PyObject *pm_self
+
+        The bound object.
+
+    .. c:member:: PyObject *pm_class
+
+        The class.  (Python v2 only.)
+
+
+.. c:function:: sipNewUserTypeFunc sipSetNewUserTypeHandler(const sipTypeDef *td, sipNewUserTypeFunc handler)
+
+    .. versionadded:: 4.19
+
+    The allows a function to be specified that is called whenever a user
+    defined sub-class of a C/C++ type is created (i.e. one implemented in
+    Python).  It is normalled called from a module's
+    :directive:`%PostInitialisationCode`.  It is provided as an alternative to
+    providing a meta-type when the limited Python API is enabled.
+
+    :param td:
+        the :ref:`generated type object <ref-type-objects>` corresponding to
+        the C/C++ type.
+    :param handler:
+        the function that is called whenever a user defined sub-class of the
+        type is created.  The function takes a single argument which is the
+        :c:type:`sipWrapperType` of the user defined class.  It returns an
+        :c:type:`int` which is 0 if there was no error.  A Python exception is
+        raised and -1 returned if there was an error.
+    :return:
+        the previously installed handler.  This allows handlers to be chained.
 
 
 .. c:function:: int sipParseResult(int *iserr, PyObject *method, PyObject *result, const char *format, ...)
@@ -1538,6 +1858,32 @@ specification files.
         incremented.  The Python object may be ``Py_None``.
 
 
+.. c:function:: PyObject *sipPyTypeDict(const PyTypeObject *py_type)
+
+    .. versionadded:: 4.19
+
+    This provides access to a Python type object's ``tp_dict`` field and is
+    typically used when the limited Python API is enabled.
+
+    :param py_type:
+        the type object.
+    :return:
+        the value of the type object's ``tp_dict`` field.
+
+
+.. c:function:: const char *sipPyTypeName(const PyTypeObject *py_type)
+
+    .. versionadded:: 4.19
+
+    This provides access to a Python type object's ``tp_name`` field and is
+    typically used when the limited Python API is enabled.
+
+    :param py_type:
+        the type object.
+    :return:
+        the value of the type object's ``tp_name`` field.
+
+
 .. c:function:: int sipRegisterAttributeGetter(const sipTypeDef *td, sipAttrGetterFunc getter)
 
     This registers a handler that will called just before SIP needs to get an
@@ -1607,6 +1953,20 @@ specification files.
         0 if there was no error, otherwise -1 is returned.
 
     See the section :ref:`ref-types-metatypes` for more details.
+
+
+.. c:function:: void sipReleaseBufferInfo(sipBufferInfoDef *buffer_info)
+
+    .. versionadded:: 4.19
+
+    This releases the buffer information related to a Python object that
+    implements the buffer protocol that was created with a corresponding call
+    to :c:func:`sipGetBufferInfo`.  It is similar to
+    :c:func:`PyBuffer_Release` and should be used instead of that when the
+    limited Python API is enabled.
+
+    :param buffer_info:
+        the buffer information to release.
 
 
 .. c:function:: void sipReleaseInstance(void *cpp, sipWrapperType *type, int state)
@@ -1683,11 +2043,43 @@ specification files.
         be destroyed when the interpreter exits.  This is the default.
 
 
+.. c:function:: void sipSetTypeUserData(sipWrapperType *type, void *data)
+
+    .. versionadded:: 4.19
+
+    Each generated type corresponding to a wrapped C/C++ type, or a user
+    sub-class of such a type, contains a pointer for the use of handwritten
+    code.  This sets the value of that pointer.
+
+    :param type:
+        the type object.
+    :param data:
+        the type-specific pointer.
+
+
+.. c:function:: void sipSetUserObject(sipSimpleWrapper *obj, PyObject *user)
+
+    .. versionadded:: 4.19
+
+    Each wrapped object can contain a reference to a single Python object that
+    can be used for any purpose by handwritten code and will automatically be
+    garbage collected at the appropriate time.  This sets that object.
+
+    :param obj:
+        the wrapped object.
+    :param user:
+        the user object.
+
+
 .. c:type:: sipSimpleWrapper
 
     This is a C structure that represents a Python wrapped instance whose type
     is :class:`sip.simplewrapper`.  It is an extension of the ``PyObject``
     structure and so may be safely cast to it.
+
+    When the limited Python API is enabled and Python v3.2 or later is being
+    used then it is only available as an opaque (i.e. incomplete) type and the
+    following memebers are not available.
 
     .. c:member:: void *data
 
@@ -1722,6 +2114,9 @@ specification files.
     implementation of :class:`sip.simplewrapper`.  It may be safely cast to
     :c:type:`sipWrapperType`.
 
+    When the limited Python API is enabled and Python v3.2 or later is being
+    used then it is only available as an opaque (i.e. incomplete) type.
+
 
 .. c:type:: sipStringTypeClassMap
 
@@ -1738,6 +2133,32 @@ specification files.
     .. c:member:: sipWrapperType **pyType.
 
         A pointer to the corresponding generated type object.
+
+
+.. c:type:: sipTimeDef
+
+    .. versionadded:: 4.19
+
+    This C structure is used with :c:func:`sipGetTime()`,
+    :c:func:`sipFromTime(), :c:func:`sipGetDateTime()` and
+    :c:func:`sipFromDateTime()` and encapsulates the components parts of a
+    Python time.  The structure elements are as follows.
+
+    .. c:member:: int pt_hour
+
+        The hour (0-23).
+
+    .. c:member:: int pt_minute
+
+        The minute (0-59).
+
+    .. c:member:: int pt_second
+
+        The second (0-59).
+
+    .. c:member:: int pt_microsecond
+
+        The microsecond (0-999999).
 
 
 .. c:function:: void sipTransferBack(PyObject *obj)
@@ -1785,7 +2206,7 @@ specification files.
         instance's destructor is always transfered to C++.
 
 
-.. c:function:: PyTypeObject *sipTypeAsPyTypeObject(sipTypeDef *td)
+.. c:function:: PyTypeObject *sipTypeAsPyTypeObject(const sipTypeDef *td)
 
     This returns a pointer to the Python type object that SIP creates for a
     :ref:`generated type structure <ref-type-structures>`.
@@ -1877,6 +2298,71 @@ specification files.
         the type structure of the scope or ``NULL`` if the type has no scope.
 
 
+.. c:function:: void *sipUnicodeData(PyObject *obj, int *char_size, SIP_SSIZE_T *len)
+
+    .. versionadded:: 4.19
+
+    This returns information about the contents of a Python unicode object.
+
+    This is only supported for Python v3.3 and later.
+
+    :param obj:
+        the unicode object.
+    :param char_size:
+        a pointer which will be updated with the number of bytes (either 1, 2
+        or 4) used to store a character.  If there was an error then this will
+        be a negative value.
+    :param len:
+        a pointer which will be updated with the number of characters (not
+        bytes) in the unicode object.
+    :return:
+        the address of the buffer where the characters are stored.  It will be
+        undefined if the returned character size is a negative value.
+
+
+.. c:function:: PyObject *sipUnicodeNew(SIP_SSIZE_T len, unsigned maxchar, int *kind, void **data)
+
+    .. versionadded:: 4.19
+
+    This creates a Python unicode object that will hold a set number of
+    characters, each character being of a certain size.
+
+    This is only supported for Python v3.3 and later.
+
+    :param len:
+        the number of characters.
+    :param maxchar:
+        the largest code point that will be placed in the object.
+    :param kind:
+        a pointer which will be updated with a value that represents the number
+        of bytes (either 1, 2 or 4) used to store a character.
+    :param data:
+        a pointer which will be updated with the address of the buffer where
+        the characters will be stored.
+    :return:
+        the unicode object or ``NULL`` if there was an error.
+
+
+.. c:function:: void sipUnicodeWrite(int kind, void *data, int index, unsigned value)
+
+    .. versionadded:: 4.19
+
+    This updates the buffer of a Python unicode object with a character at a
+    particular position.
+
+    This is only supported for Python v3.3 and later.
+
+    :param kind:
+        the value that represents the number of bytes (either 1, 2 or 4) used
+        to store a character.
+    :param data:
+        the address of the buffer where the characters are stored.
+    :param index:
+        the character (not byte) index of the character to be updated.
+    :param value:
+        the value of the new character.
+
+
 .. c:var:: PyTypeObject *sipVoidPtr_Type
 
     This is the type of a ``PyObject`` structure that is used to wrap a
@@ -1889,6 +2375,9 @@ specification files.
     is :class:`sip.wrapper`.  It is an extension of the
     :c:type:`sipSimpleWrapper` and ``PyObject`` structures and so may be safely
     cast to both.
+
+    When the limited Python API is enabled and Python v3.2 or later is being
+    used then it is only available as an opaque (i.e. incomplete) type.
 
 
 .. c:function:: int sipWrapper_Check(PyObject *obj)
@@ -1920,6 +2409,9 @@ specification files.
     extension of the ``PyObject`` structure) and so may be safely cast to
     ``PyTypeObject`` (and ``PyObject``).
 
+    When the limited Python API is enabled and Python v3.2 or later is being
+    used then it is only available as an opaque (i.e. incomplete) type.
+
 
 .. c:var:: PyTypeObject *sipWrapperType_Type
 
@@ -1948,7 +2440,8 @@ For those structure that correspond to mapped types the remaining part of the
 name is generated by SIP.  The only way for handwritten code to obtain a
 pointer to a structure for a mapped type is to use :c:func:`sipFindType()`.
 
-The type structures of all imported types are available to handwritten code.
+The type structures of all imported types explicitly used by a module are
+available to handwritten code.
 
 
 .. _ref-type-objects:
