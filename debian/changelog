@@ -10,6 +10,7 @@ sip4 (4.19+dfsg-1) UNRELEASED; urgency=medium
   * Drop siputils_debian_changes.diff (for experimental upload), I think
     it may be no longer needed.
   * Bump API version to 12.0.
+  * Call dh_strip_nondeterminism during build.
 
  -- Scott Kitterman <scott@kitterman.com>  Thu, 20 Oct 2016 22:35:18 -0400
 
