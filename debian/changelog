@@ -1,4 +1,4 @@
-sip4 (4.19+dfsg-1) UNRELEASED; urgency=medium
+sip4 (4.19+dfsg-1) experimental; urgency=medium
 
   [ Scott Kitterman ]
   * Remove Michael Casadevall from uploaders due to retirement from Debian
@@ -12,7 +12,7 @@ sip4 (4.19+dfsg-1) UNRELEASED; urgency=medium
   * Bump API version to 12.0.
   * Call dh_strip_nondeterminism during build.
 
- -- Scott Kitterman <scott@kitterman.com>  Thu, 20 Oct 2016 22:35:18 -0400
+ -- Dmitry Shachnev <mitya57@debian.org>  Wed, 04 Jan 2017 21:53:11 +0300
 
 sip4 (4.18.1+dfsg-1) unstable; urgency=medium
 
