@@ -1,5 +1,6 @@
-sip4 (4.19.1+dfsg-3) UNRELEASED; urgency=medium
+sip4 (4.19.1+dfsg-3) experimental; urgency=medium
 
+  * The “How could I screw it up so badly” upload.
   * Fix the Provides syntax in debian/rules.
   * Document the new -D option in sip manpage.
   * Bump years in debian/copyright.
