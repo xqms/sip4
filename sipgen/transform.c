@@ -1,7 +1,7 @@
 /*
  * The parse tree transformation module for SIP.
  *
- * Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -273,11 +273,14 @@ void transform(sipSpec *pt)
     for (cd = pt->classes; cd != NULL; cd = cd->next)
         if (cd->iff->type == class_iface)
         {
+            if (needsShadow(cd) && !isIncomplete(cd) && canCreate(cd))
+                setHasShadow(cd);
+
             /* Get the list of visible Python member functions. */
             getVisiblePyMembers(pt, cd);
 
             /* Get the virtual members. */
-            if (hasShadow(cd))
+            if (needsShadow(cd))
                 getVirtuals(pt, cd);
         }
         else if (cd->iff->type == namespace_iface)
@@ -1164,11 +1167,11 @@ static void setHierarchy(sipSpec *pt, classDef *base, classDef *cd,
                     setCannotAssign(cd);
 
                 /*
-                 * If the super-class has a shadow then this one should have
+                 * If the super-class needs a shadow then this one should have
                  * one as well.
                  */
-                if (hasShadow(mro->cd))
-                    setHasShadow(cd);
+                if (needsShadow(mro->cd))
+                    setNeedsShadow(cd);
 
                 /*
                  * Ensure that the sub-class base class is the furthest up the
@@ -3860,20 +3863,7 @@ static void createSortedNumberedTypesTable(sipSpec *pt, moduleDef *mod)
  */
 static int compareTypes(const void *t1, const void *t2)
 {
-    scopedNameDef *snd1, *snd2;
-
-    snd1 = getFQCNameOfType((argDef *)t1);
-    snd2 = getFQCNameOfType((argDef *)t2);
-
-    /*
-     * This is a lazy hack.  All names should have an explicit scope.  However
-     * mapped type templates don't (yet), so for the moment we just strip the
-     * global scope.
-     */
-    if (snd1->name[0] == '\0') snd1 = snd1->next;
-    if (snd2->name[0] == '\0') snd2 = snd2->next;
-
-    return compareScopedNames(snd1, snd2);
+    return strcmp(((argDef *)t1)->name->text, ((argDef *)t2)->name->text);
 }
 
 

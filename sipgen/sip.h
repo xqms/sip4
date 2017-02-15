@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041300
-#define SIP_VERSION_STR     "4.19"
+#define SIP_VERSION         0x041301
+#define SIP_VERSION_STR     "4.19.1"
 
 
 #ifdef TRUE
@@ -212,6 +212,8 @@
 #define CLASS2_MIXIN        0x02        /* The class is a mixin. */
 #define CLASS2_EXPORT_DERIVED   0x04    /* Export the derived class declaration. */
 #define CLASS2_HIDDEN_NS    0x08        /* The namespace is hidden. */
+#define CLASS2_USE_TMPL_NAME    0x10    /* Use the template name. */
+#define CLASS2_NEEDS_SHADOW 0x20        /* The class needs a shadow class. */
 
 #define isTemplateArg(cd)   ((cd)->classflags2 & CLASS2_TMPL_ARG)
 #define setTemplateArg(cd)  ((cd)->classflags2 |= CLASS2_TMPL_ARG)
@@ -221,6 +223,10 @@
 #define setExportDerived(cd)    ((cd)->classflags2 |= CLASS2_EXPORT_DERIVED)
 #define isHiddenNamespace(cd)   ((cd)->classflags2 & CLASS2_HIDDEN_NS)
 #define setHiddenNamespace(cd)  ((cd)->classflags2 |= CLASS2_HIDDEN_NS)
+#define useTemplateName(cd) ((cd)->classflags2 & CLASS2_USE_TMPL_NAME)
+#define setUseTemplateName(cd)  ((cd)->classflags2 |= CLASS2_USE_TMPL_NAME)
+#define needsShadow(cd)      ((cd)->classflags & CLASS2_NEEDS_SHADOW)
+#define setNeedsShadow(cd)   ((cd)->classflags |= CLASS2_NEEDS_SHADOW)
 
 
 /* Handle ctor flags.  These are combined with the section flags. */
@@ -1082,6 +1088,7 @@ typedef struct _overDef {
     signatureDef *cppsig;               /* The C++ signature. */
     throwArgs *exceptions;              /* The exceptions. */
     codeBlockList *methodcode;          /* Method code. */
+    codeBlockList *premethodcode;       /* Code to insert before the method code. */
     codeBlockList *virtcallcode;        /* Virtual call code. */
     codeBlockList *virtcode;            /* Virtual handler code. */
     char *prehook;                      /* The pre-hook name. */
@@ -1101,6 +1108,7 @@ typedef struct _ctorDef {
     signatureDef *cppsig;               /* The C++ signature, NULL if /NoDerived/. */
     throwArgs *exceptions;              /* The exceptions. */
     codeBlockList *methodcode;          /* Method code. */
+    codeBlockList *premethodcode;       /* Code to insert before the method code. */
     char *prehook;                      /* The pre-hook name. */
     char *posthook;                     /* The post-hook name. */
     struct _ctorDef *next;              /* Next in the list. */
