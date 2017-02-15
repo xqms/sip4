@@ -2,12 +2,12 @@
 .\" Created by Ricardo Cardenes Medina <ricardo@conysis.com>
 .\" for the Debian 'sip' package
 .\"
-.TH SIP 1 "2016/04/26"
+.TH SIP 1 "2017/02/15"
 .SH NAME
 sip \- generates C++/Python bindings
 .SH SYNOPSIS
 .B sip
-[\-h] [\-V] [\-a\~file] [\-b\~file] [\-B\~tag] [\-c\~dir] [\-d\~file] [\-e] [\-f] [\-g]
+[\-h] [\-V] [\-a\~file] [\-b\~file] [\-B\~tag] [\-c\~dir] [\-d\~file] [\-D] [\-e] [\-f] [\-g]
 [\-I\~dir] [\-j\~number] [\-k] [\-m\~file] [\-o] [\-p\~module] [\-P] [\-r] [\-s\~suffix]
 [\-t\~tag] [\-w] [\-x\~feature] [\-X\~id:file] [\-y\~file] [\-z\~file] [@file] [file]
 .SH DESCRIPTION
@@ -41,6 +41,9 @@ If not indicated, no code will be generated.
 .B \-d file
 The name of the documentation file (deprecated).
 If not indicated, no documentation will be generated.
+.TP
+.B \-D
+Generate code for a debug build of Python.
 .TP
 .B \-e
 Enable support for exceptions. Disabled by default.
