@@ -1,6 +1,7 @@
 sip4 (4.19.2+dfsg-1) UNRELEASED; urgency=medium
 
   * New upstream bugfix release.
+  * Drop python-sip4-dbg Breaks, it was only needed for Stretch.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Mon, 08 May 2017 22:42:15 +0300
 
