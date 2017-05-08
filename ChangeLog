@@ -1,4 +1,27 @@
+2017-03-30  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.2.
+	[1df924860f57] [4.19.2] <4.19-maint>
+
+2017-03-23  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Remove an unnecessary comment.
+	[1f31effbc614] <4.19-maint>
+
+2017-03-03  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Fixed a crash when a user defined class uses sip.wrappertype as it's
+	meta-type but is not derived from sip.simplewrapper.
+	[f5bab1986fbb] <4.19-maint>
+
 2017-02-15  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.1 for changeset ee5ea590d186
+	[f45eb310f129] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.1.

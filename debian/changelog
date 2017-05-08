@@ -1,3 +1,9 @@
+sip4 (4.19.2+dfsg-1) UNRELEASED; urgency=medium
+
+  * New upstream bugfix release.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Mon, 08 May 2017 22:42:15 +0300
+
 sip4 (4.19.1+dfsg-3) experimental; urgency=medium
 
   * The “How could I screw it up so badly” upload.
