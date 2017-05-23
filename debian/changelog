@@ -1,4 +1,4 @@
-sip4 (4.18.1+dfsg-2) UNRELEASED; urgency=medium
+sip4 (4.18.1+dfsg-2) unstable; urgency=medium
 
   [ Scott Kitterman ]
   * Remove Michael Casadevall from uploaders due to retirement from Debian
@@ -9,7 +9,7 @@ sip4 (4.18.1+dfsg-2) UNRELEASED; urgency=medium
   * Drop 11.0 and 11.1 API versions, as there was an unintended ABI break
     between 11.1 and 11.2 (Closes: #831860). Still provide 11.2 and 11.3.
 
- -- Scott Kitterman <scott@kitterman.com>  Thu, 20 Oct 2016 22:35:18 -0400
+ -- Dmitry Shachnev <mitya57@debian.org>  Tue, 23 May 2017 10:57:38 +0300
 
 sip4 (4.18.1+dfsg-1) unstable; urgency=medium
 
