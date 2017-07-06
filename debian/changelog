@@ -3,6 +3,7 @@ sip4 (4.19.3+dfsg-1) UNRELEASED; urgency=medium
   * New upstream release.
   * Bump API version to 12.2.
   * Switch from python-sphinx to python3-sphinx.
+  * Bump Standards-Version to 4.0.0, no changes needed.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Thu, 06 Jul 2017 11:27:34 +0300
 
