@@ -31,6 +31,7 @@
 
 
 static sipSpec *currentSpec;            /* The current spec being parsed. */
+static int strictParse;                 /* Set if the platform is enforced. */
 static stringList *backstops;           /* The list of backstops. */
 static stringList *neededQualifiers;    /* The list of required qualifiers. */
 static stringList *excludedQualifiers;  /* The list of excluded qualifiers. */
@@ -46,13 +47,15 @@ static int currentIsSlot;               /* Set if the current is Q_SLOT. */
 static int currentIsTemplate;           /* Set if the current is a template. */
 static char *previousFile;              /* The file just parsed. */
 static parserContext currentContext;    /* The current context. */
-static int skipStackPtr;                /* The skip stack pointer. */
+static int stackPtr;                    /* The stack pointer. */
 static int skipStack[MAX_NESTED_IF];    /* Stack of skip flags. */
 static classDef *scopeStack[MAX_NESTED_SCOPE];  /* The scope stack. */
 static int sectFlagsStack[MAX_NESTED_SCOPE];    /* The section flags stack. */
 static int currentScopeIdx;             /* The scope stack index. */
 static int currentTimelineOrder;        /* The current timeline order. */
 static classList *currentSupers;        /* The current super-class list. */
+static platformDef *currentPlatforms;   /* The current platforms list. */
+static platformDef *platformStack[MAX_NESTED_IF];   /* Stack of platforms. */
 static KwArgs defaultKwArgs;            /* The default keyword arguments support. */
 static int makeProtPublic;              /* Treat protected items as public. */
 static int parsingCSignature;           /* An explicit C/C++ signature is being parsed. */
@@ -61,8 +64,9 @@ static int parsingCSignature;           /* An explicit C/C++ signature is being 
 static const char *getPythonName(moduleDef *mod, optFlags *optflgs,
         const char *cname);
 static classDef *findClass(sipSpec *pt, ifaceFileType iftype,
-        apiVersionRangeDef *api_range, scopedNameDef *fqname);
-static classDef *findClassWithInterface(sipSpec *pt, ifaceFileDef *iff);
+        apiVersionRangeDef *api_range, scopedNameDef *fqname, int tmpl_arg);
+static classDef *findClassWithInterface(sipSpec *pt, ifaceFileDef *iff,
+        int tmpl_arg);
 static classDef *newClass(sipSpec *pt, ifaceFileType iftype,
         apiVersionRangeDef *api_range, scopedNameDef *snd,
         const char *virt_error_handler, typeHintDef *typehint_in,
@@ -111,7 +115,8 @@ static qualDef *allocQualifier(moduleDef *, int, int, int, const char *,
         qualType);
 static void newImport(const char *filename);
 static int timePeriod(const char *lname, const char *uname);
-static int platOrFeature(char *,int);
+static int platOrFeature(char *name, int optnot);
+static void addPlatform(qualDef *qd);
 static int notSkipping(void);
 static void getHooks(optFlags *,char **,char **);
 static int getTransfer(optFlags *optflgs);
@@ -1409,30 +1414,36 @@ qualifiername:  TK_NAME_VALUE {
         }
     ;
 
-ifstart:    TK_IF '(' qualifiers ')' {
-            if (skipStackPtr >= MAX_NESTED_IF)
+ifstart:    TK_IF '(' {
+            currentPlatforms = NULL;
+        } qualifiers ')' {
+            if (stackPtr >= MAX_NESTED_IF)
                 yyerror("Internal error: increase the value of MAX_NESTED_IF");
 
             /* Nested %Ifs are implicit logical ands. */
 
-            if (skipStackPtr > 0)
-                $3 = ($3 && skipStack[skipStackPtr - 1]);
+            if (stackPtr > 0)
+                $4 = ($4 && skipStack[stackPtr - 1]);
 
-            skipStack[skipStackPtr++] = $3;
+            skipStack[stackPtr] = $4;
+
+            platformStack[stackPtr] = currentPlatforms;
+
+            ++stackPtr;
         }
     ;
 
 oredqualifiers: TK_NAME_VALUE {
-            $$ = platOrFeature($1,FALSE);
+            $$ = platOrFeature($1, FALSE);
         }
     |   '!' TK_NAME_VALUE {
-            $$ = platOrFeature($2,TRUE);
+            $$ = platOrFeature($2, TRUE);
         }
     |   oredqualifiers TK_LOGICAL_OR TK_NAME_VALUE {
-            $$ = (platOrFeature($3,FALSE) || $1);
+            $$ = (platOrFeature($3, FALSE) || $1);
         }
     |   oredqualifiers TK_LOGICAL_OR '!' TK_NAME_VALUE {
-            $$ = (platOrFeature($4,TRUE) || $1);
+            $$ = (platOrFeature($4, TRUE) || $1);
         }
     ;
 
@@ -1443,8 +1454,10 @@ qualifiers: oredqualifiers
     ;
 
 ifend:      TK_END {
-            if (skipStackPtr-- <= 0)
+            if (stackPtr-- <= 0)
                 yyerror("Too many %End directives");
+
+            currentPlatforms = (stackPtr == 0 ? NULL : platformStack[stackPtr - 1]);
         }
     ;
 
@@ -2635,6 +2648,7 @@ enumline:   ifstart
                 emd->cname = $1;
                 emd->no_typehint = getNoTypeHint(&$3);
                 emd->ed = currentEnum;
+                emd->platforms = currentPlatforms;
                 emd->next = NULL;
 
                 checkAttributes(currentSpec, currentModule, emd->ed->ecd,
@@ -3097,7 +3111,8 @@ superclass: class_access scopedname {
                  * should pass the API of the sub-class being defined,
                  * otherwise we cannot create sub-classes of versioned classes.
                  */
-                super = findClass(currentSpec, class_iface, NULL, snd);
+                super = findClass(currentSpec, class_iface, NULL, snd,
+                        currentIsTemplate);
                 appendToClassList(&currentSupers, super);
             }
         }
@@ -3125,7 +3140,8 @@ optclassbody:   {
         }
     ;
 
-classbody:  classline
+classbody:
+    |   classline
     |   classbody classline
     ;
 
@@ -3134,6 +3150,7 @@ classline:  ifstart
     |   namespace
     |   struct
     |   class
+    |   classtmpl
     |   exception
     |   typedef
     |   enum
@@ -4640,8 +4657,9 @@ exceptionlist:  {
 /*
  * Parse the specification.
  */
-void parse(sipSpec *spec, FILE *fp, char *filename, stringList *tsl,
-        stringList *bsl, stringList *xfl, KwArgs kwArgs, int protHack)
+void parse(sipSpec *spec, FILE *fp, char *filename, int strict,
+        stringList *tsl, stringList *bsl, stringList *xfl, KwArgs kwArgs,
+        int protHack)
 {
     classTmplDef *tcd;
 
@@ -4651,6 +4669,7 @@ void parse(sipSpec *spec, FILE *fp, char *filename, stringList *tsl,
     spec->genc = -1;
 
     currentSpec = spec;
+    strictParse = strict;
     backstops = bsl;
     neededQualifiers = tsl;
     excludedQualifiers = xfl;
@@ -4663,7 +4682,8 @@ void parse(sipSpec *spec, FILE *fp, char *filename, stringList *tsl,
     currentIsSlot = FALSE;
     currentIsTemplate = FALSE;
     previousFile = NULL;
-    skipStackPtr = 0;
+    stackPtr = 0;
+    currentPlatforms = NULL;
     currentScopeIdx = 0;
     sectionFlags = 0;
     defaultKwArgs = kwArgs;
@@ -4796,7 +4816,7 @@ static void parseFile(FILE *fp, const char *name, moduleDef *prevmod,
     parserContext pc;
 
     pc.filename = name;
-    pc.ifdepth = skipStackPtr;
+    pc.ifdepth = stackPtr;
     pc.prevmod = prevmod;
 
     if (setInputFile(fp, &pc, optional))
@@ -4918,6 +4938,12 @@ ifaceFileDef *findIfaceFile(sipSpec *pt, moduleDef *mod, scopedNameDef *fqname,
         iff->first_alt = iff;
     }
 
+    /*
+     * Note that we assume that the type (ie. class vs. mapped type vs.
+     * exception) will be the same across all platforms.
+     */
+    iff->platforms = currentPlatforms;
+
     iff->type = iftype;
     iff->ifacenr = -1;
     iff->fqcname = fqname;
@@ -4937,25 +4963,36 @@ ifaceFileDef *findIfaceFile(sipSpec *pt, moduleDef *mod, scopedNameDef *fqname,
  * Find a class definition in a parse tree.
  */
 static classDef *findClass(sipSpec *pt, ifaceFileType iftype,
-        apiVersionRangeDef *api_range, scopedNameDef *fqname)
+        apiVersionRangeDef *api_range, scopedNameDef *fqname, int tmpl_arg)
 {
-    return findClassWithInterface(pt, findIfaceFile(pt, currentModule, fqname, iftype, api_range, NULL));
+    return findClassWithInterface(pt,
+            findIfaceFile(pt, currentModule, fqname, iftype, api_range, NULL),
+            tmpl_arg);
 }
 
 
 /*
  * Find a class definition given an existing interface file.
  */
-static classDef *findClassWithInterface(sipSpec *pt, ifaceFileDef *iff)
+static classDef *findClassWithInterface(sipSpec *pt, ifaceFileDef *iff,
+        int tmpl_arg)
 {
     classDef *cd;
 
-    for (cd = pt -> classes; cd != NULL; cd = cd -> next)
-        if (cd -> iff == iff)
+    for (cd = pt->classes; cd != NULL; cd = cd->next)
+        if (cd->iff == iff)
+        {
+            if (isTemplateArg(cd) && !tmpl_arg)
+                resetTemplateArg(cd);
+
             return cd;
+        }
 
     /* Create a new one. */
     cd = sipMalloc(sizeof (classDef));
+
+    if (tmpl_arg)
+        setTemplateArg(cd);
 
     cd->iff = iff;
     cd->pyname = cacheName(pt, classBaseName(cd));
@@ -5031,7 +5068,7 @@ static exceptionDef *findException(sipSpec *pt, scopedNameDef *fqname, int new)
         if (iff->type == exception_iface)
             iff->type = class_iface;
 
-        cd = findClassWithInterface(pt, iff);
+        cd = findClassWithInterface(pt, iff, FALSE);
     }
 
     /* Create a new one. */
@@ -5099,7 +5136,7 @@ static classDef *newClass(sipSpec *pt, ifaceFileType iftype,
         scope = NULL;
     }
 
-    cd = findClass(pt, iftype, api_range, fqname);
+    cd = findClass(pt, iftype, api_range, fqname, FALSE);
 
     /* Check it hasn't already been defined. */
     if (iftype != namespace_iface && cd->iff->module != NULL)
@@ -5606,6 +5643,7 @@ static enumDef *newEnum(sipSpec *pt, moduleDef *mod, mappedTypeDef *mt_scope,
     ed->members = NULL;
     ed->slots = NULL;
     ed->overs = NULL;
+    ed->platforms = currentPlatforms;
     ed->next = pt -> enums;
 
     pt->enums = ed;
@@ -6020,17 +6058,12 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
                 classDef *icd;
 
                 if (tad->atype == defined_type)
-                    icd = findClass(pt, class_iface, NULL, tad->u.snd);
+                    icd = findClass(pt, class_iface, NULL, tad->u.snd, FALSE);
                 else if (tad->atype == class_type)
                     icd = tad->u.cd;
                 else
                     fatal("Template argument %s must expand to a class\n",
                             unscoped->name);
-
-                /*
-                 * Don't complain about the template argument being undefined.
-                 */
-                setTemplateArg(cl->cd);
 
                 cl->cd = icd;
             }
@@ -6386,6 +6419,40 @@ static void templateType(argDef *ad, classTmplDef *tcd, templateDef *td,
                 type_values);
 
         return;
+    }
+
+    /* Handle any default value. */
+    if (ad->defval != NULL && ad->defval->vtype == fcall_value)
+    {
+        /*
+         * We only handle the subset where the value is an function call, ie. a
+         * template ctor.
+         */
+        valueDef *vd = ad->defval;
+
+        if (vd->vtype == fcall_value && vd->u.fcd->type.atype == defined_type)
+        {
+            valueDef *new_vd;
+            fcallDef *fcd;
+            scopedNameDef *snd, **tailp;
+
+            fcd = sipMalloc(sizeof (fcallDef));
+            *fcd = *vd->u.fcd;
+
+            tailp = &fcd->type.u.snd;
+            for (snd = vd->u.fcd->type.u.snd; snd != NULL; snd = snd->next)
+            {
+                *tailp = text2scopePart(
+                        templateString(snd->name, type_names, type_values));
+                tailp = &(*tailp)->next;
+            }
+
+            new_vd = sipMalloc(sizeof (valueDef));
+            new_vd->vtype = fcall_value;
+            new_vd->u.fcd = fcd;
+
+            ad->defval = new_vd;
+        }
     }
 
     /* Handle any type hints. */
@@ -6747,6 +6814,7 @@ static void newTypedef(sipSpec *pt, moduleDef *mod, char *name, argDef *type,
     td->fqname = fqname;
     td->ecd = scope;
     td->module = mod;
+    td->platforms = currentPlatforms;
     td->type = *type;
 
     if (getOptFlag(optflgs, "Capsule", bool_flag) != NULL)
@@ -6778,20 +6846,20 @@ static void addTypedef(sipSpec *pt, typedefDef *tdd)
     typedefDef **tdp;
 
     /*
-     * Check it doesn't already exist and find the position in the sorted list
-     * where it should be put.
+     * Check it doesn't already exist (with a strict parse) and find the
+     * position in the sorted list where it should be put.
      */
     for (tdp = &pt->typedefs; *tdp != NULL; tdp = &(*tdp)->next)
     {
         int res = compareScopedNames((*tdp)->fqname, tdd->fqname);
 
-        if (res == 0)
+        if (res == 0 && strictParse)
         {
             fatalScopedName(tdd->fqname);
             fatal(" already defined\n");
         }
 
-        if (res > 0)
+        if (res >= 0)
             break;
     }
 
@@ -6936,6 +7004,7 @@ static void newVar(sipSpec *pt, moduleDef *mod, char *name, int isstatic,
     var->module = mod;
     var->varflags = 0;
     var->no_typehint = getNoTypeHint(of);
+    var->platforms = currentPlatforms;
     var->type = *type;
     appendCodeBlock(&var->accessfunc, acode);
     appendCodeBlock(&var->getcode, gcode);
@@ -6988,6 +7057,7 @@ static void newCtor(moduleDef *mod, char *name, int sectFlags,
     ct->pysig = *args;
     ct->cppsig = (cppsig != NULL ? cppsig : &ct->pysig);
     ct->exceptions = exceptions;
+    ct->platforms = currentPlatforms;
     appendCodeBlock(&ct->methodcode, methodcode);
     appendCodeBlock(&ct->premethodcode, premethodcode);
 
@@ -7322,6 +7392,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
     od->pysig = *sig;
     od->cppsig = (cppsig != NULL ? cppsig : &od->pysig);
     od->exceptions = exceptions;
+    od->platforms = currentPlatforms;
     appendCodeBlock(&od->methodcode, methodcode);
     appendCodeBlock(&od->premethodcode, premethodcode);
     appendCodeBlock(&od->virtcallcode, virtcallcode);
@@ -7492,6 +7563,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         len->common = findFunction(pt, mod, c_scope, ns_scope, mt_scope,
                 len->cppname, TRUE, 0, FALSE);
 
+        len->platforms = od->platforms;
         len->next = od->next;
         od->next = len;
     }
@@ -7513,6 +7585,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
                 matmul->cppname, (matmul->methodcode != NULL),
                 matmul->pysig.nrArgs, FALSE);
 
+        matmul->platforms = od->platforms;
         matmul->next = od->next;
         od->next = matmul;
     }
@@ -7534,6 +7607,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
                 imatmul->cppname, (imatmul->methodcode != NULL),
                 imatmul->pysig.nrArgs, FALSE);
 
+        imatmul->platforms = od->platforms;
         imatmul->next = od->next;
         od->next = imatmul;
     }
@@ -7851,8 +7925,11 @@ static void checkAttributes(sipSpec *pt, moduleDef *mod, classDef *py_c_scope,
     varDef *vd;
     classDef *cd;
 
-    /* Check the enums. */
+    /* We don't do any check for a non-strict parse. */
+    if (!strictParse)
+        return;
 
+    /* Check the enums. */
     for (ed = pt->enums; ed != NULL; ed = ed->next)
     {
         enumMemberDef *emd;
@@ -7884,8 +7961,8 @@ static void checkAttributes(sipSpec *pt, moduleDef *mod, classDef *py_c_scope,
     }
 
     /*
-     * Only check the members if this attribute isn't a member because we
-     * can handle members with the same name in the same scope.
+     * Only check the members if this attribute isn't a member because we can
+     * handle members with the same name in the same scope.
      */
     if (!isfunc)
     {
@@ -8023,10 +8100,10 @@ static void handleEOF()
      * the file.
      */
 
-    if (skipStackPtr > currentContext.ifdepth)
+    if (stackPtr > currentContext.ifdepth)
         fatal("Too many %%If statements in %s\n", previousFile);
 
-    if (skipStackPtr < currentContext.ifdepth)
+    if (stackPtr < currentContext.ifdepth)
         fatal("Too many %%End statements in %s\n", previousFile);
 }
 
@@ -8281,7 +8358,7 @@ static void popScope(void)
  */
 static int notSkipping()
 {
-    return (skipStackPtr == 0 ? TRUE : skipStack[skipStackPtr - 1]);
+    return (stackPtr == 0 ? TRUE : skipStack[stackPtr - 1]);
 }
 
 
@@ -8394,32 +8471,79 @@ static int isBackstop(qualDef *qd)
 /*
  * Return the value of an expression involving a single platform or feature.
  */
-static int platOrFeature(char *name,int optnot)
+static int platOrFeature(char *name, int optnot)
 {
     int this;
     qualDef *qd;
 
-    if ((qd = findQualifier(name)) == NULL || qd -> qtype == time_qualifier)
+    if ((qd = findQualifier(name)) == NULL || qd->qtype == time_qualifier)
         yyerror("No such platform or feature");
 
     /* Assume this sub-expression is false. */
 
     this = FALSE;
 
-    if (qd -> qtype == feature_qualifier)
+    if (qd->qtype == feature_qualifier)
     {
         if (!excludedFeature(excludedQualifiers, qd))
             this = TRUE;
     }
-    else if (selectedQualifier(neededQualifiers, qd))
+    else
     {
-        this = TRUE;
+        if (!strictParse)
+        {
+            if (optnot)
+            {
+                moduleDef *mod;
+
+                /* Add every platform except the one we have. */
+                for (mod = currentSpec->modules; mod != NULL; mod = mod->next)
+                {
+                    qualDef *not_qd;
+
+                    for (not_qd = mod->qualifiers; not_qd != NULL; not_qd = not_qd->next)
+                        if (not_qd->qtype == platform_qualifier && strcmp(not_qd->name, qd->name) != 0)
+                            addPlatform(not_qd);
+                }
+            }
+            else
+            {
+                addPlatform(qd);
+            }
+
+            /*
+             * If it is a non-strict parse then this is always TRUE, ie. we
+             * never skip because of the platform.
+             */
+            return TRUE;
+        }
+
+        if (selectedQualifier(neededQualifiers, qd))
+            this = TRUE;
     }
 
     if (optnot)
         this = !this;
 
     return this;
+}
+
+
+/*
+ * Add a platform to the current list of platforms if it is not already there.
+ */
+static void addPlatform(qualDef *qd)
+{
+    platformDef *pd;
+
+    for (pd = currentPlatforms; pd != NULL; pd = pd->next)
+        if (pd->qualifier == qd)
+            return;
+
+    pd = sipMalloc(sizeof (platformDef));
+    pd->qualifier = qd;
+    pd->next = currentPlatforms;
+    currentPlatforms = pd;
 }
 
 
@@ -9154,6 +9278,7 @@ static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
     pd->get = get;
     pd->set = set;
     appendCodeBlock(&pd->docstring, docstring);
+    pd->platforms = currentPlatforms;
     pd->next = cd->properties;
 
     cd->properties = pd;

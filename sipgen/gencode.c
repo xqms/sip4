@@ -148,7 +148,7 @@ static void generateHandleResult(moduleDef *, overDef *, int, int, char *,
         FILE *);
 static void generateOrdinaryFunction(sipSpec *pt, moduleDef *mod,
         classDef *c_scope, mappedTypeDef *mt_scope, memberDef *md, FILE *fp);
-static void generateSimpleFunctionCall(fcallDef *, FILE *);
+static void generateSimpleFunctionCall(fcallDef *, int, FILE *);
 static int generateResultVar(ifaceFileDef *scope, overDef *od, argDef *res,
         const char *indent, FILE *fp);
 static void generateFunctionCall(classDef *c_scope, mappedTypeDef *mt_scope,
@@ -293,12 +293,13 @@ static void generateGlobalFunctionTableEntries(sipSpec *pt, moduleDef *mod,
         memberDef *members, FILE *fp);
 static void prTemplateType(FILE *fp, ifaceFileDef *scope, templateDef *td,
         int remove_global_scope);
+static int isString(argDef *ad);
 
 
 /*
  * Generate the code from a specification.
  */
-void generateCode(sipSpec *pt, char *codeDir, char *buildfile, char *docFile,
+void generateCode(sipSpec *pt, char *codeDir, char *buildFile, char *docFile,
         const char *srcSuffix, int except, int trace, int releaseGIL,
         int parts, stringList *needed_qualifiers, stringList *xsl,
         const char *consModule, int docs, int py_debug)
@@ -340,8 +341,8 @@ void generateCode(sipSpec *pt, char *codeDir, char *buildfile, char *docFile,
     }
 
     /* Generate the build file. */
-    if (buildfile != NULL)
-        generateBuildFile(pt, buildfile, srcSuffix, consModule);
+    if (buildFile != NULL)
+        generateBuildFile(pt, buildFile, srcSuffix, consModule);
 }
 
 
@@ -468,14 +469,52 @@ void generateExpression(valueDef *vd, int in_str, FILE *fp)
         switch (vd->vtype)
         {
         case qchar_value:
-            prcode(fp,"'%c'",vd->u.vqchar);
+            if (vd->u.vqchar == '"' && in_str)
+                prcode(fp, "'\\\"'");
+            else
+                prcode(fp, "'%c'", vd->u.vqchar);
+
             break;
 
         case string_value:
             {
-                const char *quote = (in_str ? "\\\"" : "\"");
+                const char *cp, *quote = (in_str ? "\\\"" : "\"");
 
-                prcode(fp,"%s%s%s", quote, vd->u.vstr, quote);
+                prcode(fp, "%s", quote);
+
+                for (cp = vd->u.vstr; *cp != '\0'; ++cp)
+                {
+                    char ch = *cp;
+                    int escape;
+
+                    if (strchr("\\\"", ch) != NULL)
+                    {
+                        escape = TRUE;
+                    }
+                    else if (ch == '\n')
+                    {
+                        escape = TRUE;
+                        ch = 'n';
+                    }
+                    else if (ch == '\r')
+                    {
+                        escape = TRUE;
+                        ch = 'r';
+                    }
+                    else if (ch == '\t')
+                    {
+                        escape = TRUE;
+                        ch = 't';
+                    }
+                    else
+                    {
+                        escape = FALSE;
+                    }
+
+                    prcode(fp, "%s%c", (escape ? "\\" : ""), ch);
+                }
+
+                prcode(fp, "%s", quote);
             }
 
             break;
@@ -497,7 +536,7 @@ void generateExpression(valueDef *vd, int in_str, FILE *fp)
             break;
 
         case fcall_value:
-            generateSimpleFunctionCall(vd->u.fcd,fp);
+            generateSimpleFunctionCall(vd->u.fcd, in_str, fp);
             break;
         }
  
@@ -647,7 +686,7 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipParseArgs                sipAPI_%s->api_parse_args\n"
 "#define sipParseKwdArgs             sipAPI_%s->api_parse_kwd_args\n"
 "#define sipParsePair                sipAPI_%s->api_parse_pair\n"
-"#define sipCommonDtor               sipAPI_%s->api_common_dtor\n"
+"#define sipInstanceDestroyed        sipAPI_%s->api_instance_destroyed\n"
 "#define sipConvertFromSequenceIndex sipAPI_%s->api_convert_from_sequence_index\n"
 "#define sipConvertFromVoidPtr       sipAPI_%s->api_convert_from_void_ptr\n"
 "#define sipConvertToVoidPtr         sipAPI_%s->api_convert_to_void_ptr\n"
@@ -762,6 +801,7 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipIsDerivedClass           sipAPI_%s->api_is_derived_class\n"
 "#define sipGetUserObject            sipAPI_%s->api_get_user_object\n"
 "#define sipSetUserObject            sipAPI_%s->api_set_user_object\n"
+"#define sipRegisterEventHandler     sipAPI_%s->api_register_event_handler\n"
 "\n"
 "/* These are deprecated. */\n"
 "#define sipMapStringToClass         sipAPI_%s->api_map_string_to_class\n"
@@ -771,6 +811,7 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipConvertToArray           sipAPI_%s->api_convert_to_array\n"
 "#define sipConvertToTypedArray      sipAPI_%s->api_convert_to_typed_array\n"
 "#define sipEnableGC                 sipAPI_%s->api_enable_gc\n"
+"#define sipPrintObject              sipAPI_%s->api_print_object\n"
 "#define sipWrapper_Check(w)         PyObject_TypeCheck((w), sipAPI_%s->api_wrapper_type)\n"
 "#define sipGetWrapper(p, wt)        sipGetPyObject((p), (wt)->wt_td)\n"
 "#define sipReleaseInstance(p, wt, s)    sipReleaseType((p), (wt)->wt_td, (s))\n"
@@ -785,6 +826,8 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipConvertFromMappedType    sipConvertFromType\n"
 "#define sipConvertFromNamedEnum(v, pt)  sipConvertFromEnum((v), ((sipEnumTypeObject *)(pt))->type)\n"
 "#define sipConvertFromNewInstance(p, wt, t) sipConvertFromNewType((p), (wt)->wt_td, (t))\n"
+        ,mname
+        ,mname
         ,mname
         ,mname
         ,mname
@@ -2008,8 +2051,8 @@ static void generateCpp(sipSpec *pt, moduleDef *mod, const char *codeDir,
                         if (xd->iff->module == mld->module && xd->exceptionnr == i)
                         {
                             prcode(fp,
-"    {\"%s.%s\"},\n"
-                                , mld->module->name, xd->pyname);
+"    {\"%s\"},\n"
+                                , xd->pyname);
                         }
                     }
                 }
@@ -2155,7 +2198,7 @@ static void generateCpp(sipSpec *pt, moduleDef *mod, const char *codeDir,
 "\n"
 "\n"
 "PyObject *sipExportedExceptions_%s[%d];\n"
-            , mname, mod->nrexceptions);
+            , mname, mod->nrexceptions + 1);
 
     /* Generate any API versions table. */
     if (mod->api_ranges != NULL || mod->api_versions != NULL)
@@ -2550,6 +2593,14 @@ static void generateCpp(sipSpec *pt, moduleDef *mod, const char *codeDir,
 "    }\n"
             , xd->pyname, xd->iff->module->name, xd->exceptionnr);
     }
+
+    if (mod->nrexceptions > 0)
+        prcode(fp,
+"\n"
+"    sipExportedExceptions_%s[%d] = NULL;\n"
+            , mname, mod->nrexceptions);
+
+    /* Generate the interface source files. */
 
     /* Generate any post-initialisation code. */
     generateCppCodeBlock(mod->postinitcode, fp);
@@ -6181,7 +6232,7 @@ static void generateClassFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
         prcode(fp,
 "static void release_%L(void *%s, int%s)\n"
 "{\n"
-            , cd->iff, (need_ptr ? "sipCppV" : ""), (need_state ? " sipIsDerived" : ""));
+            , cd->iff, (need_ptr ? "sipCppV" : ""), (need_state ? " sipState" : ""));
 
         if (need_cast_ptr)
         {
@@ -6236,7 +6287,7 @@ static void generateClassFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
             else if (hasShadow(cd))
             {
                 prcode(fp,
-"    if (sipIsDerived)\n"
+"    if (sipState & SIP_DERIVED_CLASS)\n"
 "        delete reinterpret_cast<sip%C *>(sipCppV);\n"
                     , classFQCName(cd));
 
@@ -6951,7 +7002,7 @@ static void generateShadowCode(sipSpec *pt, moduleDef *mod, classDef *cd,
             generateCppCodeBlock(cd->dtorcode,fp);
 
         prcode(fp,
-"    sipCommonDtor(sipPySelf);\n"
+"    sipInstanceDestroyed(sipPySelf);\n"
 "}\n"
             );
     }
@@ -7953,7 +8004,7 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
 
         prcode(fp," %ssipRes",(res_isref ? "*" : ""));
 
-        if ((res->atype == class_type || res->atype == mapped_type) && res->nrderefs == 0)
+        if ((res->atype == class_type || res->atype == mapped_type || res->atype == template_type) && res->nrderefs == 0)
         {
             if (res->atype == class_type)
             {
@@ -8687,6 +8738,7 @@ static void generateUsedIncludes(ifaceFileList *iffl, FILE *fp)
  */
 static void generateModuleAPI(sipSpec *pt, moduleDef *mod, FILE *fp)
 {
+    int no_exceptions = TRUE;
     classDef *cd;
     mappedTypeDef *mtd;
     exceptionDef *xd;
@@ -8702,10 +8754,21 @@ static void generateModuleAPI(sipSpec *pt, moduleDef *mod, FILE *fp)
 
     for (xd = pt->exceptions; xd != NULL; xd = xd->next)
         if (xd->iff->module == mod && xd->exceptionnr >= 0)
-            prcode(fp,
+        {
+            if (no_exceptions)
+            {
+                prcode(fp,
 "\n"
+"/* The exceptions defined in this module. */\n"
+"extern PyObject *sipExportedExceptions_%s[];\n"
+"\n"
+                    , mod->name);
+            }
+
+            prcode(fp,
 "#define sipException_%C sipExportedExceptions_%s[%d]\n"
                 , xd->iff->fqcname, mod->name, xd->exceptionnr);
+        }
 
     generateEnumMacros(pt, mod, NULL, NULL, fp);
 
@@ -9197,7 +9260,7 @@ static void generateCallArgs(moduleDef *mod, signatureDef *sd,
         case ustring_type:
         case string_type:
         case wstring_type:
-            if (ad->nrderefs > (isOutArg(ad) ? 0 : 1))
+            if (ad->nrderefs > (isOutArg(ad) ? 0 : 1) && !isReference(ad))
                 ind = "&";
 
             break;
@@ -9703,7 +9766,7 @@ static void generateDefaultValue(moduleDef *mod, argDef *ad, int argnr,
 /*
  * Generate a simple function call.
  */
-static void generateSimpleFunctionCall(fcallDef *fcd,FILE *fp)
+static void generateSimpleFunctionCall(fcallDef *fcd, int in_str, FILE *fp)
 {
     int i;
 
@@ -9714,7 +9777,7 @@ static void generateSimpleFunctionCall(fcallDef *fcd,FILE *fp)
         if (i > 0)
             prcode(fp,",");
 
-        generateExpression(fcd->args[i], FALSE, fp);
+        generateExpression(fcd->args[i], in_str, fp);
     }
 
     prcode(fp,")");
@@ -12175,6 +12238,20 @@ static const char *resultOwner(overDef *od)
 
 
 /*
+ * Check if an argument is a string rather than a char type.
+ */
+static int isString(argDef *ad)
+{
+    int nrderefs = ad->nrderefs;
+
+    if (isOutArg(ad) && !isReference(ad))
+        --nrderefs;
+
+    return nrderefs > 0;
+}
+
+
+/*
  * Return the format string used by sipBuildResult() for a particular type.
  */
 static const char *getBuildResultFormat(argDef *ad)
@@ -12196,15 +12273,15 @@ static const char *getBuildResultFormat(argDef *ad)
     case ascii_string_type:
     case latin1_string_type:
     case utf8_string_type:
-        return (ad->nrderefs > (isOutArg(ad) ? 1 : 0)) ? "A" : "a";
+        return isString(ad) ? "A" : "a";
 
     case sstring_type:
     case ustring_type:
     case string_type:
-        return (ad->nrderefs > (isOutArg(ad) ? 1 : 0)) ? "s" : "c";
+        return isString(ad) ? "s" : "c";
 
     case wstring_type:
-        return (ad->nrderefs > (isOutArg(ad) ? 1 : 0)) ? "x" : "w";
+        return isString(ad) ? "x" : "w";
 
     case enum_type:
         return (ad->u.ed->fqcname != NULL) ? "F" : "e";
@@ -13310,48 +13387,48 @@ static int generateArgParser(moduleDef *mod, signatureDef *sd,
         switch (ad->atype)
         {
         case ascii_string_type:
-            if (ad->nrderefs == 0 || (isOutArg(ad) && ad->nrderefs == 1))
-                fmt = "aA";
-            else
+            if (isString(ad))
                 fmt = "AA";
+            else
+                fmt = "aA";
 
             break;
 
         case latin1_string_type:
-            if (ad->nrderefs == 0 || (isOutArg(ad) && ad->nrderefs == 1))
-                fmt = "aL";
-            else
+            if (isString(ad))
                 fmt = "AL";
+            else
+                fmt = "aL";
 
             break;
 
         case utf8_string_type:
-            if (ad->nrderefs == 0 || (isOutArg(ad) && ad->nrderefs == 1))
-                fmt = "a8";
-            else
+            if (isString(ad))
                 fmt = "A8";
+            else
+                fmt = "a8";
 
             break;
 
         case sstring_type:
         case ustring_type:
         case string_type:
-            if (ad->nrderefs == 0 || (isOutArg(ad) && ad->nrderefs == 1))
-                fmt = "c";
-            else if (isArray(ad))
+            if (isArray(ad))
                 fmt = "k";
-            else
+            else if (isString(ad))
                 fmt = "s";
+            else
+                fmt = "c";
 
             break;
 
         case wstring_type:
-            if (ad->nrderefs == 0 || (isOutArg(ad) && ad->nrderefs == 1))
-                fmt = "w";
-            else if (isArray(ad))
+            if (isArray(ad))
                 fmt = "K";
-            else
+            else if (isString(ad))
                 fmt = "x";
+            else
+                fmt = "w";
 
             break;
 
