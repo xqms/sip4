@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041302
-#define SIP_VERSION_STR     "4.19.2"
+#define SIP_VERSION         0x041303
+#define SIP_VERSION_STR     "4.19.3"
 
 
 /*
@@ -67,6 +67,12 @@ extern "C" {
  * minor number set * to 0.
  *
  * History:
+ *
+ * 12.2 Added sip_api_print_object() to the public API.
+ *      Renamed sip_api_common_dtor() to sip_api_instance_destroyed() and added
+ *      it to the public API.
+ *      Added sipEventType and sip_api_register_event_handler() to the public
+ *      API.
  *
  * 12.1 Added sip_api_enable_gc() to the public API.
  *
@@ -246,7 +252,7 @@ extern "C" {
  * 0.0  Original version.
  */
 #define SIP_API_MAJOR_NR    12
-#define SIP_API_MINOR_NR    1
+#define SIP_API_MINOR_NR    2
 
 
 /* The name of the sip module. */
@@ -413,8 +419,21 @@ typedef struct _sipWrapper sipWrapper;
 
 
 /*
- * Some convenient function pointers.
+ * The different events a handler can be registered for.
  */
+typedef enum
+{
+    sipEventWrappedInstance,    /* After wrapping a C/C++ instance. */
+    sipEventCollectingWrapper,  /* When garbage collecting a wrapper object. */
+    sipEventNrEvents
+} sipEventType;
+
+/*
+ * The event handlers.
+ */
+typedef void (*sipWrappedInstanceEventHandler)(void *sipCpp);
+typedef void (*sipCollectingWrapperEventHandler)(sipSimpleWrapper *sipSelf);
+
 
 /*
  * The operation an access function is being asked to perform.
@@ -426,6 +445,10 @@ typedef enum
     ReleaseGuard        /* Release the guard, if any. */
 } AccessFuncOp;
 
+
+/*
+ * Some convenient function pointers.
+ */
 typedef void *(*sipInitFunc)(sipSimpleWrapper *, PyObject *, PyObject *,
         PyObject **, PyObject **, PyObject **);
 typedef int (*sipFinalFunc)(PyObject *, void *, PyObject *, PyObject **);
@@ -1723,7 +1746,15 @@ typedef struct _sipAPIDef {
             const char *fmt, ...);
     int (*api_parse_pair)(PyObject **parseErrp, PyObject *arg0, PyObject *arg1,
             const char *fmt, ...);
-    void (*api_common_dtor)(sipSimpleWrapper *sipSelf);
+
+    /*
+     * The following are part of the public API.
+     */
+    void (*api_instance_destroyed)(sipSimpleWrapper *sipSelf);
+
+    /*
+     * The following are not part of the public API.
+     */
     void (*api_no_function)(PyObject *parseErr, const char *func,
             const char *doc);
     void (*api_no_method)(PyObject *parseErr, const char *scope,
@@ -1808,6 +1839,9 @@ typedef struct _sipAPIDef {
      * The following are part of the public API.
      */
     int (*api_enable_gc)(int enable);
+    void (*api_print_object)(PyObject *o);
+    int (*api_register_event_handler)(sipEventType type, const sipTypeDef *td,
+            void *handler);
 } sipAPIDef;
 
 

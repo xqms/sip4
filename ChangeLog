@@ -1,4 +1,165 @@
+2017-07-03  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.3.
+	[14685a6e736e] [4.19.3] <4.19-maint>
+
+2017-07-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c, sipgen/type_hints.c:
+	Fixes for hidden namespaces in generated XML.
+	[489321fd2475] <4.19-maint>
+
+2017-06-28  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/specification_files.rst:
+	Fixed an out of date statement in the docs.
+	[21539b0e74c6] <4.19-maint>
+
+2017-06-22  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in:
+	Don't report template arguments of uninstantiated templates as
+	undefined classes.
+	[a69025738247] <4.19-maint>
+
+2017-06-21  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y:
+	Allow empty class bodies.
+	[265b531cb6e4] <4.19-maint>
+
+	* sipgen/gencode.c:
+	Fixed a bug handling double quotes as the default value of a char
+	argument.
+	[d86c23976619] <4.19-maint>
+
+2017-06-16  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/main.c, sipgen/metasrc/parser.y, sipgen/sip.h.in,
+	sipgen/transform.c:
+	Completed the implementation of non-strict parsing.
+	[8b5e498d13dd] <4.19-maint>
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in:
+	The relevant data structures now retain the platform information.
+	[15b6c00166a7] <4.19-maint>
+
+	* sipgen/gencode.c, sipgen/main.c, sipgen/metasrc/parser.y,
+	sipgen/sip.h.in:
+	Added the stub of non-strict parsing that saves (but otherwise
+	ignores) the platform information.
+	[b05b36a086c2] <4.19-maint>
+
+	* sipgen/gencode.c, sipgen/metasrc/lexer.l:
+	Improve the handling of string constants to properly support escape
+	characters.
+	[495a7635a52d] <4.19-maint>
+
+	* sipgen/metasrc/parser.y:
+	Make sure any expanded template ctor call is a deep copy.
+	[141c98e741b6] <4.19-maint>
+
+2017-06-15  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y:
+	Expand template ctor calls when they are the default values of an
+	argument.
+	[5df8870c61a7] <4.19-maint>
+
+2017-06-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed a regression in the invocation of the dtor of shadow classes.
+	[e833dc3f9a2f] <4.19-maint>
+
+2017-06-06  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgignore:
+	Updated .hgignore for the changed build directory.
+	[b2fb251d3500] <4.19-maint>
+
+2017-05-27  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in, sphinx/c_api.rst:
+	Documented the event handler mechanism.
+	[aee09bdf1206] <4.19-maint>
+
+	* sipgen/gencode.c, siplib/sip.h.in.in, siplib/siplib.c.in:
+	Implemented sipEventType and sipRegisterEventHandler().
+	[2a4bcf305afa] <4.19-maint>
+
+2017-05-26  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, siplib/objmap.c, siplib/sip.h.in.in,
+	siplib/sipint.h, siplib/siplib.c.in, sphinx/c_api.rst:
+	Renamed sipCommonDtor() to sipInstanceDestroyed() and added it to
+	the public API.
+	[e7d4e6661fa0] <4.19-maint>
+
+	* sipgen/metasrc/parser.y:
+	The parser will now accept class template definitions within a
+	class. The generated code is untested.
+	[ec57a6e03eb3] <4.19-maint>
+
+2017-05-23  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/type_hints.c:
+	Added support for type hints for properties from Scott Maxwell.
+	[c861fe0ef6ca] <4.19-maint>
+
+2017-05-15  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixes for 'char *&' argument types.
+	[684e23c995a3] <4.19-maint>
+
+2017-05-05  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Removed a duplicate call.
+	[afe3d3efc82d] <4.19-maint>
+
+	* sipgen/gencode.c:
+	Don't try and initialise the result of a virtual when the type is a
+	template.
+	[cce4fe835faf] <4.19-maint>
+
+2017-04-27  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, siplib/sip.h.in.in, siplib/siplib.c.in:
+	Added sipPrintObject() to the public C API.
+	[10e10b1a2d68] <4.19-maint>
+
+2017-04-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, siplib/siplib.c.in:
+	Fixed regressions in the handling of exceptions.
+	[974a4d77314b] <4.19-maint>
+
+	* sipgen/transform.c, sphinx/conf.py.in:
+	Minor cosmetic fixes.
+	[4ea35fd2187d] <4.19-maint>
+
+2017-04-05  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Effectively re-applied changeset dc06058c99dd. If there is a real
+	problem here then we don't yet fully understand it.
+	[95a493a417e8] <4.19-maint>
+
+2017-04-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/transform.c:
+	Fix a regression so that a shadow class is not generated if there is
+	a private dtor.
+	[6b09a6d578e8] <4.19-maint>
+
 2017-03-30  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.2 for changeset 1df924860f57
+	[6209a625ac87] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.2.

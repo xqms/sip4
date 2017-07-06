@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041302
-#define SIP_VERSION_STR     "4.19.2"
+#define SIP_VERSION         0x041303
+#define SIP_VERSION_STR     "4.19.3"
 
 
 #ifdef TRUE
@@ -217,6 +217,7 @@
 
 #define isTemplateArg(cd)   ((cd)->classflags2 & CLASS2_TMPL_ARG)
 #define setTemplateArg(cd)  ((cd)->classflags2 |= CLASS2_TMPL_ARG)
+#define resetTemplateArg(cd)    ((cd)->classflags2 &= ~CLASS2_TMPL_ARG)
 #define isMixin(cd)         ((cd)->classflags2 & CLASS2_MIXIN)
 #define setMixin(cd)        ((cd)->classflags2 |= CLASS2_MIXIN)
 #define isExportDerived(cd) ((cd)->classflags2 & CLASS2_EXPORT_DERIVED)
@@ -747,6 +748,13 @@ typedef struct _qualDef {
 } qualDef;
 
 
+/* A platform. */
+typedef struct _platformDef {
+    struct _qualDef *qualifier;         /* The platform qualifier. */
+    struct _platformDef *next;          /* Next in the list. */
+} platformDef;
+
+
 /* A scoped name. */
 typedef struct _scopedNameDef {
     char *name;                         /* The name. */
@@ -969,6 +977,7 @@ typedef struct _ifaceFileDef {
     codeBlockList *hdrcode;             /* Header code. */
     const char *file_extension;         /* The optional file extension. */
     struct _ifaceFileList *used;        /* Interface files used. */
+    platformDef *platforms;             /* The platforms. */
     struct _ifaceFileDef *next;         /* Next in the list. */
 } ifaceFileDef;
 
@@ -1044,6 +1053,7 @@ typedef struct _typedefDef {
     struct _classDef *ecd;              /* The enclosing class. */
     moduleDef *module;                  /* The owning module. */
     argDef type;                        /* The actual type. */
+    platformDef *platforms;             /* The platforms. */
     struct _typedefDef *next;           /* Next in the list. */
 } typedefDef;
 
@@ -1060,6 +1070,7 @@ typedef struct _varDef {
     codeBlockList *accessfunc;          /* The access function. */
     codeBlockList *getcode;             /* The get code. */
     codeBlockList *setcode;             /* The set code. */
+    platformDef *platforms;             /* The platforms. */
     struct _varDef *next;               /* Next in the list. */
 } varDef;
 
@@ -1070,6 +1081,7 @@ typedef struct _propertyDef {
     const char *get;                    /* The name of the getter method. */
     const char *set;                    /* The name of the setter method. */
     codeBlockList *docstring;           /* The docstring. */
+    platformDef *platforms;             /* The platforms. */
     struct _propertyDef *next;          /* Next in the list. */
 } propertyDef;
 
@@ -1094,6 +1106,7 @@ typedef struct _overDef {
     char *prehook;                      /* The pre-hook name. */
     char *posthook;                     /* The post-hook name. */
     const char *virt_error_handler;     /* The virtual error handler. */
+    platformDef *platforms;             /* The platforms. */
     struct _overDef *next;              /* Next in the list. */
 } overDef;
 
@@ -1111,6 +1124,7 @@ typedef struct _ctorDef {
     codeBlockList *premethodcode;       /* Code to insert before the method code. */
     char *prehook;                      /* The pre-hook name. */
     char *posthook;                     /* The post-hook name. */
+    platformDef *platforms;             /* The platforms. */
     struct _ctorDef *next;              /* Next in the list. */
 } ctorDef;
 
@@ -1121,6 +1135,7 @@ typedef struct _enumMemberDef {
     int no_typehint;                    /* The type hint will be suppressed. */
     char *cname;                        /* The C/C++ name. */
     struct _enumDef *ed;                /* The enclosing enum. */
+    platformDef *platforms;             /* The platforms. */
     struct _enumMemberDef *next;        /* Next in the list. */
 } enumMemberDef;
 
@@ -1142,6 +1157,7 @@ typedef struct _enumDef {
     enumMemberDef *members;             /* The list of members. */
     struct _memberDef *slots;           /* The list of slots. */
     struct _overDef *overs;             /* The list of slot overloads. */
+    platformDef *platforms;             /* The platforms. */
     struct _enumDef *next;              /* Next in the list. */
 } enumDef;
 
@@ -1329,10 +1345,10 @@ extern char *sipVersion;                /* The version of SIP. */
 extern stringList *includeDirList;      /* The include directory list for SIP files. */
 
 
-void parse(sipSpec *, FILE *, char *, stringList *, stringList *, stringList *,
-        KwArgs, int);
+void parse(sipSpec *, FILE *, char *, int, stringList *, stringList *,
+        stringList *, KwArgs, int);
 void parserEOF(const char *,parserContext *);
-void transform(sipSpec *);
+void transform(sipSpec *, int);
 void generateCode(sipSpec *, char *, char *, char *, const char *, int, int,
         int, int, stringList *needed_qualifiers, stringList *, const char *,
         int, int);

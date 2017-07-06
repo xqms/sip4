@@ -434,6 +434,9 @@ static void sip_api_release_buffer_info(sipBufferInfoDef *bi);
 static PyObject *sip_api_get_user_object(const sipSimpleWrapper *sw);
 static void sip_api_set_user_object(sipSimpleWrapper *sw, PyObject *user);
 static int sip_api_enable_gc(int enable);
+static void sip_api_print_object(PyObject *o);
+static int sip_api_register_event_handler(sipEventType type,
+        const sipTypeDef *td, void *handler);
 
 
 /*
@@ -530,7 +533,13 @@ static const sipAPIDef sip_api = {
     sip_api_init_module,
     sip_api_parse_args,
     sip_api_parse_pair,
-    sip_api_common_dtor,
+    /*
+     * The following are part of the public API.
+     */
+    sip_api_instance_destroyed,
+    /*
+     * The following are not part of the public API.
+     */
     sip_api_no_function,
     sip_api_no_method,
     sip_api_abstract_method,
@@ -590,6 +599,8 @@ static const sipAPIDef sip_api = {
      * The following are part of the public API.
      */
     sip_api_enable_gc,
+    sip_api_print_object,
+    sip_api_register_event_handler,
 };
 
 
@@ -677,6 +688,16 @@ typedef struct _sipProxyResolver {
     sipProxyResolverFunc resolver;  /* The resolver. */
     struct _sipProxyResolver *next; /* The next in the list. */
 } sipProxyResolver;
+
+
+/*
+ * An entry in the linked list of event handlers.
+ */
+typedef struct _sipEventHandler {
+    const sipClassTypeDef *ctd;     /* The type the handler handles. */
+    void *handler;                  /* The handler. */
+    struct _sipEventHandler *next;  /* The next in the list. */
+} sipEventHandler;
 
 
 /*****************************************************************************
@@ -782,7 +803,7 @@ static sipPyObject *sipRegisteredPyTypes = NULL;    /* Registered Python types. 
 static sipPyObject *sipDisabledAutoconversions = NULL;  /* Python types whose auto-conversion is disabled. */
 static PyInterpreterState *sipInterpreter = NULL;   /* The interpreter. */
 static int destroy_on_exit = TRUE;      /* Destroy owned objects on exit. */
-
+static sipEventHandler *event_handlers[sipEventNrEvents];   /* The event handler lists. */
 
 static void addClassSlots(sipWrapperType *wt, const sipClassTypeDef *ctd);
 static void addTypeSlots(PyHeapTypeObject *heap_to, sipPySlotDef *slots);
@@ -946,6 +967,8 @@ static int importErrorHandlers(sipExportedModuleDef *client,
         sipImportedModuleDef *im, sipExportedModuleDef *em);
 static int importExceptions(sipExportedModuleDef *client,
         sipImportedModuleDef *im, sipExportedModuleDef *em);
+static int is_subtype(const sipClassTypeDef *ctd,
+        const sipClassTypeDef *base_ctd);
 
 
 /*
@@ -5962,7 +5985,7 @@ static PyObject *convertToSequence(void *array, SIP_SSIZE_T nr_elem,
 /*
  * Carry out actions common to all dtors.
  */
-void sip_api_common_dtor(sipSimpleWrapper *sipSelf)
+void sip_api_instance_destroyed(sipSimpleWrapper *sipSelf)
 {
     if (sipSelf != NULL && sipInterpreter != NULL)
     {
@@ -7134,6 +7157,7 @@ static int add_lazy_attrs(sipTypeDef *td)
      * Get any lazy attributes from registered getters.  This must be done last
      * to allow any existing attributes to be replaced.
      */
+    /* TODO: Deprecate this mechanism in favour of an event handler. */
     for (ag = sipAttrGetters; ag != NULL; ag = ag->next)
         if (ag->type == NULL || PyType_IsSubtype((PyTypeObject *)wt, ag->type))
             if (ag->getter(td, dict) < 0)
@@ -9914,6 +9938,7 @@ static int sipWrapperType_init(sipWrapperType *self, PyObject *args,
          */
         if (base != NULL && PyObject_TypeCheck((PyObject *)base, (PyTypeObject *)&sipWrapperType_Type))
         {
+            /* TODO: Deprecate this mechanism in favour of an event handler. */
             sipNewUserTypeFunc new_user_type_handler;
 
             self->wt_td = ((sipWrapperType *)base)->wt_td;
@@ -10197,10 +10222,30 @@ static int sipSimpleWrapper_init(sipSimpleWrapper *self, PyObject *args,
 
     /* If we are wrapping an instance returned from C/C++ then we are done. */
     if (from_cpp)
+    {
+        /*
+         * Invoke any event handlers for instances that are accessed directly.
+         */
+        if (self->access_func == NULL)
+        {
+            sipEventHandler *eh;
+
+            for (eh = event_handlers[sipEventWrappedInstance]; eh != NULL; eh = eh->next)
+            {
+                if (is_subtype(ctd, eh->ctd))
+                {
+                    sipWrappedInstanceEventHandler handler = (sipWrappedInstanceEventHandler)eh->handler;
+
+                    handler(sipNew);
+                }
+            }
+        }
+
         return 0;
+    }
 
     /* Call any finalisation code. */
-    if ((final_func = find_finalisation(ctd)) != NULL)
+    if (final_func != NULL)
     {
         PyObject *new_unused = NULL, **new_unused_p;
 
@@ -10558,10 +10603,10 @@ static sipFinalFunc find_finalisation(sipClassTypeDef *ctd)
     if ((sup = ctd->ctd_supers) != NULL)
         do
         {
-            sipTypeDef *sup_td = getGeneratedType(sup, ctd->ctd_base.td_module);
+            sipClassTypeDef *sup_ctd = sipGetGeneratedClassType(sup, ctd);
             sipFinalFunc func;
 
-            if ((func = find_finalisation((sipClassTypeDef *)sup_td)) != NULL)
+            if ((func = find_finalisation(sup_ctd)) != NULL)
                 return func;
         }
         while (!sup++->sc_flag);
@@ -10674,7 +10719,7 @@ static int sipSimpleWrapper_clear(sipSimpleWrapper *self)
 
             if ((sup = ctd->ctd_supers) != NULL)
                 do
-                    sup_ctd = (sipClassTypeDef *)getGeneratedType(sup, ctd->ctd_base.td_module);
+                    sup_ctd = sipGetGeneratedClassType(sup, ctd);
                 while (sup_ctd->ctd_clear == NULL && !sup++->sc_flag);
         }
 
@@ -11241,22 +11286,7 @@ static int sipWrapper_clear(sipWrapper *self)
 
     /* Detach children (which will be owned by C/C++). */
     while ((sw = (sipSimpleWrapper *)self->first_child) != NULL)
-    {
-        /*
-         * Although this object is being garbage collected, if it is owned by
-         * C++ (and therefore we aren't about to call the C++ dtor) then it
-         * doesn't follow that it's children should be.  So we make sure that
-         * the child stays alive (in case it has Python re-implementations of
-         * C++ virtuals) and remember we have done so.
-         */
-        if (!sipIsPyOwned(sw))
-        {
-            Py_INCREF(sw);
-            sipSetCppHasRef(sw);
-        }
-
         removeFromParent(self->first_child);
-    }
 
     return vret;
 }
@@ -11684,6 +11714,20 @@ static void addTypeSlots(PyHeapTypeObject *heap_to, sipPySlotDef *slots)
  */
 static void forgetObject(sipSimpleWrapper *sw)
 {
+    sipEventHandler *eh;
+    const sipClassTypeDef *ctd = (const sipClassTypeDef *)((sipWrapperType *)Py_TYPE(sw))->wt_td;
+
+    /* Invoke any event handlers. */
+    for (eh = event_handlers[sipEventCollectingWrapper]; eh != NULL; eh = eh->next)
+    {
+        if (is_subtype(ctd, eh->ctd))
+        {
+            sipCollectingWrapperEventHandler handler = (sipCollectingWrapperEventHandler)eh->handler;
+
+            handler(sw);
+        }
+    }
+
     /*
      * This is needed because we release the GIL when calling a C++ dtor.
      * Without it the cyclic garbage collector can be invoked from another
@@ -12861,6 +12905,7 @@ static void *resolve_proxy(const sipTypeDef *td, void *proxy)
 {
     sipProxyResolver *pr;
 
+    /* TODO: Deprecate this mechanism in favour of an event handler. */
     for (pr = proxyResolvers; pr != NULL; pr = pr->next)
         if (pr->td == td)
             proxy = pr->resolver(proxy);
@@ -13442,7 +13487,7 @@ static int importExceptions(sipExportedModuleDef *client,
         {
             while (*exc != NULL)
             {
-                if (strcmp(Py_TYPE(*exc)->tp_name, name) == 0)
+                if (strcmp(((PyTypeObject *)(*exc))->tp_name, name) == 0)
                 {
                     exception = *exc;
                     break;
@@ -13540,4 +13585,67 @@ static int sip_api_enable_gc(int enable)
     }
 
     return was_enabled;
+}
+
+
+/*
+ * A thin wrapper around PyObject_Print() usually used when debugging with the
+ * limited API.
+ */
+static void sip_api_print_object(PyObject *o)
+{
+    PyObject_Print(o, stdout, 0);
+}
+
+
+/*
+ * Register a handler for a particular event.
+ */
+static int sip_api_register_event_handler(sipEventType type,
+        const sipTypeDef *td, void *handler)
+{
+    sipEventHandler *eh;
+
+    assert(sipTypeIsClass(td));
+
+    if ((eh = sip_api_malloc(sizeof (sipEventHandler))) == NULL)
+        return -1;
+
+    eh->ctd = (const sipClassTypeDef *)td;
+    eh->handler = handler;
+
+    eh->next = event_handlers[(int)type];
+    event_handlers[(int)type] = eh;
+
+    return 0;
+}
+
+
+/*
+ * Returns TRUE if a generated class type is a sub-class of a base generated
+ * class type.
+ */
+static int is_subtype(const sipClassTypeDef *ctd,
+        const sipClassTypeDef *base_ctd)
+{
+    const sipEncodedTypeDef *sup;
+
+    /* Handle the trivial cases. */
+    if (ctd == base_ctd)
+        return TRUE;
+
+    if ((sup = ctd->ctd_supers) == NULL)
+        return FALSE;
+
+    /* Search the super-types. */
+    do
+    {
+        const sipClassTypeDef *sup_ctd = sipGetGeneratedClassType(sup, ctd);
+
+        if (is_subtype(sup_ctd, base_ctd))
+            return TRUE;
+    }
+    while (!sup++->sc_flag);
+
+    return FALSE;
 }
