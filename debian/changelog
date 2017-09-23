@@ -1,6 +1,7 @@
 sip4 (4.19.3+dfsg-2) UNRELEASED; urgency=medium
 
   * Move sip-dbg to automatic dbgsym package (but not python*-sip-dbg).
+  * Drop Breaks/Replaces on versions that are not even in oldstable.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Sat, 23 Sep 2017 21:17:35 +0300
 
