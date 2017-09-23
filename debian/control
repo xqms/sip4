@@ -16,7 +16,7 @@ Build-Depends: bison,
                python3-all-dbg,
                python3-all-dev (>= 3.3.2-5~)
 Build-Depends-Indep: python3-sphinx (>= 1.3)
-Standards-Version: 4.0.0
+Standards-Version: 4.1.0
 Homepage: http://www.riverbankcomputing.co.uk/software/sip/
 Vcs-Git: https://anonscm.debian.org/git/python-modules/packages/sip4.git
 Vcs-Browser: https://anonscm.debian.org/cgit/python-modules/packages/sip4.git
@@ -34,7 +34,6 @@ Description: Python/C++ bindings generator runtime library
  specificity towards C++ and Python.
 
 Package: python-sip-dbg
-Priority: extra
 Architecture: any
 Section: debug
 Depends: python-sip (= ${binary:Version}), python-dbg, ${shlibs:Depends}, ${misc:Depends}
@@ -169,7 +168,6 @@ Description: Python 3/C++ bindings generator development files
 Package: python3-sip-dbg
 Architecture: any
 Section: debug
-Priority: extra
 Depends: python3-sip (= ${binary:Version}), python3-dbg, ${shlibs:Depends}, ${misc:Depends}
 Description: Python 3/C++ bindings generator runtime library (debug extension)
  SIP is a tool for generating bindings for C++ classes with some ideas
