@@ -6,7 +6,7 @@ Uploaders: Torsten Marek <shlomme@debian.org>,
            Scott Kitterman <scott@kitterman.com>,
            Dmitry Shachnev <mitya57@debian.org>
 Build-Depends: bison,
-               debhelper (>= 9),
+               debhelper (>= 9.20160114~),
                dh-python,
                dh-strip-nondeterminism,
                dpkg-dev (>= 1.16.1~),
@@ -106,33 +106,6 @@ Description: Python/C++ bindings generator code generator application
  .
  This package contains the code generator tool needed to develop Python and
  Python 3 bindings with sip.
-
-Package: sip-dbg
-Priority: extra
-Architecture: any
-Section: debug
-Depends: sip-dev (= ${binary:Version}), python-dbg, ${shlibs:Depends}, ${misc:Depends}
-Description: Debug symbols for Python/C++ bindings generator application
- SIP is a tool for generating bindings for C++ classes with some ideas
- borrowed from SWIG, but capable of tighter bindings because of its
- specificity towards C++ and Python.
- .
- SIP was originally designed to generate Python bindings for KDE and so
- has explicit support for the signal slot mechanism used by the Qt/KDE
- class libraries.
- .
- Features:
-     - connecting Qt signals to Python functions and class methods
-     - connecting Python signals to Qt slots
-     - overloading virtual member functions with Python class methods
-     - protected member functions
-     - abstract classes
-     - enumerated types
-     - global class instances
-     - static member functions.
- .
- This package contains the debug symbols for the code generator tool needed to
- develop Python and Python 3 bindings with sip.
 
 Package: python-sip-doc
 Architecture: all

@@ -173,14 +173,11 @@ ifneq (,$(findstring -a, $(DH_OPTIONS)))
 	rm -rf debian/python3-sip-dbg/usr/share/doc/python3-sip-dbg
 	mkdir -p debian/python3-sip-dbg/usr/share/doc
 	ln -s python3-sip debian/python3-sip-dbg/usr/share/doc/python3-sip-dbg
-	rm -rf debian/sip-dbg/usr/share/doc/sip-dbg
-	mkdir -p debian/sip-dbg/usr/share/doc
-	ln -s sip-dev debian/sip-dbg/usr/share/doc/sip-dbg
 	DH_OPTIONS= dh_strip -ppython-sip-dev
 	DH_OPTIONS= dh_strip -ppython-sip -Npython-sip-dev --dbg-package=python-sip-dbg
 	DH_OPTIONS= dh_strip -ppython3-sip-dev
 	DH_OPTIONS= dh_strip -ppython3-sip -Npython3-sip-dev --dbg-package=python3-sip-dbg
-	DH_OPTIONS= dh_strip -psip-dev --dbg-package=sip-dbg
+	DH_OPTIONS= dh_strip -psip-dev --dbgsym-migration='sip-dbg (<< 4.19.3+dfsg-2~)'
 endif
 	dh_strip_nondeterminism
 	dh_compress -X.inv
