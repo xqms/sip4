@@ -2,6 +2,7 @@ sip4 (4.19.4+dfsg-1) UNRELEASED; urgency=medium
 
   * New upstream release.
   * Bump API version to 12.3.
+  * Update debhelper compat level to 10.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Thu, 02 Nov 2017 23:48:50 +0300
 
