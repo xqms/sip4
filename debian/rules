@@ -55,7 +55,7 @@ dbg-build-%/configure-stamp: sipgen/lexer.c sipgen/parser.c
 			-e /usr/include/python$*_d \
 			-u CFLAGS="${CFLAGS} ${CPPFLAGS}" CFLAGS_RELEASE="" \
 			CXXFLAGS="${CXXFLAGS} ${CPPFLAGS}" CXXFLAGS_RELEASE="" \
-			LFLAGS="${LDFLAGS}" LFLAGS_RELEASE="" STRIP="" 
+			LFLAGS="${LDFLAGS}" LFLAGS_RELEASE="" STRIP=""
 	touch $@
 
 sipconfig-3.%:
@@ -92,7 +92,7 @@ clean:
 
 install-arch: build
 	dh_testdir
-	dh_testroot	
+	dh_testroot
 	dh_prep -a
 	echo "sip:Provides=$(PY2_PROVIDES)" >> debian/python-sip.substvars
 	echo "sip3:Provides=$(PY3_PROVIDES)" >> debian/python3-sip.substvars

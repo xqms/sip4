@@ -341,7 +341,7 @@ sip4 (4.14.7-2) unstable; urgency=low
   * Fix sip API bump missed in the last upload (Closes: #712669)
     - Bump sip-api and sip-py3api to 10.0
     - Update python-sip Breaks versions
-    - Add appropriate Breaks for python3-sip 
+    - Add appropriate Breaks for python3-sip
 
  -- Scott Kitterman <scott@kitterman.com>  Tue, 18 Jun 2013 16:47:59 -0400
 
@@ -837,7 +837,7 @@ sip4-qt3 (4.4.5-3) unstable; urgency=low
   * Hack the hack for the library dependencies,
     add an exception for QtAssitantClient
   * Added debian/pycompat
-  
+
  -- Torsten Marek <shlomme@debian.org>  Sun,  3 Sep 2006 15:35:38 +0200
 
 sip4-qt3 (4.4.5-2) unstable; urgency=low
@@ -900,7 +900,7 @@ sip4-qt3 (4.2.1-1) unstable; urgency=low
   * Standards version updated to 3.6.1.0
   * Build-depends adapted (python2.3-dev and python2.4-dev),
     autoconf, bison and flex removed
-  * The sip4 build system has been  tweaked in several ways 
+  * The sip4 build system has been tweaked in several ways
     to allow parrallel builds for different versions of Python
 
  -- Torsten Marek <shlomme@gmx.net>  Sun,  6 Mar 2005 23:30:53 +0100
@@ -941,7 +941,7 @@ sip4-qt3 (4.0-2) unstable; urgency=low
 sip4-qt3 (4.0-1) unstable; urgency=low
 
   * New upstream release
-  * Changed the 
+  * Changed the
   * Fixed the debian/copyright file, stating the correct license.
     The new license is a derivative of PSF's Python License, only
     changing references to the licenser, so it's still free and
@@ -1081,7 +1081,7 @@ sip (2.5-2.2) unstable; urgency=low
 sip (2.5-2.1) unstable; urgency=medium
 
   * Non-maintainer upload: rebuilt for Python 2.2 (closes: #120709).
-    sip's configure calls up 'python' and sets the include path for the 
+    sip's configure calls up 'python' and sets the include path for the
     Python header files according to its sys.version. Therefore, a
     Build-Depends on "python-dev" suffices to build a current package
     python-pyqt at any time. What was missing was the installation time
