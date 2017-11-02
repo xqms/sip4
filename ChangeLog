@@ -1,4 +1,260 @@
+2017-11-01  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.4.
+	[ed56fb689db8] [4.19.4] <4.19-maint>
+
+2017-10-09  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Build fixes for Python v2.
+	[5b2adad49340] <4.19-maint>
+
+2017-09-18  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed a regression that meant that namespaces were included in the
+	types of arguments to signals. Probably only affects
+	PyQtDataVisualization.
+	[5c94d14871a3] <4.19-maint>
+
+2017-09-05  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Appy a cast to const class pointers to static instances.
+	[3db4b02ea152] <4.19-maint>
+
+	* sphinx/incompatibilities.rst, sphinx/using.rst:
+	Added a section on overflow checking to the documentation.
+	[39409c0a5282] <4.19-maint>
+
+	* sipgen/gencode.c:
+	Make sure the default value of scoped enums is valid.
+	[5024429c9126] <4.19-maint>
+
+2017-09-04  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/sip.h.in.in, siplib/siplib.c.in, sphinx/c_api.rst,
+	test/int_convertors/run_test.py, test/int_convertors/test.h,
+	test/int_convertors/test.sip:
+	Deprecated sipCanConvertToEnum(). sipConvertToEnum() now has single-
+	pass behaviour like the integer convertors.
+	[2065bdd284cc] <4.19-maint>
+
+2017-09-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/int_convertors.c, siplib/siplib.c.in:
+	Improved the exception text when a virtual should return an enum or
+	a bool.
+	[7636b12a0789] <4.19-maint>
+
+	* test/int_convertors/run_test.py, test/int_convertors/test.h,
+	test/int_convertors/test.sip:
+	Added the tests for converting names enums.
+	[8b5be80fda82] <4.19-maint>
+
+	* siplib/siplib.c.in:
+	Fixed a regression where sipBadCatcherResult() is called without an
+	exception.
+	[894b51685d51] <4.19-maint>
+
+	* test/int_convertors/run_test.py:
+	Added the remaining bool tests.
+	[1afb586f55db] <4.19-maint>
+
+	* sipgen/gencode.c, siplib/int_convertors.c, siplib/sip.h.in.in,
+	siplib/sipint.h, siplib/siplib.c.in, sphinx/c_api.rst,
+	test/int_convertors/run_test.py, test/int_convertors/test.h,
+	test/int_convertors/test.sip:
+	Added sipConvertToBool() to the public API. Implemented the tests
+	for invalid bool values.
+	[3e8faabe48a1] <4.19-maint>
+
+	* test/int_convertors/run_test.py, test/int_convertors/test.h,
+	test/int_convertors/test.sip:
+	Added the tests for converting char.
+	[fb34c9009048] <4.19-maint>
+
+	* test/int_convertors/run_test.py:
+	Completed the unit tests for unsigned values.
+	[cbb776ab54f9] <4.19-maint>
+
+2017-09-01  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* test/int_convertors/run_test.py:
+	Added the tests for valid values of unsigned types.
+	[895e5218b2a2] <4.19-maint>
+
+	* test/int_convertors/run_test.py, test/int_convertors/test.h,
+	test/int_convertors/test.sip:
+	Added tests for virtuals returning invalid values. Added the C++ and
+	wrappers for the unsigned types tests.
+	[b42f7afd33bc] <4.19-maint>
+
+	* test/int_convertors/run_test.py:
+	Fixed the tests for long and long long to account for the legacy
+	behaviour of the convertors.
+	[06c124a19f3c] <4.19-maint>
+
+	* test/int_convertors/run_test.py, test/int_convertors/test.h,
+	test/int_convertors/test.sip:
+	Implemented the unit tests for int, long and long long integer
+	conversions.
+	[55a8a713a6fc] <4.19-maint>
+
+	* test/int_convertors/mk.sh, test/int_convertors/run_test.py,
+	test/int_convertors/test.h, test/int_convertors/test.sip:
+	Added the unit tests for signed char and short integer convertors.
+	[1109afd9d851] <4.19-maint>
+
+	* siplib/siplib.c.in:
+	The type of the exception raised when a Python re-implementation of
+	a C++ virtual raises an exception is now the same as that original
+	exception and not fixed to be TypeError.
+	[61885f427681] <4.19-maint>
+
+2017-08-31  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, siplib/siplib.c.in:
+	Fixed a regression in the generation of slots code.
+	[9e09f205e404] <4.19-maint>
+
+2017-08-30  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/c_api.rst:
+	Backed out the documentation change for sipConvertToEnum().
+	[fec7c90f35a2] <4.19-maint>
+
+	* sipgen/gencode.c, siplib/siplib.c.in, sphinx/c_api.rst:
+	Removed the last call to SIPLong_AsLong().
+	[b70f7ccc3069] <4.19-maint>
+
+	* sipgen/gencode.c, siplib/int_convertors.c, siplib/sip.h.in.in,
+	siplib/sipint.h, siplib/siplib.c.in, siplib/siplib.sbf.in,
+	sphinx/c_api.rst:
+	Added sipLong_AsSignedChar() ot the public API. The generated
+	variable setters now use the new convertors.
+	[85bfd5c33ae0] <4.19-maint>
+
+	* siplib/siplib.c.in:
+	Completed the sip module changes for overflow checking.
+	[c8029d4cc754] <4.19-maint>
+
+2017-08-23  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	Migration of more module code to the new convertors.
+	[b035786f41e8] <4.19-maint>
+
+2017-08-21  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/array.c, siplib/voidptr.c:
+	The array and voidptr types now use the new convertors.
+	[037839910d09] <4.19-maint>
+
+	* siplib/int_convertors.c:
+	Completed the implementation of the new integer convertors.
+	[cae1cf5dfa79] <4.19-maint>
+
+2017-08-20  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, siplib/int_convertors.c, siplib/sip.h.in.in,
+	siplib/sipint.h, siplib/siplib.c.in, sphinx/c_api.rst:
+	Implemented the int convertor stubs and documented them.
+	[3c4d82a590ac] <4.19-maint>
+
+	* siplib/int_convertors.c, siplib/sipint.h, siplib/siplib.c.in:
+	Refactored the support for int convertors.
+	[2b1714de0e3f] <4.19-maint>
+
+2017-08-19  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, siplib/sip.h.in.in, siplib/siplib.c.in,
+	sphinx/c_api.rst, sphinx/python_api.rst:
+	Implemented sipEnableOverflowChecking() and
+	sip.enableoverflowchecking() stubs.
+	[56266006c18f] <4.19-maint>
+
+2017-08-13  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS, sphinx/c_api.rst, sphinx/incompatibilities.rst:
+	Updated the docs regarding support for scoped enums.
+	[0cf1c85b12bd] <4.19-maint>
+
+	* sipgen/gencode.c, siplib/sip.h.in.in, siplib/siplib.c.in:
+	Completed the implementation of scoped enums.
+	[d0b2e8967294] <4.19-maint>
+
+	* siplib/siplib.c.in:
+	Scoped enums are now created as Python enums.
+	[ae7df49152e3] <4.19-maint>
+
+	* siplib/siplib.c.in, sphinx/c_api.rst:
+	More work on scoped enums.
+	[9a196aece94e] <4.19-maint>
+
+2017-08-12  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/metasrc/parser.y, siplib/sip.h.in.in,
+	siplib/siplib.c.in, sphinx/c_api.rst:
+	Created the stub of the scoped enums implementation.
+	[674f800ed250] <4.19-maint>
+
+	* sipgen/type_hints.c:
+	Removed some unused variables.
+	[90360e454f86] <4.19-maint>
+
+	* sipgen/gencode.c, siplib/sip.h.in.in:
+	Remove the const from the source object declaration in assignment
+	helpers.
+	[2b53ba180983] <4.19-maint>
+
+2017-08-11  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y:
+	Completed the parser support for scoped enums.
+	[11b383822a47] <4.19-maint>
+
+	* sipgen/metasrc/parser.y, sipgen/sip.h.in,
+	sphinx/specification_files.rst:
+	Added parser support for scoped enums.
+	[f5b7d5bf0624] <4.19-maint>
+
+	* sipgen/gencode.c:
+	Use static_cast<int>() when passing values to sipConvertFromEnum().
+	[091cfd53e597] <4.19-maint>
+
+2017-08-08  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/transform.c:
+	Disallow (rather than ignore) invalid types in Python signatures if
+	%MethodCode and a C/C++ signature is provided.
+	[a975983c39c1] <4.19-maint>
+
+2017-08-07  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed a code generation bug in the handling of signals in scoped
+	classes.
+	[7c82958d6327] <4.19-maint>
+
+2017-07-22  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/sip.h.in, sipgen/transform.c:
+	Fixes for the detection of recursive imports.
+	[6a7ab03d4efa] <4.19-maint>
+
+2017-07-14  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/transform.c:
+	Detect recursive imports as an error.
+	[ba19c3f5fb29] <4.19-maint>
+
 2017-07-03  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.3 for changeset 14685a6e736e
+	[2a9f342b7f39] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.3.

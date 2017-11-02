@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041303
-#define SIP_VERSION_STR     "4.19.3"
+#define SIP_VERSION         0x041304
+#define SIP_VERSION_STR     "4.19.4"
 
 
 #ifdef TRUE
@@ -88,6 +88,7 @@
 #define MOD_SUPER_INIT_YES      0x0100  /* Call super().__init__(). */
 #define MOD_SUPER_INIT_UNDEF    0x0000  /* Calling super().__init__() is undefined. */
 #define MOD_SUPER_INIT_MASK     0x0180  /* The mask for the above flags. */
+#define MOD_SETTING_IMPORTS     0x0200  /* Imports are being set. */
 
 #define hasDelayedDtors(m)  ((m)->modflags & MOD_HAS_DELAYED_DTORS)
 #define setHasDelayedDtors(m)   ((m)->modflags |= MOD_HAS_DELAYED_DTORS)
@@ -108,6 +109,9 @@
 #define setCallSuperInitYes(m)  ((m)->modflags = ((m)->modflags & ~MOD_SUPER_INIT_MASK) | MOD_SUPER_INIT_YES)
 #define isCallSuperInitYes(m)   (((m)->modflags & MOD_SUPER_INIT_MASK) == MOD_SUPER_INIT_YES)
 #define isCallSuperInitUndefined(m) (((m)->modflags & MOD_SUPER_INIT_MASK) == MOD_SUPER_INIT_UNDEF)
+#define settingImports(m)   ((m)->modflags & MOD_SETTING_IMPORTS)
+#define setSettingImports(m)    ((m)->modflags |= MOD_SETTING_IMPORTS)
+#define resetSettingImports(m)  ((m)->modflags &= ~MOD_SETTING_IMPORTS)
 
 
 /* Handle section flags. */
@@ -290,6 +294,7 @@
 #define ENUM_WAS_PROT       0x00000100  /* It was defined as protected. */
 #define ENUM_NO_SCOPE       0x00000200  /* Omit the member scopes. */
 #define ENUM_NEEDS_ENUM     0x00000400  /* The module needs it. */
+#define ENUM_SCOPED         0x00000800  /* A C++0x11 scoped enum. */
 
 #define isProtectedEnum(e)  ((e)->enumflags & SECT_IS_PROT)
 #define setIsProtectedEnum(e)   ((e)->enumflags |= SECT_IS_PROT)
@@ -302,6 +307,8 @@
 #define setIsNoScope(e)     ((e)->enumflags |= ENUM_NO_SCOPE)
 #define needsEnum(e)        ((e)->enumflags & ENUM_NEEDS_ENUM)
 #define setNeedsEnum(e)     ((e)->enumflags |= ENUM_NEEDS_ENUM)
+#define isScopedEnum(e)     ((e)->enumflags & ENUM_SCOPED)
+#define setIsScopedEnum(e)  ((e)->enumflags |= ENUM_SCOPED)
 
 
 /* Handle hierarchy flags. */

@@ -75,7 +75,7 @@ static void finishClass(sipSpec *, moduleDef *, classDef *, optFlags *);
 static exceptionDef *findException(sipSpec *pt, scopedNameDef *fqname, int new);
 static mappedTypeDef *newMappedType(sipSpec *,argDef *, optFlags *);
 static enumDef *newEnum(sipSpec *pt, moduleDef *mod, mappedTypeDef *mt_scope,
-        char *name, optFlags *of, int flags);
+        char *name, optFlags *of, int flags, int isscoped);
 static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
         classDef *scope, scopedNameDef *fqname, classTmplDef *tcd,
         templateDef *td, const char *pyname, int use_template_name);
@@ -460,6 +460,7 @@ static scopedNameDef *fullyQualifiedName(scopedNameDef *snd);
 %type <boolean>         oredqualifiers
 %type <boolean>         optclassbody
 %type <boolean>         bool_value
+%type <boolean>         optenumkey
 %type <exceptionbase>   baseexception
 %type <klass>           class
 %type <token>           class_access
@@ -2580,7 +2581,7 @@ codelines:  TK_CODELINE
         }
     ;
 
-enum:       TK_ENUM optname optflags {
+enum:       TK_ENUM optenumkey optname optflags {
             if (notSkipping())
             {
                 const char *annos[] = {
@@ -2590,15 +2591,29 @@ enum:       TK_ENUM optname optflags {
                     NULL
                 };
 
-                checkAnnos(&$3, annos);
+                checkAnnos(&$4, annos);
 
                 if (sectionFlags != 0 && (sectionFlags & ~(SECT_IS_PUBLIC | SECT_IS_PROT)) != 0)
                     yyerror("Class enums must be in the public or protected sections");
 
+                if (currentSpec->genc && $2)
+                    yyerror("Scoped enums not allowed in a C module");
+
                 currentEnum = newEnum(currentSpec, currentModule,
-                        currentMappedType, $2, &$3, sectionFlags);
+                        currentMappedType, $3, &$4, sectionFlags, $2);
             }
         } '{' optenumbody '}' ';'
+    ;
+
+optenumkey: {
+            $$ = FALSE;
+        }
+    |   TK_CLASS {
+            $$ = TRUE;
+        }
+    |   TK_STRUCT {
+            $$ = TRUE;
+        }
     ;
 
 optfilename:    {
@@ -5552,7 +5567,7 @@ mappedTypeDef *allocMappedType(sipSpec *pt, argDef *type)
  * Create a new enum.
  */
 static enumDef *newEnum(sipSpec *pt, moduleDef *mod, mappedTypeDef *mt_scope,
-        char *name, optFlags *of, int flags)
+        char *name, optFlags *of, int flags, int isscoped)
 {
     enumDef *ed, *first_alt, *next_alt;
     classDef *c_scope;
@@ -5650,6 +5665,9 @@ static enumDef *newEnum(sipSpec *pt, moduleDef *mod, mappedTypeDef *mt_scope,
 
     if (getOptFlag(of, "NoScope", bool_flag) != NULL)
         setIsNoScope(ed);
+
+    if (isscoped)
+        setIsScopedEnum(ed);
 
     return ed;
 }
@@ -7932,8 +7950,6 @@ static void checkAttributes(sipSpec *pt, moduleDef *mod, classDef *py_c_scope,
     /* Check the enums. */
     for (ed = pt->enums; ed != NULL; ed = ed->next)
     {
-        enumMemberDef *emd;
-
         if (ed->pyname == NULL)
             continue;
 
@@ -7955,9 +7971,14 @@ static void checkAttributes(sipSpec *pt, moduleDef *mod, classDef *py_c_scope,
         if (strcmp(ed->pyname->text, attr) == 0)
             yyerror("There is already an enum in scope with the same Python name");
 
-        for (emd = ed->members; emd != NULL; emd = emd->next)
-            if (strcmp(emd->pyname->text, attr) == 0)
-                yyerror("There is already an enum member in scope with the same Python name");
+        if (!isScopedEnum(ed))
+        {
+            enumMemberDef *emd;
+
+            for (emd = ed->members; emd != NULL; emd = emd->next)
+                if (strcmp(emd->pyname->text, attr) == 0)
+                    yyerror("There is already an enum member in scope with the same Python name");
+        }
     }
 
     /*
