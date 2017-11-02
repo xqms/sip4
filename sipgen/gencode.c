@@ -43,6 +43,14 @@ typedef enum {
 } funcArgType;
 
 
+/* Control how scopes should be stripped. */
+typedef enum {
+    StripNone,
+    StripGlobal,
+    StripNamespace
+} StripAction;
+
+
 /* An entry in the sorted array of methods. */
 typedef struct {
     memberDef *md;                      /* The method. */
@@ -124,9 +132,10 @@ static void generateCalledArgs(moduleDef *, ifaceFileDef *, signatureDef *,
 static void generateVariable(moduleDef *, ifaceFileDef *, argDef *, int,
         FILE *);
 static void generateNamedValueType(ifaceFileDef *, argDef *, char *, FILE *);
-static void generateBaseType(ifaceFileDef *, argDef *, int, int, FILE *);
+static void generateBaseType(ifaceFileDef *, argDef *, int, StripAction,
+        FILE *);
 static void generateNamedBaseType(ifaceFileDef *, argDef *, const char *, int,
-        int, FILE *);
+        StripAction, FILE *);
 static void generateTupleBuilder(moduleDef *, signatureDef *, FILE *);
 static void generatePyQt5Emitters(classDef *cd, FILE *fp);
 static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
@@ -230,7 +239,7 @@ static void closeFile(FILE *);
 static void prScopedName(FILE *fp, scopedNameDef *snd, char *sep);
 static void prTypeName(FILE *fp, argDef *ad);
 static void prScopedClassName(FILE *fp, ifaceFileDef *scope, classDef *cd,
-        int remove_global_scope);
+        StripAction strip);
 static int isMultiArgSlot(memberDef *md);
 static int isIntArgSlot(memberDef *md);
 static int isInplaceSequenceSlot(memberDef *md);
@@ -292,8 +301,10 @@ static int generatePyQt4ClassPlugin(sipSpec *pt, classDef *cd, FILE *fp);
 static void generateGlobalFunctionTableEntries(sipSpec *pt, moduleDef *mod,
         memberDef *members, FILE *fp);
 static void prTemplateType(FILE *fp, ifaceFileDef *scope, templateDef *td,
-        int remove_global_scope);
+        StripAction strip);
 static int isString(argDef *ad);
+static scopedNameDef *stripScope(scopedNameDef *snd, classDef *ecd,
+        StripAction strip);
 
 
 /*
@@ -729,13 +740,14 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipConvertToType            sipAPI_%s->api_convert_to_type\n"
 "#define sipForceConvertToType       sipAPI_%s->api_force_convert_to_type\n"
 "#define sipCanConvertToEnum         sipAPI_%s->api_can_convert_to_enum\n"
+"#define sipConvertToEnum            sipAPI_%s->api_convert_to_enum\n"
+"#define sipConvertToBool            sipAPI_%s->api_convert_to_bool\n"
 "#define sipReleaseType              sipAPI_%s->api_release_type\n"
 "#define sipConvertFromType          sipAPI_%s->api_convert_from_type\n"
 "#define sipConvertFromNewType       sipAPI_%s->api_convert_from_new_type\n"
 "#define sipConvertFromNewPyType     sipAPI_%s->api_convert_from_new_pytype\n"
 "#define sipConvertFromEnum          sipAPI_%s->api_convert_from_enum\n"
 "#define sipGetState                 sipAPI_%s->api_get_state\n"
-"#define sipLong_AsUnsignedLong      sipAPI_%s->api_long_as_unsigned_long\n"
 "#define sipExportSymbol             sipAPI_%s->api_export_symbol\n"
 "#define sipImportSymbol             sipAPI_%s->api_import_symbol\n"
 "#define sipFindType                 sipAPI_%s->api_find_type\n"
@@ -771,6 +783,7 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipIsAPIEnabled             sipAPI_%s->api_is_api_enabled\n"
 "#define sipSetDestroyOnExit         sipAPI_%s->api_set_destroy_on_exit\n"
 "#define sipEnableAutoconversion     sipAPI_%s->api_enable_autoconversion\n"
+"#define sipEnableOverflowChecking   sipAPI_%s->api_enable_overflow_checking\n"
 "#define sipInitMixin                sipAPI_%s->api_init_mixin\n"
 "#define sipExportModule             sipAPI_%s->api_export_module\n"
 "#define sipInitModule               sipAPI_%s->api_init_module\n"
@@ -802,6 +815,17 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipGetUserObject            sipAPI_%s->api_get_user_object\n"
 "#define sipSetUserObject            sipAPI_%s->api_set_user_object\n"
 "#define sipRegisterEventHandler     sipAPI_%s->api_register_event_handler\n"
+"#define sipLong_AsChar              sipAPI_%s->api_long_as_char\n"
+"#define sipLong_AsSignedChar        sipAPI_%s->api_long_as_signed_char\n"
+"#define sipLong_AsUnsignedChar      sipAPI_%s->api_long_as_unsigned_char\n"
+"#define sipLong_AsShort             sipAPI_%s->api_long_as_short\n"
+"#define sipLong_AsUnsignedShort     sipAPI_%s->api_long_as_unsigned_short\n"
+"#define sipLong_AsInt               sipAPI_%s->api_long_as_int\n"
+"#define sipLong_AsUnsignedInt       sipAPI_%s->api_long_as_unsigned_int\n"
+"#define sipLong_AsLong              sipAPI_%s->api_long_as_long\n"
+"#define sipLong_AsUnsignedLong      sipAPI_%s->api_long_as_unsigned_long\n"
+"#define sipLong_AsLongLong          sipAPI_%s->api_long_as_long_long\n"
+"#define sipLong_AsUnsignedLongLong  sipAPI_%s->api_long_as_unsigned_long_long\n"
 "\n"
 "/* These are deprecated. */\n"
 "#define sipMapStringToClass         sipAPI_%s->api_map_string_to_class\n"
@@ -826,6 +850,19 @@ static void generateInternalAPIHeader(sipSpec *pt, moduleDef *mod,
 "#define sipConvertFromMappedType    sipConvertFromType\n"
 "#define sipConvertFromNamedEnum(v, pt)  sipConvertFromEnum((v), ((sipEnumTypeObject *)(pt))->type)\n"
 "#define sipConvertFromNewInstance(p, wt, t) sipConvertFromNewType((p), (wt)->wt_td, (t))\n"
+        ,mname
+        ,mname
+        ,mname
+        ,mname
+        ,mname
+        ,mname
+        ,mname
+        ,mname
+        ,mname
+        ,mname
+        ,mname
+        ,mname
+        ,mname
         ,mname
         ,mname
         ,mname
@@ -1856,7 +1893,7 @@ static void generateCpp(sipSpec *pt, moduleDef *mod, const char *codeDir,
         else
             prcode(fp, "0");
 
-        prcode(fp, ", 0, SIP_TYPE_ENUM, %n, {0}, 0}, %n, %d, ", ed->cname, ed->pyname, type_nr);
+        prcode(fp, ", 0, SIP_TYPE_%s, %n, {0}, 0}, %n, %d, ", (isScopedEnum(ed) ? "SCOPED_ENUM" : "ENUM"), ed->cname, ed->pyname, type_nr);
 
         if (ed->slots != NULL)
             prcode(fp, "slots_%C", ed->fqcname);
@@ -1905,7 +1942,7 @@ static void generateCpp(sipSpec *pt, moduleDef *mod, const char *codeDir,
             else if (td->type.atype == ulonglong_type)
                 prcode(fp, "unsigned long long");
             else
-                generateBaseType(NULL, &td->type, FALSE, TRUE, fp);
+                generateBaseType(NULL, &td->type, FALSE, StripGlobal, fp);
 
             prcode(fp, "\"},\n"
                 );
@@ -3260,7 +3297,11 @@ static int generateEnumMemberTable(sipSpec *pt, moduleDef *mod, classDef *cd,
         {
             classDef *ecd = emd->ed->ecd;
 
-            if (ecd != NULL)
+            if (isScopedEnum(emd->ed))
+            {
+                prcode(fp, "::%s::", emd->ed->cname->text);
+            }
+            else if (ecd != NULL)
             {
                 if (isProtectedEnum(emd->ed))
                     prcode(fp, "sip%C::", classFQCName(ecd));
@@ -3517,6 +3558,10 @@ static int generateClasses(sipSpec *pt, moduleDef *mod, classDef *cd, FILE *fp)
             }
             else if (vd->type.nrderefs != 0)
             {
+                /* This may be a bit heavy handed. */
+                if (isConstArg(&vd->type))
+                    prcode(fp, "(void *)");
+
                 prcode(fp, "&%S, &sipType_%C, SIP_INDIRECT", vd->fqcname, vcname);
             }
             else if (isConstArg(&vd->type))
@@ -4153,7 +4198,12 @@ static void generateMappedTypeCpp(mappedTypeDef *mtd, sipSpec *pt, FILE *fp)
 
     if (!noRelease(mtd))
     {
-        /* Generate the assignment helper. */
+        /*
+         * Generate the assignment helper.  Note that the source pointer is not
+         * const.  This is to allow the source instance to be modified as a
+         * consequence of the assignment, eg. if it is implementing some sort
+         * of reference counting scheme.
+         */
         prcode(fp,
 "\n"
 "\n"
@@ -4161,21 +4211,21 @@ static void generateMappedTypeCpp(mappedTypeDef *mtd, sipSpec *pt, FILE *fp)
 
         if (!generating_c)
             prcode(fp,
-"extern \"C\" {static void assign_%L(void *, SIP_SSIZE_T, const void *);}\n"
+"extern \"C\" {static void assign_%L(void *, SIP_SSIZE_T, void *);}\n"
                 , mtd->iff);
 
         prcode(fp,
-"static void assign_%L(void *sipDst, SIP_SSIZE_T sipDstIdx, const void *sipSrc)\n"
+"static void assign_%L(void *sipDst, SIP_SSIZE_T sipDstIdx, void *sipSrc)\n"
 "{\n"
             , mtd->iff);
 
         if (generating_c)
             prcode(fp,
-"    ((%b *)sipDst)[sipDstIdx] = *((const %b *)sipSrc);\n"
+"    ((%b *)sipDst)[sipDstIdx] = *((%b *)sipSrc);\n"
                 , &mtd->type, &mtd->type);
         else
             prcode(fp,
-"    reinterpret_cast<%b *>(sipDst)[sipDstIdx] = *reinterpret_cast<const %b *>(sipSrc);\n"
+"    reinterpret_cast<%b *>(sipDst)[sipDstIdx] = *reinterpret_cast<%b *>(sipSrc);\n"
                 , &mtd->type, &mtd->type);
 
         prcode(fp,
@@ -5155,9 +5205,21 @@ static void generateVariableGetter(ifaceFileDef *scope, varDef *vd, FILE *fp)
     case enum_type:
         if (vd->type.u.ed->fqcname != NULL)
         {
+            const char *cast_prefix, *cast_suffix;
+
+            if (generating_c)
+            {
+                cast_prefix = cast_suffix = "";
+            }
+            else
+            {
+                cast_prefix = "static_cast<int>(";
+                cast_suffix = ")";
+            }
+
             prcode(fp,
-"    return sipConvertFromEnum(sipVal, sipType_%C);\n"
-                , vd->type.u.ed->fqcname);
+"    return sipConvertFromEnum(%ssipVal%s, sipType_%C);\n"
+                , cast_prefix, cast_suffix, vd->type.u.ed->fqcname);
 
             break;
         }
@@ -5256,7 +5318,7 @@ static void generateVariableGetter(ifaceFileDef *scope, varDef *vd, FILE *fp)
 static void generateVariableSetter(ifaceFileDef *scope, varDef *vd, FILE *fp)
 {
     argType atype = vd->type.atype;
-    const char *first_arg, *last_arg;
+    const char *first_arg, *last_arg, *error_test;
     char *deref;
     int might_be_temp, need_py, need_cpp;
 
@@ -5293,7 +5355,10 @@ static void generateVariableSetter(ifaceFileDef *scope, varDef *vd, FILE *fp)
         prcode(fp,
 "    ");
 
-        generateNamedValueType(scope, &vd->type, "sipVal", fp);
+        if (atype == bool_type)
+            prcode(fp, "int sipVal");
+        else
+            generateNamedValueType(scope, &vd->type, "sipVal", fp);
 
         prcode(fp, ";\n"
             );
@@ -5354,22 +5419,23 @@ static void generateVariableSetter(ifaceFileDef *scope, varDef *vd, FILE *fp)
         if (vd->type.nrderefs == 0)
             deref = "*";
 
-        prcode(fp,
-"\n"
-"    if (sipIsErr)\n"
-"        return -1;\n"
-"\n"
-            );
+        error_test = "sipIsErr";
+    }
+    else if (atype == bool_type)
+    {
+        error_test = "sipVal < 0";
     }
     else
     {
-        prcode(fp,
+        error_test = "PyErr_Occurred() != NULL";
+    }
+
+    prcode(fp,
 "\n"
-"    if (PyErr_Occurred() != NULL)\n"
+"    if (%s)\n"
 "        return -1;\n"
 "\n"
-        );
-    }
+        , error_test);
 
     if (atype == pyobject_type || atype == pytuple_type ||
         atype == pylist_type || atype == pydict_type ||
@@ -5392,8 +5458,20 @@ static void generateVariableSetter(ifaceFileDef *scope, varDef *vd, FILE *fp)
 
     generateVarMember(vd, fp);
 
-    prcode(fp, " = %ssipVal;\n"
-        , deref);
+    if (atype == bool_type)
+    {
+        if (generating_c)
+            prcode(fp, " = (bool)%ssipVal;\n"
+                , deref);
+        else
+            prcode(fp, " = static_cast<bool>(%ssipVal);\n"
+                , deref);
+    }
+    else
+    {
+        prcode(fp, " = %ssipVal;\n"
+            , deref);
+    }
 
     /* Note that wchar_t * leaks here. */
 
@@ -5523,8 +5601,8 @@ static int generateObjToCppConversion(argDef *ad,FILE *fp)
         break;
 
     case enum_type:
-        prcode(fp, "(%E)SIPLong_AsLong(sipPy);\n"
-            , ad->u.ed);
+        prcode(fp, "(%E)sipConvertToEnum(sipPy, sipType_%C);\n"
+            , ad->u.ed, ad->u.ed->fqcname);
         break;
 
     case sstring_type:
@@ -5600,36 +5678,36 @@ static int generateObjToCppConversion(argDef *ad,FILE *fp)
 
     case bool_type:
     case cbool_type:
-        rhs = "(bool)SIPLong_AsLong(sipPy)";
+        rhs = "sipConvertToBool(sipPy)";
         break;
 
     case byte_type:
-        rhs = "(char)SIPLong_AsLong(sipPy)";
+        rhs = "sipLong_AsChar(sipPy)";
         break;
 
     case sbyte_type:
-        rhs = "(signed char)SIPLong_AsLong(sipPy)";
+        rhs = "sipLong_AsSignedChar(sipPy)";
         break;
 
     case ubyte_type:
-        rhs = "(unsigned char)sipLong_AsUnsignedLong(sipPy)";
+        rhs = "sipLong_AsUnsignedChar(sipPy)";
         break;
 
     case ushort_type:
-        rhs = "(unsigned short)sipLong_AsUnsignedLong(sipPy)";
+        rhs = "sipLong_AsUnsignedShort(sipPy)";
         break;
 
     case short_type:
-        rhs = "(short)SIPLong_AsLong(sipPy)";
+        rhs = "sipLong_AsShort(sipPy)";
         break;
 
     case uint_type:
-        rhs = "(uint)sipLong_AsUnsignedLong(sipPy)";
+        rhs = "sipLong_AsUnsignedInt(sipPy)";
         break;
 
     case int_type:
     case cint_type:
-        rhs = "(int)SIPLong_AsLong(sipPy)";
+        rhs = "sipLong_AsInt(sipPy)";
         break;
 
     case ulong_type:
@@ -5637,15 +5715,15 @@ static int generateObjToCppConversion(argDef *ad,FILE *fp)
         break;
 
     case long_type:
-        rhs = "PyLong_AsLong(sipPy)";
+        rhs = "sipLong_AsLong(sipPy)";
         break;
 
     case ulonglong_type:
-        rhs = "PyLong_AsUnsignedLongLongMask(sipPy)";
+        rhs = "sipLong_AsUnsignedLongLong(sipPy)";
         break;
 
     case longlong_type:
-        rhs = "PyLong_AsLongLong(sipPy)";
+        rhs = "sipLong_AsLongLong(sipPy)";
         break;
 
     case struct_type:
@@ -5986,15 +6064,18 @@ static void generateSlot(moduleDef *mod, classDef *cd, enumDef *ed,
 "    %S *sipCpp = reinterpret_cast<%S *>(sipGetCppPtr((sipSimpleWrapper *)sipSelf,sipType_%C));\n"
 "\n"
 "    if (!sipCpp)\n"
-"        return %s;\n"
-"\n"
-                    , fqcname, fqcname, fqcname
-                    , (md->slot == cmp_slot ? "-2" : (ret_int ? "-1" : "0")));
+                    , fqcname, fqcname, fqcname);
             else
                 prcode(fp,
-"    %S sipCpp = static_cast<%S>(SIPLong_AsLong(sipSelf));\n"
+"    %S sipCpp = static_cast<%S>(sipConvertToEnum(sipSelf, sipType_%C));\n"
 "\n"
-                    , fqcname, fqcname);
+"    if (PyErr_Occurred())\n"
+                    , fqcname, fqcname, fqcname);
+
+            prcode(fp,
+"        return %s;\n"
+"\n"
+                , (md->slot == cmp_slot ? "-2" : (ret_int ? "-1" : "0")));
         }
 
         if (has_args)
@@ -6747,7 +6828,12 @@ static void generateClassFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
 
     if (generating_c || assignmentHelper(cd))
     {
-        /* The assignment helper. */
+        /*
+         * Generate the assignment helper.  Note that the source pointer is not
+         * const.  This is to allow the source instance to be modified as a
+         * consequence of the assignment, eg. if it is implementing some sort
+         * of reference counting scheme.
+         */
         prcode(fp,
 "\n"
 "\n"
@@ -6755,21 +6841,21 @@ static void generateClassFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
 
         if (!generating_c)
             prcode(fp,
-"extern \"C\" {static void assign_%L(void *, SIP_SSIZE_T, const void *);}\n"
+"extern \"C\" {static void assign_%L(void *, SIP_SSIZE_T, void *);}\n"
                 , cd->iff);
 
         prcode(fp,
-"static void assign_%L(void *sipDst, SIP_SSIZE_T sipDstIdx, const void *sipSrc)\n"
+"static void assign_%L(void *sipDst, SIP_SSIZE_T sipDstIdx, void *sipSrc)\n"
 "{\n"
             , cd->iff);
 
         if (generating_c)
             prcode(fp,
-"    ((struct %U *)sipDst)[sipDstIdx] = *((const struct %U *)sipSrc);\n"
+"    ((struct %U *)sipDst)[sipDstIdx] = *((struct %U *)sipSrc);\n"
                 , cd, cd);
         else
             prcode(fp,
-"    reinterpret_cast<%U *>(sipDst)[sipDstIdx] = *reinterpret_cast<const %U *>(sipSrc);\n"
+"    reinterpret_cast<%U *>(sipDst)[sipDstIdx] = *reinterpret_cast<%U *>(sipSrc);\n"
                 , cd, cd);
 
         prcode(fp,
@@ -7173,7 +7259,7 @@ static void generateVirtualCatcher(moduleDef *mod, classDef *cd, int virtNr,
     prcode(fp,
 "\n");
 
-    generateBaseType(cd->iff, &od->cppsig->result, TRUE, FALSE, fp);
+    generateBaseType(cd->iff, &od->cppsig->result, TRUE, StripNone, fp);
 
     prcode(fp," sip%C::%O(",classFQCName(cd),od);
     generateCalledArgs(mod, cd->iff, od->cppsig, Definition, fp);
@@ -7186,7 +7272,7 @@ static void generateVirtualCatcher(moduleDef *mod, classDef *cd, int virtNr,
         prcode(fp,
 "    sipTrace(SIP_TRACE_CATCHERS,\"");
 
-        generateBaseType(cd->iff, &od->cppsig->result, TRUE, TRUE, fp);
+        generateBaseType(cd->iff, &od->cppsig->result, TRUE, StripGlobal, fp);
         prcode(fp," sip%C::%O(",classFQCName(cd),od);
         generateCalledArgs(NULL, cd->iff, od->cppsig, Declaration, fp);
         prcode(fp,")%s%X (this=0x%%08x)\\n\",this);\n"
@@ -7237,7 +7323,7 @@ static void generateVirtualCatcher(moduleDef *mod, classDef *cd, int virtNr,
             prcode(fp,
 "        ");
 
-            generateNamedBaseType(cd->iff, res, "sipRes", TRUE, FALSE, fp);
+            generateNamedBaseType(cd->iff, res, "sipRes", TRUE, StripNone, fp);
 
             prcode(fp, ";\n"
                 );
@@ -7414,7 +7500,7 @@ static void generateVirtHandlerCall(moduleDef *mod, classDef *cd,
     prcode(fp,
 "%sextern ", indent);
 
-    generateBaseType(cd->iff, &od->cppsig->result, TRUE, FALSE, fp);
+    generateBaseType(cd->iff, &od->cppsig->result, TRUE, StripNone, fp);
 
     prcode(fp, " sipVH_%s_%d(sip_gilstate_t, sipVirtErrorHandlerFunc, sipSimpleWrapper *, PyObject *", mod->name, vhd->virthandlernr);
 
@@ -7498,12 +7584,22 @@ static void generateVirtHandlerCall(moduleDef *mod, classDef *cd,
 /*
  * Generate a cast to zero.
  */
-static void generateCastZero(argDef *ad,FILE *fp)
+static void generateCastZero(argDef *ad, FILE *fp)
 {
     if (ad->atype == enum_type)
-        prcode(fp,"(%E)",ad->u.ed);
+    {
+        enumDef *ed = ad->u.ed;
 
-    prcode(fp,"0");
+        if (ed->members != NULL)
+        {
+            prcode(fp, "%E::%s", ed, ed->members->cname);
+            return;
+        }
+
+        prcode(fp, "(%E)", ed);
+    }
+
+    prcode(fp, "0");
 }
 
 
@@ -7725,7 +7821,7 @@ static void generateProtectedDeclarations(classDef *cd,FILE *fp)
             if (isStatic(od))
                 prcode(fp,"static ");
 
-            generateBaseType(cd->iff, &od->cppsig->result, TRUE, FALSE, fp);
+            generateBaseType(cd->iff, &od->cppsig->result, TRUE, StripNone, fp);
 
             if (!isStatic(od) && !isAbstract(od) && (isVirtual(od) || isVirtualReimp(od)))
             {
@@ -7779,7 +7875,7 @@ static void generateProtectedDefinitions(moduleDef *mod, classDef *cd, FILE *fp)
 "\n"
                 );
 
-            generateBaseType(cd->iff, &od->cppsig->result, TRUE, FALSE, fp);
+            generateBaseType(cd->iff, &od->cppsig->result, TRUE, StripNone, fp);
 
             if (!isStatic(od) && !isAbstract(od) && (isVirtual(od) || isVirtualReimp(od)))
             {
@@ -7953,7 +8049,7 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
     saved = *vhd->cppsig;
     fakeProtectedArgs(vhd->cppsig);
 
-    generateBaseType(NULL, &vhd->cppsig->result, TRUE, FALSE, fp);
+    generateBaseType(NULL, &vhd->cppsig->result, TRUE, StripNone, fp);
 
     prcode(fp," sipVH_%s_%d(sip_gilstate_t sipGILState, sipVirtErrorHandlerFunc sipErrorHandler, sipSimpleWrapper *sipPySelf, PyObject *sipMethod"
         , mod->name, vhd->virthandlernr);
@@ -8000,7 +8096,7 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
         if (res->atype == wstring_type && res->nrderefs == 1)
             prcode(fp, "static ");
 
-        generateBaseType(NULL, &res_noconstref, TRUE, FALSE, fp);
+        generateBaseType(NULL, &res_noconstref, TRUE, StripNone, fp);
 
         prcode(fp," %ssipRes",(res_isref ? "*" : ""));
 
@@ -8319,6 +8415,11 @@ static const char *getParseResultFormat(argDef *ad, int res_isref, int xfervh)
         return ((ad->u.ed->fqcname != NULL) ? "F" : "e");
 
     case byte_type:
+        /*
+         * Note that this assumes that char is signed.  We should not make that
+         * assumption.
+         */
+
     case sbyte_type:
         return "L";
 
@@ -9170,7 +9271,7 @@ void prOverloadDecl(FILE *fp, ifaceFileDef *scope, overDef *od, int defval)
 
     normaliseArgs(od->cppsig);
 
-    generateBaseType(scope, &od->cppsig->result, TRUE, FALSE, fp);
+    generateBaseType(scope, &od->cppsig->result, TRUE, StripNone, fp);
  
     prcode(fp, " %O(", od);
 
@@ -9181,7 +9282,7 @@ void prOverloadDecl(FILE *fp, ifaceFileDef *scope, overDef *od, int defval)
         if (a > 0)
             prcode(fp, ",");
 
-        generateBaseType(scope, ad, TRUE, FALSE, fp);
+        generateBaseType(scope, ad, TRUE, StripNone, fp);
 
         if (defval && ad->defval != NULL)
         {
@@ -9227,7 +9328,7 @@ static void generateCalledArgs(moduleDef *mod, ifaceFileDef *scope,
             buf[0] = '\0';
         }
 
-        generateNamedBaseType(scope, ad, name, TRUE, FALSE, fp);
+        generateNamedBaseType(scope, ad, name, TRUE, StripNone, fp);
     }
 }
 
@@ -9336,7 +9437,7 @@ static void generateNamedValueType(ifaceFileDef *scope, argDef *ad,
     }
 
     resetIsReference(&mod);
-    generateNamedBaseType(scope, &mod, name, TRUE, FALSE, fp);
+    generateNamedBaseType(scope, &mod, name, TRUE, StripNone, fp);
 }
 
 
@@ -9344,10 +9445,9 @@ static void generateNamedValueType(ifaceFileDef *scope, argDef *ad,
  * Generate a C++ type.
  */
 static void generateBaseType(ifaceFileDef *scope, argDef *ad,
-        int use_typename, int remove_global_scope, FILE *fp)
+        int use_typename, StripAction strip, FILE *fp)
 {
-    generateNamedBaseType(scope, ad, "", use_typename, remove_global_scope,
-            fp);
+    generateNamedBaseType(scope, ad, "", use_typename, strip, fp);
 }
 
 
@@ -9355,7 +9455,7 @@ static void generateBaseType(ifaceFileDef *scope, argDef *ad,
  * Generate a C++ type and name.
  */
 static void generateNamedBaseType(ifaceFileDef *scope, argDef *ad,
-        const char *name, int use_typename, int remove_global_scope, FILE *fp)
+        const char *name, int use_typename, StripAction strip, FILE *fp)
 {
     typedefDef *td = ad->original_type;
     int nr_derefs = ad->nrderefs;
@@ -9372,7 +9472,7 @@ static void generateNamedBaseType(ifaceFileDef *scope, argDef *ad,
         if (isReference(&td->type))
             is_reference = FALSE;
 
-        prcode(fp, "%S", (remove_global_scope ? removeGlobalScope(td->fqname) : td->fqname));
+        prcode(fp, "%S", stripScope(td->fqname, NULL, strip));
     }
     else
     {
@@ -9384,8 +9484,7 @@ static void generateNamedBaseType(ifaceFileDef *scope, argDef *ad,
         {
             signatureDef *sig = ad->u.sa;
 
-            generateBaseType(scope, &sig->result, TRUE, remove_global_scope,
-                    fp);
+            generateBaseType(scope, &sig->result, TRUE, strip, fp);
 
             prcode(fp," (");
 
@@ -9519,7 +9618,7 @@ static void generateNamedBaseType(ifaceFileDef *scope, argDef *ad,
                 if (generating_c)
                     fprintf(fp, "struct ");
 
-                prScopedName(fp, (remove_global_scope ? removeGlobalScope(ad->u.snd) : ad->u.snd), "::");
+                prScopedName(fp, stripScope(ad->u.snd, NULL, strip), "::");
             }
 
             break;
@@ -9531,16 +9630,15 @@ static void generateNamedBaseType(ifaceFileDef *scope, argDef *ad,
             break;
 
         case mapped_type:
-            generateBaseType(scope, &ad->u.mtd->type, TRUE,
-                    remove_global_scope, fp);
+            generateBaseType(scope, &ad->u.mtd->type, TRUE, strip, fp);
             break;
 
         case class_type:
-            prScopedClassName(fp, scope, ad->u.cd, remove_global_scope);
+            prScopedClassName(fp, scope, ad->u.cd, strip);
             break;
 
         case template_type:
-			prTemplateType(fp, scope, ad->u.td, remove_global_scope);
+			prTemplateType(fp, scope, ad->u.td, strip);
 			break;
 
         case enum_type:
@@ -9550,7 +9648,8 @@ static void generateNamedBaseType(ifaceFileDef *scope, argDef *ad,
                 if (ed->fqcname == NULL || isProtectedEnum(ed))
                     fprintf(fp,"int");
                 else
-                    prScopedName(fp, (remove_global_scope ? removeGlobalScope(ed->fqcname) : ed->fqcname), "::");
+                    prScopedName(fp, stripScope(ed->fqcname, ed->ecd, strip),
+                            "::");
 
                 break;
             }
@@ -10511,7 +10610,7 @@ static void generatePyQt5Emitters(classDef *cd, FILE *fp)
 "static int emit_%L_%s(void *sipCppV, PyObject *sipArgs)\n"
 "{\n"
 "    PyObject *sipParseErr = NULL;\n"
-"    %C *sipCpp = reinterpret_cast<%C *>(sipCppV);\n"
+"    %V *sipCpp = reinterpret_cast<%V *>(sipCppV);\n"
                     , cd->iff, od->cppname
                     , classFQCName(cd), classFQCName(cd));
             }
@@ -10589,7 +10688,7 @@ static void generateSignalTableEntry(sipSpec *pt, classDef *cd, overDef *sig,
             resetIsReference(&arg);
         }
 
-        generateNamedBaseType(cd->iff, &arg, "", TRUE, TRUE, fp);
+        generateNamedBaseType(cd->iff, &arg, "", TRUE, StripNamespace, fp);
     }
 
     prcode(fp,")\", ");
@@ -12087,9 +12186,21 @@ static void generateHandleResult(moduleDef *mod, overDef *od, int isNew,
     case enum_type:
         if (ad->u.ed->fqcname != NULL)
         {
+            const char *cast_prefix, *cast_suffix;
+
+            if (generating_c)
+            {
+                cast_prefix = cast_suffix = "";
+            }
+            else
+            {
+                cast_prefix = "static_cast<int>(";
+                cast_suffix = ")";
+            }
+
             prcode(fp,
-"            %s sipConvertFromEnum(%s,sipType_%C);\n"
-                , prefix, vname, ad->u.ed->fqcname);
+"            %s sipConvertFromEnum(%s%s%s, sipType_%C);\n"
+                , prefix, cast_prefix, vname, cast_suffix, ad->u.ed->fqcname);
 
             break;
         }
@@ -14148,7 +14259,7 @@ void prcode(FILE *fp, const char *fmt, ...)
                     ifaceFileDef *scope = va_arg(ap, ifaceFileDef *);
                     argDef *ad = va_arg(ap, argDef *);
 
-                    generateBaseType(scope, ad, TRUE, FALSE, fp);
+                    generateBaseType(scope, ad, TRUE, StripNone, fp);
                     break;
                 }
 
@@ -14163,7 +14274,7 @@ void prcode(FILE *fp, const char *fmt, ...)
                     resetIsReference(ad);
                     ad->nrderefs = 0;
 
-                    generateBaseType(NULL, ad, TRUE, FALSE, fp);
+                    generateBaseType(NULL, ad, TRUE, StripNone, fp);
 
                     *ad = orig;
 
@@ -14171,7 +14282,8 @@ void prcode(FILE *fp, const char *fmt, ...)
                 }
 
             case 'B':
-                generateBaseType(NULL, va_arg(ap,argDef *), TRUE, FALSE, fp);
+                generateBaseType(NULL, va_arg(ap,argDef *), TRUE, StripNone,
+                        fp);
                 break;
 
             case 'c':
@@ -14208,7 +14320,7 @@ void prcode(FILE *fp, const char *fmt, ...)
                     resetIsReference(ad);
                     ad->nrderefs = 0;
 
-                    generateBaseType(NULL, ad, FALSE, FALSE, fp);
+                    generateBaseType(NULL, ad, FALSE, StripNone, fp);
 
                     *ad = orig;
 
@@ -14330,7 +14442,7 @@ void prcode(FILE *fp, const char *fmt, ...)
                     if (generating_c)
                         fprintf(fp,"struct ");
 
-                    prScopedClassName(fp, cd->iff, cd, FALSE);
+                    prScopedClassName(fp, cd->iff, cd, StripNone);
                     break;
                 }
 
@@ -14563,11 +14675,11 @@ static void prScopedName(FILE *fp, scopedNameDef *snd, char *sep)
  * scoped.
  */
 static void prScopedClassName(FILE *fp, ifaceFileDef *scope, classDef *cd,
-        int remove_global_scope)
+        StripAction strip)
 {
     if (useTemplateName(cd))
     {
-        prTemplateType(fp, scope, cd->td, remove_global_scope);
+        prTemplateType(fp, scope, cd->td, strip);
     }
     else if (isProtectedClass(cd))
     {
@@ -14579,12 +14691,7 @@ static void prScopedClassName(FILE *fp, ifaceFileDef *scope, classDef *cd,
     }
     else
     {
-        scopedNameDef *snd = classFQCName(cd);
-
-        if (remove_global_scope)
-            snd = removeGlobalScope(snd);
-
-        prScopedName(fp, snd, "::");
+        prScopedName(fp, stripScope(classFQCName(cd), cd->ecd, strip), "::");
     }
 }
 
@@ -15365,24 +15472,62 @@ static void generateGlobalFunctionTableEntries(sipSpec *pt, moduleDef *mod,
  * Generate a template type.
  */
 static void prTemplateType(FILE *fp, ifaceFileDef *scope, templateDef *td,
-        int remove_global_scope)
+        StripAction strip)
 {   
     static const char tail[] = ">";
     int a;
     
-    prcode(fp, "%S%s", ((prcode_xml || remove_global_scope) ? removeGlobalScope(td->fqname) : td->fqname), (prcode_xml ? "&lt;" : "<"));
+    if (prcode_xml)
+        strip = StripGlobal;
+
+    prcode(fp, "%S%s", stripScope(td->fqname, NULL, strip), (prcode_xml ? "&lt;" : "<"));
     
     for (a = 0; a < td->types.nrArgs; ++a)
     {   
         if (a > 0)
             prcode(fp, ",");
         
-        generateBaseType(scope, &td->types.args[a], TRUE, remove_global_scope,
-                fp);
+        generateBaseType(scope, &td->types.args[a], TRUE, strip, fp);
     }       
     
     if (prcode_last == tail)
         prcode(fp, " ");
     
     prcode(fp, (prcode_xml ? "&gt;" : tail));
+}
+
+
+/*
+ * Strip the leading scopes from a scoped name as required.
+ */
+static scopedNameDef *stripScope(scopedNameDef *snd, classDef *ecd,
+        StripAction strip)
+{
+    if (strip != StripNone)
+    {
+        snd = removeGlobalScope(snd);
+
+        if (strip == StripNamespace && ecd != NULL)
+        {
+            int i, nr_outers;
+
+            /* Count the number of outer namespaces. */
+            nr_outers = 0;
+
+            do
+            {
+                if (ecd->iff->type != namespace_iface)
+                    nr_outers = 0;
+                else
+                    ++nr_outers;
+            }
+            while ((ecd = ecd->ecd) != NULL);
+
+            /* Remove the names of any outer namespaces. */
+            for (i = 0; i < nr_outers; ++i)
+                snd = snd->next;
+        }
+    }
+
+    return snd;
 }
