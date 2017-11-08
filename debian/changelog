@@ -6,6 +6,7 @@ sip4 (4.19.5+dfsg-1) UNRELEASED; urgency=medium
   * Bump Standards-Version to 4.1.1, no changes needed.
   * Remove debian/python-sip-doc.links, not needed with dh_sphinxdoc.
   * Use dh_installdocs --link-doc for debug packages.
+  * Update descriptions of -dbg packages.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Thu, 02 Nov 2017 23:48:50 +0300
 

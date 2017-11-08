@@ -42,7 +42,8 @@ Description: Python/C++ bindings generator runtime library (debug extension)
  borrowed from SWIG, but capable of tighter bindings because of its
  specificity towards C++ and Python.
  .
- This package contains the extension built for the Python debug interpreter.
+ This package contains the extension built for the Python debug interpreter,
+ and the debugging symbols for python-sip package.
 
 Package: python-sip-dev
 Architecture: any
@@ -174,4 +175,5 @@ Description: Python 3/C++ bindings generator runtime library (debug extension)
  borrowed from SWIG, but capable of tighter bindings because of its
  specificity towards C++ and Python.
  .
- This package contains debugging symbols for python3-sip
+ This package contains the extension built for the Python 3 debug interpreter,
+ and the debugging symbols for python3-sip package.
