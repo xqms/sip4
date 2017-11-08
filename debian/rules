@@ -157,8 +157,8 @@ binary-common:
 	dh_testdir
 	dh_testroot
 	dh_installman
-	dh_installchangelogs NEWS
-	dh_installdocs -A
+	dh_installchangelogs -Npython-sip-dbg -Npython3-sip-dbg NEWS
+	dh_installdocs -Npython-sip-dbg -Npython3-sip-dbg
 ifeq (,$(findstring -a, $(DH_OPTIONS)))
 	dh_sphinxdoc -p python-sip-doc
 endif
@@ -167,12 +167,8 @@ endif
 # don't call strip twice (or make the -dbg doc directories symlinks twice),
 # it's in binary-common
 ifneq (,$(findstring -a, $(DH_OPTIONS)))
-	rm -rf debian/python-sip-dbg/usr/share/doc/python-sip-dbg
-	mkdir -p debian/python-sip-dbg/usr/share/doc
-	ln -s python-sip debian/python-sip-dbg/usr/share/doc/python-sip-dbg
-	rm -rf debian/python3-sip-dbg/usr/share/doc/python3-sip-dbg
-	mkdir -p debian/python3-sip-dbg/usr/share/doc
-	ln -s python3-sip debian/python3-sip-dbg/usr/share/doc/python3-sip-dbg
+	dh_installdocs -ppython-sip-dbg --link-doc=python-sip
+	dh_installdocs -ppython3-sip-dbg --link-doc=python3-sip
 	DH_OPTIONS= dh_strip -ppython-sip-dev
 	DH_OPTIONS= dh_strip -ppython-sip -Npython-sip-dev --dbg-package=python-sip-dbg
 	DH_OPTIONS= dh_strip -ppython3-sip-dev
