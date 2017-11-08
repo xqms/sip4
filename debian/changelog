@@ -7,6 +7,7 @@ sip4 (4.19.5+dfsg-1) UNRELEASED; urgency=medium
   * Remove debian/python-sip-doc.links, not needed with dh_sphinxdoc.
   * Use dh_installdocs --link-doc for debug packages.
   * Update descriptions of -dbg packages.
+  * Remove use of ${shlibs:Depends} from -dev packages.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Thu, 02 Nov 2017 23:48:50 +0300
 
