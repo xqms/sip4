@@ -1,4 +1,4 @@
-sip4 (4.19.4+dfsg-1) UNRELEASED; urgency=medium
+sip4 (4.19.5+dfsg-1) UNRELEASED; urgency=medium
 
   * New upstream release.
   * Bump API version to 12.3.
