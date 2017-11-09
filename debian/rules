@@ -88,6 +88,7 @@ clean:
 	rm -rf $(CURDIR)/debian/sipconfig_py3.py.tmp
 	rm -rf $(CURDIR)/sipconfig-3.*
 	rm -f sipgen/lexer.c sipgen/parser.h sipgen/parser.c sipgen/parser.output
+	rm -f debian/manpages/dh_sip.1 debian/manpages/dh_sip3.1
 	dh_clean debian/python3-sip.pydist
 
 install-arch: build
@@ -156,6 +157,8 @@ install-arch-2%:
 binary-common:
 	dh_testdir
 	dh_testroot
+	pod2man -c Debhelper -r '' debian/dh_sip debian/manpages/dh_sip.1
+	pod2man -c Debhelper -r '' debian/dh_sip3 debian/manpages/dh_sip3.1
 	dh_installman
 	dh_installchangelogs -Npython-sip-dbg -Npython3-sip-dbg NEWS
 	dh_installdocs -Npython-sip-dbg -Npython3-sip-dbg

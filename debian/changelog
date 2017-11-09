@@ -10,6 +10,7 @@ sip4 (4.19.5+dfsg-1) UNRELEASED; urgency=medium
   * Remove use of ${shlibs:Depends} from -dev packages.
   * Remove python*-sip-dbg.postinst files, they were only needed for
     upgrades from Wheezy.
+  * Regenerate dh_sip and dh_sip3 manpages during build using pod2man.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Thu, 02 Nov 2017 23:48:50 +0300
 
