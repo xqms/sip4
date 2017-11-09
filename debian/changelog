@@ -1,4 +1,4 @@
-sip4 (4.19.5+dfsg-1) UNRELEASED; urgency=medium
+sip4 (4.19.5+dfsg-1) unstable; urgency=medium
 
   * New upstream release.
   * Bump API version to 12.3.
@@ -12,7 +12,7 @@ sip4 (4.19.5+dfsg-1) UNRELEASED; urgency=medium
     upgrades from Wheezy.
   * Regenerate dh_sip and dh_sip3 manpages during build using pod2man.
 
- -- Dmitry Shachnev <mitya57@debian.org>  Thu, 02 Nov 2017 23:48:50 +0300
+ -- Dmitry Shachnev <mitya57@debian.org>  Thu, 09 Nov 2017 16:04:40 +0300
 
 sip4 (4.19.3+dfsg-2) unstable; urgency=medium
 
