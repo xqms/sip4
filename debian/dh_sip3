@@ -11,7 +11,7 @@ use Debian::Debhelper::Dh_Lib;
 
 =head1 SYNOPSIS
 
-B<dh_sip> 
+B<dh_sip3>
 
 =head1 DESCRIPTION
 
@@ -43,7 +43,7 @@ This program is a part of python3-sip-dev but is made to work with debhelper.
 =head1 AUTHORS
 
 Torsten Marek <shlomme@debian.org>
-Adapted for Python3 by
-Scott Kitterman <scott@kitterman.com>
+
+Adapted for Python 3 by Scott Kitterman <scott@kitterman.com>
 
 =cut
