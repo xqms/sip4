@@ -1,4 +1,27 @@
+2017-11-23  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.6.
+	[3f131525d4d5] [4.19.6] <4.19-maint>
+
+2017-11-21  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/annotations.rst:
+	Updated the docs for /NewThread/.
+	[30c7476904af] <4.19-maint>
+
+2017-11-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed the handling of the default value of unscoped enums when using
+	old compilers.
+	[dd017d3e1454] <4.19-maint>
+
 2017-11-06  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.5 for changeset a572b9daf87f
+	[e0419013252c] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.5.
