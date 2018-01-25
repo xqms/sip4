@@ -1,3 +1,9 @@
+sip4 (4.19.7+dfsg-1) UNRELEASED; urgency=medium
+
+  * New upstream bugfix release.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Thu, 25 Jan 2018 12:41:02 +0300
+
 sip4 (4.19.6+dfsg-1) unstable; urgency=medium
 
   * New upstream bugfix release.
