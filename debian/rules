@@ -170,8 +170,8 @@ endif
 # don't call strip twice (or make the -dbg doc directories symlinks twice),
 # it's in binary-common
 ifneq (,$(findstring -a, $(DH_OPTIONS)))
-	dh_installdocs -ppython-sip-dbg --link-doc=python-sip
-	dh_installdocs -ppython3-sip-dbg --link-doc=python3-sip
+	DH_OPTIONS= dh_installdocs -ppython-sip-dbg --link-doc=python-sip
+	DH_OPTIONS= dh_installdocs -ppython3-sip-dbg --link-doc=python3-sip
 	DH_OPTIONS= dh_strip -ppython-sip-dev
 	DH_OPTIONS= dh_strip -ppython-sip -Npython-sip-dev --dbg-package=python-sip-dbg
 	DH_OPTIONS= dh_strip -ppython3-sip-dev
