@@ -1,4 +1,113 @@
+2018-01-23  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.7.
+	[7e9dbd15c866] [4.19.7] <4.19-maint>
+
+	* NEWS:
+	Updated the NEWS file.
+	[3d0a9ebb536c] <4.19-maint>
+
+2018-01-22  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c.in:
+	A significant update to a comment.
+	[f947546822c3] <4.19-maint>
+
+2018-01-16  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/lexer.l:
+	Fixed the failed attempt to fix %Docstring argument parsing.
+	[6054b3268f6f] <4.19-maint>
+
+2018-01-15  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y,
+	sphinx/directives.rst:
+	In the context of a class's docstring the signature argument refers
+	to the concatanated ctor docstrings.
+	[34ddf9638287] <4.19-maint>
+
+	* sipgen/metasrc/parser.y, sphinx/directives.rst:
+	Typedefs can now have docstrings. These are only used by those that
+	instantiate class templates.
+	[327ad560d853] <4.19-maint>
+
+2018-01-14  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed the generated of a default value that is a global unscoped
+	enum.
+	[8f9c478295d3] <4.19-maint>
+
+2018-01-09  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed a missing quote in the docstring support.
+	[e37301b91a57] <4.19-maint>
+
+2018-01-07  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed the handling of signal docstrings.
+	[5d4d28286e02] <4.19-maint>
+
+	* sipgen/gencode.c:
+	Fixed the docstring handling for private ctors and method.
+	[8186b65687f1] <4.19-maint>
+
+	* sipgen/gencode.c:
+	Fixed the formats of class docstrings.
+	[3af2dab08ed3] <4.19-maint>
+
+	* sipgen/gencode.c:
+	Fixed the formatting of function/method docstrings.
+	[8e1829fdaf04] <4.19-maint>
+
+2018-01-06  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/metasrc/lexer.l, sipgen/metasrc/parser.y,
+	sipgen/sip.h.in, sphinx/directives.rst:
+	Initial commit to support embeded signatures in explicit docstrings.
+	[b3d42a546701] <4.19-maint>
+
+2018-01-05  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/conf.py.in, sphinx/riverbank/layout.html,
+	sphinx/riverbank/static/logo.png,
+	sphinx/riverbank/static/logo_tn.ico,
+	sphinx/riverbank/static/riverbank.css, sphinx/riverbank/theme.conf,
+	sphinx/static/classic.css, sphinx/static/logo.png,
+	sphinx/static/logo_tn.ico:
+	Switched to the revised Sphinx standards.
+	[b68eecb348b9] <4.19-maint>
+
+2017-12-30  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, siplib/sip.h.in.in, siplib/siplib.c.in:
+	Fixed the handling of wchar_t constants.
+	[c0436cb89959] <4.19-maint>
+
+2017-12-16  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* configure.py.in:
+	Readability improvement.
+	[6a635db426ea] <4.19-maint>
+
+	* configure.py.in:
+	Fixed the location to install the code generator in a Windows venv.
+	[d0f37d83df6f] <4.19-maint>
+
+	* configure.py.in:
+	Fixed the location of the pythonMN.lib file on Windows when building
+	in a venv.
+	[a098e2be83c2] <4.19-maint>
+
 2017-11-23  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.6 for changeset 3f131525d4d5
+	[3f3a98f6a67a] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.6.
