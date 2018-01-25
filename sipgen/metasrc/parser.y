@@ -1,7 +1,7 @@
 /*
  * The SIP parser.
  *
- * Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -78,18 +78,20 @@ static enumDef *newEnum(sipSpec *pt, moduleDef *mod, mappedTypeDef *mt_scope,
         char *name, optFlags *of, int flags, int isscoped);
 static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
         classDef *scope, scopedNameDef *fqname, classTmplDef *tcd,
-        templateDef *td, const char *pyname, int use_template_name);
-static void newTypedef(sipSpec *, moduleDef *, char *, argDef *, optFlags *);
+        templateDef *td, const char *pyname, int use_template_name,
+        docstringDef *docstring);
+static void newTypedef(sipSpec *, moduleDef *, char *, argDef *, optFlags *,
+        docstringDef *);
 static void newVar(sipSpec *pt, moduleDef *mod, char *name, int isstatic,
         argDef *type, optFlags *of, codeBlock *acode, codeBlock *gcode,
         codeBlock *scode, int section);
 static void newCtor(moduleDef *, char *, int, signatureDef *, optFlags *,
-                    codeBlock *, throwArgs *, signatureDef *, int, codeBlock *,
-                    codeBlock *);
+                    codeBlock *, throwArgs *, signatureDef *, int,
+                    docstringDef *, codeBlock *);
 static void newFunction(sipSpec *, moduleDef *, classDef *, ifaceFileDef *,
         mappedTypeDef *, int, int, int, int, int, char *, signatureDef *, int,
         int, optFlags *, codeBlock *, codeBlock *, codeBlock *, throwArgs *,
-        signatureDef *, codeBlock *, int, codeBlock *);
+        signatureDef *, docstringDef *, int, codeBlock *);
 static optFlag *findOptFlag(optFlags *flgs, const char *name);
 static optFlag *getOptFlag(optFlags *flgs, const char *name, flagType ft);
 static memberDef *findFunction(sipSpec *, moduleDef *, classDef *,
@@ -165,6 +167,7 @@ static void addTypedef(sipSpec *pt, typedefDef *tdd);
 static void addVariable(sipSpec *pt, varDef *vd);
 static void applyTypeFlags(moduleDef *mod, argDef *ad, optFlags *flags);
 static Format convertFormat(const char *format);
+static Signature convertSignature(const char *signature);
 static argType convertEncoding(const char *encoding);
 static apiVersionRangeDef *getAPIRange(optFlags *optflgs);
 static apiVersionRangeDef *convertAPIRange(moduleDef *mod, nameDef *name,
@@ -177,12 +180,12 @@ static char *strip(char *s);
 static int isEnabledFeature(const char *name);
 static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
         const char *name, const char *get, const char *set,
-        codeBlock *docstring);
+        docstringDef *docstring);
 static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
         const char *filename, const char *name, int c_module, KwArgs kwargs,
         int use_arg_names, int use_limited_api, int call_super_init,
         int all_raise_py_exc, const char *def_error_handler,
-        codeBlock *docstring);
+        docstringDef *docstring);
 static void addAutoPyName(moduleDef *mod, const char *remove_leading);
 static KwArgs convertKwArgs(const char *kwargs);
 static void checkAnnos(optFlags *annos, const char *valid[]);
@@ -207,6 +210,7 @@ static scopedNameDef *fullyQualifiedName(scopedNameDef *snd);
     signatureDef    *optsignature;
     throwArgs       *throwlist;
     codeBlock       *codeb;
+    docstringDef    *docstr;
     valueDef        value;
     valueDef        *valp;
     optFlags        optflags;
@@ -220,7 +224,8 @@ static scopedNameDef *fullyQualifiedName(scopedNameDef *snd);
     autoPyNameCfg   autopyname;
     compModuleCfg   compmodule;
     consModuleCfg   consmodule;
-    defDocstringCfg defdocstring;
+    defDocstringFmtCfg  defdocstringfmt;
+    defDocstringSigCfg  defdocstringsig;
     defEncodingCfg  defencoding;
     defMetatypeCfg  defmetatype;
     defSupertypeCfg defsupertype;
@@ -242,7 +247,8 @@ static scopedNameDef *fullyQualifiedName(scopedNameDef *snd);
 
 %token          TK_API
 %token          TK_AUTOPYNAME
-%token          TK_DEFDOCSTRING
+%token          TK_DEFDOCSTRFMT
+%token          TK_DEFDOCSTRSIG
 %token          TK_DEFENCODING
 %token          TK_PLUGIN
 %token          TK_VIRTERRORHANDLER
@@ -438,8 +444,8 @@ static scopedNameDef *fullyQualifiedName(scopedNameDef *snd);
 %type <codeb>           premethodcode
 %type <codeb>           instancecode
 %type <codeb>           raisecode
-%type <codeb>           docstring
-%type <codeb>           optdocstring
+%type <docstr>          optdocstring
+%type <docstr>          docstring
 %type <text>            operatorname
 %type <text>            optfilename
 %type <text>            optname
@@ -487,9 +493,13 @@ static scopedNameDef *fullyQualifiedName(scopedNameDef *snd);
 %type <consmodule>      consmodule_body_directives
 %type <consmodule>      consmodule_body_directive
 
-%type <defdocstring>    defdocstring_args
-%type <defdocstring>    defdocstring_arg_list
-%type <defdocstring>    defdocstring_arg
+%type <defdocstringfmt> defdocstringfmt_args
+%type <defdocstringfmt> defdocstringfmt_arg_list
+%type <defdocstringfmt> defdocstringfmt_arg
+
+%type <defdocstringsig> defdocstringsig_args
+%type <defdocstringsig> defdocstringsig_arg_list
+%type <defdocstringsig> defdocstringsig_arg
 
 %type <defencoding>     defencoding_args
 %type <defencoding>     defencoding_arg_list
@@ -599,7 +609,8 @@ modstatement:   module
     |   platforms
     |   feature
     |   license
-    |   defdocstring
+    |   defdocstringfmt
+    |   defdocstringsig
     |   defencoding
     |   defmetatype
     |   defsupertype
@@ -649,24 +660,24 @@ nsstatement:    ifstart
         }
     ;
 
-defdocstring:    TK_DEFDOCSTRING defdocstring_args {
+defdocstringfmt: TK_DEFDOCSTRFMT defdocstringfmt_args {
             if (notSkipping())
-                currentModule->defdocstring = convertFormat($2.name);
+                currentModule->defdocstringfmt = convertFormat($2.name);
         }
     ;
 
-defdocstring_args:   TK_STRING_VALUE {
+defdocstringfmt_args:   TK_STRING_VALUE {
             resetLexerState();
 
             $$.name = $1;
         }
-    |   '(' defdocstring_arg_list ')' {
+    |   '(' defdocstringfmt_arg_list ')' {
             $$ = $2;
         }
     ;
 
-defdocstring_arg_list:   defdocstring_arg
-    |   defdocstring_arg_list ',' defdocstring_arg {
+defdocstringfmt_arg_list:   defdocstringfmt_arg
+    |   defdocstringfmt_arg_list ',' defdocstringfmt_arg {
             $$ = $1;
 
             switch ($3.token)
@@ -676,7 +687,41 @@ defdocstring_arg_list:   defdocstring_arg
         }
     ;
 
-defdocstring_arg:    TK_NAME '=' TK_STRING_VALUE {
+defdocstringfmt_arg:    TK_NAME '=' TK_STRING_VALUE {
+            $$.token = TK_NAME;
+
+            $$.name = $3;
+        }
+    ;
+
+defdocstringsig: TK_DEFDOCSTRSIG defdocstringsig_args {
+            if (notSkipping())
+                currentModule->defdocstringsig = convertSignature($2.name);
+        }
+    ;
+
+defdocstringsig_args:   TK_STRING_VALUE {
+            resetLexerState();
+
+            $$.name = $1;
+        }
+    |   '(' defdocstringsig_arg_list ')' {
+            $$ = $2;
+        }
+    ;
+
+defdocstringsig_arg_list:   defdocstringsig_arg
+    |   defdocstringsig_arg_list ',' defdocstringsig_arg {
+            $$ = $1;
+
+            switch ($3.token)
+            {
+            case TK_NAME: $$.name = $3.name; break;
+            }
+        }
+    ;
+
+defdocstringsig_arg:    TK_NAME '=' TK_STRING_VALUE {
             $$.token = TK_NAME;
 
             $$.name = $3;
@@ -1697,7 +1742,7 @@ consmodule: TK_CONSMODULE consmodule_args consmodule_body {
                     yyerror("%ConsolidatedModule must appear before any %Module or %CModule directive");
 
                 setModuleName(currentSpec, currentModule, $2.name);
-                appendCodeBlock(&currentModule->docstring, $3.docstring);
+                currentModule->docstring = $3.docstring;
 
                 setIsConsolidated(currentModule);
             }
@@ -1783,7 +1828,7 @@ compmodule: TK_COMPOMODULE compmodule_args compmodule_body {
                     yyerror("%CompositeModule must appear before any %Module directive");
 
                 setModuleName(currentSpec, currentModule, $2.name);
-                appendCodeBlock(&currentModule->docstring, $3.docstring);
+                currentModule->docstring = $3.docstring;
 
                 setIsComposite(currentModule);
             }
@@ -2397,7 +2442,11 @@ autopyname_arg: TK_REMOVELEADING '=' TK_STRING_VALUE {
     ;
 
 docstring:  TK_DOCSTRING docstring_args codeblock {
-            $$ = $3;
+            $$ = sipMalloc(sizeof(docstringDef));
+
+            $$->signature = $2.signature;
+            $$->text = $3->frag;
+            free($3);
 
             /* Format the docstring. */
             if ($2.format == deindented)
@@ -2411,7 +2460,7 @@ docstring:  TK_DOCSTRING docstring_args codeblock {
                 indent = 0;
                 skipping = FALSE;
 
-                for (cp = $$->frag; *cp != '\0'; ++cp)
+                for (cp = $$->text; *cp != '\0'; ++cp)
                 {
                     if (skipping)
                     {
@@ -2446,7 +2495,7 @@ docstring:  TK_DOCSTRING docstring_args codeblock {
                 /*
                  * Go through the text again removing the common indentation.
                  */
-                cp = dp = $$->frag;
+                cp = dp = $$->text;
 
                 while (*cp != '\0')
                 {
@@ -2477,12 +2526,14 @@ docstring:  TK_DOCSTRING docstring_args codeblock {
     ;
 
 docstring_args: {
-            $$.format = currentModule->defdocstring;
+            $$.format = currentModule->defdocstringfmt;
+            $$.signature = currentModule->defdocstringsig;
         }
     |   TK_STRING_VALUE {
             resetLexerState();
 
             $$.format = convertFormat($1);
+            $$.signature = currentModule->defdocstringsig;
         }
     |   '(' docstring_arg_list ')' {
             $$ = $2;
@@ -2496,6 +2547,7 @@ docstring_arg_list: docstring_arg
             switch ($3.token)
             {
             case TK_FORMAT: $$.format = $3.format; break;
+            case TK_SIGNATURE: $$.signature = $3.signature; break;
             }
         }
     ;
@@ -2504,6 +2556,13 @@ docstring_arg:  TK_FORMAT '=' TK_STRING_VALUE {
             $$.token = TK_FORMAT;
 
             $$.format = convertFormat($3);
+            $$.signature = currentModule->defdocstringsig;
+        }
+    |   TK_SIGNATURE '=' TK_STRING_VALUE {
+            $$.token = TK_SIGNATURE;
+
+            $$.format = currentModule->defdocstringfmt;
+            $$.signature = convertSignature($3);
         }
     ;
 
@@ -2887,7 +2946,7 @@ exprlist:   {
         }
     ;
 
-typedef:    TK_TYPEDEF cpptype TK_NAME_VALUE optflags ';' {
+typedef:    TK_TYPEDEF cpptype TK_NAME_VALUE optflags ';' optdocstring {
             if (notSkipping())
             {
                 const char *annos[] = {
@@ -2906,10 +2965,10 @@ typedef:    TK_TYPEDEF cpptype TK_NAME_VALUE optflags ';' {
                 checkAnnos(&$4, annos);
 
                 applyTypeFlags(currentModule, &$2, &$4);
-                newTypedef(currentSpec, currentModule, $3, &$2, &$4);
+                newTypedef(currentSpec, currentModule, $3, &$2, &$4, $6);
             }
         }
-    |   TK_TYPEDEF cpptype '(' '*' TK_NAME_VALUE ')' '(' cpptypelist ')' optflags ';' {
+    |   TK_TYPEDEF cpptype '(' '*' TK_NAME_VALUE ')' '(' cpptypelist ')' optflags ';' optdocstring {
             if (notSkipping())
             {
                 const char *annos[] = {
@@ -2943,7 +3002,7 @@ typedef:    TK_TYPEDEF cpptype TK_NAME_VALUE optflags ';' {
                 ftype.nrderefs = 1;
                 ftype.u.sa = sig;
 
-                newTypedef(currentSpec, currentModule, $5, &ftype, &$10);
+                newTypedef(currentSpec, currentModule, $5, &ftype, &$10, $12);
             }
         }
     ;
@@ -3172,7 +3231,14 @@ classline:  ifstart
     |   property
     |   docstring {
             if (notSkipping())
-                appendCodeBlock(&currentScope()->docstring, $1);
+            {
+                classDef *scope = currentScope();
+
+                if (scope->docstring != NULL)
+                    yyerror("%Docstring already given for class");
+
+                scope->docstring = $1;
+            }
         }
     |   typecode {
             if (notSkipping())
@@ -4805,7 +4871,7 @@ static moduleDef *allocModule()
 
     newmod = sipMalloc(sizeof (moduleDef));
 
-    newmod->defdocstring = raw;
+    newmod->defdocstringfmt = raw;
     newmod->encoding = no_type;
     newmod->next_key = -1;
 
@@ -5984,7 +6050,8 @@ static char *scopedNameToString(scopedNameDef *name)
  */
 static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
         classDef *scope, scopedNameDef *fqname, classTmplDef *tcd,
-        templateDef *td, const char *pyname, int use_template_name)
+        templateDef *td, const char *pyname, int use_template_name,
+        docstringDef *docstring)
 {
     scopedNameDef *type_names, *type_values;
     classDef *cd;
@@ -6013,6 +6080,9 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
 
     /* Start with a shallow copy. */
     *cd = *tcd->cd;
+
+    if (docstring != NULL)
+        cd->docstring = docstring;
 
     resetIsTemplateClass(cd);
     cd->pyname = cacheName(pt, pyname);
@@ -6797,7 +6867,7 @@ static int foundInScope(scopedNameDef *fq_name, scopedNameDef *rel_name)
  * Create a new typedef.
  */
 static void newTypedef(sipSpec *pt, moduleDef *mod, char *name, argDef *type,
-        optFlags *optflgs)
+        optFlags *optflgs, docstringDef *docstring)
 {
     int no_type_name;
     typedefDef *td;
@@ -6819,7 +6889,8 @@ static void newTypedef(sipSpec *pt, moduleDef *mod, char *name, argDef *type,
                 sameTemplateSignature(&tcd->sig, &td->types, FALSE))
             {
                 instantiateClassTemplate(pt, mod, scope, fqname, tcd, td,
-                        getPythonName(mod, optflgs, name), no_type_name);
+                        getPythonName(mod, optflgs, name), no_type_name,
+                        docstring);
 
                 /* All done. */
                 return;
@@ -7044,7 +7115,7 @@ static void newVar(sipSpec *pt, moduleDef *mod, char *name, int isstatic,
 static void newCtor(moduleDef *mod, char *name, int sectFlags,
         signatureDef *args, optFlags *optflgs, codeBlock *methodcode,
         throwArgs *exceptions, signatureDef *cppsig, int explicit,
-        codeBlock *docstring, codeBlock *premethodcode)
+        docstringDef *docstring, codeBlock *premethodcode)
 {
     ctorDef *ct, **ctp;
     classDef *cd = currentScope();
@@ -7052,9 +7123,6 @@ static void newCtor(moduleDef *mod, char *name, int sectFlags,
     /* Check the name of the constructor. */
     if (strcmp(classBaseName(cd), name) != 0)
         yyerror("Constructor doesn't have the same name as its class");
-
-    if (docstring != NULL)
-        appendCodeBlock(&cd->docstring, docstring);
 
     /* Add to the list of constructors. */
     ct = sipMalloc(sizeof (ctorDef));
@@ -7069,6 +7137,7 @@ static void newCtor(moduleDef *mod, char *name, int sectFlags,
     memset(&args->result, 0, sizeof (argDef));
     args->result.atype = void_type;
 
+    ct->docstring = docstring;
     ct->ctorflags = sectFlags;
     ct->no_typehint = getNoTypeHint(optflgs);
     ct->api_range = getAPIRange(optflgs);
@@ -7145,7 +7214,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
         int isstatic, int issignal, int isslot, int isvirt, char *name,
         signatureDef *sig, int isconst, int isabstract, optFlags *optflgs,
         codeBlock *methodcode, codeBlock *vcode, codeBlock *virtcallcode,
-        throwArgs *exceptions, signatureDef *cppsig, codeBlock *docstring,
+        throwArgs *exceptions, signatureDef *cppsig, docstringDef *docstring,
         int isfinal, codeBlock *premethodcode)
 {
     static const char *annos[] = {
@@ -7457,8 +7526,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
     if (strcmp(pyname, "__delattr__") == 0)
         setIsDelattr(od);
 
-    if (docstring != NULL)
-        appendCodeBlock(&od->common->docstring, docstring);
+    od->docstring = docstring;
 
     od->api_range = getAPIRange(optflgs);
 
@@ -9063,6 +9131,24 @@ static Format convertFormat(const char *format)
 
 
 /*
+ * Return the Signature for a string.
+ */
+static Signature convertSignature(const char *signature)
+{
+    if (strcmp(signature, "discarded") == 0)
+        return discarded;
+
+    if (strcmp(signature, "prepended") == 0)
+        return prepended;
+
+    if (strcmp(signature, "appended") == 0)
+        return appended;
+
+    yyerror("The docstring signature must be either \"discarded\", \"prepended\" or \"appended\"");
+}
+
+
+/*
  * Return the argument type for a string with the given encoding or no_type if
  * the encoding was invalid.
  */
@@ -9287,7 +9373,7 @@ static int isEnabledFeature(const char *name)
  */
 static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
         const char *name, const char *get, const char *set,
-        codeBlock *docstring)
+        docstringDef *docstring)
 {
     propertyDef *pd;
 
@@ -9298,7 +9384,7 @@ static void addProperty(sipSpec *pt, moduleDef *mod, classDef *cd,
     pd->name = cacheName(pt, name);
     pd->get = get;
     pd->set = set;
-    appendCodeBlock(&pd->docstring, docstring);
+    pd->docstring = docstring;
     pd->platforms = currentPlatforms;
     pd->next = cd->properties;
 
@@ -9316,7 +9402,7 @@ static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
         const char *filename, const char *name, int c_module, KwArgs kwargs,
         int use_arg_names, int use_limited_api, int call_super_init,
         int all_raise_py_exc, const char *def_error_handler,
-        codeBlock *docstring)
+        docstringDef *docstring)
 {
     moduleDef *mod;
 
@@ -9342,7 +9428,7 @@ static moduleDef *configureModule(sipSpec *pt, moduleDef *module,
     setModuleName(pt, module, name);
     module->kwargs = kwargs;
     module->virt_error_handler = def_error_handler;
-    appendCodeBlock(&module->docstring, docstring);
+    module->docstring = docstring;
 
     if (all_raise_py_exc)
         setAllRaisePyException(module);

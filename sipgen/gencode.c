@@ -1,7 +1,7 @@
 /*
  * The code generator module for SIP.
  *
- * Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -271,24 +271,28 @@ static void generateNameCache(sipSpec *pt, FILE *fp);
 static const char *resultOwner(overDef *od);
 static void prCachedName(FILE *fp, nameDef *nd, const char *prefix);
 static void generateSignalTableEntry(sipSpec *pt, classDef *cd, overDef *sig,
-        memberDef *md, int membernr, int optional_args, FILE *fp);
+        int membernr, int optional_args, FILE *fp);
 static void generateTypesTable(moduleDef *mod, FILE *fp);
 static int py2OnlySlot(slotType st);
 static int py2_5LaterSlot(slotType st);
 static int keepPyReference(argDef *ad);
 static int isDuplicateProtected(classDef *cd, overDef *target);
-static char getEncoding(argType atype);
+static char getEncoding(argDef *ad);
 static void generateTypeDefName(ifaceFileDef *iff, FILE *fp);
 static void generateTypeDefLink(ifaceFileDef *iff, FILE *fp);
-static int overloadHasDocstring(sipSpec *pt, overDef *od, memberDef *md);
-static int hasDocstring(sipSpec *pt, overDef *od, memberDef *md,
+static int overloadHasAutoDocstring(sipSpec *pt, overDef *od);
+static int hasMemberDocstring(sipSpec *pt, overDef *overs, memberDef *md,
         ifaceFileDef *scope);
-static void generateDocstring(sipSpec *pt, overDef *overs, memberDef *md,
+static int generateMemberDocstring(sipSpec *pt, overDef *overs, memberDef *md,
         int is_method, FILE *fp);
-static int overloadHasClassDocstring(sipSpec *pt, ctorDef *ct);
+static void generateMemberAutoDocstring(sipSpec *pt, overDef *od,
+        int is_method, FILE *fp);
+static int ctorHasAutoDocstring(sipSpec *pt, ctorDef *ct);
 static int hasClassDocstring(sipSpec *pt, classDef *cd);
 static void generateClassDocstring(sipSpec *pt, classDef *cd, FILE *fp);
-static void generateExplicitDocstring(codeBlockList *cbl, FILE *fp);
+static void generateCtorAutoDocstring(sipSpec *pt, classDef *cd, ctorDef *ct,
+        FILE *fp);
+static void generateDocstringText(docstringDef *docstring, FILE *fp);
 static int copyConstRefArg(argDef *ad);
 static void generatePreprocLine(int linenr, const char *fname, FILE *fp);
 static int hasOptionalArgs(overDef *od);
@@ -2287,10 +2291,7 @@ static void generateCpp(sipSpec *pt, moduleDef *mod, const char *codeDir,
                 is_versioned_functions = TRUE;
             }
 
-            has_docstring = FALSE;
-
-            if (md->docstring != NULL || (docstrings && hasDocstring(pt, mod->overs, md, NULL)))
-                has_docstring = TRUE;
+            has_docstring = hasMemberDocstring(pt, mod->overs, md, NULL);
 
             /*
              * Every overload has an entry to capture all the version ranges.
@@ -3059,30 +3060,24 @@ static void generateOrdinaryFunction(sipSpec *pt, moduleDef *mod,
         );
 
     /* Generate the docstrings. */
-    has_auto_docstring = FALSE;
-
-    if (md->docstring != NULL || (docstrings && hasDocstring(pt, od, md, scope)))
+    if (hasMemberDocstring(pt, od, md, scope))
     {
         if (scope != NULL)
             prcode(fp,
-"PyDoc_STRVAR(doc_%L_%s, ", scope, md->pyname->text);
+"PyDoc_STRVAR(doc_%L_%s, \"", scope, md->pyname->text);
         else
             prcode(fp,
-"PyDoc_STRVAR(doc_%s, " , md->pyname->text);
+"PyDoc_STRVAR(doc_%s, \"" , md->pyname->text);
 
-        if (md->docstring != NULL)
-        {
-            generateExplicitDocstring(md->docstring, fp);
-        }
-        else
-        {
-            generateDocstring(pt, od, md, FALSE, fp);
-            has_auto_docstring = TRUE;
-        }
+        has_auto_docstring = generateMemberDocstring(pt, od, md, FALSE, fp);
 
-        prcode(fp, ");\n"
+        prcode(fp, "\");\n"
 "\n"
             );
+    }
+    else
+    {
+        has_auto_docstring = FALSE;
     }
 
     if (noArgParser(md) || useKeywordArgs(md))
@@ -3663,7 +3658,7 @@ static int generateChars(sipSpec *pt, moduleDef *mod, classDef *cd, FILE *fp)
         if (pyScope(vd->ecd) != cd || vd->module != mod)
             continue;
 
-        if (!((vtype == ascii_string_type || vtype == latin1_string_type || vtype == utf8_string_type || vtype == sstring_type || vtype == ustring_type || vtype == string_type || vtype == wstring_type) && vd->type.nrderefs == 0))
+        if (!((vtype == ascii_string_type || vtype == latin1_string_type || vtype == utf8_string_type || vtype == sstring_type || vtype == ustring_type || vtype == string_type) && vd->type.nrderefs == 0))
             continue;
 
         if (needsHandler(vd))
@@ -3691,7 +3686,7 @@ static int generateChars(sipSpec *pt, moduleDef *mod, classDef *cd, FILE *fp)
 
         prcode(fp,
 "    {%N, %S, '%c'},\n"
-            , vd->pyname, (cd != NULL ? vd->fqcname : vd->fqcname->next), getEncoding(vtype));
+            , vd->pyname, (cd != NULL ? vd->fqcname : vd->fqcname->next), getEncoding(&vd->type));
     }
 
     if (!noIntro)
@@ -3718,11 +3713,13 @@ static int generateStrings(sipSpec *pt, moduleDef *mod, classDef *cd, FILE *fp)
     for (vd = pt->vars; vd != NULL; vd = vd->next)
     {
         argType vtype = vd->type.atype;
+        const char *cast;
+        char encoding;
 
         if (pyScope(vd->ecd) != cd || vd->module != mod)
             continue;
 
-        if (!((vtype == ascii_string_type || vtype == latin1_string_type || vtype == utf8_string_type || vtype == sstring_type || vtype == ustring_type || vtype == string_type || vtype == wstring_type) && vd->type.nrderefs != 0))
+        if (!(((vtype == ascii_string_type || vtype == latin1_string_type || vtype == utf8_string_type || vtype == sstring_type || vtype == ustring_type || vtype == string_type) && vd->type.nrderefs != 0) || vtype == wstring_type))
             continue;
 
         if (needsHandler(vd))
@@ -3748,9 +3745,19 @@ static int generateStrings(sipSpec *pt, moduleDef *mod, classDef *cd, FILE *fp)
             noIntro = FALSE;
         }
 
+        /* This is the hack for handling wchar_t and wchar_t*. */
+        encoding = getEncoding(&vd->type);
+
+        if (encoding == 'w')
+            cast = "(const char *)&";
+        else if (encoding == 'W')
+            cast = "(const char *)";
+        else
+            cast = "";
+
         prcode(fp,
-"    {%N, %S, '%c'},\n"
-            , vd->pyname, (cd != NULL ? vd->fqcname : vd->fqcname->next), getEncoding(vtype));
+"    {%N, %s%S, '%c'},\n"
+            , vd->pyname, cast, (cd != NULL ? vd->fqcname : vd->fqcname->next), encoding);
     }
 
     if (!noIntro)
@@ -4755,7 +4762,6 @@ static void prMethodTable(sipSpec *pt, sortedMethTab *mtable, int nr,
     {
         memberDef *md = mtable[i].md;
         const char *cast, *flags;
-        int has_docstring;
 
         if (noArgParser(md) || useKeywordArgs(md))
         {
@@ -4771,15 +4777,10 @@ static void prMethodTable(sipSpec *pt, sortedMethTab *mtable, int nr,
         /* Save the index in the table. */
         md->membernr = i;
 
-        has_docstring = FALSE;
-
-        if (md->docstring != NULL || (docstrings && hasDocstring(pt, overs, md, iff)))
-            has_docstring = TRUE;
-
         prcode(fp,
 "    {SIP_MLNAME_CAST(%N), %smeth_%L_%s, METH_VARARGS%s, ", md->pyname, cast, iff, md->pyname->text, flags);
 
-        if (has_docstring)
+        if (hasMemberDocstring(pt, overs, md, iff))
             prcode(fp, "SIP_MLDOC_CAST(doc_%L_%s)", iff, md->pyname->text);
         else
             prcode(fp, "NULL");
@@ -7584,7 +7585,7 @@ static void generateCastZero(argDef *ad, FILE *fp)
         {
             if (isScopedEnum(ed))
                 prcode(fp, "%E", ed);
-            else
+            else if (ed->ecd != NULL)
                 prEnumMemberScope(ed->members, fp);
 
             prcode(fp, "::%s", ed->members->cname);
@@ -10007,11 +10008,11 @@ static void generateTypeDefinition(sipSpec *pt, classDef *cd, int py_debug,
         {
             prcode(fp,
 "\n"
-"PyDoc_STRVAR(doc_%L_%s, " , cd->iff, pd->name->text);
+"PyDoc_STRVAR(doc_%L_%s, \"" , cd->iff, pd->name->text);
 
-            generateExplicitDocstring(pd->docstring, fp);
+            generateDocstringText(pd->docstring, fp);
 
-            prcode(fp, ");\n"
+            prcode(fp, "\");\n"
                 );
         }
     }
@@ -10083,23 +10084,22 @@ static void generateTypeDefinition(sipSpec *pt, classDef *cd, int py_debug,
     is_inst_double = generateDoubles(pt, mod, cd, fp);
 
     /* Generate the docstrings. */
-    has_docstring = FALSE;
-
-    if (cd->docstring != NULL || (docstrings && hasClassDocstring(pt, cd)))
+    if (hasClassDocstring(pt, cd))
     {
         prcode(fp,
 "\n"
-"PyDoc_STRVAR(doc_%L, ", cd->iff);
+"PyDoc_STRVAR(doc_%L, \"", cd->iff);
 
-        if (cd->docstring != NULL)
-            generateExplicitDocstring(cd->docstring, fp);
-        else
-            generateClassDocstring(pt, cd, fp);
+        generateClassDocstring(pt, cd, fp);
 
-        prcode(fp, ");\n"
+        prcode(fp, "\");\n"
             );
 
         has_docstring = TRUE;
+    }
+    else
+    {
+        has_docstring = FALSE;
     }
 
     /* Generate any plugin-specific data structures. */
@@ -10663,7 +10663,7 @@ static void generatePyQt5Emitters(classDef *cd, FILE *fp)
  * Generate an entry in the PyQt4 or PyQt5 signal table.
  */
 static void generateSignalTableEntry(sipSpec *pt, classDef *cd, overDef *sig,
-        memberDef *md, int membernr, int optional_args, FILE *fp)
+        int membernr, int optional_args, FILE *fp)
 {
     int a, pyqt5 = pluginPyQt5(pt);
 
@@ -10687,22 +10687,23 @@ static void generateSignalTableEntry(sipSpec *pt, classDef *cd, overDef *sig,
         generateNamedBaseType(cd->iff, &arg, "", TRUE, StripNamespace, fp);
     }
 
-    prcode(fp,")\", ");
+    prcode(fp, ")\", ");
 
     if (docstrings)
     {
-        if (md->docstring != NULL)
+        prcode(fp, "\"");
+
+        if (sig->docstring != NULL)
         {
-            generateExplicitDocstring(md->docstring, fp);
+            generateDocstringText(sig->docstring, fp);
         }
         else
         {
-            fprintf(fp, "\"\\1");
+            fprintf(fp, "\\1");
             dsOverload(pt, sig, TRUE, FALSE, fp);
-            fprintf(fp, "\"");
         }
 
-        fprintf(fp, ", ");
+        fprintf(fp, "\", ");
     }
     else
     {
@@ -11632,26 +11633,21 @@ static void generateFunction(sipSpec *pt, memberDef *md, overDef *overs,
             );
 
         /* Generate the docstrings. */
-        has_auto_docstring = FALSE;
-
-        if (md->docstring != NULL || (docstrings && hasDocstring(pt, overs, md, cd->iff)))
+        if (hasMemberDocstring(pt, overs, md, cd->iff))
         {
             prcode(fp,
-"PyDoc_STRVAR(doc_%L_%s, " , cd->iff, pname);
+"PyDoc_STRVAR(doc_%L_%s, \"" , cd->iff, pname);
 
-            if (md->docstring != NULL)
-            {
-                generateExplicitDocstring(md->docstring, fp);
-            }
-            else
-            {
-                generateDocstring(pt, overs, md, TRUE, fp);
-                has_auto_docstring = TRUE;
-            }
+            has_auto_docstring = generateMemberDocstring(pt, overs, md, TRUE,
+                    fp);
 
-            prcode(fp, ");\n"
+            prcode(fp, "\");\n"
 "\n"
                 );
+        }
+        else
+        {
+            has_auto_docstring = FALSE;
         }
 
         if (!generating_c)
@@ -14956,11 +14952,11 @@ static int keepPyReference(argDef *ad)
 /*
  * Return the encoding character for the given type.
  */
-static char getEncoding(argType atype)
+static char getEncoding(argDef *ad)
 {
     char encoding;
 
-    switch (atype)
+    switch (ad->atype)
     {
     case ascii_string_type:
         encoding = 'A';
@@ -14972,6 +14968,10 @@ static char getEncoding(argType atype)
 
     case utf8_string_type:
         encoding = '8';
+        break;
+
+    case wstring_type:
+        encoding = ((ad->nrderefs == 0) ? 'w' : 'W');
         break;
 
     default:
@@ -14986,12 +14986,9 @@ static char getEncoding(argType atype)
  * Return TRUE if a docstring can be automatically generated for a function
  * overload.
  */
-static int overloadHasDocstring(sipSpec *pt, overDef *od, memberDef *md)
+static int overloadHasAutoDocstring(sipSpec *pt, overDef *od)
 {
-    if (isPrivate(od) || isSignal(od))
-        return FALSE;
-
-    if (od->common != md)
+    if (!docstrings)
         return FALSE;
 
     /* If it is versioned then make sure it is the default API. */
@@ -15000,12 +14997,32 @@ static int overloadHasDocstring(sipSpec *pt, overDef *od, memberDef *md)
 
 
 /*
- * Return TRUE if a docstring can be automatically generated for a function.
+ * Return TRUE if a function/method has a docstring.
  */
-static int hasDocstring(sipSpec *pt, overDef *overs, memberDef *md,
+static int hasMemberDocstring(sipSpec *pt, overDef *overs, memberDef *md,
         ifaceFileDef *scope)
 {
+    int auto_docstring = FALSE;
     overDef *od;
+
+    /*
+     * Check for any explicit docstrings and remember if there were any that
+     * could be automatically generated.
+     */
+    for (od = overs; od != NULL; od = od->next)
+    {
+        if (od->common != md)
+            continue;
+
+        if (isPrivate(od) || isSignal(od))
+            continue;
+
+        if (od->docstring != NULL)
+            return TRUE;
+
+        if (overloadHasAutoDocstring(pt, od))
+            auto_docstring = TRUE;
+    }
 
     if (noArgParser(md))
         return FALSE;
@@ -15013,62 +15030,124 @@ static int hasDocstring(sipSpec *pt, overDef *overs, memberDef *md,
     if (scope != NULL && !inDefaultAPI(pt, scope->api_range))
         return FALSE;
 
-    for (od = overs; od != NULL; od = od->next)
-        if (overloadHasDocstring(pt, od, md))
-            return TRUE;
-
-    return FALSE;
+    return auto_docstring;
 }
 
 
 /*
- * Generate the docstring for a function or method.
+ * Generate the docstring for all overloads of a function/method.  Return TRUE
+ * if the docstring was entirely automatically generated.
  */
-static void generateDocstring(sipSpec *pt, overDef *overs, memberDef *md,
+static int generateMemberDocstring(sipSpec *pt, overDef *overs, memberDef *md,
         int is_method, FILE *fp)
 {
-    const char *sep = NULL;
+    int auto_docstring = TRUE;
+    int is_first, all_auto, any_implied;
+    static const char *newline = "\\n\"\n\"";
     overDef *od;
+
+    /* See if all the docstrings are automatically generated. */
+    all_auto = TRUE;
+    any_implied = FALSE;
 
     for (od = overs; od != NULL; od = od->next)
     {
-        if (!overloadHasDocstring(pt, od, md))
+        if (od->common != md)
             continue;
 
-        if (sep == NULL)
+        if (isPrivate(od) || isSignal(od))
+            continue;
+
+        if (od->docstring != NULL)
         {
-            prcode(fp, "\"");
-            sep = "\\n\"\n    \"";
+            all_auto = FALSE;
+
+            if (od->docstring->signature != discarded)
+                any_implied = TRUE;
         }
-        else
+    }
+
+    /* Generate the docstring. */
+    is_first = TRUE;
+
+    for (od = overs; od != NULL; od = od->next)
+    {
+        if (od->common != md)
+            continue;
+
+        if (isPrivate(od) || isSignal(od))
+            continue;
+
+        if (!is_first)
         {
-            prcode(fp, "%s", sep);
+            prcode(fp, newline);
+
+            /*
+             * Insert a blank line if any explicit docstring wants to include a
+             * signature.  This maintains compatibility with previous versions.
+             */
+            if (any_implied)
+                prcode(fp, newline);
         }
 
+        if (od->docstring != NULL)
+        {
+            if (od->docstring->signature == prepended)
+            {
+                generateMemberAutoDocstring(pt, od, is_method, fp);
+                prcode(fp, newline);
+            }
+
+            generateDocstringText(od->docstring, fp);
+
+            if (od->docstring->signature == appended)
+            {
+                prcode(fp, newline);
+                generateMemberAutoDocstring(pt, od, is_method, fp);
+            }
+
+            auto_docstring = FALSE;
+        }
+        else if (all_auto || any_implied)
+        {
+            generateMemberAutoDocstring(pt, od, is_method, fp);
+        }
+
+        is_first = FALSE;
+    }
+
+    return auto_docstring;
+}
+
+
+/*
+ * Generate the automatic docstring for a function/method.
+ */
+static void generateMemberAutoDocstring(sipSpec *pt, overDef *od,
+        int is_method, FILE *fp)
+{
+    if (overloadHasAutoDocstring(pt, od))
+    {
         dsOverload(pt, od, is_method, FALSE, fp);
         ++currentLineNr;
 
         if (hasImplicitOverloads(&od->pysig))
         {
-            prcode(fp, "%s", sep);
+            prcode(fp, "\\n\"\n\"");
 
             dsOverload(pt, od, is_method, TRUE, fp);
             ++currentLineNr;
         }
     }
-
-    if (sep != NULL)
-        prcode(fp, "\"");
 }
 
 
 /*
- * Return TRUE if a docstring can be automatically generated for a class
- * overload.
+ * Return TRUE if a docstring can be automatically generated for a ctor.
  */
-static int overloadHasClassDocstring(sipSpec *pt, ctorDef *ct)
+static int ctorHasAutoDocstring(sipSpec *pt, ctorDef *ct)
 {
-    if (isPrivateCtor(ct))
+    if (!docstrings)
         return FALSE;
 
     /* If it is versioned then make sure it is the default API. */
@@ -15077,11 +15156,31 @@ static int overloadHasClassDocstring(sipSpec *pt, ctorDef *ct)
 
 
 /*
- * Return TRUE if a docstring can be automatically generated for a class.
+ * Return TRUE if a class has a docstring.
  */
 static int hasClassDocstring(sipSpec *pt, classDef *cd)
 {
+    int auto_docstring = FALSE;
     ctorDef *ct;
+
+    /*
+     * Check for any explicit docstrings and remember if there were any that
+     * could be automatically generated.
+     */
+    if (cd->docstring != NULL)
+        return TRUE;
+
+    for (ct = cd->ctors; ct != NULL; ct = ct->next)
+    {
+        if (isPrivateCtor(ct))
+            continue;
+
+        if (ct->docstring != NULL)
+            return TRUE;
+
+        if (ctorHasAutoDocstring(pt, ct))
+            auto_docstring = TRUE;
+    }
 
     if (!canCreate(cd))
         return FALSE;
@@ -15089,11 +15188,7 @@ static int hasClassDocstring(sipSpec *pt, classDef *cd)
     if (!inDefaultAPI(pt, cd->iff->api_range))
         return FALSE;
 
-    for (ct = cd->ctors; ct != NULL; ct = ct->next)
-        if (overloadHasClassDocstring(pt, ct))
-            return TRUE;
-
-    return FALSE;
+    return auto_docstring;
 }
 
 
@@ -15102,84 +15197,145 @@ static int hasClassDocstring(sipSpec *pt, classDef *cd)
  */
 static void generateClassDocstring(sipSpec *pt, classDef *cd, FILE *fp)
 {
-    const char *sep = NULL;
+    int is_first, all_auto, any_implied;
+    static const char *newline = "\\n\"\n\"";
     ctorDef *ct;
+
+    /* See if all the docstrings are automatically generated. */
+    all_auto = (cd->docstring == NULL);
+    any_implied = FALSE;
 
     for (ct = cd->ctors; ct != NULL; ct = ct->next)
     {
-        if (!overloadHasClassDocstring(pt, ct))
+        if (isPrivateCtor(ct))
             continue;
 
-        if (sep == NULL)
+        if (ct->docstring != NULL)
         {
-            fprintf(fp, "\"\\1");
-            sep = "\\n\"\n    \"";
+            all_auto = FALSE;
+
+            if (ct->docstring->signature != discarded)
+                any_implied = TRUE;
         }
-        else
+    }
+
+    /* Generate the docstring. */
+    if (all_auto)
+        prcode(fp, "\\1");
+
+    if (cd->docstring != NULL && cd->docstring->signature != prepended)
+    {
+        generateDocstringText(cd->docstring, fp);
+        is_first = FALSE;
+    }
+    else
+    {
+        is_first = TRUE;
+    }
+
+    if (cd->docstring == NULL || cd->docstring->signature != discarded)
+    {
+        for (ct = cd->ctors; ct != NULL; ct = ct->next)
         {
-            fprintf(fp, "%s", sep);
+            if (isPrivateCtor(ct))
+                continue;
+
+            if (!is_first)
+            {
+                prcode(fp, newline);
+
+                /*
+                 * Insert a blank line if any explicit docstring wants to
+                 * include a signature.  This maintains compatibility with
+                 * previous versions.
+                 */
+                if (any_implied)
+                    prcode(fp, newline);
+            }
+
+            if (ct->docstring != NULL)
+            {
+                if (ct->docstring->signature == prepended)
+                {
+                    generateCtorAutoDocstring(pt, cd, ct, fp);
+                    prcode(fp, newline);
+                }
+
+                generateDocstringText(ct->docstring, fp);
+
+                if (ct->docstring->signature == appended)
+                {
+                    prcode(fp, newline);
+                    generateCtorAutoDocstring(pt, cd, ct, fp);
+                }
+            }
+            else if (all_auto || any_implied)
+            {
+                generateCtorAutoDocstring(pt, cd, ct, fp);
+            }
+
+            is_first = FALSE;
+        }
+    }
+
+    if (cd->docstring != NULL && cd->docstring->signature == prepended)
+    {
+        if (!is_first)
+        {
+            prcode(fp, newline);
+            prcode(fp, newline);
         }
 
+        generateDocstringText(cd->docstring, fp);
+    }
+}
+
+
+/*
+ * Generate the automatic docstring for a ctor.
+ */
+static void generateCtorAutoDocstring(sipSpec *pt, classDef *cd, ctorDef *ct,
+        FILE *fp)
+{
+    if (ctorHasAutoDocstring(pt, ct))
+    {
         dsCtor(pt, cd, ct, FALSE, fp);
         ++currentLineNr;
 
         if (hasImplicitOverloads(&ct->pysig))
         {
-            fprintf(fp, "%s", sep);
+            prcode(fp, "\\n\"\n\"");
 
             dsCtor(pt, cd, ct, TRUE, fp);
             ++currentLineNr;
         }
     }
-
-    if (sep != NULL)
-        fprintf(fp, "\"");
 }
 
 
 /*
- * Generate an explicit docstring.
+ * Generate the text of a docstring.
  */
-static void generateExplicitDocstring(codeBlockList *cbl, FILE *fp)
+static void generateDocstringText(docstringDef *docstring, FILE *fp)
 {
-    const char *sep = NULL;
+    const char *cp;
 
-    while (cbl != NULL)
+    for (cp = docstring->text; *cp != '\0'; ++cp)
     {
-        const char *cp;
-
-        if (sep == NULL)
+        if (*cp == '\n')
         {
-            prcode(fp, "\"");
-            sep = "\\n\"\n    \"";
+            /* Ignore if this is the last character. */
+            if (cp[1] != '\0')
+                prcode(fp, "\\n\"\n\"");
         }
         else
         {
-            prcode(fp, "%s", sep);
+            if (*cp == '\\' || *cp == '\"')
+                prcode(fp, "\\");
+
+            prcode(fp, "%c", *cp);
         }
-
-        for (cp = cbl->block->frag; *cp != '\0'; ++cp)
-        {
-            if (*cp == '\n')
-            {
-                /* Ignore if this is the last character of the fragment. */
-                if (cp[1] != '\0')
-                    prcode(fp, "%s", sep);
-            }
-            else
-            {
-                if (*cp == '\\' || *cp == '\"')
-                    prcode(fp, "\\");
-
-                prcode(fp, "%c", *cp);
-            }
-        }
-
-        cbl = cbl->next;
     }
-
-    if (sep != NULL)
-        prcode(fp, "\"");
 }
 
 
@@ -15192,11 +15348,11 @@ static void generateModDocstring(moduleDef *mod, FILE *fp)
     {
         prcode(fp,
 "\n"
-"PyDoc_STRVAR(doc_mod_%s, ", mod->name);
+"PyDoc_STRVAR(doc_mod_%s, \"", mod->name);
 
-        generateExplicitDocstring(mod->docstring, fp);
+        generateDocstringText(mod->docstring, fp);
 
-        prcode(fp, ");\n"
+        prcode(fp, "\");\n"
             );
     }
 }
@@ -15293,7 +15449,7 @@ static int generatePluginSignalsTable(sipSpec *pt, classDef *cd,
                  * provide an emitter function which handles the optional
                  * arguments.
                  */
-                generateSignalTableEntry(pt, cd, od, md, membernr,
+                generateSignalTableEntry(pt, cd, od, membernr,
                         hasOptionalArgs(od), fp);
 
                 membernr = -1;
@@ -15312,8 +15468,7 @@ static int generatePluginSignalsTable(sipSpec *pt, classDef *cd,
                             break;
 
                         cppsig->nrArgs = a;
-                        generateSignalTableEntry(pt, cd, od, md, -1, FALSE,
-                                fp);
+                        generateSignalTableEntry(pt, cd, od, -1, FALSE, fp);
                     }
 
                     cppsig->nrArgs = nr_args;
@@ -15441,10 +15596,6 @@ static void generateGlobalFunctionTableEntries(sipSpec *pt, moduleDef *mod,
     {
         if (md->slot == no_slot && notVersioned(md))
         {
-            int has_docstring;
-
-            has_docstring = (md->docstring != NULL || (docstrings && hasDocstring(pt, mod->overs, md, NULL)));
-
             prcode(fp,
 "        {SIP_MLNAME_CAST(%N), ", md->pyname);
 
@@ -15453,7 +15604,7 @@ static void generateGlobalFunctionTableEntries(sipSpec *pt, moduleDef *mod,
             else
                 prcode(fp, "func_%s, METH_VARARGS", md->pyname->text);
 
-            if (has_docstring)
+            if (hasMemberDocstring(pt, mod->overs, md, NULL))
                 prcode(fp, ", SIP_MLDOC_CAST(doc_%s)},\n"
                     , md->pyname->text);
             else
