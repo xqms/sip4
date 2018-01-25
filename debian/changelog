@@ -1,6 +1,7 @@
 sip4 (4.19.7+dfsg-1) UNRELEASED; urgency=medium
 
   * New upstream bugfix release.
+  * Bump years in debian/copyright.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Thu, 25 Jan 2018 12:41:02 +0300
 
