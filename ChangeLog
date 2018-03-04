@@ -1,4 +1,33 @@
+2018-02-26  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.8.
+	[09748626765f] [4.19.8] <4.19-maint>
+
+2018-02-03  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* README:
+	Fixed the README.
+	[f07d0788eef0] <4.19-maint>
+
+2018-01-29  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/c_api.rst:
+	Make sure the C API is documented in alphabetical order.
+	[e930a3c90dc0] <4.19-maint>
+
+	* sipgen/gencode.c, siplib/sip.h.in.in, siplib/siplib.c.in:
+	Make sure that the pointer to the Python object held by the C++
+	instance of the generated derived type is reset by the derived
+	type's dtor. Also make sure it is tested and reset while the GIL is
+	held in order to avoid race conditions.
+	[71bfa703c4ee] <4.19-maint>
+
 2018-01-23  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.7 for changeset 7e9dbd15c866
+	[9a8622f989f9] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.7.
