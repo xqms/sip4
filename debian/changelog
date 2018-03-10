@@ -5,6 +5,7 @@ sip4 (4.19.8+dfsg-1) UNRELEASED; urgency=medium
 
   [ Dmitry Shachnev ]
   * New upstream bugfix release.
+  * Bump API version to 12.4.
 
  -- Ondřej Nový <onovy@debian.org>  Tue, 13 Feb 2018 10:00:00 +0100
 
