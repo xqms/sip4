@@ -1,4 +1,4 @@
-sip4 (4.19.8+dfsg-1) UNRELEASED; urgency=medium
+sip4 (4.19.8+dfsg-1) unstable; urgency=medium
 
   [ Ondřej Nový ]
   * d/control: Set Vcs-* to salsa.debian.org
@@ -7,7 +7,7 @@ sip4 (4.19.8+dfsg-1) UNRELEASED; urgency=medium
   * New upstream bugfix release.
   * Bump API version to 12.4.
 
- -- Ondřej Nový <onovy@debian.org>  Tue, 13 Feb 2018 10:00:00 +0100
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 10 Mar 2018 09:56:30 +0300
 
 sip4 (4.19.7+dfsg-1) unstable; urgency=medium
 
