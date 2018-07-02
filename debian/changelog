@@ -7,6 +7,7 @@ sip4 (4.19.11+dfsg-1) UNRELEASED; urgency=medium
   [ Dmitry Shachnev ]
   * New upstream release.
   * Update debian/copyright.
+  * Make python-sip depend on python-enum34.
 
  -- Ondřej Nový <onovy@debian.org>  Mon, 14 May 2018 07:50:08 +0200
 

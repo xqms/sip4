@@ -25,7 +25,7 @@ Package: python-sip
 Architecture: any
 Section: python
 Provides: ${sip:Provides}
-Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
+Depends: python-enum34, ${misc:Depends}, ${python:Depends}, ${shlibs:Depends}
 Description: Python/C++ bindings generator runtime library
  SIP is a tool for generating bindings for C++ classes with some ideas
  borrowed from SWIG, but capable of tighter bindings because of its
