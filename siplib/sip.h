@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041308
-#define SIP_VERSION_STR     "4.19.8"
+#define SIP_VERSION         0x04130b
+#define SIP_VERSION_STR     "4.19.11"
 
 
 /*
@@ -266,10 +266,6 @@ extern "C" {
  */
 #define SIP_API_MAJOR_NR    12
 #define SIP_API_MINOR_NR    4
-
-
-/* The name of the sip module. */
-#define SIP_MODULE_NAME     "@CFG_MODULE_NAME@"
 
 
 /*
@@ -2011,19 +2007,24 @@ typedef struct _sipQtAPI {
 #define sipTypeName(td)     sipNameFromPool((td)->td_module, (td)->td_cname)
 #define sipTypePluginData(td)   ((td)->td_plugin_data)
 
+#if PY_VERSION_HEX >= 0x03070000
+#define sipConvertFromSliceObject(o, len, start, stop, step, slen) (        \
+    PySlice_Unpack((o), (start), (stop), (step)) < 0 ?                      \
+    ((*(slen) = 0), -1) :                                                   \
+    ((*(slen) = PySlice_AdjustIndices((len), (start), (stop), *(step))), 0))
+#elif PY_VERSION_HEX >= 0x03020000
+#define sipConvertFromSliceObject   PySlice_GetIndicesEx
+#else
+#define sipConvertFromSliceObject(o, len, start, stop, step, slen)          \
+        PySlice_GetIndicesEx((PySliceObject *)(o), (len), (start), (stop),  \
+                (step), (slen))
+#endif
+
 /*
  * Note that this was never actually documented as being part of the public
  * API.  It is now deprecated.  sipIsUserType() should be used instead.
  */
 #define sipIsExactWrappedType(wt)   (sipTypeAsPyTypeObject((wt)->wt_td) == (PyTypeObject *)(wt))
-
-#if PY_VERSION_HEX >= 0x03020000
-#define sipConvertFromSliceObject   PySlice_GetIndicesEx
-#else
-#define sipConvertFromSliceObject(o, len, start, stop, step, slen) \
-        PySlice_GetIndicesEx((PySliceObject *)(o), (len), (start), (stop), \
-                (step), (slen))
-#endif
 
 
 /*

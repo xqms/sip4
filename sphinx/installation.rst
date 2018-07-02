@@ -5,7 +5,7 @@ Downloading
 -----------
 
 You can get the latest release of the SIP source code from
-http://www.riverbankcomputing.com/software/sip/download.
+https://www.riverbankcomputing.com/software/sip/download.
 
 SIP is also included with all of the major Linux distributions.  However, it
 may be a version or two out of date.
@@ -26,7 +26,7 @@ For example::
 This assumes that the Python interpreter is on your path.  Something like the
 following may be appropriate on Windows::
 
-    c:\python35\python configure.py
+    c:\python37\python configure.py
 
 If you have multiple versions of Python installed then make sure you use the
 interpreter for which you wish SIP to generate bindings for.
@@ -90,6 +90,16 @@ The full set of command line options is:
     not been specified then the universal binary will include the ``i386`` and
     ``ppc`` architectures.
 
+.. cmdoption:: --no-dist-info
+
+    .. versionadded:: 4.19.9
+
+    This disables the creation of the PEP 376 ``.dist-info`` directory.
+    Starting with this version a ``.dist-info`` is created.  This contains
+    meta-data about the installation including version information for
+    dependent packages.  It also means that ``pip`` can be used to uninstall
+    the package.
+
 .. cmdoption:: --no-stubs
 
     .. versionadded:: 4.19
@@ -144,9 +154,10 @@ The full set of command line options is:
 .. cmdoption:: --sip-module <NAME>
 
     The :mod:`sip` module will be created with the name ``<NAME>`` rather than
-    the default ``sip``.  ``<NAME>`` may be of the form
-    ``package.sub-package.module``.  See :ref:`ref-private-sip` for how to use
-    this to create a private copy of the :mod:`sip` module.
+    the default ``sip``.  ``<NAME>`` should be of the form ``package.sip``.
+    See :ref:`ref-private-sip` for how to use this to create a private copy of
+    the :mod:`sip` module.  Also see the :option:`-n <sip -n>` option of the
+    code generator.
 
 .. cmdoption:: --sysroot <DIR>
 
@@ -208,7 +219,7 @@ SIP, and the modules it generates, can be built with MinGW, the Windows port of
 GCC.  You must use the :option:`--platform <configure.py -p>` command line
 option to specify the correct platform.  For example::
 
-    c:\python35\python configure.py --platform win32-g++
+    c:\python37\python configure.py --platform win32-g++
 
 
 Configuring for the Borland C++ Compiler
@@ -218,14 +229,14 @@ SIP, and the modules it generates, can be built with the free Borland C++
 compiler.  You must use the :option:`--platform <configure.py -p>` command line
 option to specify the correct platform.  For example::
 
-    c:\python35\python configure.py --platform win32-borland
+    c:\python37\python configure.py --platform win32-borland
 
 You must also make sure you have a Borland-compatible version of the Python
 library.  If you are using the standard Python distribution (built using the
 Microsoft compiler) then you must convert the format of the Python library.
 For example::
 
-    coff2omf python35.lib python35_bcpp.lib
+    coff2omf python37.lib python37_bcpp.lib
 
 
 Building
