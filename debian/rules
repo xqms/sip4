@@ -130,8 +130,6 @@ install-arch-3.%:
 	mkdir -p debian/python3-sip-dev/usr/include/python3.$*dm
 	ln -s ../python3.$*m/sip.h \
 	    debian/python3-sip-dev/usr/include/python3.$*dm/sip.h
-	mkdir -p debian/python3-sip-dev/usr/lib/python3.$*/dist-packages
-	install -m 644 -o root -g root sipdistutils.py debian/python3-sip-dev/usr/lib/python3.$*/dist-packages
 
 install-arch-2%:
 	$(MAKE) -C build-2$* install DESTDIR=$(CURDIR)/debian/tmp
@@ -143,8 +141,6 @@ install-arch-2%:
 	mkdir -p debian/python-sip-dev/usr/include/python2$*_d
 	ln -s ../python2$*/sip.h \
 	    debian/python-sip-dev/usr/include/python2$*_d/sip.h
-	mkdir -p debian/python-sip-dev/usr/lib/python2$*/dist-packages
-	install -m 644 -o root -g root sipdistutils.py debian/python-sip-dev/usr/lib/python2$*/dist-packages
 
 
 # Must not depend on anything. This is to be called by
