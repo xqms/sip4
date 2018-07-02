@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041308
-#define SIP_VERSION_STR     "4.19.8"
+#define SIP_VERSION         0x04130b
+#define SIP_VERSION_STR     "4.19.11"
 
 
 #ifdef TRUE
@@ -853,6 +853,7 @@ typedef struct {
     int nrderefs;                       /* Nr. of dereferences. */
     int derefs[MAX_NR_DEREFS];          /* The const for each dereference. */
     valueDef *defval;                   /* The default value. */
+    int scopes_stripped;                /* Nr. of scopes to be stripped. */
     int key;                            /* The optional /KeepReference/ key. */
     struct _typedefDef *original_type;  /* The original type if typedef'd. */
     union {
@@ -1375,7 +1376,7 @@ void parserEOF(const char *,parserContext *);
 void transform(sipSpec *, int);
 void generateCode(sipSpec *, char *, char *, char *, const char *, int, int,
         int, int, stringList *needed_qualifiers, stringList *, const char *,
-        int, int);
+        int, int, const char *);
 void generateExtracts(sipSpec *pt, const stringList *extracts);
 void addExtractPart(sipSpec *pt, const char *id, int order, codeBlock *part);
 void generateAPI(sipSpec *pt, moduleDef *mod, const char *apiFile);

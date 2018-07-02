@@ -431,6 +431,49 @@ Again, we hope that the scripts are self documenting.
        tags are not mutually exclusive, i.e. any number may be valid at a time.
 
 
+Wrapping Enums
+--------------
+
+.. versionadded:: 4.19.4
+
+SIP wraps C/C++ enums using a dedicated Python type and implements behaviour
+that mimics the C/C++ behaviour regqrding the visibility of the enum's members.
+In other words, an enum's members have the same visibility as the enum itself.
+For example::
+
+    class MyClass
+    {
+    public:
+        enum MyEnum
+        {
+            Member
+        }
+    }
+
+In Python the ``Member`` member is referenced as ``MyClass.Member``.  This
+behaviour makes it easier to translate C/C++ code to Python.
+
+In more recent times C++11 has introduced scoped enums and Python has
+introduced the :mod:`enum` module.  In both cases a member is only visible in
+the scope of the enum.  In other words, the ``Member`` member is referenced as
+``MyClass.MyEnum.Member``.
+
+This version of SIP adds support for wrapping C++11 scoped enums and implements
+them as Python :class:`enum.Enum` objects.  For versions of Python that don't
+include the :mod:`enum` module in the standrd library (i.e. versions earlier
+than v3.4) then the ``enum34`` package must be installed from PyPI.
+
+.. versionadded:: 4.19.9
+
+A disadvantage of the above is that the Python programmer needs to know the
+nature of the C/C++ enum in order to access its members.  In order to avoid
+this, this version of SIP makes the members of traditional C/C++ enums visible
+from the scope of the enum as well.
+
+It is recommended that Python code should always specify the enum scope when
+referencing an enum member.
+
+
 .. _ref-object-ownership:
 
 Ownership of Objects
@@ -683,23 +726,22 @@ Building a Private Copy of the ``sip`` Module
 
 .. versionadded:: 4.12
 
-The ``sip`` module is intended to be be used by all the SIP generated modules
-of a particular Python installation.  For example PyQt4 and PyQt5 are
-completely independent of each other but will use the same ``sip`` module.
-However, this means that all the generated modules must be built against a
-compatible version of SIP.  If you do not have complete control over the
-Python installation then this may be difficult or even impossible to achieve.
+The :mod:`sip` module is intended to be be used by all the SIP generated
+modules of a particular Python installation.  For example PyQt4 and PyQt5 are
+completely independent of each other but, historically, used the same
+:mod:`sip` module.  However, this meant that all the generated modules must be
+built against a compatible version of SIP.  If you do not have complete control
+over the Python installation then this may be difficult or even impossible to
+achieve.
 
-To get around this problem you can build a private copy of the ``sip`` module
-that has a different name and/or is placed in a different Python package.  To
-do this you use the :option:`--sip-module <configure.py --sip-module>` option
-to specify the name (optionally including a package name) of your private copy.
+To get around this problem you can build a private copy of the :mod:`sip`
+module that installed as part of your package.  To do this you use the
+:option:`--sip-module <configure.py --sip-module>` option to specify the fully
+qualified package name of your private copy.
 
-As well as building the private copy of the module, the version of the
-``sip.h`` header file will also be specific to the private copy.  You will
-probably also want to use the :option:`--incdir <configure.py -e>` option to
-specify the directory where the header file will be installed to avoid
-overwriting a copy of the default version that might already be installed.
+Note that SIP v5 will only support private copies of the :mod:`sip` module.
 
-When building your generated modules you must ensure that they ``#include`` the
-private copy of ``sip.h`` instead of any default version.
+.. versionadded:: 4.19.9
+
+In order use the private copy of the :mod:`sip` module you must use the
+:option:`-n <sip -n>` option when generating the bindings code.
