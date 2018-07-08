@@ -4,6 +4,7 @@ sip4 (4.19.12+dfsg-1) UNRELEASED; urgency=medium
   * New upstream release.
     - Fixes segfault when -n option is not specified (closes: #903263).
   * Drop header_install.diff, applied upstream.
+  * Bump API version to 12.5.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Sun, 08 Jul 2018 17:03:16 +0300
 
