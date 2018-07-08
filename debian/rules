@@ -34,7 +34,7 @@ sipgen/lexer.c: sipgen/metasrc/lexer.l
 sipgen/parser.c: sipgen/metasrc/parser.y
 	bison --yacc --defines=sipgen/parser.h --output=sipgen/parser.c sipgen/metasrc/parser.y
 
-build-%/configure-stamp: $(PYTHON3S:%=sipconfig-%) sipgen/lexer.c sipgen/parser.c
+build-%/configure-stamp: sipgen/lexer.c sipgen/parser.c
 	dh_testdir
 	mkdir -p build-$*
 	cp $(CURDIR)/sip.pyi $(CURDIR)/build-$*
@@ -60,14 +60,14 @@ dbg-build-%/configure-stamp:
 			LFLAGS="${LDFLAGS}" LFLAGS_RELEASE="" STRIP=""
 	touch $@
 
-sipconfig-3.%:
-	cat $(CURDIR)/debian/sipconfig_py3.py $(CURDIR)/debian/sipconfig_py3.snippet \
-		> $(CURDIR)/debian/sipconfig_py3.py.tmp
-	sed -e "s/@MINORVERS@/$*/g" <$(CURDIR)/debian/sipconfig_py3.py.tmp \
-		> $(CURDIR)/debian/sipconfig_py3.py
-	touch $@
+debian/sipconfig_py3.py:
+	cp debian/sipconfig_py3.header debian/sipconfig_py3.py
+	set -e; for version in $(PYTHON3S:3.%=%); do \
+		sed -e "s/@MINORVERS@/$$version/g" debian/sipconfig_py3.snippet \
+		>> debian/sipconfig_py3.py; \
+	done
 
-build: $(PYTHON3S:%=sipconfig-%) $(PYTHONS:%=build-%/build-stamp) $(PYTHONS:%=dbg-build-%/build-stamp)
+build: debian/sipconfig_py3.py $(PYTHONS:%=build-%/build-stamp) $(PYTHONS:%=dbg-build-%/build-stamp)
 
 build-%/build-stamp: build-%/configure-stamp
 	dh_testdir
@@ -86,9 +86,7 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -rf *-stamp siputils.pyc __pycache__ $(PYTHONS:%=build-%) $(PYTHONS:%=dbg-build-%)
-	cp $(CURDIR)/debian/sipconfig_py3.header $(CURDIR)/debian/sipconfig_py3.py
-	rm -rf $(CURDIR)/debian/sipconfig_py3.py.tmp
-	rm -rf $(CURDIR)/sipconfig-3.*
+	rm -f $(CURDIR)/debian/sipconfig_py3.py
 	rm -f sipgen/lexer.c sipgen/parser.h sipgen/parser.c sipgen/parser.output
 	rm -f debian/manpages/dh_sip.1 debian/manpages/dh_sip3.1
 	dh_clean debian/python3-sip.pydist
