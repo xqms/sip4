@@ -634,6 +634,10 @@ static const sipAPIDef sip_api = {
      * The following are not part of the public API.
      */
     sip_api_instance_destroyed_ex,
+    /*
+     * The following are part of the public API.
+     */
+    sip_api_convert_from_slice_object,
 };
 
 
@@ -7254,9 +7258,7 @@ static int add_lazy_container_attrs(sipTypeDef *td, sipContainerDef *cod,
     sipVariableDef *vd;
 
     /* Do the methods. */
-    pmd = cod->cod_methods;
-
-    for (i = 0; i < cod->cod_nrmethods; ++i)
+    for (pmd = cod->cod_methods, i = 0; i < cod->cod_nrmethods; ++i, ++pmd)
     {
         /* Non-lazy methods will already have been handled. */
         if (!sipTypeHasNonlazyMethod(td) || !isNonlazyMethod(pmd))
@@ -7264,14 +7266,10 @@ static int add_lazy_container_attrs(sipTypeDef *td, sipContainerDef *cod,
             if (addMethod(dict, pmd) < 0)
                 return -1;
         }
-
-        ++pmd;
     }
 
     /* Do the unscoped enum members. */
-    enm = cod->cod_enummembers;
-
-    for (i = 0; i < cod->cod_nrenummembers; ++i)
+    for (enm = cod->cod_enummembers, i = 0; i < cod->cod_nrenummembers; ++i, ++enm)
     {
         int rc;
         PyObject *val;
@@ -7304,14 +7302,10 @@ static int add_lazy_container_attrs(sipTypeDef *td, sipContainerDef *cod,
 
         if (rc < 0)
             return -1;
-
-        ++enm;
     }
 
     /* Do the variables. */
-    vd = cod->cod_variables;
-
-    for (i = 0; i < cod->cod_nrvariables; ++i)
+    for (vd = cod->cod_variables, i = 0; i < cod->cod_nrvariables; ++i, ++vd)
     {
         int rc;
         PyObject *descr;
@@ -7330,8 +7324,6 @@ static int add_lazy_container_attrs(sipTypeDef *td, sipContainerDef *cod,
 
         if (rc < 0)
             return -1;
-
-        ++vd;
     }
 
     return 0;
@@ -14152,3 +14144,26 @@ static PyObject *get_qualname(const sipTypeDef *td, PyObject *name)
             ((PyHeapTypeObject *)scope_type)->ht_qualname, name);
 }
 #endif
+
+
+/*
+ * Implement PySlice_GetIndicesEx() (or its subsequent replacement).
+ */
+int sip_api_convert_from_slice_object(PyObject *slice, SIP_SSIZE_T length,
+        SIP_SSIZE_T *start, SIP_SSIZE_T *stop, SIP_SSIZE_T *step,
+        SIP_SSIZE_T *slicelength)
+{
+#if PY_VERSION_HEX >= 0x03070000
+    if (PySlice_Unpack(slice, start, stop, step) < 0)
+        return -1;
+
+    *slicelength = PySlice_AdjustIndices(length, start, stop, *step);
+
+    return 0;
+#elif PY_VERSION_HEX >= 0x03020000
+    return PySlice_GetIndicesEx(slice, length, start, stop, step, slicelength);
+#else
+    return PySlice_GetIndicesEx((PySliceObject *)slice, length, start, stop,
+            step, slicelength);
+#endif
+}

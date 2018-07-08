@@ -1,4 +1,67 @@
+2018-07-05  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.12.
+	[290a78d4a00d] [4.19.12] <4.19-maint>
+
+	* sphinx/installation.rst, sphinx/using.rst:
+	Updated the docs regarding private copies of the sip module.
+	[e30b9d2668c4] <4.19-maint>
+
+	* NEWS, configure.py.in, sphinx/installation.rst:
+	Added the --no-module option to configure.py.
+	[02ab8cfda064] <4.19-maint>
+
+	* configure.py.in:
+	The --no-tools option does not install the sip.h. Fixed .dist-info
+	for the code generator when --no-tools is specified.
+	[b3633241320b] <4.19-maint>
+
+2018-07-04  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Updated the NEWS file.
+	[f4799b368aa1] <4.19-maint>
+
+	* sipgen/main.c:
+	Fixed the default sip module name.
+	[30b34699ad64] <4.19-maint>
+
+	* sipgen/gencode.c, siplib/array.c, siplib/sip.h.in, siplib/sipint.h,
+	siplib/siplib.c, siplib/voidptr.c:
+	Fixed the implementation of sipConvertFromSliceObject() so that
+	generated modules still support the limited API.
+	[5baed8e71fdb] <4.19-maint>
+
+	* configure.py.in:
+	Include the build system for all builds (not just legacy ones).
+	[5443d32d2928] <4.19-maint>
+
+	* configure.py.in:
+	The mk_distinfo.py script now takes a temporary installation
+	directory as an additional argument.
+	[048f7a6100c8] <4.19-maint>
+
+	* configure.py.in:
+	Fixes for invoking mk_distinfo.py for out-of-tree builds.
+	[ded7362cc94a] <4.19-maint>
+
+	* siplib/siplib.c:
+	Fixed a bug exposing traditional enum members in a class that also
+	contains a C++11 scoped enum.
+	[ccc4eda868de] <4.19-maint>
+
+2018-07-03  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* configure.py.in:
+	Fix for installing sip.h with out-of-tree builds.
+	[935f8cdab1b7] <4.19-maint>
+
 2018-06-29  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.11 for changeset a7d0f8459788
+	[77add4c87760] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.11.
