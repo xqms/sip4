@@ -54,7 +54,6 @@ dbg-build-%/configure-stamp:
 	cd dbg-build-$* \
 		&& python$*-dbg ../configure.py \
 			-d /usr/lib/python$*/dist-packages \
-			-e /usr/include/python$*_d \
 			--no-tools \
 			-u CFLAGS="${CFLAGS} ${CPPFLAGS}" CFLAGS_RELEASE="" \
 			CXXFLAGS="${CXXFLAGS} ${CPPFLAGS}" CXXFLAGS_RELEASE="" \

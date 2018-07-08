@@ -6,6 +6,7 @@ sip4 (4.19.12+dfsg-1) UNRELEASED; urgency=medium
   * Drop header_install.diff, applied upstream.
   * Bump API version to 12.5.
   * Build sipgen only once, not for every Python version.
+  * Stop passing -e option to configure.py, the default value is fine.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Sun, 08 Jul 2018 17:03:16 +0300
 
