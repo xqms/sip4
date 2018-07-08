@@ -22,6 +22,7 @@ endif
 
 PYTHONS	:= $(shell pyversions -vr) $(shell py3versions -vr)
 PYTHON3S := $(shell py3versions -vr)
+DEFAULT_PYTHON := $(shell py3versions -vd)
 
 .PRECIOUS: build-%/configure-stamp dbg-build-%/configure-stamp
 
@@ -40,12 +41,13 @@ build-%/configure-stamp: $(PYTHON3S:%=sipconfig-%) sipgen/lexer.c sipgen/parser.
 	cd build-$* \
 		&& python$* ../configure.py \
 			-d /usr/lib/python$*/dist-packages \
+			$(if $(filter $(DEFAULT_PYTHON),$*),,--no-tools) \
 			-u STRIP="" CFLAGS="${CFLAGS} ${CPPFLAGS}" CFLAGS_RELEASE="" \
 			CXXFLAGS="${CXXFLAGS} ${CPPFLAGS}" CXXFLAGS_RELEASE="" \
 			LFLAGS="${LDFLAGS}" LFLAGS_RELEASE=""
 	touch $@
 
-dbg-build-%/configure-stamp: sipgen/lexer.c sipgen/parser.c
+dbg-build-%/configure-stamp:
 	dh_testdir
 	mkdir -p dbg-build-$*
 	cp $(CURDIR)/sip.pyi $(CURDIR)/dbg-build-$*
@@ -53,6 +55,7 @@ dbg-build-%/configure-stamp: sipgen/lexer.c sipgen/parser.c
 		&& python$*-dbg ../configure.py \
 			-d /usr/lib/python$*/dist-packages \
 			-e /usr/include/python$*_d \
+			--no-tools \
 			-u CFLAGS="${CFLAGS} ${CPPFLAGS}" CFLAGS_RELEASE="" \
 			CXXFLAGS="${CXXFLAGS} ${CPPFLAGS}" CXXFLAGS_RELEASE="" \
 			LFLAGS="${LDFLAGS}" LFLAGS_RELEASE="" STRIP=""
@@ -115,7 +118,7 @@ install-arch: build
 	find debian/python*-sip-dbg ! -type d ! -name '*_d.*' ! -name *sipconfig_d* | xargs rm -f
 	find debian/python*-sip-dbg -depth -empty -exec rmdir {} \;
 
-	dh_install -a --sourcedir=$(CURDIR)/debian/tmp
+	dh_install -a
 	install -m 755 -o root -g root debian/dh_sip debian/python-sip-dev/usr/bin
 
 install-arch-3.%:
@@ -126,7 +129,7 @@ install-arch-3.%:
 	mkdir -p debian/python3-sip-dbg/usr/lib/python3.$*/dist-packages/
 	install -m 644 -o root -g root debian/sipconfig_py3.py debian/python3-sip/usr/lib/python3.$*/dist-packages/sipconfig.py
 	install -m 644 -o root -g root build-3.$*/sipconfig.py debian/python3-sip/usr/lib/python3.$*/dist-packages/sipconfig_nd$*.py
-	mv debian/python3-sip-dbg/usr/lib/python3.$*/dist-packages/sipconfig.py debian/python3-sip-dbg/usr/lib/python3/dist-packages/sipconfig_d$*.py
+	install -m 644 -o root -g root dbg-build-3.$*/sipconfig.py debian/python3-sip-dbg/usr/lib/python3.$*/dist-packages/sipconfig_d$*.py
 	mkdir -p debian/python3-sip-dev/usr/include/python3.$*dm
 	ln -s ../python3.$*m/sip.h \
 	    debian/python3-sip-dev/usr/include/python3.$*dm/sip.h
