@@ -1,4 +1,4 @@
-sip4 (4.19.12+dfsg-1) UNRELEASED; urgency=medium
+sip4 (4.19.12+dfsg-1) unstable; urgency=medium
 
   * Exclude sipgen/lexer.c and sipgen/parser.{c,h} from the tarball.
   * New upstream release.
