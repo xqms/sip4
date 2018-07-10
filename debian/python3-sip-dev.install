@@ -1,2 +1,3 @@
+usr/include/python3*
 usr/lib/python3*/*-packages/sipdistutils.py
 ../../debian/dh_sip3 usr/bin

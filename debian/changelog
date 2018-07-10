@@ -1,3 +1,20 @@
+sip4 (4.19.11+dfsg-1) unstable; urgency=medium
+
+  [ Ondřej Nový ]
+  * d/control: Remove ancient X-Python-Version field
+  * d/control: Remove ancient X-Python3-Version field
+
+  [ Dmitry Shachnev ]
+  * New upstream release.
+  * Update debian/copyright.
+  * Make python-sip depend on python-enum34.
+  * Document the new -n option in sip.1 manpage.
+  * Fix installation of siplib/sip.h.
+  * Simplify installation code in debian/rules.
+  * Bump Standards-Version to 4.1.4, no changes needed.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Tue, 03 Jul 2018 22:24:52 +0300
+
 sip4 (4.19.8+dfsg-1) unstable; urgency=medium
 
   [ Ondřej Nový ]

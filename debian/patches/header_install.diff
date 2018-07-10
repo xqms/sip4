@@ -1,0 +1,21 @@
+From: Dmitry Shachnev <mitya57@debian.org>
+Date: Mon, 2 Jul 2018 18:18:50 +0300
+Subject: Install siplib/sip.h from src_dir, not from build directory
+
+---
+ configure.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.py b/configure.py
+index 9b537c5..b83f80c 100644
+--- a/configure.py
++++ b/configure.py
+@@ -417,7 +417,7 @@ def create_makefiles(macros):
+ 
+     # The module installs.
+     module_installs=[
+-            (os.path.join(os.getcwd(), "siplib", "sip.h"), cfg.sip_inc_dir)]
++            (os.path.join(src_dir, "siplib", "sip.h"), cfg.sip_inc_dir)]
+ 
+     if opts.pyi:
+         module_installs.append((os.path.join(src_dir, 'sip.pyi'), pyi_dir))

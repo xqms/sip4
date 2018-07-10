@@ -2,13 +2,13 @@
 .\" Created by Ricardo Cardenes Medina <ricardo@conysis.com>
 .\" for the Debian 'sip' package
 .\"
-.TH SIP 1 "2017/02/15"
+.TH SIP 1 "2018/07/02"
 .SH NAME
 sip \- generates C++/Python bindings
 .SH SYNOPSIS
 .B sip
 [\-h] [\-V] [\-a\~file] [\-b\~file] [\-B\~tag] [\-c\~dir] [\-d\~file] [\-D] [\-e] [\-f] [\-g]
-[\-I\~dir] [\-j\~number] [\-k] [\-m\~file] [\-o] [\-p\~module] [\-P] [\-r] [\-s\~suffix]
+[\-I\~dir] [\-j\~number] [\-k] [\-m\~file] [\-n\~name] [\-o] [\-p\~module] [\-P] [\-r] [\-s\~suffix]
 [\-t\~tag] [\-w] [\-x\~feature] [\-X\~id:file] [\-y\~file] [\-z\~file] [@file] [file]
 .SH DESCRIPTION
 .B sip
@@ -66,6 +66,9 @@ Support keyword arguments in functions and methods.
 .TP
 .B \-m file
 The name of the XML export file. If not indicated, the file will not be generated.
+.TP
+.B \-n name
+The qualified name of the private copy of the sip module.
 .TP
 .B \-o
 Enable the automatic generation of docstrings. Disabled by default.

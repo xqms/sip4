@@ -6,8 +6,12 @@ div.body h2 {
     margin-right: 0px;
 }
 
+h1 a,
 h1 a:visited,
-h2 a:visited {
+h2 a,
+h2 a:visited,
+h3 a,
+h3 a:visited {
     color: white;
     text-decoration: none;
 }
