@@ -1,2 +1,2 @@
 version=3
-opts=dversionmangle=s/\+dfsg\d*//,repacksuffix=+dfsg http://sf.net/pyqt/sip-(.*)\.tar\.gz
+opts=dversionmangle=s/\+dfsg\d*//,repacksuffix=+dfsg https://sf.net/pyqt/sip-(.*)\.tar\.gz
