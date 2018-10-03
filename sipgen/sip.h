@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x04130c
-#define SIP_VERSION_STR     "4.19.12"
+#define SIP_VERSION         0x04130d
+#define SIP_VERSION_STR     "4.19.13"
 
 
 #ifdef TRUE
@@ -1407,6 +1407,7 @@ int sameBaseType(argDef *,argDef *);
 char *scopedNameTail(scopedNameDef *);
 scopedNameDef *copyScopedName(scopedNameDef *);
 void appendScopedName(scopedNameDef **,scopedNameDef *);
+scopedNameDef *text2scopePart(char *text);
 void freeScopedName(scopedNameDef *);
 void appendToClassList(classList **,classDef *);
 void appendCodeBlockList(codeBlockList **headp, codeBlockList *cbl);
@@ -1454,6 +1455,10 @@ void dsCtor(sipSpec *pt, classDef *cd, ctorDef *ct, int sec, FILE *fp);
 void dsOverload(sipSpec *pt, overDef *od, int is_method, int sec, FILE *fp);
 scopedNameDef *getFQCNameOfType(argDef *ad);
 scopedNameDef *removeGlobalScope(scopedNameDef *snd);
+void pyiTypeHint(sipSpec *pt, typeHintDef *thd, moduleDef *mod, int out,
+        ifaceFileList *defined, int pep484, int rest, FILE *fp);
+void restPyClass(classDef *cd, int as_ref, FILE *fp);
+void restPyEnum(enumDef *ed, int as_ref, FILE *fp);
 
 
 /* These are only here because bison publically references them. */
