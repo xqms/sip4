@@ -194,7 +194,4 @@ binary-arch: install-arch
 
 binary: binary-arch binary-indep
 
-get-orig-source:
-	uscan --verbose --download-current-version
-
-.PHONY: build binary-indep binary-arch binary clean configure get-orig-source
+.PHONY: build binary-indep binary-arch binary clean configure

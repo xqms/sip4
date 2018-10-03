@@ -6,6 +6,7 @@ sip4 (4.19.13+dfsg-1) UNRELEASED; urgency=medium
 
   [ Dmitry Shachnev ]
   * New upstream release.
+  * Remove unnecessary get-orig-source target.
 
  -- Ondřej Nový <onovy@debian.org>  Mon, 27 Aug 2018 15:04:05 +0200
 
