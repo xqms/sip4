@@ -1,4 +1,149 @@
+2018-10-01  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.13.
+	[cefb1103ef73] [4.19.13] <4.19-maint>
+
+2018-09-30  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Updated the NEWS file.
+	[8fa0f0ce57bf] <4.19-maint>
+
+2018-09-26  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c:
+	The sphinx extension now uses a single ref role.
+	[b755b909cfef] <4.19-maint>
+
+	* sipgen/export.c, sipgen/metasrc/parser.y, sipgen/sip.h.in:
+	The default values arguments have reST references added if possible
+	in the XML export.
+	[1b277c7657ea] <4.19-maint>
+
+2018-09-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c, sipgen/metasrc/parser.y:
+	Signals now respect the keyword arguments handling for documentation
+	purposes.
+	[073bf8c4ec04] <4.19-maint>
+
+	* sipgen/export.c, sipgen/type_hints.c:
+	Added argument names and default values to the XML export.
+	[ac95df0c0d7c] <4.19-maint>
+
+	* sipgen/transform.c:
+	Fixed a bug when arguments that were templates could lose their type
+	hints.
+	[59d17e57d62b] <4.19-maint>
+
+2018-09-21  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c, sipgen/sip.h.in, sipgen/type_hints.c:
+	Use reST references in the type hints for the XML export.
+	[4b6b9a9b516d] <4.19-maint>
+
+	* sipgen/export.c:
+	Handle the type hints of out arguments properly in the XML export.
+	[88504a898624] <4.19-maint>
+
+	* sipgen/export.c, sipgen/sip.h.in, sipgen/type_hints.c:
+	Use type hints in the XML export.
+	[64a719179be3] <4.19-maint>
+
+	* sipgen/export.c:
+	Restored the inclusion of reST references in the XML export.
+	[a8c265f2fe9f] <4.19-maint>
+
+2018-09-20  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c:
+	Don't include reST directives in the XML export.
+	[dd7fb1107cc8] <4.19-maint>
+
+	* sipgen/export.c:
+	Pass the fully qualified Python names of types for arguments and
+	results.
+	[4e9678c0cbc8] <4.19-maint>
+
+	* sipgen/export.c:
+	Removal of more deprecated features from the XML/API export.
+	[9ad4caca8899] <4.19-maint>
+
+	* sipgen/export.c:
+	Removed support in the XML/API export for deprecated features.
+	[5f436a87d01c] <4.19-maint>
+
+2018-09-18  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c:
+	Renamed 'cppname' to 'realname' in the XML export.
+	[5c75d7268b68] <4.19-maint>
+
+2018-09-11  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/export.c:
+	Debug the XML changes.
+	[729d6415a013] <4.19-maint>
+
+	* sipgen/export.c:
+	Added the 'cppname' attribute to the Class, Enum and EnumMember
+	elements. Don't include the enum name in the name of a member.
+	[bf9326ffec00] <4.19-maint>
+
+2018-08-13  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c:
+	Only install the legacy module if the module name is 'sip'.
+	[415a408d2338] <4.19-maint>
+
+2018-08-12  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/command_line.rst, sphinx/installation.rst:
+	Clarified the documentation regarding the name of the private sip
+	module.
+	[6b9ffbfdfa50] <4.19-maint>
+
+	* configure.py.in, siplib/siplib.c:
+	Restored the handling of --sip-module so that it doesn't assume the
+	basename of the sip module is 'sip'.
+	[face4b1f8845] <4.19-maint>
+
+2018-07-14  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* configure.py.in:
+	Fixes when using a configuration file that specifies a non-standard
+	sip module directory.
+	[af4c8f655ead] <4.19-maint>
+
+	* configure.py.in:
+	Make sure sip.h is installed from the sipgen Makefile rather than
+	the top-level Makefile.
+	[42366281cb44] <4.19-maint>
+
+2018-07-13  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* configure.py.in:
+	Fixed the installation of sip.h when --no-module is specified.
+	[f9aabf749e0d] <4.19-maint>
+
+	* configure.py.in:
+	Fixed the dist-info support for static builds.
+	[c8d571ad80ee] <4.19-maint>
+
+	* configure.py.in:
+	Fixed configure.py when using --use-qmake without --no-tools.
+	[0bfda308bc51] <4.19-maint>
+
+	* configure.py.in:
+	INSTALL_ROOT is used instead of DESTDIR when using qmake.
+	[18fc82d664f8] <4.19-maint>
+
 2018-07-05  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.12 for changeset 290a78d4a00d
+	[1c2d897d7106] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.12.

@@ -173,7 +173,6 @@ static apiVersionRangeDef *getAPIRange(optFlags *optflgs);
 static apiVersionRangeDef *convertAPIRange(moduleDef *mod, nameDef *name,
         int from, int to);
 static char *convertFeaturedString(char *fs);
-static scopedNameDef *text2scopePart(char *text);
 static KwArgs keywordArgs(moduleDef *mod, optFlags *optflgs, signatureDef *sd,
         int need_name);
 static char *strip(char *s);
@@ -7586,7 +7585,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
     if (getDeprecated(optflgs))
         setIsDeprecated(od);
 
-    if (!isPrivate(od) && !isSignal(od) && (od->common->slot == no_slot || od->common->slot == call_slot))
+    if (!isPrivate(od) && (od->common->slot == no_slot || od->common->slot == call_slot))
     {
         od->kwargs = keywordArgs(mod, optflgs, &od->pysig, hasProtected(od->common));
 
@@ -7598,7 +7597,7 @@ static void newFunction(sipSpec *pt, moduleDef *mod, classDef *c_scope,
          * we need to make sure that any other overloads' keyword argument
          * names are marked as used.
          */
-        if (isProtected(od) && !inMainModule())
+        if (!isSignal(od) && isProtected(od) && !inMainModule())
         {
             overDef *kwod;
 
@@ -8371,7 +8370,7 @@ void freeScopedName(scopedNameDef *snd)
 /*
  * Convert a text string to a scope part structure.
  */
-static scopedNameDef *text2scopePart(char *text)
+scopedNameDef *text2scopePart(char *text)
 {
     scopedNameDef *snd;
 
