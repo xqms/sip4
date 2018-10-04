@@ -154,8 +154,8 @@ binary-common:
 	pod2man -c Debhelper -r '' debian/dh_sip debian/manpages/dh_sip.1
 	pod2man -c Debhelper -r '' debian/dh_sip3 debian/manpages/dh_sip3.1
 	dh_installman
-	dh_installchangelogs -Npython-sip-dbg -Npython3-sip-dbg NEWS
-	dh_installdocs -Npython-sip-dbg -Npython3-sip-dbg
+	dh_installchangelogs -Npython-sip-dbg -Npython3-sip-dbg
+	dh_installdocs -Npython-sip-dbg -Npython3-sip-dbg -A NEWS
 ifeq (,$(findstring -a, $(DH_OPTIONS)))
 	dh_sphinxdoc -p python-sip-doc
 endif

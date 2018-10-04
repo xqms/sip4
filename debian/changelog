@@ -8,6 +8,7 @@ sip4 (4.19.13+dfsg-1) UNRELEASED; urgency=medium
   * New upstream release.
   * Remove unnecessary get-orig-source target.
   * Update debhelper compat level to 11.
+  * Install both upstream changelog and NEWS, per Policy 12.7.
 
  -- Ondřej Nový <onovy@debian.org>  Mon, 27 Aug 2018 15:04:05 +0200
 
