@@ -647,6 +647,7 @@ static const sipAPIDef sip_api = {
      * The following are part of the public API.
      */
     sip_api_convert_from_slice_object,
+    sip_api_long_as_size_t,
 };
 
 
@@ -692,6 +693,8 @@ typedef struct _sipParseFailure {
     PyObject *detail_obj;           /* The detail if a Python object. */
     int arg_nr;                     /* The wrong positional argument. */
     const char *arg_name;           /* The wrong keyword argument. */
+    int overflow_arg_nr;            /* The overflowed positional argument. */
+    const char *overflow_arg_name;  /* The overflowed keyword argument. */
 } sipParseFailure;
 
 
@@ -933,7 +936,7 @@ static int addLicense(PyObject *dict, sipLicenseDef *lc);
 static PyObject *assign(PyObject *self, PyObject *args);
 static PyObject *cast(PyObject *self, PyObject *args);
 static PyObject *callDtor(PyObject *self, PyObject *args);
-static PyObject *dumpWrapper(PyObject *self, PyObject *args);
+static PyObject *dumpWrapper(PyObject *self, PyObject *arg);
 static PyObject *enableAutoconversion(PyObject *self, PyObject *args);
 static PyObject *isDeleted(PyObject *self, PyObject *args);
 static PyObject *isPyCreated(PyObject *self, PyObject *args);
@@ -948,6 +951,7 @@ static PyObject *setDestroyOnExit(PyObject *self, PyObject *args);
 static void print_object(const char *label, PyObject *obj);
 static void addToParent(sipWrapper *self, sipWrapper *owner);
 static void removeFromParent(sipWrapper *self);
+static void detachChildren(sipWrapper *self);
 static void release(void *addr, const sipTypeDef *td, int state);
 static void callPyDtor(sipSimpleWrapper *self);
 static int parseBytes_AsCharArray(PyObject *obj, const char **ap,
@@ -1060,7 +1064,7 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
         {"assign", assign, METH_VARARGS, NULL},
         {"cast", cast, METH_VARARGS, NULL},
         {"delete", callDtor, METH_VARARGS, NULL},
-        {"dump", dumpWrapper, METH_VARARGS, NULL},
+        {"dump", dumpWrapper, METH_O, NULL},
         {"enableautoconversion", enableAutoconversion, METH_VARARGS, NULL},
         {"enableoverflowchecking", sipEnableOverflowChecking, METH_VARARGS, NULL},
         {"getapi", sipGetAPI, METH_VARARGS, NULL},
@@ -1322,43 +1326,49 @@ static PyObject *setTraceMask(PyObject *self, PyObject *args)
 
 
 /*
- * Dump various bits of potentially useful information to stdout.
+ * Dump various bits of potentially useful information to stdout.  Note that we
+ * use the same calling convention as sys.getrefcount() so that it has the
+ * same caveat regarding the reference count.
  */
-static PyObject *dumpWrapper(PyObject *self, PyObject *args)
+static PyObject *dumpWrapper(PyObject *self, PyObject *arg)
 {
     sipSimpleWrapper *sw;
 
     (void)self;
 
-    if (PyArg_ParseTuple(args, "O!:dump", &sipSimpleWrapper_Type, &sw))
+    if (!PyObject_TypeCheck(arg, (PyTypeObject *)&sipSimpleWrapper_Type))
     {
-        print_object(NULL, (PyObject *)sw);
-
-#if PY_VERSION_HEX >= 0x02050000
-        printf("    Reference count: %" PY_FORMAT_SIZE_T "d\n", Py_REFCNT(sw));
-#else
-        printf("    Reference count: %d\n", Py_REFCNT(sw));
-#endif
-        printf("    Address of wrapped object: %p\n", sip_api_get_address(sw));
-        printf("    Created by: %s\n", (sipIsDerived(sw) ? "Python" : "C/C++"));
-        printf("    To be destroyed by: %s\n", (sipIsPyOwned(sw) ? "Python" : "C/C++"));
-
-        if (PyObject_TypeCheck((PyObject *)sw, (PyTypeObject *)&sipWrapper_Type))
-        {
-            sipWrapper *w = (sipWrapper *)sw;
-
-            print_object("Parent wrapper", (PyObject *)w->parent);
-            print_object("Next sibling wrapper", (PyObject *)w->sibling_next);
-            print_object("Previous sibling wrapper",
-                    (PyObject *)w->sibling_prev);
-            print_object("First child wrapper", (PyObject *)w->first_child);
-        }
-
-        Py_INCREF(Py_None);
-        return Py_None;
+        PyErr_Format(PyExc_TypeError,
+                "dump() argument 1 must be sip.simplewrapper, not %s",
+                Py_TYPE(arg)->tp_name);
+        return NULL;
     }
 
-    return NULL;
+    sw = (sipSimpleWrapper *)arg;
+
+    print_object(NULL, (PyObject *)sw);
+
+#if PY_VERSION_HEX >= 0x02050000
+    printf("    Reference count: %" PY_FORMAT_SIZE_T "d\n", Py_REFCNT(sw));
+#else
+    printf("    Reference count: %d\n", Py_REFCNT(sw));
+#endif
+    printf("    Address of wrapped object: %p\n", sip_api_get_address(sw));
+    printf("    Created by: %s\n", (sipIsDerived(sw) ? "Python" : "C/C++"));
+    printf("    To be destroyed by: %s\n", (sipIsPyOwned(sw) ? "Python" : "C/C++"));
+
+    if (PyObject_TypeCheck((PyObject *)sw, (PyTypeObject *)&sipWrapper_Type))
+    {
+        sipWrapper *w = (sipWrapper *)sw;
+
+        print_object("Parent wrapper", (PyObject *)w->parent);
+        print_object("Next sibling wrapper", (PyObject *)w->sibling_next);
+        print_object("Previous sibling wrapper", (PyObject *)w->sibling_prev);
+        print_object("First child wrapper", (PyObject *)w->first_child);
+    }
+
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 
@@ -2650,6 +2660,10 @@ static PyObject *buildObject(PyObject *obj, const char *fmt, va_list va)
             el = PyLong_FromUnsignedLong(va_arg(va, unsigned));
             break;
 
+        case '=':
+            el = PyLong_FromUnsignedLong(va_arg(va, size_t));
+            break;
+
         case 'B':
             {
                 /* This is deprecated. */
@@ -3158,6 +3172,19 @@ static int parseResult(PyObject *method, PyObject *res,
 
                 break;
 
+            case '=':
+                {
+                    size_t *p = va_arg(va, size_t *);
+                    size_t v = sip_api_long_as_size_t(arg);
+
+                    if (PyErr_Occurred())
+                        invalid = TRUE;
+                    else if (p != NULL)
+                        *p = v;
+                }
+
+                break;
+
             case 'l':
                 {
                     long *p = va_arg(va, long *);
@@ -3270,14 +3297,9 @@ static int parseResult(PyObject *method, PyObject *res,
                     const char **p = va_arg(va, const char **);
 
                     if (parseBytes_AsString(arg, p) < 0)
-                    {
                         invalid = TRUE;
-                    }
                     else
-                    {
-                        Py_INCREF(arg);
                         sip_api_keep_reference((PyObject *)py_self, key, arg);
-                    }
                 }
 
                 break;
@@ -4980,6 +5002,25 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
                 break;
             }
 
+        case '=':
+            {
+                /* size_t integer. */
+
+                size_t *p = va_arg(va, size_t *);
+
+                if (arg != NULL)
+                {
+                    size_t v = sip_api_long_as_size_t(arg);
+
+                    if (PyErr_Occurred())
+                        handle_failed_int_conversion(&failure, arg);
+                    else
+                        *p = v;
+                }
+
+                break;
+            }
+
         case 'L':
             {
                 /* Signed char. */
@@ -5405,24 +5446,24 @@ static int parsePass1(PyObject **parseErrp, sipSimpleWrapper **selfp,
             exc_str = "invalid exception text";
 #endif
 
-        if (failure.arg_nr >= 0)
+        if (failure.overflow_arg_nr >= 0)
         {
 #if PY_MAJOR_VERSION >= 3
             PyErr_Format(PyExc_OverflowError, "argument %d overflowed: %S",
-                    failure.arg_nr, failure.detail_obj);
+                    failure.overflow_arg_nr, failure.detail_obj);
 #else
             PyErr_Format(PyExc_OverflowError, "argument %d overflowed: %s",
-                    failure.arg_nr, exc_str);
+                    failure.overflow_arg_nr, exc_str);
 #endif
         }
         else
         {
 #if PY_MAJOR_VERSION >= 3
             PyErr_Format(PyExc_OverflowError, "argument '%s' overflowed: %S",
-                    failure.arg_name, failure.detail_obj);
+                    failure.overflow_arg_name, failure.detail_obj);
 #else
             PyErr_Format(PyExc_OverflowError, "argument '%s' overflowed: %s",
-                    failure.arg_name, exc_str);
+                    failure.overflow_arg_name, exc_str);
 #endif
         }
 
@@ -5471,6 +5512,8 @@ static void handle_failed_int_conversion(sipParseFailure *pf, PyObject *arg)
         Py_XDECREF(pf->detail_obj);
 
         pf->reason = Overflow;
+        pf->overflow_arg_nr = pf->arg_nr;
+        pf->overflow_arg_name = pf->arg_name;
         pf->detail_obj = xvalue;
         Py_INCREF(xvalue);
     }
@@ -5481,9 +5524,7 @@ static void handle_failed_int_conversion(sipParseFailure *pf, PyObject *arg)
         Py_INCREF(arg);
     }
 
-    Py_XDECREF(xtype);
-    Py_XDECREF(xvalue);
-    Py_XDECREF(xtb);
+    PyErr_Restore(xtype, xvalue, xtb);
 }
 
 
@@ -6201,6 +6242,16 @@ static void removeFromParent(sipWrapper *self)
          */
         Py_DECREF((sipSimpleWrapper *)self);
     }
+}
+
+
+/*
+ * Detach and children of a parent.
+ */
+static void detachChildren(sipWrapper *self)
+{
+    while (self->first_child != NULL)
+        removeFromParent(self->first_child);
 }
 
 
@@ -6979,7 +7030,7 @@ static PyObject *createScopedEnum(sipExportedModuleDef *client,
     /* Get the enum type if we haven't done so already. */
     if (enum_type == NULL)
     {
-        if ((enum_type = import_module_attr("enum", "Enum")) == NULL)
+        if ((enum_type = import_module_attr("enum", "IntEnum")) == NULL)
             goto ret_err;
     }
 
@@ -8228,7 +8279,9 @@ static void sip_api_transfer_back(PyObject *self)
             Py_DECREF(sw);
         }
         else
+        {
             removeFromParent((sipWrapper *)sw);
+        }
 
         sipSetPyOwned(sw);
     }
@@ -8251,7 +8304,9 @@ static void sip_api_transfer_break(PyObject *self)
             Py_DECREF(sw);
         }
         else
+        {
             removeFromParent((sipWrapper *)sw);
+        }
     }
 }
 
@@ -11626,9 +11681,8 @@ static int sipWrapper_clear(sipWrapper *self)
         }
     }
 
-    /* Detach children (which will be owned by C/C++). */
-    while ((sw = (sipSimpleWrapper *)self->first_child) != NULL)
-        removeFromParent(self->first_child);
+    /* Detach any children (which will be owned by C/C++). */
+    detachChildren(self);
 
     return vret;
 }

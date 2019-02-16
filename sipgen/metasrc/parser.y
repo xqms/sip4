@@ -39,7 +39,7 @@ static moduleDef *currentModule;        /* The current module being parsed. */
 static mappedTypeDef *currentMappedType;    /* The current mapped type. */
 static enumDef *currentEnum;            /* The current enum being parsed. */
 static int sectionFlags;                /* The current section flags. */
-static int currentOverIsVirt;           /* Set if the overload is virtual. */
+static int currentIsVirt;               /* Set if the callable is virtual. */
 static int currentCtorIsExplicit;       /* Set if the ctor is explicit. */
 static int currentIsStatic;             /* Set if the current is static. */
 static int currentIsSignal;             /* Set if the current is Q_SIGNAL. */
@@ -347,6 +347,7 @@ static scopedNameDef *fullyQualifiedName(scopedNameDef *snd);
 %token          TK_SIPSLOTCON
 %token          TK_SIPSLOTDIS
 %token          TK_SIPSSIZET
+%token          TK_SIZET
 %token <number> TK_NUMBER_VALUE
 %token <real>   TK_REAL_VALUE
 %token          TK_TYPEDEF
@@ -364,7 +365,6 @@ static scopedNameDef *fullyQualifiedName(scopedNameDef *snd);
 %token          TK_QOBJECT
 %token          TK_EXCEPTION
 %token          TK_RAISECODE
-%token          TK_VIRTERRORCODE
 %token          TK_EXPLICIT
 %token          TK_TEMPLATE
 %token          TK_FINAL
@@ -412,7 +412,6 @@ static scopedNameDef *fullyQualifiedName(scopedNameDef *snd);
 %type <number>          optref
 %type <number>          optconst
 %type <number>          optfinal
-%type <number>          optvirtual
 %type <number>          optabstract
 %type <number>          optnumber
 %type <value>           simplevalue
@@ -2890,6 +2889,9 @@ simplevalue:    scopedname {
             $$.vtype = fcall_value;
             $$.u.fcd = fcd;
         }
+    |   '{' '}' {
+            $$.vtype = empty_value;
+        }
     |   TK_REAL_VALUE {
             $$.vtype = real_value;
             $$.u.vreal = $1;
@@ -3030,6 +3032,7 @@ struct:     TK_STRUCT scopedname {
                     "NoTypeHint",
                     "PyName",
                     "PyQtFlags",
+                    "PyQtFlagsEnums",
                     "PyQtInterface",
                     "PyQtNoQMetaObject",
                     "Supertype",
@@ -3109,6 +3112,7 @@ class:  TK_CLASS scopedname {
                     "NoDefaultCtors",
                     "PyName",
                     "PyQtFlags",
+                    "PyQtFlagsEnums",
                     "PyQtInterface",
                     "PyQtNoQMetaObject",
                     "Supertype",
@@ -3551,7 +3555,12 @@ optslot:    {
         }
     ;
 
-dtor:       optvirtual '~' TK_NAME_VALUE '(' ')' optexceptions optabstract optflags ';' premethodcode methodcode virtualcatchercode {
+dtor:
+        TK_VIRTUAL {currentIsVirt = TRUE;} dtor_decl
+    |   dtor_decl
+    ;
+
+dtor_decl:  '~' TK_NAME_VALUE '(' ')' optexceptions optabstract optflags ';' premethodcode methodcode virtualcatchercode {
             /* Note that we allow non-virtual dtors in C modules. */
 
             if (notSkipping())
@@ -3564,22 +3573,22 @@ dtor:       optvirtual '~' TK_NAME_VALUE '(' ')' optexceptions optabstract optfl
 
                 classDef *cd = currentScope();
 
-                checkAnnos(&$8, annos);
+                checkAnnos(&$7, annos);
 
-                if (strcmp(classBaseName(cd),$3) != 0)
+                if (strcmp(classBaseName(cd),$2) != 0)
                     yyerror("Destructor doesn't have the same name as its class");
 
                 if (isDtor(cd))
                     yyerror("Destructor has already been defined");
 
-                if (currentSpec -> genc && $10 == NULL)
+                if (currentSpec -> genc && $9 == NULL)
                     yyerror("Destructor in C modules must include %MethodCode");
 
 
-                appendCodeBlock(&cd->dealloccode, $10); /* premethodcode */
-                appendCodeBlock(&cd->dealloccode, $11); /* methodcode */
-                appendCodeBlock(&cd->dtorcode, $12);
-                cd -> dtorexceptions = $6;
+                appendCodeBlock(&cd->dealloccode, $9);  /* premethodcode */
+                appendCodeBlock(&cd->dealloccode, $10); /* methodcode */
+                appendCodeBlock(&cd->dtorcode, $11);
+                cd -> dtorexceptions = $5;
 
                 /*
                  * Note that we don't apply the protected/public hack to dtors
@@ -3587,9 +3596,9 @@ dtor:       optvirtual '~' TK_NAME_VALUE '(' ')' optexceptions optabstract optfl
                  */
                 cd->classflags |= sectionFlags;
 
-                if ($7)
+                if ($6)
                 {
-                    if (!$1)
+                    if (!currentIsVirt)
                         yyerror("Abstract destructor must be virtual");
 
                     setIsAbstractClass(cd);
@@ -3599,7 +3608,7 @@ dtor:       optvirtual '~' TK_NAME_VALUE '(' ')' optexceptions optabstract optfl
                  * The class has a shadow if we have a virtual dtor or some
                  * dtor code.
                  */
-                if ($1 || $11 != NULL)
+                if (currentIsVirt || $10 != NULL)
                 {
                     if (currentSpec -> genc)
                         yyerror("Virtual destructor or %VirtualCatcherCode not allowed in a C module");
@@ -3607,11 +3616,13 @@ dtor:       optvirtual '~' TK_NAME_VALUE '(' ')' optexceptions optabstract optfl
                     setNeedsShadow(cd);
                 }
 
-                if (getReleaseGIL(&$8))
+                if (getReleaseGIL(&$7))
                     setIsReleaseGILDtor(cd);
-                else if (getHoldGIL(&$8))
+                else if (getHoldGIL(&$7))
                     setIsHoldGILDtor(cd);
             }
+
+            currentIsVirt = FALSE;
         }
     ;
 
@@ -3694,14 +3705,6 @@ optsig: {
         }
     ;
 
-optvirtual: {
-            $$ = FALSE;
-        }
-    |   TK_VIRTUAL {
-            $$ = TRUE;
-        }
-    ;
-
 function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optfinal optexceptions optabstract optflags optsig ';' optdocstring premethodcode methodcode virtualcatchercode virtualcallcode {
             if (notSkipping())
             {
@@ -3711,14 +3714,14 @@ function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optfinal optexception
 
                 newFunction(currentSpec, currentModule, currentScope(), NULL,
                         NULL, sectionFlags, currentIsStatic, currentIsSignal,
-                        currentIsSlot, currentOverIsVirt, $2, &$4, $6, $9,
-                        &$10, $15, $16, $17, $8, $11, $13, $7, $14);
+                        currentIsSlot, currentIsVirt, $2, &$4, $6, $9, &$10,
+                        $15, $16, $17, $8, $11, $13, $7, $14);
             }
 
             currentIsStatic = FALSE;
             currentIsSignal = FALSE;
             currentIsSlot = FALSE;
-            currentOverIsVirt = FALSE;
+            currentIsVirt = FALSE;
         }
     |   cpptype TK_OPERATOR '=' '(' cpptype ')' ';' {
             /*
@@ -3738,7 +3741,7 @@ function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optfinal optexception
             currentIsStatic = FALSE;
             currentIsSignal = FALSE;
             currentIsSlot = FALSE;
-            currentOverIsVirt = FALSE;
+            currentIsVirt = FALSE;
         }
     |   cpptype TK_OPERATOR operatorname '(' arglist ')' optconst optfinal optexceptions optabstract optflags optsig ';' premethodcode methodcode virtualcatchercode virtualcallcode {
             if (notSkipping())
@@ -3775,14 +3778,14 @@ function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optfinal optexception
 
                 newFunction(currentSpec, currentModule, cd, ns_scope, NULL,
                         sectionFlags, currentIsStatic, currentIsSignal,
-                        currentIsSlot, currentOverIsVirt, $3, &$5, $7, $10,
-                        &$11, $15, $16, $17, $9, $12, NULL, $8, $14);
+                        currentIsSlot, currentIsVirt, $3, &$5, $7, $10, &$11,
+                        $15, $16, $17, $9, $12, NULL, $8, $14);
             }
 
             currentIsStatic = FALSE;
             currentIsSignal = FALSE;
             currentIsSlot = FALSE;
-            currentOverIsVirt = FALSE;
+            currentIsVirt = FALSE;
         }
     |   TK_OPERATOR cpptype '(' arglist ')' optconst optfinal optexceptions optabstract optflags optsig ';' premethodcode methodcode virtualcatchercode virtualcallcode {
             if (notSkipping())
@@ -3838,8 +3841,8 @@ function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optfinal optexception
 
                     newFunction(currentSpec, currentModule, scope, NULL, NULL,
                             sectionFlags, currentIsStatic, currentIsSignal,
-                            currentIsSlot, currentOverIsVirt, sname, &$4, $6,
-                            $9, &$10, $14, $15, $16, $8, $11, NULL, $7, $13);
+                            currentIsSlot, currentIsVirt, sname, &$4, $6, $9,
+                            &$10, $14, $15, $16, $8, $11, NULL, $7, $13);
                 }
                 else
                 {
@@ -3861,7 +3864,7 @@ function:   cpptype TK_NAME_VALUE '(' arglist ')' optconst optfinal optexception
             currentIsStatic = FALSE;
             currentIsSignal = FALSE;
             currentIsSlot = FALSE;
-            currentOverIsVirt = FALSE;
+            currentIsVirt = FALSE;
         }
     ;
 
@@ -4245,7 +4248,7 @@ varmem:
     ;
 
 member:
-        TK_VIRTUAL {currentOverIsVirt = TRUE;} function
+        TK_VIRTUAL {currentIsVirt = TRUE;} function
     |   function
     ;
 
@@ -4670,6 +4673,10 @@ basetype:   scopedname {
             memset(&$$, 0, sizeof (argDef));
             $$.atype = ssize_type;
         }
+    |   TK_SIZET {
+            memset(&$$, 0, sizeof (argDef));
+            $$.atype = size_type;
+        }
     |   TK_ELLIPSIS {
             memset(&$$, 0, sizeof (argDef));
             $$.atype = ellipsis_type;
@@ -4762,7 +4769,7 @@ void parse(sipSpec *spec, FILE *fp, char *filename, int strict,
     excludedQualifiers = xfl;
     currentModule = NULL;
     currentMappedType = NULL;
-    currentOverIsVirt = FALSE;
+    currentIsVirt = FALSE;
     currentCtorIsExplicit = FALSE;
     currentIsStatic = FALSE;
     currentIsSignal = FALSE;
@@ -5304,6 +5311,13 @@ static void finishClass(sipSpec *pt, moduleDef *mod, classDef *cd,
     if ((flg = getOptFlag(of, "FileExtension", string_flag)) != NULL)
         cd->iff->file_extension = flg->fvalue.sval;
 
+    if ((flg = getOptFlag(of, "PyQtFlagsEnums", string_list_flag)) != NULL)
+    {
+        cd->pyqt_flags_enums = flg->fvalue.slval;
+        cd->pyqt_flags = 1;
+    }
+
+    /* This is deprecated and only used by versions before v5.12. */
     if ((flg = getOptFlag(of, "PyQtFlags", integer_flag)) != NULL)
         cd->pyqt_flags = flg->fvalue.ival;
 
@@ -6065,6 +6079,7 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
     argDef *ad;
     ifaceFileList *iffl, **used;
     classList *cl;
+    stringList *sl;
 
     type_names = type_values = NULL;
     appendTypeStrings(classFQCName(tcd->cd), &tcd->sig, &td->types, NULL, &type_names, &type_values);
@@ -6132,6 +6147,20 @@ static void instantiateClassTemplate(sipSpec *pt, moduleDef *mod,
         cd->typehint_out = newTypeHint(
                 templateString(cd->typehint_out->raw_hint, type_names,
                         type_values));
+
+    /* Handle any flagged enums. */
+    if ((sl = cd->pyqt_flags_enums) != NULL)
+    {
+        cd->pyqt_flags_enums = NULL;
+
+        do
+        {
+            appendString(&cd->pyqt_flags_enums,
+                    templateString(sl->s, type_names, type_values));
+            sl = sl->next;
+        }
+        while (sl != NULL);
+    }
 
     /* Handle the super-classes. */
     for (cl = cd->supers; cl != NULL; cl = cl->next)
@@ -7123,6 +7152,7 @@ static void newCtor(moduleDef *mod, char *name, int sectFlags,
         throwArgs *exceptions, signatureDef *cppsig, int explicit,
         docstringDef *docstring, codeBlock *premethodcode)
 {
+    int a;
     ctorDef *ct, **ctp;
     classDef *cd = currentScope();
 
@@ -7202,6 +7232,15 @@ static void newCtor(moduleDef *mod, char *name, int sectFlags,
             yyerror("A constructor with the /Default/ annotation has already been defined");
 
         cd->defctor = ct;
+    }
+
+    /* /Transfer/ arguments need the wrapper. */
+    for (a = 0; a < ct->pysig.nrArgs; ++a)
+    {
+        argDef *ad = &ct->pysig.args[a];
+
+        if (isTransferred(ad))
+            setGetWrapper(ad);
     }
 
     /* Append to the list. */
@@ -7997,6 +8036,43 @@ static optFlag *getOptFlag(optFlags *flgs, const char *name, flagType ft)
             }
         }
 
+        /* A string list will look like a string. */
+        if (ft == string_list_flag && of->ftype == string_flag)
+        {
+            char *s;
+
+            s = of->fvalue.sval;
+            of->fvalue.slval = NULL;
+
+            while (*s != '\0')
+            {
+                char *start;
+
+                while (*s == ' ')
+                    ++s;
+
+                start = s;
+
+                if (*start != '\0')
+                {
+                    char saved, *end;
+
+                    for (end = start + 1; *end != ' ' && *end != '\0'; ++end)
+                        ;
+
+                    saved = *end;
+                    *end = '\0';
+
+                    appendString(&of->fvalue.slval, start);
+
+                    *end = saved;
+                    s = end;
+                }
+            }
+
+            of->ftype = string_list_flag;
+        }
+
         if (ft != of->ftype)
             yyerror("Annotation has a value of the wrong type");
     }
@@ -8690,9 +8766,20 @@ static classDef *currentScope(void)
 static void newQualifier(moduleDef *mod, int line, int order,
         int default_enabled, const char *name, qualType qt)
 {
-    /* Check it doesn't already exist. */
-    if (findQualifier(name) != NULL)
-        yyerror("Version is already defined");
+    qualDef *qd;
+
+    /* See if it already exists. */
+    if ((qd = findQualifier(name)) != NULL)
+    {
+        /*
+         * We allow versions to be defined more than once so long as they are
+         * in different timelines.  It is sometimes necessary to define the
+         * same timeline in multiple modules if a module that others depend on
+         * is added during the timeline (eg. QtWebEngineCore).
+         */
+        if (qd->qtype != time_qualifier || qt != time_qualifier || (qd->module == mod && qd->line == line))
+            yyerror("Version is already defined");
+    }
 
     allocQualifier(mod, line, order, default_enabled, name, qt);
 }
