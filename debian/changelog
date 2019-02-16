@@ -1,3 +1,9 @@
+sip4 (4.19.14+dfsg-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 16 Feb 2019 17:26:54 +0300
+
 sip4 (4.19.13+dfsg-2) unstable; urgency=medium
 
   * Team upload.
