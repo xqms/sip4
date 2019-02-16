@@ -1,7 +1,7 @@
 /*
  * The parse tree transformation module for SIP.
  *
- * Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -531,6 +531,7 @@ static void addComplementarySlot(sipSpec *pt, classDef *cd, memberDef *md,
         resetIsVirtual(od2);
         setIsComplementary(od2);
         od2->common = md2;
+        od2->cppname = cslot_name;
 
         od2->next = cd->overs;
         cd->overs = od2;
@@ -960,6 +961,9 @@ static void moveGlobalSlot(sipSpec *pt, moduleDef *mod, memberDef *gmd)
         }
 
         /* Move the overload to the end of the destination list. */
+        if (second)
+            setIsReflected(od);
+
         setIsPublic(od);
         setIsGlobal(od);
         od->common = md;
@@ -2203,6 +2207,7 @@ static void resolveVariableType(sipSpec *pt, varDef *vd)
     case ulonglong_type:
     case longlong_type:
     case ssize_type:
+    case size_type:
     case pyobject_type:
     case pytuple_type:
     case pylist_type:
@@ -2347,6 +2352,7 @@ static int supportedType(classDef *cd,overDef *od,argDef *ad,int outputs)
     case ulonglong_type:
     case longlong_type:
     case ssize_type:
+    case size_type:
     case pyobject_type:
     case pytuple_type:
     case pylist_type:
@@ -2603,8 +2609,8 @@ int sameSignature(signatureDef *sd1, signatureDef *sd2, int strict)
 #define pyAsFloat(t)    ((t) == cfloat_type || (t) == float_type || \
             (t) == cdouble_type || (t) == double_type)
 #define pyAsInt(t)  ((t) == bool_type || (t) == ssize_type || \
-            (t) == byte_type || (t) == sbyte_type || (t) == ubyte_type || \
-            (t) == short_type || (t) == ushort_type || \
+            (t) == size_type || (t) == byte_type || (t) == sbyte_type || \
+            (t) == ubyte_type || (t) == short_type || (t) == ushort_type || \
             (t) == cint_type || (t) == int_type || (t) == uint_type)
 #define pyAsLong(t) ((t) == long_type || (t) == longlong_type)
 #define pyAsULong(t)    ((t) == ulong_type || (t) == ulonglong_type)

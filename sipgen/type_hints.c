@@ -1,7 +1,7 @@
 /*
  * The PEP 484 type hints generator for SIP.
  *
- * Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -1060,6 +1060,7 @@ static void pyiType(sipSpec *pt, moduleDef *mod, argDef *ad, int out, int sec,
     case int_type:
     case cint_type:
     case ssize_type:
+    case size_type:
         type_name = "int";
         break;
 
@@ -1434,7 +1435,8 @@ static void pyiTypeHintNode(typeHintNodeDef *node, moduleDef *mod,
     switch (node->type)
     {
     case typing_node:
-        fprintf(fp, "%s%s", (pep484 ? "typing." : ""), node->u.name);
+        if (node->u.name != NULL)
+            fprintf(fp, "%s%s", (pep484 ? "typing." : ""), node->u.name);
 
         if (node->children != NULL)
         {
@@ -1460,7 +1462,7 @@ static void pyiTypeHintNode(typeHintNodeDef *node, moduleDef *mod,
 
     case class_node:
         if (rest)
-            restPyClass(node->u.cd, TRUE, fp);
+            restPyClass(node->u.cd, fp);
         else
             prClassRef(node->u.cd, mod, defined, pep484, fp);
 
@@ -1468,14 +1470,10 @@ static void pyiTypeHintNode(typeHintNodeDef *node, moduleDef *mod,
 
     case enum_node:
         if (rest)
-            restPyEnum(node->u.ed, TRUE, fp);
+            restPyEnum(node->u.ed, fp);
         else
             prEnumRef(node->u.ed, mod, defined, pep484, fp);
 
-        break;
-
-    case brackets_node:
-        fprintf(fp, "[]");
         break;
 
     case other_node:
@@ -1585,15 +1583,22 @@ static int parseTypeHintNode(sipSpec *pt, int out, int top_level, char *start,
             break;
         }
 
-    /* We must have a name unless we have empty brackets. */
+    /* We must have a name unless we have brackets. */
     if (name_start == name_end)
     {
-        if (top_level && have_brackets && children == NULL)
+        /* Check we have brackets. */
+        if (!have_brackets)
             return FALSE;
 
-        /* Return the representation of empty brackets. */
+        /* Check we don't have empty brackets at the top level. */
+        if (top_level && children == NULL)
+            return FALSE;
+
+        /* Return the representation of brackets. */
         node = sipMalloc(sizeof (typeHintNodeDef));
-        node->type = brackets_node;
+        node->type = typing_node;
+        node->u.name = NULL;
+        node->children = children;
     }
     else
     {

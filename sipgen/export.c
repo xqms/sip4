@@ -1,7 +1,7 @@
 /*
  * The XML and API file generator module for SIP.
  *
- * Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -52,13 +52,14 @@ static void xmlCtor(sipSpec *pt, moduleDef *mod, classDef *scope, ctorDef *ct,
 static void xmlOverload(sipSpec *pt, moduleDef *mod, classDef *scope,
         memberDef *md, overDef *od, classDef *xtnds, int stat, int indent,
         FILE *fp);
-static void xmlCppSignature(FILE *fp, overDef *od);
+static void xmlCppSignature(FILE *fp, signatureDef *sd, int is_const);
 static void xmlArgument(sipSpec *pt, moduleDef *mod, argDef *ad, int out,
         KwArgs kwargs, int res_xfer, int indent, FILE *fp);
 static void xmlType(sipSpec *pt, moduleDef *mod, argDef *ad, int out,
         KwArgs kwargs, FILE *fp);
 static void xmlIndent(int indent, FILE *fp);
-static void xmlRealName(scopedNameDef *fqcname, FILE *fp);
+static void xmlRealName(scopedNameDef *fqcname, const char *member, FILE *fp);
+static void xmlRealScopedName(classDef *scope, const char *cppname, FILE *fp);
 static const char *pyType(sipSpec *pt, argDef *ad, classDef **scope);
 static void exportPythonSignature(sipSpec *pt, FILE *fp, signatureDef *sd,
         int names, int defaults, int in_str, int is_signal);
@@ -66,6 +67,8 @@ static void restPyEnumMember(enumMemberDef *emd, FILE *fp);
 static void restPyAttribute(moduleDef *mod, classDef *scope, nameDef *name,
         FILE *fp);
 static int restValue(sipSpec *pt, valueDef *value, FILE *fp);
+static const char *reflectedSlot(slotType st);
+static int hasCppSignature(signatureDef *sd);
 
 
 /*
@@ -326,9 +329,34 @@ void generateXML(sipSpec *pt, moduleDef *mod, const char *xmlFile)
 
 
 /*
+ * Generate a 'realname' attribute containing a fully qualified C/C++ name of
+ * an object.
+ */
+static void xmlRealScopedName(classDef *scope, const char *cppname, FILE *fp)
+{
+    const char *sep = "";
+
+    fprintf(fp, " realname=\"");
+
+    if (scope != NULL)
+    {
+        scopedNameDef *snd;
+
+        for (snd = removeGlobalScope(classFQCName(scope)); snd != NULL; snd = snd->next)
+        {
+            fprintf(fp, "%s%s", sep, snd->name);
+            sep = "::";
+        }
+    }
+
+    fprintf(fp, "%s%s\"", sep, cppname);
+}
+
+
+/*
  * Generate a 'realname' attribute containing a fully qualified C/C++ name.
  */
-static void xmlRealName(scopedNameDef *fqcname, FILE *fp)
+static void xmlRealName(scopedNameDef *fqcname, const char *member, FILE *fp)
 {
     const char *sep = "";
     scopedNameDef *snd;
@@ -340,6 +368,9 @@ static void xmlRealName(scopedNameDef *fqcname, FILE *fp)
         fprintf(fp, "%s%s", sep, snd->name);
         sep = "::";
     }
+
+    if (member != NULL)
+        fprintf(fp, "::%s", member);
 
     fprintf(fp, "\"");
 }
@@ -368,10 +399,10 @@ static void xmlClass(sipSpec *pt, moduleDef *mod, classDef *cd, FILE *fp)
     {
         xmlIndent(indent++, fp);
         fprintf(fp, "<Class name=\"");
-        restPyClass(cd, FALSE, fp);
+        prScopedPythonName(fp, cd->ecd, cd->pyname->text);
         fprintf(fp, "\"");
 
-        xmlRealName(classFQCName(cd), fp);
+        xmlRealName(classFQCName(cd), NULL, fp);
 
         if (cd->picklecode != NULL)
             fprintf(fp, " pickle=\"1\"");
@@ -385,6 +416,23 @@ static void xmlClass(sipSpec *pt, moduleDef *mod, classDef *cd, FILE *fp)
         if (cd->real != NULL)
             fprintf(fp, " extends=\"%s\"", cd->real->iff->module->name);
 
+        if (cd->pyqt_flags_enums != NULL)
+        {
+            const char *sep;
+            stringList *sl;
+
+            fprintf(fp, " flagsenums=\"");
+            sep = "";
+
+            for (sl = cd->pyqt_flags_enums; sl != NULL; sl = sl->next)
+            {
+                fprintf(fp, "%s%s", sep, sl->s);
+                sep = " ";
+            }
+
+            fprintf(fp, "\"");
+        }
+
         if (cd->supers != NULL)
         {
             classList *cl;
@@ -396,7 +444,7 @@ static void xmlClass(sipSpec *pt, moduleDef *mod, classDef *cd, FILE *fp)
                 if (cl != cd->supers)
                     fprintf(fp, " ");
 
-                restPyClass(cl->cd, TRUE, fp);
+                restPyClass(cl->cd, fp);
             }
 
             fprintf(fp, "\"");
@@ -449,20 +497,21 @@ static void xmlEnums(sipSpec *pt, moduleDef *mod, classDef *scope, int indent,
 
             xmlIndent(indent++, fp);
             fprintf(fp, "<Enum name=\"");
-            restPyEnum(ed, FALSE, fp);
+            prScopedPythonName(fp, ed->ecd, ed->pyname->text);
             fprintf(fp, "\"");
 
-            xmlRealName(ed->fqcname, fp);
+            xmlRealName(ed->fqcname, NULL, fp);
 
             fprintf(fp, ">\n");
 
             for (emd = ed->members; emd != NULL; emd = emd->next)
             {
                 xmlIndent(indent, fp);
-                fprintf(fp, "<EnumMember name=\"%s\"", emd->pyname->text);
+                fprintf(fp, "<EnumMember name=\"");
+                prScopedPythonName(fp, ed->ecd, ed->pyname->text);
+                fprintf(fp, ".%s\"", emd->pyname->text);
 
-                if (strcmp(emd->pyname->text, emd->cname) != 0)
-                    fprintf(fp, " realname=\"%s\"", emd->cname);
+                xmlRealName(ed->fqcname, emd->cname, fp);
 
                 fprintf(fp, "/>\n");
             }
@@ -479,7 +528,11 @@ static void xmlEnums(sipSpec *pt, moduleDef *mod, classDef *scope, int indent,
                 xmlIndent(indent, fp);
                 fprintf(fp, "<Member name=\"");
                 prScopedPythonName(fp, ed->ecd, emd->pyname->text);
-                fprintf(fp, "\" const=\"1\" typename=\"int\"/>\n");
+                fprintf(fp, "\"");
+
+                xmlRealScopedName(scope, emd->cname, fp);
+
+                fprintf(fp, " const=\"1\" typename=\"int\"/>\n");
             }
         }
     }
@@ -507,6 +560,8 @@ static void xmlVars(sipSpec *pt, moduleDef *mod, classDef *scope, int indent,
         prScopedPythonName(fp, vd->ecd, vd->pyname->text);
         fprintf(fp, "\"");
 
+        xmlRealName(vd->fqcname, NULL, fp);
+
         if (isConstArg(&vd->type) || scope == NULL)
             fprintf(fp, " const=\"1\"");
 
@@ -531,6 +586,15 @@ static void xmlCtor(sipSpec *pt, moduleDef *mod, classDef *scope, ctorDef *ct,
     fprintf(fp, "<Function name=\"");
     prScopedPythonName(fp, scope, "__init__");
     fprintf(fp, "\"");
+
+    xmlRealScopedName(scope, "__init__", fp);
+
+    if (hasCppSignature(ct->cppsig))
+    {
+        fprintf(fp, " cppsig=\"");
+        xmlCppSignature(fp, ct->cppsig, FALSE);
+        fprintf(fp, "\"");
+    }
 
     /* Handle the trivial case. */
     if (ct->pysig.nrArgs == 0)
@@ -583,18 +647,25 @@ static void xmlFunction(sipSpec *pt, moduleDef *mod, classDef *scope,
             xmlIndent(indent++, fp);
             fprintf(fp, "<Signal name=\"");
             prScopedPythonName(fp, scope, md->pyname->text);
-            /* TODO: add the C++ signature. */
-            /* fprintf(fp, "\" sig=\""); */
-            /* xmlCppSignature(fp, od); */
+            fprintf(fp, "\"");
+
+            xmlRealScopedName(scope, od->cppname, fp);
+
+            if (hasCppSignature(od->cppsig))
+            {
+                fprintf(fp, " cppsig=\"");
+                xmlCppSignature(fp, od->cppsig, FALSE);
+                fprintf(fp, "\"");
+            }
 
             /* Handle the trivial case. */
             if (od->pysig.nrArgs == 0)
             {
-                fprintf(fp, "\"/>\n");
+                fprintf(fp, "/>\n");
                 continue;
             }
 
-            fprintf(fp, "\">\n");
+            fprintf(fp, ">\n");
 
             for (a = 0; a < od->pysig.nrArgs; ++a)
             {
@@ -630,12 +701,36 @@ static void xmlOverload(sipSpec *pt, moduleDef *mod, classDef *scope,
         memberDef *md, overDef *od, classDef *xtnds, int stat, int indent,
         FILE *fp)
 {
+    const char *name, *cppname = od->cppname;
     int a, no_res;
 
     xmlIndent(indent++, fp);
     fprintf(fp, "<Function name=\"");
-    prScopedPythonName(fp, scope, md->pyname->text);
+
+    if (isReflected(od))
+    {
+        if ((name = reflectedSlot(md->slot)) != NULL)
+            cppname = name;
+        else
+            name = md->pyname->text;
+    }
+    else
+    {
+        name = md->pyname->text;
+    }
+
+    prScopedPythonName(fp, scope, name);
+
     fprintf(fp, "\"");
+
+    xmlRealScopedName(scope, cppname, fp);
+
+    if (hasCppSignature(od->cppsig))
+    {
+        fprintf(fp, " cppsig=\"");
+        xmlCppSignature(fp, od->cppsig, isConst(od));
+        fprintf(fp, "\"");
+    }
 
     if (isAbstract(od))
         fprintf(fp, " abstract=\"1\"");
@@ -644,11 +739,7 @@ static void xmlOverload(sipSpec *pt, moduleDef *mod, classDef *scope,
         fprintf(fp, " static=\"1\"");
 
     if (isSlot(od))
-    {
-        fprintf(fp, " slot=\"");
-        xmlCppSignature(fp, od);
-        fprintf(fp, "\"");
-    }
+        fprintf(fp, " slot=\"1\"");
 
     if (isVirtual(od))
     {
@@ -662,7 +753,11 @@ static void xmlOverload(sipSpec *pt, moduleDef *mod, classDef *scope,
         fprintf(fp, "\"");
     }
 
-    no_res = (od->pysig.result.atype == void_type && od->pysig.result.nrderefs == 0);
+    /* An empty type hint specifies a void return. */
+    if (od->pysig.result.typehint_out != NULL && od->pysig.result.typehint_out->raw_hint[0] == '\0')
+        no_res = TRUE;
+    else
+        no_res = (od->pysig.result.atype == void_type && od->pysig.result.nrderefs == 0);
 
     /* Handle the trivial case. */
     if (no_res && od->pysig.nrArgs == 0)
@@ -681,9 +776,13 @@ static void xmlOverload(sipSpec *pt, moduleDef *mod, classDef *scope,
     {
         argDef *ad = &od->pysig.args[a];
 
-        /* Ignore the first argument of number slots. */
-        if (isNumberSlot(md) && a == 0 && od->pysig.nrArgs == 2)
-            continue;
+        /*
+         * Ignore the first argument of non-reflected number slots and the
+         * second argument of reflected number slots.
+         */
+        if (isNumberSlot(md) && od->pysig.nrArgs == 2)
+            if ((a == 0 && !isReflected(od)) || (a == 1 && isReflected(od)))
+                continue;
 
         if (isInArg(ad))
             xmlArgument(pt, mod, ad, FALSE, od->kwargs, FALSE, indent, fp);
@@ -698,12 +797,68 @@ static void xmlOverload(sipSpec *pt, moduleDef *mod, classDef *scope,
 
 
 /*
+ * Return TRUE if there is a C/C++ signature.
+ */
+static int hasCppSignature(signatureDef *sd)
+{
+    int a;
+
+    if (sd == NULL)
+        return FALSE;
+
+    /*
+     * See if there are any arguments that could only have come from
+     * handwritten code.
+     */
+    for (a = 0; a < sd->nrArgs; ++a)
+    {
+        switch (sd->args[a].atype)
+        {
+        case pyobject_type:
+        case pytuple_type:
+        case pylist_type:
+        case pydict_type:
+        case pycallable_type:
+        case pyslice_type:
+        case pytype_type:
+        case pybuffer_type:
+        case capsule_type:
+            return FALSE;
+
+        default:
+            break;
+        }
+    }
+
+    return TRUE;
+}
+
+
+/*
  * Generate the XML for a C++ signature.
  */
-static void xmlCppSignature(FILE *fp, overDef *od)
+static void xmlCppSignature(FILE *fp, signatureDef *sd, int is_const)
 {
+    int a;
+
     prcode(fp, "%M");
-    prOverloadDecl(fp, NULL, od, TRUE);
+    normaliseArgs(sd);
+
+    prcode(fp, "(");
+
+    for (a = 0; a < sd->nrArgs; ++a)
+    {
+        argDef *ad = &sd->args[a];
+
+        if (a > 0)
+            prcode(fp, ",");
+
+        generateBaseType(NULL, ad, TRUE, STRIP_GLOBAL, fp);
+    }
+
+    prcode(fp, ")%s", (is_const ? " const" : ""));
+
+    restoreArgs(sd);
     prcode(fp, "%M");
 }
 
@@ -773,19 +928,19 @@ static void xmlType(sipSpec *pt, moduleDef *mod, argDef *ad, int out,
         switch (ad->atype)
         {
         case class_type:
-            restPyClass(ad->u.cd, TRUE, fp);
+            restPyClass(ad->u.cd, fp);
             break;
 
         case enum_type:
             if (ad->u.ed->pyname != NULL)
-                restPyEnum(ad->u.ed, TRUE, fp);
+                restPyEnum(ad->u.ed, fp);
             else
                 fprintf(fp, "int");
 
             break;
 
         case qobject_type:
-            restPyClass(pt->qobject_cd, TRUE, fp);
+            restPyClass(pt->qobject_cd, fp);
             break;
 
         case mapped_type:
@@ -978,6 +1133,7 @@ static const char *pyType(sipSpec *pt, argDef *ad, classDef **scope)
     case int_type:
     case cint_type:
     case ssize_type:
+    case size_type:
         type_name = "int";
         break;
 
@@ -1115,34 +1271,24 @@ static void exportPythonSignature(sipSpec *pt, FILE *fp, signatureDef *sd,
 
 
 /*
- * Generate a fully qualified class name optionally as a reST reference.
+ * Generate a fully qualified class name as a reST reference.
  */
-void restPyClass(classDef *cd, int as_ref, FILE *fp)
+void restPyClass(classDef *cd, FILE *fp)
 {
-    if (as_ref)
-        fprintf(fp, ":sip:ref:`~");
-
-    fprintf(fp, "%s.", cd->iff->module->fullname->text);
+    fprintf(fp, ":sip:ref:`~%s.", cd->iff->module->fullname->text);
     prScopedPythonName(fp, cd->ecd, cd->pyname->text);
-
-    if (as_ref)
-        fprintf(fp, "`");
+    fprintf(fp, "`");
 }
 
 
 /*
- * Generate a fully qualified enum name optionally as a reST reference.
+ * Generate a fully qualified enum name as a reST reference.
  */
-void restPyEnum(enumDef *ed, int as_ref, FILE *fp)
+void restPyEnum(enumDef *ed, FILE *fp)
 {
-    if (as_ref)
-        fprintf(fp, ":sip:ref:`~");
-
-    fprintf(fp, "%s.", ed->module->fullname->text);
+    fprintf(fp, ":sip:ref:`~%s.", ed->module->fullname->text);
     prScopedPythonName(fp, ed->ecd, ed->pyname->text);
-
-    if (as_ref)
-        fprintf(fp, "`");
+    fprintf(fp, "`");
 }
 
 
@@ -1170,7 +1316,7 @@ static void restPyAttribute(moduleDef *mod, classDef *scope, nameDef *name,
 
 
 /*
- * Generate a reST reference for a scoped name is possible.  Return TRUE if
+ * Generate a reST reference for a scoped name if possible.  Return TRUE if
  * something was generated.
  */
 static int restValue(sipSpec *pt, valueDef *value, FILE *fp)
@@ -1259,4 +1405,56 @@ static int restValue(sipSpec *pt, valueDef *value, FILE *fp)
     freeScopedName(scope);
 
     return FALSE;
+}
+
+
+/*
+ * Return the name of the reflected version of a slot or NULL if it doesn't
+ * have one.
+ */
+static const char *reflectedSlot(slotType st)
+{
+    switch (st)
+    {
+    case add_slot:
+        return "__radd__";
+
+    case sub_slot:
+        return "__rsub__";
+
+    case mul_slot:
+        return "__rmul__";
+
+    case matmul_slot:
+        return "__rmatmul__";
+
+    case truediv_slot:
+        return "__rtruediv__";
+
+    case floordiv_slot:
+        return "__rfloordiv__";
+
+    case mod_slot:
+        return "__rmod__";
+
+    case lshift_slot:
+        return "__rlshift__";
+
+    case rshift_slot:
+        return "__rrshift__";
+
+    case and_slot:
+        return "__rand__";
+
+    case or_slot:
+        return "__ror__";
+
+    case xor_slot:
+        return "__rxor__";
+
+    default:
+        break;
+    }
+
+    return NULL;
 }
