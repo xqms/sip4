@@ -2,8 +2,8 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-PY2_PROVIDES=sip-api-12.0, sip-api-12.1, sip-api-12.2, sip-api-12.3, sip-api-12.4, sip-api-12.5
-PY3_PROVIDES=sip-py3api-12.0, sip-py3api-12.1, sip-py3api-12.2, sip-py3api-12.3, sip-py3api-12.4, sip-py3api-12.5
+PY2_PROVIDES=sip-api-12.0, sip-api-12.1, sip-api-12.2, sip-api-12.3, sip-api-12.4, sip-api-12.5, sip-api-12.6
+PY3_PROVIDES=sip-py3api-12.0, sip-py3api-12.1, sip-py3api-12.2, sip-py3api-12.3, sip-py3api-12.4, sip-py3api-12.5, sip-py3api-12.6
 # `dh_python3 --depends sip3` should generate dependency on newest API only
 PYDIST=sip $(lastword $(PY3_PROVIDES))
 
