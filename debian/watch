@@ -1,2 +1,4 @@
 version=3
-opts=dversionmangle=s/\+dfsg\d*//,repacksuffix=+dfsg https://sf.net/pyqt/sip-(.*)\.tar\.gz
+opts=dversionmangle=s/\+dfsg\d*//,repacksuffix=+dfsg \
+https://www.riverbankcomputing.com/software/sip/download \
+/static/Downloads/sip/sip-([\d.]+)\.tar\.gz
