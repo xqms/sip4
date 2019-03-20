@@ -1,6 +1,7 @@
 sip4 (4.19.15+dfsg-1) UNRELEASED; urgency=medium
 
   * New upstream release.
+  * Drop pyqt4_no_nullptr.diff, included in the new release.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Thu, 21 Mar 2019 00:17:56 +0300
 
