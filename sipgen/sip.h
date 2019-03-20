@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x04130e
-#define SIP_VERSION_STR     "4.19.14"
+#define SIP_VERSION         0x04130f
+#define SIP_VERSION_STR     "4.19.15"
 
 
 #ifdef TRUE
@@ -317,14 +317,8 @@
 
 /* Handle hierarchy flags. */
 
-#define HIER_IS_DUPLICATE   0x0001      /* It is a super class duplicate. */
-#define HIER_HAS_DUPLICATE  0x0002      /* It has a super class duplicate. */
-#define HIER_BEING_SET      0x0004      /* The MRO is being set. */
+#define HIER_BEING_SET      0x0001      /* The MRO is being set. */
 
-#define isDuplicateSuper(m) ((m)->mroflags & HIER_IS_DUPLICATE)
-#define setIsDuplicateSuper(m)  ((m)->mroflags |= HIER_IS_DUPLICATE)
-#define hasDuplicateSuper(m)    ((m)->mroflags & HIER_HAS_DUPLICATE)
-#define setHasDuplicateSuper(m) ((m)->mroflags |= HIER_HAS_DUPLICATE)
 #define hierBeingSet(m)     ((m)->mroflags & HIER_BEING_SET)
 #define setHierBeingSet(m)  ((m)->mroflags |= HIER_BEING_SET)
 #define resetHierBeingSet(m)    ((m)->mroflags &= ~HIER_BEING_SET)

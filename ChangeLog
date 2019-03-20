@@ -1,4 +1,74 @@
+2019-03-19  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.15.
+	[bc42af3b0125] [4.19.15] <4.19-maint>
+
+2019-03-18  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Updated the NEWS file.
+	[118ad726b35a] <4.19-maint>
+
+2019-02-25  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/directives.rst, sphinx/using.rst:
+	Added the section on writing %ConvertToSubClassCode to the docs.
+	[20205aee866c] <4.19-maint>
+
+2019-02-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y:
+	Fixed the handling of size_t as a template argument.
+	[a86d8632daac] <4.19-maint>
+
+2019-02-21  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c:
+	Restored the casting of an instance pointer to the base type of a
+	convertor before calling the convertor. This completes the rollback
+	to the v4.16 era of handling sub-class convertors.
+	[7d15fbe6bad8] <4.19-maint>
+
+	* siplib/siplib.c:
+	Backed out changeset 1427 (along with 1428) to select a convertor
+	based on whether the target is a sub-class of of the convertor's
+	base type. The changesets changed the selection to the left side
+	super-class.
+	[229047ed8c4f] <4.19-maint>
+
+	* siplib/siplib.c:
+	Backed out changset set 1428 as a pair with 1427.
+	[88fae7d57cc0] <4.19-maint>
+
+	* sipgen/gencode.c, sipgen/sip.h.in, sipgen/transform.c:
+	Fixed the handling of duplicate classes in an MRO so that the cast
+	function is correct with diamond shaped inheritance trees.
+	[b446501afb47] <4.19-maint>
+
+2019-02-19  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed a code generation regression specific to PyQt4.
+	[7bd4d19479ad] <4.19-maint>
+
+2019-02-12  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/riverbank/static/riverbank.css:
+	CSS updates.
+	[4ab117a13343] <4.19-maint>
+
+2019-02-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Fixed typos in the NEWS file.
+	[98a02040e6c5] <4.19-maint>
+
 2019-02-09  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.14 for changeset 910c0e9b6601
+	[0b8423eb79e3] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.14.
