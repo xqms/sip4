@@ -1,4 +1,4 @@
 version=3
 opts=dversionmangle=s/\+dfsg\d*//,repacksuffix=+dfsg \
 https://www.riverbankcomputing.com/software/sip/download \
-/static/Downloads/sip/sip-([\d.]+)\.tar\.gz
+/static/Downloads/sip/[\d.]+/sip-([\d.]+)\.tar\.gz
