@@ -1,4 +1,4 @@
-sip4 (4.19.14+dfsg-2) UNRELEASED; urgency=medium
+sip4 (4.19.14+dfsg-2) unstable; urgency=medium
 
   * Do not add SIP_OVERRIDE to the generated C++ code, to fix QGIS build.
 
