@@ -1,0 +1,22 @@
+From: Dmitry Shachnev <mitya57@debian.org>
+Date: Sun, 31 Mar 2019 17:40:56 +0300
+Subject: Do not add SIP_OVERRIDE keyword to the generated code.
+
+This partially reverts upstream changeset 3ccc5b6f9e1f.
+---
+ sipgen/gencode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sipgen/gencode.c b/sipgen/gencode.c
+index 83af4f7..e14c4f0 100644
+--- a/sipgen/gencode.c
++++ b/sipgen/gencode.c
+@@ -9331,7 +9331,7 @@ static void generateOverloadDecl(FILE *fp, ifaceFileDef *scope, overDef *od)
+         generateBaseType(scope, ad, TRUE, STRIP_NONE, fp);
+     }
+  
+-    prcode(fp, ")%s%X SIP_OVERRIDE", (isConst(od) ? " const" : ""), od->exceptions);
++    prcode(fp, ")%s%X", (isConst(od) ? " const" : ""), od->exceptions);
+ 
+     restoreArgs(od->cppsig);
+ }
