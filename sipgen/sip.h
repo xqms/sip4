@@ -27,8 +27,8 @@
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x04130f
-#define SIP_VERSION_STR     "4.19.15"
+#define SIP_VERSION         0x041310
+#define SIP_VERSION_STR     "4.19.16"
 
 
 #ifdef TRUE
@@ -318,10 +318,13 @@
 /* Handle hierarchy flags. */
 
 #define HIER_BEING_SET      0x0001      /* The MRO is being set. */
+#define IN_A_DIAMOND        0x0002      /* The class is in a diamond. */
 
 #define hierBeingSet(m)     ((m)->mroflags & HIER_BEING_SET)
 #define setHierBeingSet(m)  ((m)->mroflags |= HIER_BEING_SET)
 #define resetHierBeingSet(m)    ((m)->mroflags &= ~HIER_BEING_SET)
+#define inADiamond(m)       ((m)->mroflags & IN_A_DIAMOND)
+#define setInADiamond(m)    ((m)->mroflags |= IN_A_DIAMOND)
 
 
 /* Handle overload flags.  These are combined with the section flags. */

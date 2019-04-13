@@ -30,8 +30,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x04130f
-sip_version_str = "4.19.15"
+sip_version = 0x041310
+sip_version_str = "4.19.16"
 py_version = sys.hexversion >> 8
 py_platform = sys.platform
 plat_py_site_dir = None
@@ -155,7 +155,8 @@ def set_build_platform():
         "sunos5":       "solaris-cc",
         "ultrix":       "ultrix-g++",
         "unix_sv":      "unixware-g++",
-        "unixware":     "unixware-cc"
+        "unixware":     "unixware-cc",
+        "haiku1":       "haiku-g++"
     }
 
     build_platform = "none"
