@@ -1,4 +1,43 @@
+2019-04-11  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.16.
+	[0aac5d17136d] [4.19.16] <4.19-maint>
+
+2019-04-10  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Updated the NEWS file.
+	[e10bb493d10b] <4.19-maint>
+
+2019-04-06  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/transform.c:
+	Further fixes for diamond class hierarchies.
+	[96fce123ab54] <4.19-maint>
+
+	* sipgen/gencode.c, sipgen/sip.h.in, sipgen/transform.c:
+	Don't cast to a class that occurs more than once in a super-class
+	hierarchy.
+	[9232c12ff0dc] <4.19-maint>
+
+2019-04-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* configure.py.in, specs/haiku-g++:
+	Added support for the haiku platform.
+	[a093d109d0de] <4.19-maint>
+
+2019-03-29  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* Roadmap.rst, sphinx/introduction.rst.in:
+	Updated the docs and roadmap for SIP v5.
+	[04c93865d356] <4.19-maint>
+
 2019-03-19  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.15 for changeset bc42af3b0125
+	[1d00d28be4e6] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.15.
