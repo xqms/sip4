@@ -1,6 +1,6 @@
 sip4 (4.19.16+dfsg-1) UNRELEASED; urgency=medium
 
-  * New upstream release.
+  * New upstream release (closes: #926904).
   * Use dh sequencer and the pybuild buildsystem.
   * Remove references to build path from the generated sipconfig.py files.
   * Fix dist-packages paths in the sipconfig.py files (LP: #1822733).
