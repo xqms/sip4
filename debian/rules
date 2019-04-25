@@ -52,6 +52,8 @@ override_dh_auto_install: debian/sipconfig_py3.py
 	mkdir -p debian/tmp/usr/lib/python3/dist-packages
 	cp debian/sipconfig_py3.py debian/tmp/usr/lib/python3/dist-packages/sipconfig.py
 	set -ex; for version in $(PYTHON3S:3.%=%); do \
+		sed -Ei "s,python3\.$$version/dist-packages,python3/dist-packages," build-python3.$$version/sipconfig.py; \
+		sed -Ei "s,python3\.$$version/dist-packages,python3/dist-packages," build-python3.$$version-dbg/sipconfig.py; \
 		cp build-python3.$$version/sipconfig.py debian/tmp/usr/lib/python3/dist-packages/sipconfig_nd$$version.py; \
 		cp build-python3.$$version-dbg/sipconfig.py debian/tmp/usr/lib/python3/dist-packages/sipconfig_d$$version.py; \
 		mkdir debian/tmp/usr/include/python3.$${version}dm; \
