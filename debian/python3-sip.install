@@ -1,3 +1,5 @@
+usr/lib/python3.*/dist-packages/sip-*.dist-info/INSTALLER
+usr/lib/python3.*/dist-packages/sip-*.dist-info/METADATA
 usr/lib/python3.*/dist-packages/sip.pyi
 usr/lib/python3.*/dist-packages/sip.so
 usr/lib/python3/dist-packages/sipconfig.py
