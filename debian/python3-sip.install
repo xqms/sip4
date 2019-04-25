@@ -1,2 +1,4 @@
-usr/lib/python3*/*-packages/sip.so
-usr/lib/python3*/*-packages/sip.pyi
+usr/lib/python3.*/dist-packages/sip.pyi
+usr/lib/python3.*/dist-packages/sip.so
+usr/lib/python3/dist-packages/sipconfig.py
+usr/lib/python3/dist-packages/sipconfig_nd*.py

@@ -7,26 +7,26 @@ PY3_PROVIDES=sip-py3api-12.0, sip-py3api-12.1, sip-py3api-12.2, sip-py3api-12.3,
 # `dh_python3 --depends sip3` should generate dependency on newest API only
 PYDIST=sip $(lastword $(PY3_PROVIDES))
 
-CFLAGS=
-CPPFLAGS=
-CXXFLAGS=
-LDFLAGS=
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -O0 -g
-else
-	CFLAGS += $(shell dpkg-buildflags --get CFLAGS)
-	CPPFLAGS += $(shell dpkg-buildflags --get CPPFLAGS)
-	CXXFLAGS += $(shell dpkg-buildflags --get CXXFLAGS)
-	LDFLAGS += $(shell dpkg-buildflags --get LDFLAGS)
-endif
-
-PYTHONS	:= $(shell pyversions -vr) $(shell py3versions -vr)
 PYTHON3S := $(shell py3versions -vr)
-DEFAULT_PYTHON := $(shell py3versions -vd)
 
-.PRECIOUS: build-%/configure-stamp dbg-build-%/configure-stamp
+CONFIGURE_PY_ARGS=--destdir /usr/lib/python{version}/dist-packages --debug \
+	"CFLAGS=$(shell dpkg-buildflags --get CFLAGS) $(shell dpkg-buildflags --get CPPFLAGS)" \
+	"CXXFLAGS=$(shell dpkg-buildflags --get CXXFLAGS) $(shell dpkg-buildflags --get CPPFLAGS)" \
+	"LFLAGS=$(shell dpkg-buildflags --get LDFLAGS)"
 
-configure: $(PYTHONS:%=build-%/configure-stamp) $(PYTHONS:%=dbg-build-%/configure-stamp)
+export PYBUILD_NAME=sip
+export PYBUILD_SYSTEM=custom
+export PYBUILD_CONFIGURE_ARGS=mkdir build-{interpreter}; cd build-{interpreter}; {interpreter} ../configure.py $(CONFIGURE_PY_ARGS)
+export PYBUILD_CONFIGURE_ARGS_python2-dbg=$(PYBUILD_CONFIGURE_ARGS) --no-tools --no-dist-info --no-stubs
+export PYBUILD_CONFIGURE_ARGS_python3-dbg=$(PYBUILD_CONFIGURE_ARGS_python2-dbg)
+export PYBUILD_BUILD_ARGS=$(MAKE) -C build-{interpreter}
+export PYBUILD_INSTALL_ARGS=$(MAKE) -C build-{interpreter} install DESTDIR=$(CURDIR)/debian/tmp
+export PYBUILD_INSTALL_ARGS_python2-dbg=$(MAKE) -C build-{interpreter} install DESTDIR=$(CURDIR)/debian/{package}
+export PYBUILD_INSTALL_ARGS_python3-dbg=$(PYBUILD_INSTALL_ARGS_python2-dbg)
+export PYBUILD_CLEAN_ARGS=rm -rf build-{interpreter}
+
+%:
+	dh $@ --with python2,python3 --buildsystem=pybuild
 
 sipgen/lexer.c: sipgen/metasrc/lexer.l
 	flex --outfile=sipgen/lexer.c sipgen/metasrc/lexer.l
@@ -34,31 +34,8 @@ sipgen/lexer.c: sipgen/metasrc/lexer.l
 sipgen/parser.c: sipgen/metasrc/parser.y
 	bison --yacc --defines=sipgen/parser.h --output=sipgen/parser.c sipgen/metasrc/parser.y
 
-build-%/configure-stamp: sipgen/lexer.c sipgen/parser.c
-	dh_testdir
-	mkdir -p build-$*
-	cp $(CURDIR)/sip.pyi $(CURDIR)/build-$*
-	cd build-$* \
-		&& python$* ../configure.py \
-			-d /usr/lib/python$*/dist-packages \
-			$(if $(filter $(DEFAULT_PYTHON),$*),,--no-tools) \
-			-u STRIP="" CFLAGS="${CFLAGS} ${CPPFLAGS}" CFLAGS_RELEASE="" \
-			CXXFLAGS="${CXXFLAGS} ${CPPFLAGS}" CXXFLAGS_RELEASE="" \
-			LFLAGS="${LDFLAGS}" LFLAGS_RELEASE=""
-	touch $@
-
-dbg-build-%/configure-stamp:
-	dh_testdir
-	mkdir -p dbg-build-$*
-	cp $(CURDIR)/sip.pyi $(CURDIR)/dbg-build-$*
-	cd dbg-build-$* \
-		&& python$*-dbg ../configure.py \
-			-d /usr/lib/python$*/dist-packages \
-			--no-tools \
-			-u CFLAGS="${CFLAGS} ${CPPFLAGS}" CFLAGS_RELEASE="" \
-			CXXFLAGS="${CXXFLAGS} ${CPPFLAGS}" CXXFLAGS_RELEASE="" \
-			LFLAGS="${LDFLAGS}" LFLAGS_RELEASE="" STRIP=""
-	touch $@
+override_dh_auto_configure: sipgen/lexer.c sipgen/parser.c
+	dh_auto_configure
 
 debian/sipconfig_py3.py:
 	cp debian/sipconfig_py3.header debian/sipconfig_py3.py
@@ -67,131 +44,46 @@ debian/sipconfig_py3.py:
 		>> debian/sipconfig_py3.py; \
 	done
 
-build: debian/sipconfig_py3.py $(PYTHONS:%=build-%/build-stamp) $(PYTHONS:%=dbg-build-%/build-stamp)
-
-build-%/build-stamp: build-%/configure-stamp
-	dh_testdir
-	$(MAKE) -C build-$*
-	touch $@
-
-dbg-build-%/build-stamp: dbg-build-%/configure-stamp
-	dh_testdir
-	$(MAKE) -C dbg-build-$*
-	touch $@
-
-build-arch: build
-build-indep:
-
-clean:
-	dh_testdir
-	dh_testroot
-	rm -rf *-stamp siputils.pyc __pycache__ $(PYTHONS:%=build-%) $(PYTHONS:%=dbg-build-%)
-	rm -f $(CURDIR)/debian/sipconfig_py3.py
-	rm -f sipgen/lexer.c sipgen/parser.h sipgen/parser.c sipgen/parser.output
-	rm -f debian/manpages/dh_sip.1 debian/manpages/dh_sip3.1
-	dh_clean debian/python3-sip.pydist
-
-install-arch: build
-	dh_testdir
-	dh_testroot
-	dh_prep -a
-	echo "sip:Provides=$(PY2_PROVIDES)" >> debian/python-sip.substvars
-	echo "sip3:Provides=$(PY3_PROVIDES)" >> debian/python3-sip.substvars
-	echo "$(PYDIST)" > debian/python3-sip.pydist
-	dh_installdirs -a
-	# This is needed to enforce that the install-arch-% rules are
-	# not run in parallel. Both rules install into the same directory,
-	# and therefore might try to access the same files at the same time.
-	# Therefore, instead of depending on the install-arch-% rules,
-	# we invoke them explicitly.
-	for p in $(PYTHONS) ; do \
-		$(MAKE) -f debian/rules install-arch-$$p;\
+override_dh_auto_install: debian/sipconfig_py3.py
+	dh_auto_install
+	cp build-python2.7/sipconfig.py debian/tmp/usr/lib/python2.7/dist-packages/sipconfig_nd.py
+	cp build-python2.7-dbg/sipconfig.py debian/tmp/usr/lib/python2.7/dist-packages/sipconfig_d.py
+	mkdir -p debian/tmp/usr/lib/python3/dist-packages
+	cp debian/sipconfig_py3.py debian/tmp/usr/lib/python3/dist-packages/sipconfig.py
+	set -ex; for version in $(PYTHON3S:3.%=%); do \
+		cp build-python3.$$version/sipconfig.py debian/tmp/usr/lib/python3/dist-packages/sipconfig_nd$$version.py; \
+		cp build-python3.$$version-dbg/sipconfig.py debian/tmp/usr/lib/python3/dist-packages/sipconfig_d$$version.py; \
+		mkdir debian/tmp/usr/include/python3.$${version}dm; \
+		ln -s ../python3.$${version}m/sip.h debian/tmp/usr/include/python3.$${version}dm/sip.h; \
 	done
 
-	for i in $$(find debian/python*-sip-dbg -name '*.so'); do \
-		b=$$(basename $$i .so); \
-		mv -v $$i $$(dirname $$i)/$${b}_d.so; \
-	done
-	find debian/python*-sip-dbg ! -type d ! -name '*_d.*' ! -name *sipconfig_d* | xargs rm -f
-	find debian/python*-sip-dbg -depth -empty -exec rmdir {} \;
-
-	dh_install -a
-	install -m 755 -o root -g root debian/dh_sip debian/python-sip-dev/usr/bin
-
-install-arch-3.%:
-	$(MAKE) -C build-3.$* install DESTDIR=$(CURDIR)/debian/tmp
-	$(MAKE) -C dbg-build-3.$* install DESTDIR=$(CURDIR)/debian/python3-sip-dbg
-	mkdir -p debian/python3-sip/usr/lib/python3.$*/dist-packages/
-	mkdir -p debian/python3-sip-dbg/usr/lib/python3/dist-packages/
-	mkdir -p debian/python3-sip-dbg/usr/lib/python3.$*/dist-packages/
-	install -m 644 -o root -g root debian/sipconfig_py3.py debian/python3-sip/usr/lib/python3.$*/dist-packages/sipconfig.py
-	install -m 644 -o root -g root build-3.$*/sipconfig.py debian/python3-sip/usr/lib/python3.$*/dist-packages/sipconfig_nd$*.py
-	install -m 644 -o root -g root dbg-build-3.$*/sipconfig.py debian/python3-sip-dbg/usr/lib/python3.$*/dist-packages/sipconfig_d$*.py
-	mkdir -p debian/python3-sip-dev/usr/include/python3.$*m
-	install -m 644 -o root -g root siplib/sip.h debian/python3-sip-dev/usr/include/python3.$*m/sip.h
-	mkdir -p debian/python3-sip-dev/usr/include/python3.$*dm
-	ln -s ../python3.$*m/sip.h \
-	    debian/python3-sip-dev/usr/include/python3.$*dm/sip.h
-
-install-arch-2%:
-	$(MAKE) -C build-2$* install DESTDIR=$(CURDIR)/debian/tmp
-	$(MAKE) -C dbg-build-2$* install DESTDIR=$(CURDIR)/debian/python-sip-dbg
-	mkdir -p debian/python-sip/usr/lib/python2$*/dist-packages/
-	install -m 644 -o root -g root debian/sipconfig.py debian/python-sip/usr/lib/python2$*/dist-packages/
-	install -m 644 -o root -g root build-2$*/sipconfig.py debian/python-sip/usr/lib/python2$*/dist-packages/sipconfig_nd.py
-	install -m 644 -o root -g root dbg-build-2$*/sipconfig.py debian/python-sip-dbg/usr/lib/python2$*/dist-packages/sipconfig_d.py
-	mkdir -p debian/python-sip-dev/usr/include/python2$*_d
-	ln -s ../python2$*/sip.h \
-	    debian/python-sip-dev/usr/include/python2$*_d/sip.h
-
-
-# Must not depend on anything. This is to be called by
-# binary-arch/binary-indep
-# in another 'make' thread.
-binary-common:
-	dh_testdir
-	dh_testroot
+override_dh_installman:
 	pod2man -c Debhelper -r '' debian/dh_sip debian/manpages/dh_sip.1
 	pod2man -c Debhelper -r '' debian/dh_sip3 debian/manpages/dh_sip3.1
 	dh_installman
-	dh_installchangelogs -Npython-sip-dbg -Npython3-sip-dbg
-	dh_installdocs -Npython-sip-dbg -Npython3-sip-dbg -A NEWS
-ifeq (,$(findstring -a, $(DH_OPTIONS)))
-	dh_sphinxdoc -p python-sip-doc
-endif
-	dh_installexamples
-	dh_link
-# don't call strip twice (or make the -dbg doc directories symlinks twice),
-# it's in binary-common
-ifneq (,$(findstring -a, $(DH_OPTIONS)))
-	DH_OPTIONS= dh_installdocs -ppython-sip-dbg --link-doc=python-sip
-	DH_OPTIONS= dh_installdocs -ppython3-sip-dbg --link-doc=python3-sip
-	DH_OPTIONS= dh_strip -ppython-sip-dev
-	DH_OPTIONS= dh_strip -ppython-sip -Npython-sip-dev --dbg-package=python-sip-dbg
-	DH_OPTIONS= dh_strip -ppython3-sip-dev
-	DH_OPTIONS= dh_strip -ppython3-sip -Npython3-sip-dev --dbg-package=python3-sip-dbg
-	DH_OPTIONS= dh_strip -psip-dev --dbgsym-migration='sip-dbg (<< 4.19.3+dfsg-2~)'
-endif
-	dh_strip_nondeterminism
-	dh_compress -X.inv
-	dh_python2 --no-dbg-cleaning -N sip-dev
-	dh_python3 --no-dbg-cleaning -N sip-dev
-	dh_fixperms
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
 
-# Build architecture independant packages using the common target.
-binary-indep:
+override_dh_strip:
+	dh_strip -ppython-sip --dbg-package=python-sip-dbg
+	dh_strip -ppython3-sip --dbg-package=python3-sip-dbg
+	dh_strip --remaining-packages -Npython-sip-dbg -Npython3-sip-dbg
+
+override_dh_install-indep:
 	python3 -m sphinx sphinx debian/python-sip-doc/usr/share/doc/python-sip-doc/html
-	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
+	dh_sphinxdoc
 
-# Build architecture dependant packages using the common target.
-binary-arch: install-arch
-	$(MAKE) -f debian/rules DH_OPTIONS=-a binary-common
+override_dh_installdocs:
+	dh_installdocs -ppython-sip-dbg --link-doc=python-sip
+	dh_installdocs -ppython3-sip-dbg --link-doc=python3-sip
+	dh_installdocs --remaining-packages -A NEWS
 
-binary: binary-arch binary-indep
+override_dh_python2:
+	dh_python2 --no-dbg-cleaning
 
-.PHONY: build binary-indep binary-arch binary clean configure
+override_dh_python3:
+	echo "$(PYDIST)" > debian/python3-sip.pydist
+	dh_python3 --no-dbg-cleaning
+
+override_dh_gencontrol:
+	echo "sip:Provides=$(PY2_PROVIDES)" >> debian/python-sip.substvars
+	echo "sip3:Provides=$(PY3_PROVIDES)" >> debian/python3-sip.substvars
+	dh_gencontrol
