@@ -7,6 +7,7 @@ sip4 (4.19.16+dfsg-1) UNRELEASED; urgency=medium
   * Install the PEP 376 .dist-info directories (but without the RECORD).
   * Update debhelper compat level to 12, use the new syntax.
   * Simplify the .install files, add debian/not-installed file.
+  * Install sip and sip3 addons for the dh sequencer.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Thu, 18 Apr 2019 20:28:49 +0300
 
