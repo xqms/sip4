@@ -1,4 +1,4 @@
-sip4 (4.19.16+dfsg-1) UNRELEASED; urgency=medium
+sip4 (4.19.16+dfsg-1) experimental; urgency=medium
 
   * New upstream release (closes: #926904).
   * Use dh sequencer and the pybuild buildsystem.
@@ -9,7 +9,7 @@ sip4 (4.19.16+dfsg-1) UNRELEASED; urgency=medium
   * Simplify the .install files, add debian/not-installed file.
   * Install sip and sip3 addons for the dh sequencer.
 
- -- Dmitry Shachnev <mitya57@debian.org>  Thu, 18 Apr 2019 20:28:49 +0300
+ -- Dmitry Shachnev <mitya57@debian.org>  Thu, 25 Apr 2019 20:05:10 +0300
 
 sip4 (4.19.15+dfsg-1) experimental; urgency=medium
 
