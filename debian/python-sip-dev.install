@@ -1,3 +1,3 @@
-sipdistutils.py usr/lib/python2.7/dist-packages
-siplib/sip.h usr/include/python2.7
-../../debian/dh_sip usr/bin
+debian/dh_sip usr/bin
+usr/include/python2.7/sip.h
+usr/lib/python2.7/dist-packages/sipdistutils.py
