@@ -1,3 +1,9 @@
+sip4 (4.19.16+dfsg-2) UNRELEASED; urgency=medium
+
+  * Add debian/gitlab-ci.yml file with GitLab CI configuration.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Mon, 06 May 2019 19:56:24 +0300
+
 sip4 (4.19.16+dfsg-1) experimental; urgency=medium
 
   * New upstream release (closes: #926904).
