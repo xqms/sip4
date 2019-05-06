@@ -20,7 +20,7 @@ export PYBUILD_CONFIGURE_ARGS=mkdir build-{interpreter}; cd build-{interpreter};
 export PYBUILD_CONFIGURE_ARGS_python2-dbg=$(PYBUILD_CONFIGURE_ARGS) --no-tools --no-dist-info --no-stubs
 export PYBUILD_CONFIGURE_ARGS_python3-dbg=$(PYBUILD_CONFIGURE_ARGS_python2-dbg)
 export PYBUILD_BUILD_ARGS=$(MAKE) -C build-{interpreter}
-export PYBUILD_AFTER_BUILD=sed -i "s, -fdebug-prefix-map=$(CURDIR)=.,,g" build-{interpreter}/sipconfig.py
+export PYBUILD_AFTER_BUILD=sed -Ei "s, -f(debug|file)-prefix-map=$(CURDIR)=.,,g" build-{interpreter}/sipconfig.py
 export PYBUILD_INSTALL_ARGS=$(MAKE) -C build-{interpreter} install DESTDIR=$(CURDIR)/debian/tmp
 export PYBUILD_INSTALL_ARGS_python2-dbg=$(MAKE) -C build-{interpreter} install DESTDIR=$(CURDIR)/debian/{package}
 export PYBUILD_INSTALL_ARGS_python3-dbg=$(PYBUILD_INSTALL_ARGS_python2-dbg)
