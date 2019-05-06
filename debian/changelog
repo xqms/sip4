@@ -3,6 +3,7 @@ sip4 (4.19.17+dfsg-1) UNRELEASED; urgency=medium
   * New upstream release.
   * Add debian/gitlab-ci.yml file with GitLab CI configuration.
   * Fix reproducible build when fixfilepath setting is set.
+  * Fix hardcoded sip version in debian/not-installed.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Mon, 06 May 2019 19:56:24 +0300
 
