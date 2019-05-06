@@ -1,4 +1,25 @@
+2019-05-06  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.17.
+	[6bd401a26793] [4.19.17] <4.19-maint>
+
+	* NEWS:
+	Updated the NEWS file.
+	[ed0d7dcc2f6d] <4.19-maint>
+
+2019-05-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c:
+	Do not add the members of module-level scoped enums to the module
+	dict.
+	[7af121a0120a] <4.19-maint>
+
 2019-04-11  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.16 for changeset 0aac5d17136d
+	[0ab2a63314a5] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.16.
