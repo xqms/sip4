@@ -1,5 +1,6 @@
-sip4 (4.19.16+dfsg-2) UNRELEASED; urgency=medium
+sip4 (4.19.17+dfsg-1) UNRELEASED; urgency=medium
 
+  * New upstream release.
   * Add debian/gitlab-ci.yml file with GitLab CI configuration.
   * Fix reproducible build when fixfilepath setting is set.
 
