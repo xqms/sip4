@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Contact: pyqt@riverbankcomputing.com
-Files-Excluded: doc/html sipgen/lexer.c sipgen/parser.c sipgen/parser.h
+Files-Excluded: doc sipgen/lexer.c sipgen/parser.c sipgen/parser.h
 
 Files: *
 Copyright: 2015-2018, Riverbank Computing Limited

@@ -1,3 +1,9 @@
+sip4 (4.19.17+dfsg-2) UNRELEASED; urgency=medium
+
+  * Fix Lintian source-contains-empty-directory warning.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Wed, 15 May 2019 17:20:09 +0300
+
 sip4 (4.19.17+dfsg-1) experimental; urgency=medium
 
   * New upstream release.
