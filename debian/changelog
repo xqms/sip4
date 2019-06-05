@@ -1,3 +1,81 @@
+sip4 (4.19.17+dfsg-1) experimental; urgency=medium
+
+  * New upstream release.
+  * Add debian/gitlab-ci.yml file with GitLab CI configuration.
+  * Fix reproducible build when fixfilepath setting is set.
+  * Fix hardcoded sip version in debian/not-installed.
+  * Enable fixfilepath setting to make the CI reprotest pass.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Fri, 10 May 2019 12:35:07 +0300
+
+sip4 (4.19.16+dfsg-1) experimental; urgency=medium
+
+  * New upstream release (closes: #926904).
+  * Use dh sequencer and the pybuild buildsystem.
+  * Remove references to build path from the generated sipconfig.py files.
+  * Fix dist-packages paths in the sipconfig.py files (LP: #1822733).
+  * Install the PEP 376 .dist-info directories (but without the RECORD).
+  * Update debhelper compat level to 12, use the new syntax.
+  * Simplify the .install files, add debian/not-installed file.
+  * Install sip and sip3 addons for the dh sequencer.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Thu, 25 Apr 2019 20:05:10 +0300
+
+sip4 (4.19.15+dfsg-1) experimental; urgency=medium
+
+  * New upstream release.
+  * Drop pyqt4_no_nullptr.diff, included in the new release.
+  * Update debian/watch for another upstream change.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sun, 24 Mar 2019 14:17:10 +0300
+
+sip4 (4.19.14+dfsg-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Bump API version to 12.6.
+  * Backport upstream patch fixing PyQt4 build regression.
+  * Update debian/watch to use the new tarballs location.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 23 Feb 2019 15:05:07 +0300
+
+sip4 (4.19.13+dfsg-2) unstable; urgency=medium
+
+  * Team upload.
+  * Remove myself from uploaders
+  * Bump standards-version to 4.3.0 without further change
+
+ -- Scott Kitterman <scott@kitterman.com>  Sat, 12 Jan 2019 06:21:05 -0500
+
+sip4 (4.19.13+dfsg-1) unstable; urgency=medium
+
+  [ Ondřej Nový ]
+  * Use 'python3 -m sphinx' instead of sphinx-build for building docs
+  * d/watch: Use https protocol
+
+  [ Dmitry Shachnev ]
+  * New upstream release.
+  * Remove unnecessary get-orig-source target.
+  * Update debhelper compat level to 11.
+  * Install both upstream changelog and NEWS, per Policy 12.7.
+  * Bump Standards-Version to 4.2.1.
+  * Update Homepage field.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Fri, 05 Oct 2018 11:22:53 +0300
+
+sip4 (4.19.12+dfsg-1) unstable; urgency=medium
+
+  * Exclude sipgen/lexer.c and sipgen/parser.{c,h} from the tarball.
+  * New upstream release.
+    - Fixes segfault when -n option is not specified (closes: #903263).
+  * Drop header_install.diff, applied upstream.
+  * Bump API version to 12.5.
+  * Build sipgen only once, not for every Python version.
+  * Stop passing -e option to configure.py, the default value is fine.
+  * Fix race condition when generating debian/sipconfig_py3.py.
+  * Bump Standards-Version to 4.1.5, no changes needed.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sun, 08 Jul 2018 17:03:16 +0300
+
 sip4 (4.19.11+dfsg-1) unstable; urgency=medium
 
   [ Ondřej Nový ]

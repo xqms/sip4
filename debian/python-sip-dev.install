@@ -1,3 +1,4 @@
-usr/include/python2*
-usr/lib/python2*/*-packages/sipdistutils.py
-../../debian/dh_sip usr/bin
+debian/dh_sip usr/bin
+debian/sip.pm usr/share/perl5/Debian/Debhelper/Sequence
+usr/include/python2.7/sip.h
+usr/lib/python2.7/dist-packages/sipdistutils.py

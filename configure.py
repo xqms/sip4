@@ -30,8 +30,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x04130b
-sip_version_str = "4.19.11"
+sip_version = 0x041311
+sip_version_str = "4.19.17"
 py_version = sys.hexversion >> 8
 py_platform = sys.platform
 plat_py_site_dir = None
@@ -46,6 +46,7 @@ sip_bin_dir = ''
 sip_inc_dir = ''
 sip_root_dir = ''
 sip_module_dir = ''
+sip_module_dest_dir = ''
 sip_sip_dir = ''
 pyi_dir = ''
 sysroot = ''
@@ -154,7 +155,8 @@ def set_build_platform():
         "sunos5":       "solaris-cc",
         "ultrix":       "ultrix-g++",
         "unix_sv":      "unixware-g++",
-        "unixware":     "unixware-cc"
+        "unixware":     "unixware-cc",
+        "haiku1":       "haiku-g++"
     }
 
     build_platform = "none"
@@ -182,8 +184,10 @@ def inform_user():
 
     if not opts.no_tools:
         siputils.inform("The SIP code generator will be installed in %s." % sip_bin_dir)
+        siputils.inform("The sip.h header file will be installed in %s." % sip_inc_dir)
 
-    siputils.inform("The %s module will be installed in %s." % (sip_module_name, sip_module_dir))
+    if not opts.no_module:
+        siputils.inform("The %s module will be installed in %s." % (sip_module_name, sip_module_dest_dir))
 
     if opts.pyi:
         siputils.inform("The sip.pyi stub file will be installed in %s." % pyi_dir)
@@ -191,7 +195,6 @@ def inform_user():
     if opts.static:
         siputils.inform("The %s module will be built as a static library." % sip_module_name)
 
-    siputils.inform("The sip.h header file will be installed in %s." % sip_inc_dir)
     siputils.inform("The default directory to install .sip files in is %s." % sip_sip_dir)
 
     if opts.use_qmake is None:
@@ -301,33 +304,35 @@ def create_makefiles(macros):
     cfg.set_build_macros(macros)
 
     all_installs = []
-    installs = []
+    top_installs = []
+    gen_installs = []
+    subdirs = []
 
-    if opts.no_tools:
-        subdirs = ["siplib"]
-    else:
-        subdirs = ["sipgen", "siplib"]
+    if not opts.no_tools:
+        subdirs.append('sipgen')
+        top_installs.append(
+                (["sipconfig.py", os.path.join(src_dir, "sipdistutils.py")],
+                        cfg.sip_root_dir))
+        gen_installs.append(
+                (os.path.join(src_dir, "siplib", "sip.h"), cfg.sip_inc_dir))
 
-        # Only install the (deprecated) build system for legacy installs.
-        if sip_module_name == 'sip':
-            installs.append(
-                    (["sipconfig.py", os.path.join(src_dir, "sipdistutils.py")],
-                            cfg.sip_root_dir))
+    if not opts.no_module:
+        subdirs.append('siplib')
 
-    all_installs += installs
+    all_installs.extend(top_installs)
+    all_installs.extend(gen_installs)
 
     # The command to run to generate the dist-info directory.
-    distinfo_dir = os.path.join(cfg.sip_root_dir,
+    mk_distinfo = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                'mk_distinfo.py')
+    distinfo_dir = os.path.join(cfg.sip_module_dir,
             '%s-%s.dist-info' % (sip_module_name.replace('.', '_'),
                     sip_version_str))
 
-    if sys.platform != 'win32':
-        distinfo_dir = '$(DESTDIR)' + distinfo_dir
-
-    mk_distinfo = '%s mk_distinfo.py %s installed.txt' % (sys.executable,
-            distinfo_dir)
-
     if opts.use_qmake:
+        run_mk_distinfo = '%s %s \\\"$(INSTALL_ROOT)\\\" %s installed.txt' % (
+                sys.executable, mk_distinfo, distinfo_dir)
+
         sipconfig.inform("Creating top level .pro file...")
 
         pro = open("sip.pro", "w")
@@ -335,8 +340,9 @@ def create_makefiles(macros):
         pro.write("TEMPLATE = subdirs\n")
         pro.write("SUBDIRS = %s\n" % " ".join(subdirs))
 
-        if installs:
-            files, path = installs
+        if top_installs:
+            # There will only be one element.
+            files, path = top_installs[0]
             pro.write("\n")
             pro.write("build_system.files = %s\n" % " ".join(files))
             pro.write("build_system.path = %s\n" % quote(path))
@@ -344,23 +350,26 @@ def create_makefiles(macros):
 
         if opts.distinfo:
             pro.write("\n")
-            pro.write("distinfo.extra = %s\n" % mk_distinfo)
-            pro.write("distinfo.path = %s\n" % quote(cfg.sip_root_dir))
+            pro.write("distinfo.extra = %s\n" % run_mk_distinfo)
+            pro.write("distinfo.path = %s\n" % quote(cfg.sip_module_dir))
             pro.write("INSTALLS += distinfo\n")
 
         pro.close()
     else:
+        run_mk_distinfo = '%s %s "$(DESTDIR)" %s installed.txt' % (
+                sys.executable, mk_distinfo, distinfo_dir)
+
         sipconfig.inform("Creating top level Makefile...")
 
         # Note that mk_distinfo.py won't exist if we are building from the
         # repository.
-        if opts.distinfo and os.path.isfile('mk_distinfo.py'):
-            installs.append((mk_distinfo, None))
+        if opts.distinfo and os.path.isfile(mk_distinfo):
+            top_installs.append((run_mk_distinfo, None))
 
         sipconfig.ParentMakefile(
             configuration=cfg,
             subdirs=subdirs,
-            installs=installs
+            installs=top_installs
         ).generate()
 
     if opts.use_qmake:
@@ -392,6 +401,14 @@ def create_makefiles(macros):
         pro.write("HEADERS = %s\n" % " ".join(
                 [qmake_quote(h) for h in headers]))
 
+        if gen_installs:
+            # There will only be one element.
+            files, path = gen_installs[0]
+            pro.write("\n")
+            pro.write("sip_h.files = %s\n" % " ".join(files))
+            pro.write("sip_h.path = %s\n" % quote(path))
+            pro.write("INSTALLS += sip_h\n")
+
         pro.close()
     else:
         sipconfig.inform("Creating sip code generator Makefile...")
@@ -401,6 +418,7 @@ def create_makefiles(macros):
             build_file=os.path.join(src_dir, "sipgen", "sipgen.sbf"),
             dir="sipgen",
             install_dir=os.path.dirname(cfg.sip_bin),
+            installs=gen_installs,
             console=1,
             warnings=1,
             universal=opts.universal,
@@ -408,24 +426,29 @@ def create_makefiles(macros):
             deployment_target=opts.deployment_target
         ).generate()
 
-    # The code generator installs.
-    sip_dir, sip_exe = os.path.split(cfg.sip_bin)
-    if sys.platform == 'win32':
-        sip_exe += '.exe'
+    # The implied code generator installs.
+    if not opts.no_tools:
+        sip_dir, sip_exe = os.path.split(cfg.sip_bin)
+        if sys.platform == 'win32':
+            sip_exe += '.exe'
 
-    all_installs.append((sip_exe, sip_dir))
+        all_installs.append((sip_exe, sip_dir))
 
     # The module installs.
-    module_installs=[
-            (os.path.join(os.getcwd(), "siplib", "sip.h"), cfg.sip_inc_dir)]
+    module_installs=[]
 
     if opts.pyi:
         module_installs.append((os.path.join(src_dir, 'sip.pyi'), pyi_dir))
 
     all_installs.extend(module_installs)
 
-    mod_ext = '.pyd' if sys.platform == 'win32' else '.so'
-    all_installs.append(('sip' + mod_ext, cfg.sip_module_dir))
+    if not opts.no_module:
+        if sys.platform == 'win32':
+            mod = 'sip.lib' if opts.static else 'sip.pyd'
+        else:
+            mod = 'libsip.a' if opts.static else 'sip.so'
+
+        all_installs.append((mod, sip_module_dest_dir))
 
     if opts.use_qmake:
         sipconfig.inform("Creating sip module .pro file...")
@@ -450,7 +473,11 @@ def create_makefiles(macros):
 
         if sip_module_name != 'sip':
             pro.write("\n")
-            pro.write('DEFINES += SIP_MODULE_NAME=\\\\\\"%s\\\\\\"\n' % sip_module_name)
+            pro.write('DEFINES += SIP_MODULE_NAME=%s\n' % sip_module_name)
+
+            base_name = sip_module_name.split('.')[-1]
+            if base_name != 'sip':
+                pro.write('DEFINES += SIP_MODULE_BASENAME=%s\n' % base_name)
 
         if not opts.static:
             # These only need to be correct for Windows.
@@ -482,7 +509,7 @@ target.files = $$PY_MODULE
 """ % (debug_suffix, link_lib_dir))
 
         pro.write("\n")
-        pro.write("target.path = %s\n" % cfg.sip_module_dir)
+        pro.write("target.path = %s\n" % sip_module_dest_dir)
         pro.write("INSTALLS += target\n")
 
         if opts.pyi:
@@ -490,11 +517,6 @@ target.files = $$PY_MODULE
             pro.write("sip_pyi.files = sip.pyi\n")
             pro.write("sip_pyi.path = %s\n" % pyi_dir)
             pro.write("INSTALLS += sip_pyi\n")
-
-        pro.write("\n")
-        pro.write("sip_h.files = sip.h\n")
-        pro.write("sip_h.path = %s\n" % cfg.sip_inc_dir)
-        pro.write("INSTALLS += sip_h\n")
 
         c_sources = get_sources("siplib", "*.c")
         cpp_sources = get_sources("siplib", "*.cpp")
@@ -517,7 +539,7 @@ target.files = $$PY_MODULE
             configuration=cfg,
             build_file=os.path.join(src_dir, "siplib", "siplib.sbf"),
             dir="siplib",
-            install_dir=cfg.sip_module_dir,
+            install_dir=sip_module_dest_dir,
             installs=module_installs,
             console=1,
             warnings=1,
@@ -529,8 +551,11 @@ target.files = $$PY_MODULE
         )
 
         if sip_module_name != 'sip':
-            makefile.DEFINES.append(
-                    'SIP_MODULE_NAME=\\"%s\\"' % sip_module_name)
+            makefile.DEFINES.append('SIP_MODULE_NAME=%s' % sip_module_name)
+
+            base_name = sip_module_name.split('.')[-1]
+            if base_name != 'sip':
+                makefile.DEFINES.append('SIP_MODULE_BASENAME=%s' % base_name)
 
         if src_dir != build_dir:
             src_siplib_dir = os.path.join(src_dir, "siplib")
@@ -733,6 +758,9 @@ def create_optparser(sdk_dir):
     p.add_option("--sysroot", dest='sysroot', type='string', action='callback',
             callback=store_abspath_dir, metavar="DIR",
             help="DIR is the target system root directory")
+    p.add_option("--no-module", action="store_true", default=False,
+            dest="no_module", help="disable the installation of the sip "
+            "module [default: enabled]")
     p.add_option("--no-tools", action="store_true", default=False,
             dest="no_tools", help="disable the building of the code generator "
             "and the installation of the build system [default: enabled]")
@@ -893,11 +921,15 @@ def main(argv):
     else:
         opts.universal = ''
 
+    # No sip module also implies no stubs.
+    if opts.no_module:
+        opts.pyi = False
+
     # Apply the overrides from any configuration file.
     global plat_bin_dir, plat_py_conf_inc_dir, plat_py_inc_dir
     global plat_py_lib_dir, plat_py_site_dir, plat_sip_dir
     global sip_bin_dir, sip_inc_dir, sip_root_dir, sip_module_dir, sip_sip_dir
-    global pyi_dir
+    global sip_module_dest_dir, sip_module_name, pyi_dir
 
     # Set defaults.
     sip_bin_dir = plat_bin_dir
@@ -930,7 +962,9 @@ def main(argv):
     if opts.destdir is not None:
         sip_root_dir = opts.destdir
 
-    global sip_module_name
+    # The module directory might have been set in a configuration file.
+    if not sip_module_dir:
+        sip_module_dir = sip_root_dir
 
     sip_module_name = opts.sip_module
 
@@ -938,10 +972,10 @@ def main(argv):
 
     if len(module_path) > 1:
         del module_path[-1]
-        module_path.insert(0, sip_root_dir)
-        sip_module_dir = os.path.join(*module_path)
+        module_path.insert(0, sip_module_dir)
+        sip_module_dest_dir = os.path.join(*module_path)
     else:
-        sip_module_dir = sip_root_dir
+        sip_module_dest_dir = sip_module_dir
 
     # Override from the command line.
     if opts.platform is not None:
@@ -959,7 +993,7 @@ def main(argv):
     if opts.pyidir is not None:
         pyi_dir = opts.pyidir
     else:
-        pyi_dir = sip_module_dir
+        pyi_dir = sip_module_dest_dir
 
     # Get the platform specific macros for building.
     macros = siputils.parse_build_macros(

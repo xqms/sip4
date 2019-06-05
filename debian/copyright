@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Contact: pyqt@riverbankcomputing.com
-Files-Excluded: doc/html
+Files-Excluded: doc/html sipgen/lexer.c sipgen/parser.c sipgen/parser.h
 
 Files: *
 Copyright: 2015-2018, Riverbank Computing Limited
@@ -13,33 +13,6 @@ License: GPL-3
 Files: sipdistutils.py
 Copyright: 2011, Develer Srl.
 License: SIP or GPL-2 or GPL-3
-
-Files: sipgen/parser.h
-       sipgen/parser.c
-Copyright: 1984-2006, Free Software Foundation, Inc.
-License: GPL-2+ with Bison exception
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2, or (at your option)
- any later version.
- .
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
- .
- On Debian systems, the complete text of the GNU General Public License
- version 2 can be found in `/usr/share/common-licenses/GPL-2'.
- .
- As a special exception, you may create a larger work that contains
- part or all of the Bison parser skeleton and distribute that work
- under terms of your choice, so long as that work isn't itself a
- parser generator using the skeleton or a modified version thereof
- as a parser skeleton.  Alternatively, if you modify or redistribute
- the parser skeleton itself, you may (at your option) remove this
- special exception, which will cause the skeleton and the resulting
- Bison output files to be licensed under the GNU General Public
- License without this special exception.
 
 Files: debian/*
 Copyright: 2000-2004, Ricardo Javier Cardenes Medina <rcardenes@debian.org>

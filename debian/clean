@@ -1,0 +1,7 @@
+debian/manpages/dh_sip.1
+debian/manpages/dh_sip3.1
+debian/python3-sip.pydist
+debian/sipconfig_py3.py
+sipgen/lexer.c
+sipgen/parser.c
+sipgen/parser.h

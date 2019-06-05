@@ -1,2 +1,6 @@
-usr/lib/python2.*/*-packages/sip.so
-usr/lib/python2.*/*-packages/sip.pyi
+debian/sipconfig.py usr/lib/python2.7/dist-packages
+usr/lib/python2.7/dist-packages/sip-*.dist-info/INSTALLER
+usr/lib/python2.7/dist-packages/sip-*.dist-info/METADATA
+usr/lib/python2.7/dist-packages/sip.pyi
+usr/lib/python2.7/dist-packages/sip.so
+usr/lib/python2.7/dist-packages/sipconfig_nd.py

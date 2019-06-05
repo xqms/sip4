@@ -115,6 +115,7 @@ unsigned long sip_api_long_as_unsigned_long(PyObject *o);
 PY_LONG_LONG sip_api_long_as_long_long(PyObject *o);
 unsigned PY_LONG_LONG sip_api_long_as_unsigned_long_long(PyObject *o);
 #endif
+size_t sip_api_long_as_size_t(PyObject *o);
 
 
 extern sipQtAPI *sipQtSupport;  /* The Qt support API. */
@@ -150,6 +151,9 @@ PyObject *sip_api_invoke_slot_ex(const sipSlot *slot, PyObject *sigargs,
 void *sip_api_convert_rx(sipWrapper *txSelf, const char *sigargs,
         PyObject *rxObj, const char *slot, const char **memberp, int flags);
 int sip_api_save_slot(sipSlot *sp, PyObject *rxObj, const char *slot);
+int sip_api_convert_from_slice_object(PyObject *slice, SIP_SSIZE_T length,
+        SIP_SSIZE_T *start, SIP_SSIZE_T *stop, SIP_SSIZE_T *step,
+        SIP_SSIZE_T *slicelength);
 
 
 /*
