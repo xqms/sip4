@@ -1,4 +1,57 @@
+2019-07-03  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.18.
+	[d750db0124aa] [4.19.18] <4.19-maint>
+
+2019-07-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Updated the NEWS file.
+	[ef41d6f6ba52] <4.19-maint>
+
+2019-07-01  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* configure.py.in:
+	Removed a non-ASCII character.
+	[345665372f96] <4.19-maint>
+
+2019-06-30  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c:
+	Don't try and acquire the GIL if the interpreter is no longer there.
+	[0339fda05a90] <4.19-maint>
+
+2019-06-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/array.c, siplib/descriptors.c, siplib/siplib.c,
+	siplib/voidptr.c:
+	Fixed warnings triggered by Python v3.8.
+	[79f89221765d] <4.19-maint>
+
+2019-06-20  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/introduction.rst.in:
+	Updated the docs regarding sip5.
+	[a9890af70254] <4.19-maint>
+
+2019-05-22  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* configure.py.in:
+	Check that the name of the private sip module is valid.
+	[57ec4f189c8f] <4.19-maint>
+
+	* siplib/sip.h.in:
+	Define SIP_NULLPTR as NULL (rather than 0) for older C++ compilers
+	so that the right sized zero gets passed to functions with variable
+	number of arguments (where the argument type isn't known).
+	[8e12736053f7] <4.19-maint>
+
 2019-05-06  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.17 for changeset 6bd401a26793
+	[1cb4f1190dc9] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.17.

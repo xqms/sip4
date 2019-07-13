@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Define the SIP version number.
  */
-#define SIP_VERSION         0x041311
-#define SIP_VERSION_STR     "4.19.17"
+#define SIP_VERSION         0x041312
+#define SIP_VERSION_STR     "4.19.18"
 
 
 /*
@@ -303,7 +303,7 @@ typedef unsigned int uint;
 #else
 
 /* Earlier versions of C++. */
-#define SIP_NULLPTR     0
+#define SIP_NULLPTR     NULL
 #define SIP_OVERRIDE
 
 #endif

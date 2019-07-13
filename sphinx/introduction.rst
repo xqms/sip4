@@ -1,7 +1,7 @@
 Introduction
 ============
 
-This is the reference guide for SIP 4.19.17.  SIP is a tool for
+This is the reference guide for SIP 4.19.18.  SIP is a tool for
 automatically generating `Python <https://www.python.org>`__ bindings for C and
 C++ libraries.  SIP was originally developed in 1998 for
 `PyQt <https://www.riverbankcomputing.com/software/pyqt>`__ - the Python
@@ -168,7 +168,8 @@ Preparing for SIP v5
 --------------------
 
 SIP v4.19 will be the final series of SIP v4 releases.  The next major release
-of SIP will be v5.  SIP v5.0 and SIP v5.1 will have different goals.
+of SIP will be v5.  SIP v5 will adopt semantic versioning.  SIP v5.0 and SIP
+v5.1 will have different goals.
 
 The goals of SIP v5.0 will be to:
 
