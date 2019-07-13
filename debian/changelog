@@ -1,10 +1,11 @@
-sip4 (4.19.18+dfsg-1) UNRELEASED; urgency=medium
+sip4 (4.19.18+dfsg-1) unstable; urgency=medium
 
   * New upstream release.
   * Fix Lintian source-contains-empty-directory warning.
   * Fix a typo in a comment in debian/rules.
+  * Upload to unstable.
 
- -- Dmitry Shachnev <mitya57@debian.org>  Wed, 15 May 2019 17:20:09 +0300
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 13 Jul 2019 20:04:09 +0300
 
 sip4 (4.19.17+dfsg-1) experimental; urgency=medium
 
