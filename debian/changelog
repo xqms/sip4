@@ -2,6 +2,7 @@ sip4 (4.19.18+dfsg-1) UNRELEASED; urgency=medium
 
   * New upstream release.
   * Fix Lintian source-contains-empty-directory warning.
+  * Fix a typo in a comment in debian/rules.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Wed, 15 May 2019 17:20:09 +0300
 
