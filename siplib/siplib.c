@@ -1,7 +1,7 @@
 /*
  * SIP library code.
  *
- * Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+ * Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
  *
  * This file is part of SIP.
  *
@@ -121,6 +121,9 @@ static PyTypeObject sipWrapperType_Type = {
 #if PY_VERSION_HEX >= 0x03040000
     0,                      /* tp_finalize */
 #endif
+#if PY_VERSION_HEX >= 0x03080000
+    0,                      /* tp_vectorcall */
+#endif
 };
 
 
@@ -189,6 +192,9 @@ static sipWrapperType sipWrapper_Type = {
 #endif
 #if PY_VERSION_HEX >= 0x03040000
             0,              /* tp_finalize */
+#endif
+#if PY_VERSION_HEX >= 0x03080000
+            0,              /* tp_vectorcall */
 #endif
         },
 #if PY_VERSION_HEX >= 0x03050000
@@ -810,6 +816,9 @@ static PyTypeObject sipEnumType_Type = {
     0,                      /* tp_version_tag */
 #if PY_VERSION_HEX >= 0x03040000
     0,                      /* tp_finalize */
+#endif
+#if PY_VERSION_HEX >= 0x03080000
+    0,                      /* tp_vectorcall */
 #endif
 };
 
@@ -6105,11 +6114,18 @@ void sip_api_instance_destroyed(sipSimpleWrapper *sw)
  */
 static void sip_api_instance_destroyed_ex(sipSimpleWrapper **sipSelfp)
 {
+    /* If there is no interpreter just to the minimum and get out. */
+    if (sipInterpreter == NULL)
+    {
+        *sipSelfp = NULL;
+        return;
+    }
+
     SIP_BLOCK_THREADS
 
     sipSimpleWrapper *sipSelf = *sipSelfp;
 
-    if (sipSelf != NULL && sipInterpreter != NULL)
+    if (sipSelf != NULL)
     {
         PyObject *xtype, *xvalue, *xtb;
 
@@ -6140,15 +6156,15 @@ static void sip_api_instance_destroyed_ex(sipSimpleWrapper **sipSelfp)
         {
             removeFromParent((sipWrapper *)sipSelf);
         }
-    }
 
-    /*
-     * Normally this is done in the generated dealloc function.  However this
-     * is only called if the pointer/access function has not been reset (which
-     * it has).  It acts as a guard to prevent any further invocations of 
-     * reimplemented virtuals.
-     */
-    *sipSelfp = NULL;
+        /*
+         * Normally this is done in the generated dealloc function.  However
+         * this is only called if the pointer/access function has not been
+         * reset (which it has).  It acts as a guard to prevent any further
+         * invocations of reimplemented virtuals.
+         */
+        *sipSelfp = NULL;
+    }
 
     SIP_UNBLOCK_THREADS
 }
@@ -11541,6 +11557,9 @@ sipWrapperType sipSimpleWrapper_Type = {
             0,              /* tp_version_tag */
 #if PY_VERSION_HEX >= 0x03040000
             0,              /* tp_finalize */
+#endif
+#if PY_VERSION_HEX >= 0x03080000
+            0,              /* tp_vectorcall */
 #endif
         },
 #if PY_VERSION_HEX >= 0x03050000

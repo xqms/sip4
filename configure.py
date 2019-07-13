@@ -1,6 +1,6 @@
 # This script handles the SIP configuration and generates the Makefiles.
 #
-# Copyright (c) 2018 Riverbank Computing Limited <info@riverbankcomputing.com>
+# Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
 #
 # This file is part of SIP.
 #
@@ -15,6 +15,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 
+import keyword
 import sys
 import os
 import glob
@@ -30,8 +31,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x041311
-sip_version_str = "4.19.17"
+sip_version = 0x041312
+sip_version_str = "4.19.18"
 py_version = sys.hexversion >> 8
 py_platform = sys.platform
 plat_py_site_dir = None
@@ -969,6 +970,17 @@ def main(argv):
     sip_module_name = opts.sip_module
 
     module_path = sip_module_name.split(".")
+
+    # Check the module name is valid.
+    for m in module_path:
+        # Python v2 doesn't have isidentifier() but we don't bother to provide
+        # an alternative.
+        try:
+            if keyword.iskeyword(m) or not m.isidentifier():
+                siputils.error(
+                        "'%s' is an invalid Python module name." % sip_module_name)
+        except AttributeError:
+            pass
 
     if len(module_path) > 1:
         del module_path[-1]
