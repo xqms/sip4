@@ -1,6 +1,10 @@
-sip4 (4.19.18+dfsg-2) UNRELEASED; urgency=medium
+sip4 (4.19.19+dfsg-1) UNRELEASED; urgency=medium
 
+  [ Ondřej Nový ]
   * Bump Standards-Version to 4.4.0.
+
+  [ Dmitry Shachnev ]
+  * New upstream release.
 
  -- Ondřej Nový <onovy@debian.org>  Fri, 19 Jul 2019 23:53:30 +0200
 
