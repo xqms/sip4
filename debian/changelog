@@ -5,6 +5,7 @@ sip4 (4.19.19+dfsg-1) UNRELEASED; urgency=medium
 
   [ Dmitry Shachnev ]
   * New upstream release.
+  * Bump API version to 12.7.
 
  -- Ondřej Nový <onovy@debian.org>  Fri, 19 Jul 2019 23:53:30 +0200
 
