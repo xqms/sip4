@@ -1,12 +1,11 @@
-sip4 (4.19.19+dfsg-1) UNRELEASED; urgency=medium
+sip4 (4.19.19+dfsg-1) unstable; urgency=medium
 
-  [ Dmitry Shachnev ]
   * New upstream release.
   * Bump API version to 12.7.
   * Update sip.1 manpage to reflect deprecation of the -B option.
   * Bump Standards-Version to 4.4.1, no changes needed.
 
- -- Ondřej Nový <onovy@debian.org>  Fri, 19 Jul 2019 23:53:30 +0200
+ -- Dmitry Shachnev <mitya57@debian.org>  Tue, 15 Oct 2019 19:35:22 +0300
 
 sip4 (4.19.18+dfsg-1) unstable; urgency=medium
 
