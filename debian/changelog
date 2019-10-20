@@ -1,4 +1,4 @@
-sip4 (4.19.19+dfsg-2) UNRELEASED; urgency=medium
+sip4 (4.19.19+dfsg-2) unstable; urgency=medium
 
   * Fix header files location for Python 3.8.
 
