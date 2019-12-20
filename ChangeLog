@@ -1,4 +1,33 @@
+2019-12-19  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.20.
+	[7c54145e55b6] [4.19.20] <4.19-maint>
+
+2019-12-18  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sphinx/conf.py.in:
+	Updated the Sphinx configuration.
+	[c7f732db742f] <4.19-maint>
+
+2019-12-16  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Updated the NEWS file.
+	[0bee3e89d9e0] <4.19-maint>
+
+2019-12-13  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y:
+	Don't check for name clashes between members of scoped enums and the
+	enum's containing scope.
+	[42345e2ffb44] <4.19-maint>
+
 2019-09-07  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.19 for changeset 3e90c5d80366
+	[59f71ec0b376] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.19.
