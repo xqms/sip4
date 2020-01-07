@@ -49,7 +49,7 @@ Package: python-sip-dev
 Architecture: any
 Section: python
 Depends: ${python:Depends}, python-sip (= ${binary:Version}), sip-dev (= ${binary:Version}),
- python-dev, ${misc:Depends}
+ python2-dev, ${misc:Depends}
 Suggests: python-sip-doc
 Description: Python/C++ bindings generator development files
  SIP is a tool for generating bindings for C++ classes with some ideas
