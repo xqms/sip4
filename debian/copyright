@@ -3,7 +3,7 @@ Upstream-Contact: pyqt@riverbankcomputing.com
 Files-Excluded: doc sipgen/lexer.c sipgen/parser.c sipgen/parser.h
 
 Files: *
-Copyright: 2015-2018, Riverbank Computing Limited
+Copyright: 2015-2020, Riverbank Computing Limited
 License: SIP or GPL-2 or GPL-3
 
 Files: mk_distinfo.py
@@ -22,8 +22,8 @@ Copyright: 2000-2004, Ricardo Javier Cardenes Medina <rcardenes@debian.org>
            2009-2011, Michael Casadevall <mcasadevall@debian.org>
            2011,      Michał Zając <michal.zajac@gmail.com>
            2011-2014, Scott Kitterman <scott@kitterman.com>
-           2013-2018, Dmitry Shachnev <mitya57@debian.org>
            2001-2014, Other Debian contributors
+           2013-2020, Dmitry Shachnev <mitya57@debian.org>
 License: GPL-2+
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
