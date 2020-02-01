@@ -1,7 +1,10 @@
-sip4 (4.19.20+dfsg-2) UNRELEASED; urgency=medium
+sip4 (4.19.21+dfsg-1) UNRELEASED; urgency=medium
 
   [ Matthias Klose ]
   * python-sip-dev: Depend on python2-dev instead of python-dev.
+
+  [ Dmitry Shachnev ]
+  * New upstream release.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Tue, 07 Jan 2020 18:05:36 +0300
 
