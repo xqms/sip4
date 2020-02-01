@@ -1,4 +1,47 @@
+2020-01-29  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.21 for changeset f334b39dc4c0
+	[9cb05a21f929] [tip] <4.19-maint>
+
+	* NEWS:
+	Released as v4.19.21.
+	[f334b39dc4c0] [4.19.21] <4.19-maint>
+
+	* NEWS:
+	Updated the NEWS file.
+	[179bc6c66773] <4.19-maint>
+
+2020-01-24  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c:
+	Fix a memory leak in sipGetReference().
+	[82ec38dc0e63] <4.19-maint>
+
+2020-01-22  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Make sure the keys for a class and a variable member are allocated
+	from the correct pools.
+	[699facc95914] <4.19-maint>
+
+	* sipgen/gencode.c, siplib/sip.h.in, siplib/siplib.c:
+	Further fixes to variable getters handling of wrapped classes.
+	[6a057b2d8537] <4.19-maint>
+
+2020-01-21  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, siplib/sip.h.in, siplib/siplib.c:
+	Fixed issues with C/C++ member variable getters and setters. This
+	restores the keeping of a reference to the containing object in the
+	instance of a contained class.
+	[137b9be794a1] <4.19-maint>
+
 2019-12-19  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.20 for changeset 7c54145e55b6
+	[901741c80127] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.20.
