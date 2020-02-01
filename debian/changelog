@@ -1,4 +1,4 @@
-sip4 (4.19.21+dfsg-1) UNRELEASED; urgency=medium
+sip4 (4.19.21+dfsg-1) unstable; urgency=medium
 
   [ Matthias Klose ]
   * python-sip-dev: Depend on python2-dev instead of python-dev.
@@ -9,7 +9,7 @@ sip4 (4.19.21+dfsg-1) UNRELEASED; urgency=medium
   * Drop explicit B-D on dh-strip-nondeterminism.
   * Bump Standards-Version to 4.5.0, no changes needed.
 
- -- Dmitry Shachnev <mitya57@debian.org>  Tue, 07 Jan 2020 18:05:36 +0300
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 01 Feb 2020 15:20:34 +0300
 
 sip4 (4.19.20+dfsg-1) unstable; urgency=medium
 
