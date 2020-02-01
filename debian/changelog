@@ -6,6 +6,7 @@ sip4 (4.19.21+dfsg-1) UNRELEASED; urgency=medium
   [ Dmitry Shachnev ]
   * New upstream release.
   * Bump copyright years in debian/copyright.
+  * Drop explicit B-D on dh-strip-nondeterminism.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Tue, 07 Jan 2020 18:05:36 +0300
 
