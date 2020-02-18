@@ -1,3 +1,46 @@
+sip4 (4.19.21+dfsg-1) unstable; urgency=medium
+
+  [ Matthias Klose ]
+  * python-sip-dev: Depend on python2-dev instead of python-dev.
+
+  [ Dmitry Shachnev ]
+  * New upstream release.
+  * Bump copyright years in debian/copyright.
+  * Drop explicit B-D on dh-strip-nondeterminism.
+  * Bump Standards-Version to 4.5.0, no changes needed.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 01 Feb 2020 15:20:34 +0300
+
+sip4 (4.19.20+dfsg-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Fri, 20 Dec 2019 13:24:27 +0300
+
+sip4 (4.19.19+dfsg-2) unstable; urgency=medium
+
+  * Fix header files location for Python 3.8.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sun, 20 Oct 2019 11:13:46 +0300
+
+sip4 (4.19.19+dfsg-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Bump API version to 12.7.
+  * Update sip.1 manpage to reflect deprecation of the -B option.
+  * Bump Standards-Version to 4.4.1, no changes needed.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Tue, 15 Oct 2019 19:35:22 +0300
+
+sip4 (4.19.18+dfsg-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Fix Lintian source-contains-empty-directory warning.
+  * Fix a typo in a comment in debian/rules.
+  * Upload to unstable.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 13 Jul 2019 20:04:09 +0300
+
 sip4 (4.19.17+dfsg-1) experimental; urgency=medium
 
   * New upstream release.

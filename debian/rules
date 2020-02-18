@@ -2,9 +2,9 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-PY2_PROVIDES=sip-api-12.0, sip-api-12.1, sip-api-12.2, sip-api-12.3, sip-api-12.4, sip-api-12.5, sip-api-12.6
-PY3_PROVIDES=sip-py3api-12.0, sip-py3api-12.1, sip-py3api-12.2, sip-py3api-12.3, sip-py3api-12.4, sip-py3api-12.5, sip-py3api-12.6
-# `dh_python3 --depends sip3` should generate dependency on newest API only
+PY2_PROVIDES=sip-api-12.0, sip-api-12.1, sip-api-12.2, sip-api-12.3, sip-api-12.4, sip-api-12.5, sip-api-12.6, sip-api-12.7
+PY3_PROVIDES=sip-py3api-12.0, sip-py3api-12.1, sip-py3api-12.2, sip-py3api-12.3, sip-py3api-12.4, sip-py3api-12.5, sip-py3api-12.6, sip-py3api-12.7
+# `dh_python3 --depends sip` should generate dependency on newest API only
 PYDIST=sip $(lastword $(PY3_PROVIDES))
 
 PYTHON3S := $(shell py3versions -vr)
@@ -57,8 +57,10 @@ override_dh_auto_install: debian/sipconfig_py3.py
 		sed -Ei "s,python3\.$$version/dist-packages,python3/dist-packages," build-python3.$$version-dbg/sipconfig.py; \
 		cp build-python3.$$version/sipconfig.py debian/tmp/usr/lib/python3/dist-packages/sipconfig_nd$$version.py; \
 		cp build-python3.$$version-dbg/sipconfig.py debian/tmp/usr/lib/python3/dist-packages/sipconfig_d$$version.py; \
-		mkdir debian/tmp/usr/include/python3.$${version}dm; \
-		ln -s ../python3.$${version}m/sip.h debian/tmp/usr/include/python3.$${version}dm/sip.h; \
+		abiflags=$$(python3.$$version -c "import sys; print(sys.abiflags)"); \
+		abiflags_dbg=$$(python3.$$version-dbg -c "import sys; print(sys.abiflags)"); \
+		mkdir debian/tmp/usr/include/python3.$${version}$${abiflags_dbg}; \
+		ln -s ../python3.$${version}$${abiflags}/sip.h debian/tmp/usr/include/python3.$${version}$${abiflags_dbg}/sip.h; \
 	done
 
 override_dh_installman:
