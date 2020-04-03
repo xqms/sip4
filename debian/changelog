@@ -1,3 +1,9 @@
+sip4 (4.19.21+dfsg-2) unstable; urgency=medium
+
+  * Drop Python 2 packages (closes: #938490).
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sun, 15 Mar 2020 15:08:48 +0300
+
 sip4 (4.19.21+dfsg-1) unstable; urgency=medium
 
   [ Matthias Klose ]
