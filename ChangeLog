@@ -1,12 +1,31 @@
-2020-01-29  Phil Thompson  <phil@riverbankcomputing.com>
+2020-04-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.22.
+	[4ca6f06991d5] [4.19.22] <4.19-maint>
+
+	* NEWS:
+	Updated the NEWS file.
+	[35cfe4fb8b1e] <4.19-maint>
+
+2020-03-12  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/metasrc/parser.y:
+	Fixed the handling of keyword argument names in imported class
+	templates.
+	[1510ce7f5463] <4.19-maint>
+
+2020-01-31  Phil Thompson  <phil@riverbankcomputing.com>
 
 	* .hgtags:
-	Added tag 4.19.21 for changeset f334b39dc4c0
-	[9cb05a21f929] [tip] <4.19-maint>
+	Added tag 4.19.21 for changeset a2a4d8ba9178
+	[dd9bc7744ed8] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.21.
-	[f334b39dc4c0] [4.19.21] <4.19-maint>
+	[a2a4d8ba9178] [4.19.21] <4.19-maint>
+
+2020-01-29  Phil Thompson  <phil@riverbankcomputing.com>
 
 	* NEWS:
 	Updated the NEWS file.
