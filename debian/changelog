@@ -1,3 +1,9 @@
+sip4 (4.19.22+dfsg-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Tue, 07 Apr 2020 15:18:12 +0300
+
 sip4 (4.19.21+dfsg-2) unstable; urgency=medium
 
   * Drop Python 2 packages (closes: #938490).
