@@ -1,4 +1,68 @@
+2020-06-08  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.23.
+	[853c4a8b4592] [4.19.23] <4.19-maint>
+
+2020-06-05  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* siplib/siplib.c:
+	Preserve any current exception in the implementation of the wrapper
+	dealloc functions.
+	[a5b6af9fab5a] <4.19-maint>
+
+2020-06-04  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Check there is a public copy ctor when we can't using an assigment
+	operator as a workaround.
+	[19026da2a827] <4.19-maint>
+
+2020-06-01  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed the code generation when making a copy of C++ object on the
+	stack to the heap when the class has no suitable ctor.
+	[42c99f4c1784] <4.19-maint>
+
+2020-05-30  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c, sipgen/sip.h.in, sipgen/transform.c:
+	The code generator now distinguishes between the copy/assignment
+	helper and the array helper when determining which helpers can be
+	generated.
+	[22ababb6d14a] <4.19-maint>
+
+2020-05-29  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Updated the NEWS file.
+	[c7dc4668d384] <4.19-maint>
+
+2020-05-22  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed the wrapping of methods that return a Py_Ssize_t.
+	[d85e9957e726] <4.19-maint>
+
+2020-04-22  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed a race condition when calling the PyQt5-specific meta-call
+	helper.
+	[812b5e26df96] <4.19-maint>
+
+2020-04-12  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* configure.py.in:
+	Added some missing quotes to configure.py.
+	[b5f2f60e72e5] <4.19-maint>
+
 2020-04-02  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.22 for changeset 4ca6f06991d5
+	[e06a23d69f9d] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.22.
