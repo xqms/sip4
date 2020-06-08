@@ -81,3 +81,6 @@ override_dh_python3:
 override_dh_gencontrol:
 	echo "sip3:Provides=$(PY3_PROVIDES)" >> debian/python3-sip.substvars
 	dh_gencontrol
+
+override_dh_missing-indep:
+	dh_missing --list-missing
