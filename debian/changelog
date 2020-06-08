@@ -1,11 +1,11 @@
-sip4 (4.19.23+dfsg-1) UNRELEASED; urgency=medium
+sip4 (4.19.23+dfsg-1) unstable; urgency=medium
 
   * Update debian/watch to work after recent website update.
   * New upstream release.
   * Update to debhelper compat level 13.
     - Run dh_missing with --list-missing for indep builds.
 
- -- Dmitry Shachnev <mitya57@debian.org>  Mon, 08 Jun 2020 12:21:18 +0300
+ -- Dmitry Shachnev <mitya57@debian.org>  Mon, 08 Jun 2020 23:05:25 +0300
 
 sip4 (4.19.22+dfsg-1) unstable; urgency=medium
 
