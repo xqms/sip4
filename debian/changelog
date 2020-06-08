@@ -1,6 +1,7 @@
-sip4 (4.19.22+dfsg-2) UNRELEASED; urgency=medium
+sip4 (4.19.23+dfsg-1) UNRELEASED; urgency=medium
 
   * Update debian/watch to work after recent website update.
+  * New upstream release.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Mon, 08 Jun 2020 12:21:18 +0300
 
