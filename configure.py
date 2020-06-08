@@ -1,6 +1,6 @@
 # This script handles the SIP configuration and generates the Makefiles.
 #
-# Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
+# Copyright (c) 2020 Riverbank Computing Limited <info@riverbankcomputing.com>
 #
 # This file is part of SIP.
 #
@@ -31,8 +31,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x041316
-sip_version_str = "4.19.22"
+sip_version = 0x041317
+sip_version_str = "4.19.23"
 py_version = sys.hexversion >> 8
 py_platform = sys.platform
 plat_py_site_dir = None
@@ -332,7 +332,7 @@ def create_makefiles(macros):
 
     if opts.use_qmake:
         run_mk_distinfo = '%s %s \\\"$(INSTALL_ROOT)\\\" %s installed.txt' % (
-                sys.executable, mk_distinfo, distinfo_dir)
+                quote(sys.executable), quote(mk_distinfo), quote(distinfo_dir))
 
         sipconfig.inform("Creating top level .pro file...")
 
@@ -358,7 +358,7 @@ def create_makefiles(macros):
         pro.close()
     else:
         run_mk_distinfo = '%s %s "$(DESTDIR)" %s installed.txt' % (
-                sys.executable, mk_distinfo, distinfo_dir)
+                quote(sys.executable), quote(mk_distinfo), quote(distinfo_dir))
 
         sipconfig.inform("Creating top level Makefile...")
 
