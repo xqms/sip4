@@ -49,6 +49,7 @@ Package: python-sip-doc
 Architecture: all
 Section: doc
 Depends: ${sphinxdoc:Depends}, ${misc:Depends}
+Multi-Arch: foreign
 Description: Python/C++ bindings generator documentation
  SIP is a tool for generating bindings for C++ classes with some ideas
  borrowed from SWIG, but capable of tighter bindings because of its
