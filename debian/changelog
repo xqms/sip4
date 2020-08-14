@@ -1,4 +1,4 @@
-sip4 (4.19.24+dfsg-1) UNRELEASED; urgency=low
+sip4 (4.19.24+dfsg-1) unstable; urgency=medium
 
   [ Debian Janitor ]
   * Apply multi-arch hints.
@@ -7,7 +7,7 @@ sip4 (4.19.24+dfsg-1) UNRELEASED; urgency=low
   [ Dmitry Shachnev ]
   * New upstream release.
 
- -- Debian Janitor <janitor@jelmer.uk>  Wed, 01 Jul 2020 06:10:05 -0000
+ -- Dmitry Shachnev <mitya57@debian.org>  Fri, 14 Aug 2020 14:51:47 +0300
 
 sip4 (4.19.23+dfsg-1) unstable; urgency=medium
 
