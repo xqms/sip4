@@ -1,4 +1,42 @@
+2020-08-13  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* NEWS:
+	Released as v4.19.24.
+	[58ae1285600a] [4.19.24] <4.19-maint>
+
+	* NEWS:
+	Updated the NEWS file.
+	[bd6439b5b0f4] <4.19-maint>
+
+	* siplib/qtlib.c, siplib/siplib.c:
+	Removed the use of calls deprecated in Python v3.9.
+	[88c711a50c84] <4.19-maint>
+
+2020-08-07  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* sipgen/gencode.c:
+	Fixed a regression in the virtual handler code.
+	[75cefc83ee99] <4.19-maint>
+
+	* NEWS:
+	Updated the NEWS file.
+	[a7fd24da4f99] <4.19-maint>
+
+	* configure.py.in:
+	'android_abi' can now be specified in the configuration file used to
+	build the sip module.
+	[c2cb1ee42ee6] <4.19-maint>
+
+	* sipgen/gencode.c:
+	Any %InstanceCode is now used to create the default result of a
+	virtual handler returning a class or mapped type by value.
+	[e8734cf0ff7e] <4.19-maint>
+
 2020-06-08  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.23 for changeset 853c4a8b4592
+	[bc406c09424f] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.23.

@@ -8103,10 +8103,12 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
     int a, nrvals, res_isref;
     argDef *res, res_noconstref, *ad;
     signatureDef saved;
+    codeBlockList *res_instancecode;
 
     res = &vhd->cppsig->result;
 
     res_isref = FALSE;
+    res_instancecode = NULL;
 
     if (res->atype == void_type && res->nrderefs == 0)
     {
@@ -8122,6 +8124,10 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
         {
             if (isReference(res))
                 res_isref = TRUE;
+            else if (res->atype == class_type)
+                res_instancecode = res->u.cd->instancecode;
+            else
+                res_instancecode = res->u.mtd->instancecode;
         }
 
         res_noconstref = *res;
@@ -8168,6 +8174,14 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
 
     if (res != NULL)
     {
+        if (res_instancecode != NULL)
+        {
+            prcode(fp, "    ");
+            generateBaseType(NULL, &res_noconstref, TRUE, STRIP_NONE, fp);
+            prcode(fp, " *sipCpp;\n");
+            generateCppCodeBlock(res_instancecode, fp);
+        }
+
         prcode(fp, "    ");
 
         /*
@@ -8189,7 +8203,11 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
 
         if ((res->atype == class_type || res->atype == mapped_type || res->atype == template_type) && res->nrderefs == 0)
         {
-            if (res->atype == class_type)
+            if (res_instancecode != NULL)
+            {
+                prcode(fp," = *sipCpp");
+            }
+            else if (res->atype == class_type)
             {
                 ctorDef *ct = res->u.cd->defctor;
 
