@@ -1,7 +1,11 @@
-sip4 (4.19.23+dfsg-2) UNRELEASED; urgency=low
+sip4 (4.19.24+dfsg-1) UNRELEASED; urgency=low
 
+  [ Debian Janitor ]
   * Apply multi-arch hints.
     + python-sip-doc: Add Multi-Arch: foreign.
+
+  [ Dmitry Shachnev ]
+  * New upstream release.
 
  -- Debian Janitor <janitor@jelmer.uk>  Wed, 01 Jul 2020 06:10:05 -0000
 
