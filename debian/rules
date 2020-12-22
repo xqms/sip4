@@ -8,7 +8,7 @@ PYDIST=sip $(lastword $(PY3_PROVIDES))
 
 PYTHON3S := $(shell py3versions -vr)
 
-CONFIGURE_PY_ARGS=--destdir /usr/lib/python{version}/dist-packages --debug \
+CONFIGURE_PY_ARGS=--destdir /usr/lib/python{version}/dist-packages --debug --no-dist-info \
 	"CFLAGS=$(shell dpkg-buildflags --get CFLAGS) $(shell dpkg-buildflags --get CPPFLAGS)" \
 	"CXXFLAGS=$(shell dpkg-buildflags --get CXXFLAGS) $(shell dpkg-buildflags --get CPPFLAGS)" \
 	"LFLAGS=$(shell dpkg-buildflags --get LDFLAGS)"
@@ -17,7 +17,7 @@ export DEB_BUILD_MAINT_OPTIONS=reproducible=+fixfilepath
 export PYBUILD_NAME=sip
 export PYBUILD_SYSTEM=custom
 export PYBUILD_CONFIGURE_ARGS=mkdir build-{interpreter}; cd build-{interpreter}; {interpreter} ../configure.py $(CONFIGURE_PY_ARGS)
-export PYBUILD_CONFIGURE_ARGS_python3-dbg=$(PYBUILD_CONFIGURE_ARGS) --no-tools --no-dist-info --no-stubs
+export PYBUILD_CONFIGURE_ARGS_python3-dbg=$(PYBUILD_CONFIGURE_ARGS) --no-tools --no-stubs
 export PYBUILD_BUILD_ARGS=$(MAKE) -C build-{interpreter}
 export PYBUILD_AFTER_BUILD=sed -Ei "s, -f(debug|file)-prefix-map=$(CURDIR)=.,,g" build-{interpreter}/sipconfig.py
 export PYBUILD_INSTALL_ARGS=$(MAKE) -C build-{interpreter} install DESTDIR=$(CURDIR)/debian/tmp
