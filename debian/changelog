@@ -9,6 +9,7 @@ sip4 (4.19.24+dfsg-2) UNRELEASED; urgency=medium
   [ Dmitry Shachnev ]
   * Stop installing the .dist-info directory, it causes a name conflict
     with SIP 5 (closes: #976983).
+  * Bump Standards-Version to 4.5.1, no changes needed.
 
  -- Ondřej Nový <onovy@debian.org>  Thu, 24 Sep 2020 08:50:31 +0200
 
