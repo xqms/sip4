@@ -1,4 +1,22 @@
+2021-02-26  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.25 for changeset 0d31b6c67012
+	[c0426a6b39a0] [tip] <4.19-maint>
+
+	* NEWS:
+	Released as v4.19.25.
+	[0d31b6c67012] [4.19.25] <4.19-maint>
+
+	* NEWS, sipgen/metasrc/lexer.l:
+	Added support for Py_ssize_t (required by PyQt v5.15.3).
+	[6b216e1ce173] <4.19-maint>
+
 2020-08-13  Phil Thompson  <phil@riverbankcomputing.com>
+
+	* .hgtags:
+	Added tag 4.19.24 for changeset 58ae1285600a
+	[c7643763a774] <4.19-maint>
 
 	* NEWS:
 	Released as v4.19.24.
