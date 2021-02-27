@@ -1,3 +1,9 @@
+sip4 (4.19.25+dfsg-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 27 Feb 2021 20:02:06 +0300
+
 sip4 (4.19.24+dfsg-2) unstable; urgency=medium
 
   [ Ondřej Nový ]
