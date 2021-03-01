@@ -1,6 +1,7 @@
 sip4 (4.19.25+dfsg-1) UNRELEASED; urgency=medium
 
   * New upstream release.
+  * Bump copyright years in debian/copyright.
 
  -- Dmitry Shachnev <mitya57@debian.org>  Sat, 27 Feb 2021 20:02:06 +0300
 
