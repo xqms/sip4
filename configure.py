@@ -1,6 +1,6 @@
 # This script handles the SIP configuration and generates the Makefiles.
 #
-# Copyright (c) 2019 Riverbank Computing Limited <info@riverbankcomputing.com>
+# Copyright (c) 2020 Riverbank Computing Limited <info@riverbankcomputing.com>
 #
 # This file is part of SIP.
 #
@@ -31,8 +31,8 @@ import siputils
 
 
 # Initialise the globals.
-sip_version = 0x041315
-sip_version_str = "4.19.21"
+sip_version = 0x041319
+sip_version_str = "4.19.25"
 py_version = sys.hexversion >> 8
 py_platform = sys.platform
 plat_py_site_dir = None
@@ -50,6 +50,7 @@ sip_module_dir = ''
 sip_module_dest_dir = ''
 sip_sip_dir = ''
 pyi_dir = ''
+android_abi = ''
 sysroot = ''
 src_dir = os.path.dirname(os.path.abspath(__file__))
 sip_module_name = None
@@ -281,6 +282,7 @@ def create_config(module, template, macros):
         "py_inc_dir":       plat_py_inc_dir,
         "py_conf_inc_dir":  plat_py_conf_inc_dir,
         "py_lib_dir":       plat_py_lib_dir,
+        "android_abi":      android_abi,
         "universal":        opts.universal,
         "arch":             opts.arch,
         "deployment_target":    opts.deployment_target,
@@ -332,7 +334,7 @@ def create_makefiles(macros):
 
     if opts.use_qmake:
         run_mk_distinfo = '%s %s \\\"$(INSTALL_ROOT)\\\" %s installed.txt' % (
-                sys.executable, mk_distinfo, distinfo_dir)
+                quote(sys.executable), quote(mk_distinfo), quote(distinfo_dir))
 
         sipconfig.inform("Creating top level .pro file...")
 
@@ -358,7 +360,7 @@ def create_makefiles(macros):
         pro.close()
     else:
         run_mk_distinfo = '%s %s "$(DESTDIR)" %s installed.txt' % (
-                sys.executable, mk_distinfo, distinfo_dir)
+                quote(sys.executable), quote(mk_distinfo), quote(distinfo_dir))
 
         sipconfig.inform("Creating top level Makefile...")
 
@@ -462,6 +464,10 @@ def create_makefiles(macros):
         pro.write("CONFIG += warn_on exceptions_off %s %s\n" % (
                 ("staticlib" if opts.static else "plugin plugin_bundle"),
                 ("debug" if opts.debug else "release")))
+
+        if android_abi:
+            pro.write("\n")
+            pro.write("ANDROID_ABIS = {}\n".format(android_abi))
 
         pro.write("\n")
         pro.write("# Work around QTBUG-39300.\n")
@@ -686,7 +692,7 @@ def update_from_configuration_file(config_file):
 
     # Override the relevant values.
     global py_platform, plat_py_conf_inc_dir, plat_py_inc_dir, plat_py_lib_dir
-    global sip_bin_dir, sip_inc_dir, sip_module_dir, sip_sip_dir
+    global sip_bin_dir, sip_inc_dir, sip_module_dir, sip_sip_dir, android_abi
 
     py_platform = _get_configuration_value(config, 'py_platform', py_platform)
     plat_py_inc_dir = _get_configuration_value(config, 'py_inc_dir',
@@ -709,6 +715,8 @@ def update_from_configuration_file(config_file):
 
     # Note that this is only used when creating sipconfig.py.
     sip_sip_dir = _get_configuration_value(config, 'sip_sip_dir', sip_sip_dir)
+
+    android_abi = _get_configuration_value(config, 'android_abi', android_abi)
 
 
 def create_optparser(sdk_dir):

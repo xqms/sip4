@@ -297,6 +297,9 @@ static sipWrapperType sipWrapper_Type = {
         0,                  /* ht_qualname */
         0,                  /* ht_cached_keys */
 #endif
+#if PY_VERSION_HEX >= 0x03090000
+        0,                  /* ht_module */
+#endif
 #if !defined(STACKLESS)
     },
 #endif
@@ -1128,7 +1131,7 @@ PyMODINIT_FUNC SIP_MODULE_ENTRY(void)
 #error "Add support for capsule variables"
 #endif
 
-#ifdef WITH_THREAD
+#if PY_VERSION_HEX < 0x03070000 && defined(WITH_THREAD)
     PyEval_InitThreads();
 #endif
 
@@ -2337,7 +2340,7 @@ static PyObject *call_method(PyObject *method, const char *fmt, va_list va)
         return NULL;
 
     if (buildObject(args, fmt, va) != NULL)
-        res = PyEval_CallObject(method, args);
+        res = PyObject_CallObject(method, args);
     else
         res = NULL;
 
@@ -11321,6 +11324,11 @@ static SIP_SSIZE_T sipSimpleWrapper_getcharbuffer(sipSimpleWrapper *self,
  */
 static void sipSimpleWrapper_dealloc(sipSimpleWrapper *self)
 {
+    PyObject *error_type, *error_value, *error_traceback;
+
+    /* Save the current exception, if any. */
+    PyErr_Fetch(&error_type, &error_value, &error_traceback);
+
     forgetObject(self);
 
     /*
@@ -11332,6 +11340,9 @@ static void sipSimpleWrapper_dealloc(sipSimpleWrapper *self)
 
     /* Call the standard super-type dealloc. */
     PyBaseObject_Type.tp_dealloc((PyObject *)self);
+
+    /* Restore the saved exception. */
+    PyErr_Restore(error_type, error_value, error_traceback);
 }
 
 
@@ -11671,6 +11682,9 @@ sipWrapperType sipSimpleWrapper_Type = {
         0,                  /* ht_qualname */
         0,                  /* ht_cached_keys */
 #endif
+#if PY_VERSION_HEX >= 0x03090000
+        0,                  /* ht_module */
+#endif
 #if !defined(STACKLESS)
     },
 #endif
@@ -11728,6 +11742,11 @@ static int sipWrapper_clear(sipWrapper *self)
  */
 static void sipWrapper_dealloc(sipWrapper *self)
 {
+    PyObject *error_type, *error_value, *error_traceback;
+
+    /* Save the current exception, if any. */
+    PyErr_Fetch(&error_type, &error_value, &error_traceback);
+
     /*
      * We can't simply call the super-type because things have to be done in a
      * certain order.  The first thing is to get rid of the wrapped instance.
@@ -11738,6 +11757,9 @@ static void sipWrapper_dealloc(sipWrapper *self)
 
     /* Skip the super-type's dealloc. */
     PyBaseObject_Type.tp_dealloc((PyObject *)self);
+
+    /* Restore the saved exception. */
+    PyErr_Restore(error_type, error_value, error_traceback);
 }
 
 

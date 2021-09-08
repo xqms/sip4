@@ -289,7 +289,7 @@ static void generateClassDocstring(sipSpec *pt, classDef *cd, FILE *fp);
 static void generateCtorAutoDocstring(sipSpec *pt, classDef *cd, ctorDef *ct,
         FILE *fp);
 static void generateDocstringText(docstringDef *docstring, FILE *fp);
-static int copyConstRefArg(argDef *ad);
+static int needsHeapCopy(argDef *ad, int usingCopyCtor);
 static void generatePreprocLine(int linenr, const char *fname, FILE *fp);
 static int hasOptionalArgs(overDef *od);
 static int emptyIfaceFile(sipSpec *pt, ifaceFileDef *iff);
@@ -6214,7 +6214,6 @@ static void generateSlot(moduleDef *mod, classDef *cd, enumDef *ed,
                 {
                     prcode(fp,
 "\n"
-"    /* Raise an exception if the arguments couldn't be parsed. */\n"
 "    sipNoMethod(sipParseErr, %N, ", pyname);
 
                     if (md->slot == setattr_slot)
@@ -6879,13 +6878,47 @@ static void generateClassFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
             );
     }
 
-    if (generating_c || assignmentHelper(cd))
+    /* The array allocation helper. */
+    if (generating_c || arrayHelper(cd))
+    {
+        prcode(fp,
+"\n"
+"\n"
+            );
+
+        if (!generating_c)
+            prcode(fp,
+"extern \"C\" {static void *array_%L(Py_ssize_t);}\n"
+                , cd->iff);
+
+        prcode(fp,
+"static void *array_%L(Py_ssize_t sipNrElem)\n"
+"{\n"
+            , cd->iff);
+
+        if (generating_c)
+            prcode(fp,
+"    return sipMalloc(sizeof (struct %U) * sipNrElem);\n"
+                , cd);
+        else
+            prcode(fp,
+"    return new %U[sipNrElem];\n"
+                , cd);
+
+        prcode(fp,
+"}\n"
+            );
+    }
+
+    /* The copy and assignment helpers. */
+    if (generating_c || copyHelper(cd))
     {
         /*
-         * Generate the assignment helper.  Note that the source pointer is not
-         * const.  This is to allow the source instance to be modified as a
-         * consequence of the assignment, eg. if it is implementing some sort
-         * of reference counting scheme.
+         * The assignment helper.  We assume that there will be a valid
+         * assigment operator if there is a a copy ctor.  Note that the source
+         * pointer is not const.  This is to allow the source instance to be
+         * modified as a consequence of the assignment, eg. if it is
+         * implementing some sort of reference counting scheme.
          */
         prcode(fp,
 "\n"
@@ -6910,35 +6943,6 @@ static void generateClassFunctions(sipSpec *pt, moduleDef *mod, classDef *cd,
             prcode(fp,
 "    reinterpret_cast<%U *>(sipDst)[sipDstIdx] = *reinterpret_cast<%U *>(sipSrc);\n"
                 , cd, cd);
-
-        prcode(fp,
-"}\n"
-            );
-
-        /* The array allocation helper. */
-        prcode(fp,
-"\n"
-"\n"
-            );
-
-        if (!generating_c)
-            prcode(fp,
-"extern \"C\" {static void *array_%L(SIP_SSIZE_T);}\n"
-                , cd->iff);
-
-        prcode(fp,
-"static void *array_%L(SIP_SSIZE_T sipNrElem)\n"
-"{\n"
-            , cd->iff);
-
-        if (generating_c)
-            prcode(fp,
-"    return sipMalloc(sizeof (struct %U) * sipNrElem);\n"
-                , cd);
-        else
-            prcode(fp,
-"    return new %U[sipNrElem];\n"
-                , cd);
 
         prcode(fp,
 "}\n"
@@ -7182,7 +7186,11 @@ static void generateShadowCode(sipSpec *pt, moduleDef *mod, classDef *cd,
 "    _id = %S::qt_metacall(_c,_id,_a);\n"
 "\n"
 "    if (_id >= 0)\n"
+"    {\n"
+"        SIP_BLOCK_THREADS\n"
 "        _id = sip_%s_qt_metacall(sipPySelf,sipType_%C,_c,_id,_a);\n"
+"        SIP_UNBLOCK_THREADS\n"
+"    }\n"
 "\n"
 "    return _id;\n"
 "}\n"
@@ -8095,10 +8103,12 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
     int a, nrvals, res_isref;
     argDef *res, res_noconstref, *ad;
     signatureDef saved;
+    codeBlockList *res_instancecode;
 
     res = &vhd->cppsig->result;
 
     res_isref = FALSE;
+    res_instancecode = NULL;
 
     if (res->atype == void_type && res->nrderefs == 0)
     {
@@ -8114,6 +8124,10 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
         {
             if (isReference(res))
                 res_isref = TRUE;
+            else if (res->atype == class_type)
+                res_instancecode = res->u.cd->instancecode;
+            else
+                res_instancecode = res->u.mtd->instancecode;
         }
 
         res_noconstref = *res;
@@ -8160,6 +8174,14 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
 
     if (res != NULL)
     {
+        if (res_instancecode != NULL)
+        {
+            prcode(fp, "    ");
+            generateBaseType(NULL, &res_noconstref, TRUE, STRIP_NONE, fp);
+            prcode(fp, " *sipCpp;\n");
+            generateCppCodeBlock(res_instancecode, fp);
+        }
+
         prcode(fp, "    ");
 
         /*
@@ -8181,7 +8203,11 @@ static void generateVirtualHandler(moduleDef *mod, virtHandlerDef *vhd,
 
         if ((res->atype == class_type || res->atype == mapped_type || res->atype == template_type) && res->nrderefs == 0)
         {
-            if (res->atype == class_type)
+            if (res_instancecode != NULL)
+            {
+                prcode(fp," = *sipCpp");
+            }
+            else if (res->atype == class_type)
             {
                 ctorDef *ct = res->u.cd->defctor;
 
@@ -8761,7 +8787,7 @@ static void generateTupleBuilder(moduleDef *mod, signatureDef *sd,FILE *fp)
                 break;
             }
 
-            if (copyConstRefArg(ad))
+            if (needsHeapCopy(ad, TRUE))
             {
                 fmt = "N";
                 break;
@@ -8843,7 +8869,7 @@ static void generateTupleBuilder(moduleDef *mod, signatureDef *sd,FILE *fp)
             ad->atype == rxcon_type || ad->atype == rxdis_type ||
             ad->atype == qobject_type || ad->atype == fake_void_type)
         {
-            int copy = copyConstRefArg(ad);
+            int copy = needsHeapCopy(ad, TRUE);
 
             prcode(fp,", ");
 
@@ -10544,18 +10570,30 @@ static void generateTypeDefinition(sipSpec *pt, classDef *cd, int py_debug,
 "    SIP_NULLPTR,\n"
             );
 
-    if (generating_c || assignmentHelper(cd))
+    if (generating_c || copyHelper(cd))
         prcode(fp,
 "    assign_%L,\n"
-"    array_%L,\n"
-"    copy_%L,\n"
-            , cd->iff
-            , cd->iff
             , cd->iff);
     else
         prcode(fp,
 "    SIP_NULLPTR,\n"
+            );
+
+    if (generating_c || arrayHelper(cd))
+        prcode(fp,
+"    array_%L,\n"
+            , cd->iff);
+    else
+        prcode(fp,
 "    SIP_NULLPTR,\n"
+            );
+
+    if (generating_c || copyHelper(cd))
+        prcode(fp,
+"    copy_%L,\n"
+            , cd->iff);
+    else
+        prcode(fp,
 "    SIP_NULLPTR,\n"
             );
 
@@ -11890,7 +11928,6 @@ static void generateFunction(sipSpec *pt, memberDef *md, overDef *overs,
         {
             prcode(fp,
 "\n"
-"    /* Raise an exception if the arguments couldn't be parsed. */\n"
 "    sipNoMethod(%s, %N, %N, ", (need_args ? "sipParseErr" : "SIP_NULLPTR"), cd->pyname, md->pyname);
 
             if (has_auto_docstring)
@@ -12415,6 +12452,13 @@ static void generateHandleResult(moduleDef *mod, overDef *od, int isNew,
 
         break;
 
+    case ssize_type:
+        prcode(fp,
+"            %s PyLong_FromSsize_t(%s);\n"
+            , prefix, vname);
+
+        break;
+
     case longlong_type:
         prcode(fp,
 "            %s PyLong_FromLongLong(%s);\n"
@@ -12637,21 +12681,34 @@ static const char *getBuildResultFormat(argDef *ad)
 
 
 /*
- * Return TRUE if an argument (or result) should be copied because it is a
- * const reference to a type.
+ * Return TRUE if an argument (or result) needs to be copied to the heap.
  */
-static int copyConstRefArg(argDef *ad)
+static int needsHeapCopy(argDef *ad, int usingCopyCtor)
 {
+    /* The type is a class or mapped type and not a pointer. */
     if (!noCopy(ad) && (ad->atype == class_type || ad->atype == mapped_type) && ad->nrderefs == 0)
     {
-        /* Make a copy if it is not a reference or it is a const reference. */
+        /* We need a copy unless it is a non-const reference. */
         if (!isReference(ad) || isConstArg(ad))
         {
-            /* If it is a class then we must be able to copy it. */
-            if (ad->atype != class_type || !(cannotCopy(ad->u.cd) || isAbstractClass(ad->u.cd)))
-            {
+            /* We assume we can copy a mapped type. */
+            if (ad->atype != class_type)
                 return TRUE;
-            }
+
+            /* We can't copy an abstract class. */
+            if (isAbstractClass(ad->u.cd))
+                return FALSE;
+
+            /* We can copy if we have a public copy ctor. */
+            if (!cannotCopy(ad->u.cd))
+                return TRUE;
+
+            /* We can't copy if we must use a copy ctor. */
+            if (usingCopyCtor)
+                return FALSE;
+
+            /* We can copy if we have a public assignment operator. */
+            return !cannotAssign(ad->u.cd);
         }
     }
 
@@ -12750,7 +12807,7 @@ static void generateFunctionCall(classDef *c_scope, mappedTypeDef *mt_scope,
     orig_res = *res;
 
     /* See if we need to make a copy of the result on the heap. */
-    needsNew = copyConstRefArg(res);
+    needsNew = needsHeapCopy(res, FALSE);
 
     if (needsNew)
         resetIsConstArg(res);
@@ -12930,6 +12987,11 @@ static void generateFunctionCall(classDef *c_scope, mappedTypeDef *mt_scope,
                 {
                     prcode(fp,"*sipRes = ");
                 }
+                else if (res->atype == class_type && cannotCopy(res->u.cd))
+                {
+                    prcode(fp, "sipRes = reinterpret_cast<%b *>(::operator new(sizeof (%b)));\n"
+"            *sipRes = ", res, res);
+                }
                 else
                 {
                     prcode(fp,"sipRes = new %b(",res);
@@ -12940,7 +13002,10 @@ static void generateFunctionCall(classDef *c_scope, mappedTypeDef *mt_scope,
             {
                 prcode(fp,"sipRes = ");
 
-                /* See if we need the address of the result. */
+                /*
+                 * See if we need the address of the result.  Any reference
+                 * will be non-const.
+                 */
                 if ((res->atype == class_type || res->atype == mapped_type) && (res->nrderefs == 0 || isReference(res)))
                     prcode(fp,"&");
             }
@@ -13863,7 +13928,7 @@ static int generateArgParser(moduleDef *mod, signatureDef *sd,
                 if (ad->atype == mapped_type && noRelease(ad->u.mtd))
                     fatal("Mapped type does not support /Array/\n");
 
-                if (ad->atype == class_type && !(generating_c || assignmentHelper(ad->u.cd)))
+                if (ad->atype == class_type && !(generating_c || arrayHelper(ad->u.cd)))
                 {
                     fatalScopedName(classFQCName(ad->u.cd));
                     fatal(" does not support /Array/\n");
